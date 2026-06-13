@@ -1,0 +1,93 @@
+---
+import '../styles/global.css';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  lang?: string;
+}
+
+const { title, description, image, lang = "es" } = Astro.props;
+const t = ui[lang as keyof typeof ui];
+
+const currentPath = Astro.url.pathname;
+const altLang = lang === 'es' ? 'en' : 'es';
+const altPath = lang === 'es'
+  ? '/en' + (currentPath === '/' ? '' : currentPath)
+  : currentPath.replace(/^\/en/, '') || '/';
+
+const navItems: Array<{ key: keyof typeof t; href: string }> = [
+  { key: 'nav.home' as keyof typeof t, href: lang === 'es' ? '/' : '/en' },
+  { key: 'nav.nails' as keyof typeof t, href: lang === 'es' ? '/nails' : '/en/nails' },
+  { key: 'nav.massage' as keyof typeof t, href: lang === 'es' ? '/massage' : '/en/massage' },
+];
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — Barcelona Compare</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={`${title} — Barcelona Compare`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {image && <meta property="og:image" content={image} />}
+    <link rel="alternate" hreflang={altLang} href={new URL(altPath, Astro.site).href} />
+    <link rel="canonical" href={new URL(currentPath, Astro.site).href} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <header class="border-b border-stone-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <a href={lang === 'es' ? '/' : '/en'} class="text-xl font-bold text-stone-900 tracking-tight">
+          Barcelona <span class="text-brand-500">Compare</span>
+        </a>
+        <div class="flex items-center gap-6 text-sm font-medium">
+          {navItems.map(item => (
+            <a
+              href={item.href}
+              class="text-stone-600 hover:text-stone-900 transition-colors"
+            >
+              {t[item.key]}
+            </a>
+          ))}
+          <a
+            href={altPath}
+            class="text-xs px-2.5 py-1 rounded-full border border-stone-300 text-stone-500 hover:border-stone-400 hover:text-stone-700 transition-colors"
+          >
+            {altLang.toUpperCase()}
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <footer class="border-t border-stone-200 bg-white mt-16">
+      <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-stone-500">
+        <div class="flex flex-col sm:flex-row justify-between gap-4">
+          <div>
+            <p class="font-medium text-stone-700 mb-1">Barcelona Compare</p>
+            <p class="text-xs text-stone-400">Encuentra · Compara · Elige</p>
+          </div>
+          <div class="flex gap-6">
+            <a href={lang === 'es' ? '/about' : '/en/about'} class="hover:text-stone-700 transition-colors">{lang === 'es' ? 'Cómo funciona' : 'How it works'}</a>
+            <a href={lang === 'es' ? '/for-businesses' : '/en/for-businesses'} class="hover:text-stone-700 transition-colors">{lang === 'es' ? 'Para negocios' : 'For businesses'}</a>
+          </div>
+        </div>
+        <div class="mt-6 pt-4 border-t border-stone-100 flex flex-col sm:flex-row justify-between gap-2 text-xs text-stone-400">
+          <span>&copy; {new Date().getFullYear()} Barcelona Compare</span>
+          <span>Un agregador independiente. No afiliado a Google.</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

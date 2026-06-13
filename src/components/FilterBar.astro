@@ -1,0 +1,62 @@
+---
+import { neighborhoods, massageTypes, nailServices } from '../data/constants';
+
+interface Props {
+  category: 'nails' | 'massage';
+  lang?: string;
+}
+
+const { category, lang = 'es' } = Astro.props;
+const isNails = category === 'nails';
+const categoryPath = lang === 'es' ? category : `en/${category}`;
+
+const sortLabel = lang === 'es' ? 'Ordenar por' : 'Sort by';
+const neighborhoodLabel = lang === 'es' ? 'Barrio' : 'Neighborhood';
+const priceLabel = lang === 'es' ? 'Precio' : 'Price';
+const massageTypeLabel = lang === 'es' ? 'Tipo de masaje' : 'Massage type';
+const servicesLabel = lang === 'es' ? 'Servicios' : 'Services';
+---
+
+<form id="filters" class="bg-white border border-stone-200 rounded-xl p-4 flex flex-wrap gap-3 items-end" data-category={category}>
+  <div class="flex flex-col gap-1 min-w-[140px]">
+    <label class="text-xs font-medium text-stone-500 uppercase tracking-wider">{sortLabel}</label>
+    <select name="sort" class="text-sm border border-stone-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent">
+      <option value="rating">{lang === 'es' ? 'Mejor valorados' : 'Top rated'}</option>
+      <option value="reviews">{lang === 'es' ? 'Más reseñas' : 'Most reviews'}</option>
+      <option value="price_asc">{lang === 'es' ? 'Precio: menor a mayor' : 'Price: low to high'}</option>
+      <option value="price_desc">{lang === 'es' ? 'Precio: mayor a menor' : 'Price: high to low'}</option>
+    </select>
+  </div>
+
+  <div class="flex flex-col gap-1 min-w-[140px]">
+    <label class="text-xs font-medium text-stone-500 uppercase tracking-wider">{neighborhoodLabel}</label>
+    <select name="neighborhood" class="text-sm border border-stone-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent">
+      <option value="">{lang === 'es' ? 'Todos los barrios' : 'All neighborhoods'}</option>
+      {neighborhoods.map(n => (
+        <option value={n}>{n}</option>
+      ))}
+    </select>
+  </div>
+
+  <div class="flex flex-col gap-1 min-w-[100px]">
+    <label class="text-xs font-medium text-stone-500 uppercase tracking-wider">{priceLabel}</label>
+    <select name="price" class="text-sm border border-stone-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent">
+      <option value="">{lang === 'es' ? 'Cualquiera' : 'Any'}</option>
+      <option value="€">€</option>
+      <option value="€€">€€</option>
+      <option value="€€€">€€€</option>
+    </select>
+  </div>
+
+  {!isNails && (
+    <div class="flex flex-col gap-1 min-w-[150px]">
+      <label class="text-xs font-medium text-stone-500 uppercase tracking-wider">{massageTypeLabel}</label>
+      <select name="massageType" class="text-sm border border-stone-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent">
+        <option value="">{lang === 'es' ? 'Todos' : 'All'}</option>
+        {massageTypes.map(t => (
+          <option value={t.id}>{lang === 'es' ? t.es : t.en}</option>
+        ))}
+      </select>
+    </div>
+  )}
+</form>
