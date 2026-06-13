@@ -12,6 +12,8 @@ Usage:
 Requirements: requests (pip install requests)
 """
 
+from typing import Optional
+
 import argparse
 import json
 import os
@@ -60,7 +62,7 @@ CONTENT_DIR = Path(__file__).parent.parent / "src" / "content"
 # ─── Google Places API helpers ────────────────────────────────────────────
 
 
-def places_text_search(api_key: str, query: str, page_token: str | None = None) -> dict:
+def places_text_search(api_key: str, query: str, page_token: Optional[str] = None) -> dict:
     """Call Google Places API Text Search (new)."""
     url = "https://places.googleapis.com/v1/places:searchText"
     headers = {
@@ -87,7 +89,7 @@ def places_text_search(api_key: str, query: str, page_token: str | None = None) 
     return resp.json()
 
 
-def places_photo(api_key: str, photo_reference: str, max_width: int = 800) -> bytes | None:
+def places_photo(api_key: str, photo_reference: str, max_width: int = 800) -> Optional[bytes]:
     """Download a place photo."""
     url = f"https://places.googleapis.com/v1/{photo_reference}/media"
     params = {"maxWidthPx": max_width, "skipHttpRedirect": "true"}
@@ -133,7 +135,7 @@ def infer_neighborhood(address: str) -> str:
     return "Barcelona"
 
 
-def infer_price_indicator(name: str, types: list[str]) -> str | None:
+def infer_price_indicator(name: str, types: list) -> Optional[str]:
     """Rudimentary price level inference. Most will be None — manual enrichment needed."""
     luxury_keywords = ["luxury", "premium", "spa", "boutique", "vip", "lujo", "exclusive"]
     name_lower = name.lower()
