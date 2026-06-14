@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import FilterBar from '../../../../components/FilterBar.astro';
+import PaginatedListing from '../../../../components/PaginatedListing.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const businesses = await getCollection('massage');
+  businesses.sort((a, b) => (b.data.googleRating || 0) - (a.data.googleRating || 0));
+  const PAGE_SIZE = 30;
+  const totalPages = Math.ceil(businesses.length / PAGE_SIZE);
+
+  return Array.from({ length: totalPages - 1 }, (_, i) => {
+    const pageNum = i + 2;
+    const start = (pageNum - 1) * PAGE_SIZE;
+    return {
+      params: { page: String(pageNum) },
+      props: { businesses: businesses.slice(start, start + PAGE_SIZE), total: businesses.length, currentPage: pageNum, totalPages },
+    };
+  });
+}
+
+const { businesses, total, currentPage, totalPages } = Astro.props;
+---
+
+<BaseLayout
+  title={`Barcelona's Best Massage Centers — Page ${currentPage}`}
+  description={`Compare massage centers in Barcelona. ${total} centers. Page ${currentPage} of ${totalPages}.`}
+  lang="en"
+>
+  <section class="max-w-6xl mx-auto px-4 py-12">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-stone-900">Massage in Barcelona</h1>
+      <p class="text-stone-500 mt-2">{total} centers — page {currentPage} of {totalPages}</p>
+    </div>
+    <FilterBar category="massage" lang="en" />
+    <PaginatedListing {businesses} category="massage" lang="en" {total} {currentPage} {totalPages} />
+  </section>
+</BaseLayout>
