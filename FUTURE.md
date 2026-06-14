@@ -21,3 +21,26 @@
 - Resolution (reject tiny thumbnails)
 **When to upgrade to a service:** 10,000+ images, on-the-fly transforms needed, or user-uploaded content requiring moderation.
 **Priority:** Low — current photos are good enough. Adds polish.
+
+## Complete remaining data collection
+**Why:** `scripts/broaden.py` found 2,107 candidates but only processed 1,232 (killed at user request). ~875 remain uncollected — mostly businesses in outer barrios (Sant Andreu, Nou Barris, Horta-Guinardó) and marginal keyword variants.
+
+**What's needed:**
+1. Modify `scripts/broaden.py` to **resume** rather than restart — skip already-collected place IDs
+2. Or: write a standalone script that reads the skipped candidates from a saved JSON file (the broaden script doesn't currently save a candidate list — it discovers + enriches in one pass)
+3. **Better approach for next time:** Split into two phases:
+   - **Phase 1 (discovery):** Run all three strategies, save candidate place IDs + names to `data/candidates.json` — fast, no enrichment
+   - **Phase 2 (enrichment):** Read `data/candidates.json`, filter out already-collected, enrich remaining in batches (e.g., 100 at a time with `--batch` flag)
+
+**To run a second pass now:**
+```bash
+# The script deduplicates against existing content files, so re-running
+# will skip what we already have. But it will re-run all 550+ discovery
+# queries. Add --skip-discovery to jump straight to enrichment from a
+# saved candidate list (need to implement this first).
+python scripts/broaden.py
+```
+
+**Estimated remaining:** 200-400 legitimate nail/massage businesses in the unprocessed ~875 candidates (rest are false positives from loose grid search types).
+
+**Priority:** Medium — current 848 businesses is already solid coverage. This is marginal gain.
