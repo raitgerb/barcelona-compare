@@ -10,3 +10,14 @@
 4. Update `scripts/weekly-refresh.py` to upload new photos to R2 instead of writing to `public/images/`
 5. Add R2 credentials to GitHub Actions / Cloudflare Pages env vars
 **Priority:** Low — repo is fine at current size. Before next category or city expansion.
+
+## Smart photo selection
+**Why:** Google returns 10 photos per business, we pick the first 5 blindly. Some are blurry, dark, logos, or menus.  
+**Approach:** Build-time heuristic (no AI, no service) to score and pick the best 5.  
+**Scoring signals:**
+- File size (bigger → less compression, more detail)
+- Brightness (reject near-black photos)
+- Aspect ratio (reject extreme panoramas — usually menus or logos)
+- Resolution (reject tiny thumbnails)
+**When to upgrade to a service:** 10,000+ images, on-the-fly transforms needed, or user-uploaded content requiring moderation.
+**Priority:** Low — current photos are good enough. Adds polish.
