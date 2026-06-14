@@ -23,15 +23,15 @@ const { imagePath, photoCount = 5, altText = "Photo" } = Astro.props;
 </div>
 
 <script define:vars={{ imagePath, photoCount, altText }}>
-  const lb = document.getElementById('lightbox')!;
+  const lb = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
-  const counter = document.getElementById('lightbox-counter')!;
-  const prevBtn = document.getElementById('lightbox-prev')!;
-  const nextBtn = document.getElementById('lightbox-next')!;
-  const closeBtn = document.getElementById('lightbox-close')!;
+  const counter = document.getElementById('lightbox-counter');
+  const prevBtn = document.getElementById('lightbox-prev');
+  const nextBtn = document.getElementById('lightbox-next');
+  const closeBtn = document.getElementById('lightbox-close');
 
   let current = 0;
-  let visible: number[] = [];
+  let visible = [];
 
   function build() {
     const imgs = document.querySelectorAll('.photo-gallery img');
@@ -45,7 +45,7 @@ const { imagePath, photoCount = 5, altText = "Photo" } = Astro.props;
     if (visible.length === 0) visible = Array.from({length: photoCount}, (_, i) => i);
   }
 
-  function show(idx: number) {
+  function show(idx) {
     const real = visible[idx];
     img.src = imagePath + '-' + real + '.jpg';
     img.alt = altText + ' - photo ' + (real + 1);
