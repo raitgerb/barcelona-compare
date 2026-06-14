@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import FilterBar from '../../../components/FilterBar.astro';
+import { getCollection } from 'astro:content';
+
+const businesses = await getCollection('massage');
+---
+
+<BaseLayout
+  title="Barcelona's Best Massages"
+  description="Compare massage centers in Barcelona. Massage types, prices, Google ratings. From shiatsu to Thai, find your center by neighborhood."
+  lang="en"
+>
+  <section class="max-w-6xl mx-auto px-4 py-12">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-stone-900">Massage Centers in Barcelona</h1>
+      <p class="text-stone-500 mt-2"><span id="result-count">{businesses.length}</span> centers found — compare massage types, prices, and ratings</p>
+    </div>
+    <FilterBar category="massage" lang="en" />
+    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="listing-grid">
+      {businesses.map(business => (
+        <a href={`/en/massage/${business.id}`}
+          class="listing-card group block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all p-5"
+          data-neighborhood={business.data.neighborhood}
+          data-price={business.data.priceIndicator || ''}
+          data-rating={business.data.googleRating?.toString() || '0'}
+          data-reviews={business.data.googleReviewCount?.toString() || '0'}
+          data-massage-types={(business.data.massageTypes || []).join(',')}
+        >
+          <div class="flex items-start justify-between gap-2">
+            <h3 class="font-semibold text-stone-900 group-hover:text-stone-700 text-sm truncate">{business.data.name}</h3>
+            {business.data.priceIndicator && (
+              <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 shrink-0">{business.data.priceIndicator}</span>
+            )}
+          </div>
+          <p class="text-xs text-stone-500 mt-0.5">{business.data.neighborhood}</p>
+          {business.data.googleRating && (
+            <div class="flex items-center gap-1.5 mt-2">
+              <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+              <span class="text-xs font-medium text-stone-700">{business.data.googleRating}</span>
+              <span class="text-xs text-stone-400">({business.data.googleReviewCount})</span>
+            </div>
+          )}
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+<script>
+  function filterAndSort() {
+    const form = document.getElementById('filters') as HTMLFormElement;
+    if (!form) return;
+    const sort = (form.querySelector('[name="sort"]') as HTMLSelectElement)?.value || 'rating';
+    const neighborhood = (form.querySelector('[name="neighborhood"]') as HTMLSelectElement)?.value || '';
+    const price = (form.querySelector('[name="price"]') as HTMLSelectElement)?.value || '';
+    const massageType = (form.querySelector('[name="massageType"]') as HTMLSelectElement)?.value || '';
+    const cards = Array.from(document.querySelectorAll('.listing-card')) as HTMLElement[];
+    const grid = document.getElementById('listing-grid')!;
+    const counter = document.getElementById('result-count')!;
+    let visible = cards.filter(card => {
+      if (neighborhood && card.dataset.neighborhood !== neighborhood) return false;
+      if (price && card.dataset.price !== price) return false;
+      if (massageType && !(card.dataset.massageTypes || '').includes(massageType)) return false;
+      return true;
+    });
+    visible.sort((a, b) => {
+      const ra = parseFloat(a.dataset.rating || '0'), rb = parseFloat(b.dataset.rating || '0');
+      const ca = parseInt(a.dataset.reviews || '0'), cb = parseInt(b.dataset.reviews || '0');
+      const pa = a.dataset.price || '', pb = b.dataset.price || '';
+      switch (sort) {
+        case 'rating': return rb - ra || cb - ca;
+        case 'reviews': return cb - ca;
+        case 'price_asc': return pa.length - pb.length || pa.localeCompare(pb);
+        case 'price_desc': return pb.length - pa.length || pb.localeCompare(pa);
+        default: return 0;
+      }
+    });
+    grid.innerHTML = '';
+    visible.forEach(card => grid.appendChild(card));
+    counter.textContent = visible.length.toString();
+  }
+  document.getElementById('filters')?.addEventListener('change', filterAndSort);
+</script>

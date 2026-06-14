@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="How it works"
+  description="Barcelona Compare is a local business comparison site. We don't handle bookings, we don't publish reviews — we just help you find and compare."
+  lang="en"
+>
+  <div class="max-w-2xl mx-auto px-4 py-16">
+    <h1 class="text-3xl font-bold text-stone-900 mb-6">How Barcelona Compare works</h1>
+    <div class="prose prose-stone max-w-none">
+      <p class="text-lg text-stone-600 leading-relaxed">
+        Barcelona Compare is a local business comparison site. We don't handle bookings, we don't publish reviews — we just help you find and compare.
+      </p>
+      <h2 class="text-xl font-semibold text-stone-900 mt-10 mb-4">What we do</h2>
+      <ul class="space-y-3 text-stone-600">
+        <li class="flex gap-3"><span class="text-brand-500 font-bold shrink-0">✓</span><span>Bring together local businesses in one place — nail salons and massage centers in Barcelona</span></li>
+        <li class="flex gap-3"><span class="text-brand-500 font-bold shrink-0">✓</span><span>Show Google Maps ratings so you can compare reputation</span></li>
+        <li class="flex gap-3"><span class="text-brand-500 font-bold shrink-0">✓</span><span>Display prices and services provided by the businesses themselves</span></li>
+        <li class="flex gap-3"><span class="text-brand-500 font-bold shrink-0">✓</span><span>Help you find businesses by neighborhood, price, and service type</span></li>
+      </ul>
+      <h2 class="text-xl font-semibold text-stone-900 mt-10 mb-4">What we DON'T do</h2>
+      <ul class="space-y-3 text-stone-600">
+        <li class="flex gap-3"><span class="text-red-400 font-bold shrink-0">✗</span><span>We don't manage bookings — contact the business directly</span></li>
+        <li class="flex gap-3"><span class="text-red-400 font-bold shrink-0">✗</span><span>We don't publish our own reviews — ratings come from Google Maps</span></li>
+        <li class="flex gap-3"><span class="text-red-400 font-bold shrink-0">✗</span><span>We don't charge booking commissions — we're an independent aggregator</span></li>
+      </ul>
+      <h2 class="text-xl font-semibold text-stone-900 mt-10 mb-4">Where the data comes from</h2>
+      <p class="text-stone-600 leading-relaxed">Ratings come from Google Maps and are updated periodically. Prices and services are provided by the businesses themselves. Barcelona Compare is not affiliated with Google.</p>
+    </div>
+  </div>
+</BaseLayout>
