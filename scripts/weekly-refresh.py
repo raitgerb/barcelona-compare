@@ -83,9 +83,9 @@ def download_photos(api_key: str):
                 
                 try:
                     url = f"https://places.googleapis.com/v1/{photo_name}/media"
-                    params = {"maxWidthPx": 800, "skipHttpRedirect": "true"}
+                    params = {"maxWidthPx": 800}
                     headers = {"X-Goog-Api-Key": api_key}
-                    resp = requests.get(url, headers=headers, params=params, timeout=30)
+                    resp = requests.get(url, headers=headers, params=params, timeout=30, allow_redirects=True)
                     resp.raise_for_status()
                     out_path.write_bytes(resp.content)
                     downloaded += 1

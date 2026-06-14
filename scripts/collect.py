@@ -92,9 +92,9 @@ def places_text_search(api_key: str, query: str, page_token: Optional[str] = Non
 def places_photo(api_key: str, photo_reference: str, max_width: int = 800) -> Optional[bytes]:
     """Download a place photo."""
     url = f"https://places.googleapis.com/v1/{photo_reference}/media"
-    params = {"maxWidthPx": max_width, "skipHttpRedirect": "true"}
+    params = {"maxWidthPx": max_width}
     headers = {"X-Goog-Api-Key": api_key}
-    resp = requests.get(url, headers=headers, params=params, timeout=30)
+    resp = requests.get(url, headers=headers, params=params, timeout=30, allow_redirects=True)
     if resp.status_code == 200:
         return resp.content
     return None
