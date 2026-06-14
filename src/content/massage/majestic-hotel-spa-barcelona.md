@@ -9,6 +9,8 @@ hours:
   sunday: "00:00-00:00"
 languages:
   - "Español"
+  - "Català"
 googleRating: 4.6
 googleReviewCount: 5801
+googlePlaceId: "ChIJeyGZhN2jpBIRWXblc-xJSjg"
 ---

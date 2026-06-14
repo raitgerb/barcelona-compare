@@ -10,4 +10,9 @@ languages:
   - "Español"
 googleRating: 4.9
 googleReviewCount: 66
+googlePlaceId: "ChIJS1GF8GejpBIRkzH8qSvAr38"
+services:
+  - name: "Masaje descontracturante"
+  - name: "Aromaterapia"
+  - name: "Masaje en pareja"
 ---

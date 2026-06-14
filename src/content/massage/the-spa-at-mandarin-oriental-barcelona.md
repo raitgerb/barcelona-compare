@@ -6,15 +6,17 @@ phone: "931 51 88 88"
 website: "https://www.mandarinoriental.com/en/barcelona/passeig-de-gracia/wellness/the-spa?src=loc.local_listing.mobcn.ggl"
 priceIndicator: "€€€"
 hours:
-  sunday: "08:00-20:00"
+  friday: "08:00-20:00"
   monday: "08:00-20:00"
+  saturday: "08:00-20:00"
+  sunday: "08:00-20:00"
+  thursday: "08:00-20:00"
   tuesday: "08:00-20:00"
   wednesday: "08:00-20:00"
-  thursday: "08:00-20:00"
-  friday: "08:00-20:00"
-  saturday: "08:00-20:00"
 languages:
   - "Español"
+  - "English"
 googleRating: 4.6
 googleReviewCount: 42
+googlePlaceId: "ChIJNTGmfe2ipBIRHqKbhfXf_zw"
 ---

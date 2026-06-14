@@ -8,6 +8,18 @@ hours:
   sunday: "00:00-00:00"
 languages:
   - "Español"
+  - "English"
+  - "Català"
+  - "Français"
+  - "Italiano"
+  - "Português"
+  - "Russian"
 googleRating: 4.9
 googleReviewCount: 419
+googlePlaceId: "ChIJE86EzO2jpBIRkeIi2cg2KfI"
+services:
+  - name: "Nail art / Diseño"
+  - name: "Masaje relajante"
+  - name: "Masaje tailandés"
+  - name: "Masaje en pareja"
 ---

@@ -10,4 +10,8 @@ languages:
   - "Español"
 googleRating: 4.6
 googleReviewCount: 119
+googlePlaceId: "ChIJ0eszDn2ipBIRoLAk9ce4X3s"
+services:
+  - name: "Nail art / Diseño"
+  - name: "Masaje en pareja"
 ---

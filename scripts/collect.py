@@ -106,7 +106,7 @@ def places_details(api_key: str, place_id: str) -> dict:
     headers = {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": api_key,
-        "X-Goog-FieldMask": "displayName,formattedAddress,rating,userRatingCount,regularOpeningHours,priceLevel,types,nationalPhoneNumber,websiteUri,googleMapsUri,location",
+        "X-Goog-FieldMask": "id,displayName,formattedAddress,rating,userRatingCount,regularOpeningHours,priceLevel,types,nationalPhoneNumber,websiteUri,googleMapsUri,location",
     }
     resp = requests.get(url, headers=headers, timeout=30)
     resp.raise_for_status()

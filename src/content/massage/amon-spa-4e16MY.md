@@ -1,8 +1,7 @@
 ---
-name: "Amon Spa"
+name: "Amon spa"
 neighborhood: "Gràcia"
-address: "P.º de Gracia, 78, Bajo 3 (entrada principal, Eixample, 08008 Barcelona, Spain"
-phone: "695 95 45 19"
+address: "P.º de Gracia, 78, Bajos 3, Eixample, 08008 Barcelona, Spain"
 website: "https://amonspa.vip/"
 priceIndicator: "€€€"
 hours:
@@ -21,9 +20,9 @@ languages:
   - "Italiano"
   - "Português"
   - "Russian"
-googleRating: 4.8
-googleReviewCount: 397
-googlePlaceId: "ChIJ5Ui4hFqjpBIRc_hts6VPNRM"
+googleRating: 4.7
+googleReviewCount: 458
+googlePlaceId: "ChIJJQYtS0GjpBIRhW7-D4e16MY"
 services:
   - name: "Masaje relajante"
   - name: "Masaje descontracturante"

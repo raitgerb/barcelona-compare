@@ -8,6 +8,11 @@ hours:
   sunday: "00:00-00:00"
 languages:
   - "Español"
+  - "English"
 googleRating: 4.9
 googleReviewCount: 62
+googlePlaceId: "ChIJ-Wq0a3aYpBIR03LzUAbEfdw"
+services:
+  - name: "Masaje relajante"
+  - name: "Masaje en pareja"
 ---

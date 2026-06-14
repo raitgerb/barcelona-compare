@@ -10,4 +10,8 @@ languages:
   - "Español"
 googleRating: 5
 googleReviewCount: 1596
+googlePlaceId: "ChIJ-dP-eHGjpBIRTVQM9B_xU6o"
+services:
+  - name: "Masaje relajante"
+  - name: "Masaje tailandés"
 ---

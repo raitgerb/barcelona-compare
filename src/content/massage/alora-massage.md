@@ -10,4 +10,7 @@ languages:
   - "Español"
 googleRating: 5
 googleReviewCount: 49
+googlePlaceId: "ChIJ0UXz-maZpBIRuE0WdF2HPqw"
+services:
+  - name: "Masaje en pareja"
 ---

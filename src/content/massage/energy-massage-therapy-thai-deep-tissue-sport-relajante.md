@@ -10,4 +10,9 @@ languages:
   - "Español"
 googleRating: 5
 googleReviewCount: 9
+googlePlaceId: "ChIJ7aTkBtOjpBIRXyvtx7yhbLQ"
+services:
+  - name: "Masaje relajante"
+  - name: "Masaje descontracturante"
+  - name: "Reflexología podal"
 ---

@@ -8,6 +8,10 @@ hours:
   sunday: "00:00-00:00"
 languages:
   - "Español"
+  - "English"
 googleRating: 5
 googleReviewCount: 4
+googlePlaceId: "ChIJ30ZSbTujpBIR6yIYZ-6ea7M"
+services:
+  - name: "Masaje tailandés"
 ---

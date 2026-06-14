@@ -8,6 +8,10 @@ hours:
   sunday: "00:00-00:00"
 languages:
   - "Español"
+  - "Català"
 googleRating: 4.8
 googleReviewCount: 148
+googlePlaceId: "ChIJpXSLNpCZpBIRcItaxHFZ9IY"
+services:
+  - name: "Masaje en pareja"
 ---

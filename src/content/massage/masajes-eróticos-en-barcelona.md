@@ -8,6 +8,16 @@ hours:
   sunday: "00:00-00:00"
 languages:
   - "Español"
+  - "English"
+  - "Català"
+  - "Français"
+  - "Italiano"
+  - "Português"
+  - "Russian"
 googleRating: 4.8
 googleReviewCount: 141
+googlePlaceId: "ChIJ6Q_GwfajpBIRRZJwqE4jC-s"
+services:
+  - name: "Nail art / Diseño"
+  - name: "Masaje relajante"
 ---
