@@ -43,8 +43,11 @@ const labels = isSpanish ? {
         src={`/images/${category}/${business.id}-0.jpg`}
         alt={business.data.name}
         class="w-full h-44 object-cover"
+        width="800"
+        height="450"
         loading="lazy"
         decoding="async"
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         onerror="this.style.display='none'"
       />
       <div class="p-5">
