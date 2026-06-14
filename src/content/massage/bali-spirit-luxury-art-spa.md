@@ -1,9 +1,9 @@
 ---
-name: "Thai Spa Massage"
+name: "Bali Spirit Luxury Art Spa"
 neighborhood: "Eixample"
-address: "Carrer de Girona, 148, Local derecha, Eixample, 08037 Barcelona, Spain"
-phone: "934 87 04 69"
-website: "https://thaispamassage.es/"
+address: "Carrer d'Aribau, 59, Eixample, 08011 Barcelona, Spain"
+phone: "934 51 70 85"
+website: "https://balispirit.es/"
 priceIndicator: "€€€"
 hours:
   sunday: "11:00-21:00"
@@ -15,6 +15,6 @@ hours:
   saturday: "11:00-21:00"
 languages:
   - "Español"
-googleRating: 4.5
-googleReviewCount: 1328
+googleRating: 4.4
+googleReviewCount: 662
 ---

@@ -100,6 +100,19 @@ def places_photo(api_key: str, photo_reference: str, max_width: int = 800) -> Op
     return None
 
 
+def places_details(api_key: str, place_id: str) -> dict:
+    """Call Google Places API Place Details (new) for rich data."""
+    url = f"https://places.googleapis.com/v1/places/{place_id}"
+    headers = {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": api_key,
+        "X-Goog-FieldMask": "displayName,formattedAddress,rating,userRatingCount,regularOpeningHours,priceLevel,types,nationalPhoneNumber,websiteUri,googleMapsUri,location",
+    }
+    resp = requests.get(url, headers=headers, timeout=30)
+    resp.raise_for_status()
+    return resp.json()
+
+
 # ─── Data processing ──────────────────────────────────────────────────────
 
 
@@ -164,18 +177,37 @@ def place_to_markdown(place: dict, category: str) -> str:
     place_id = place.get("id", "")
     price = infer_price_indicator(name, place.get("types", []))
 
-    # Hours
+    # Hours — Place Details uses day/hour/minute objects, not combined time strings
     hours = {}
     opening = place.get("regularOpeningHours", {})
     if opening.get("periods"):
         day_names = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
         for period in opening["periods"]:
-            day_num = period.get("open", {}).get("day", -1)
+            open_data = period.get("open", {})
+            close_data = period.get("close", {})
+            day_num = open_data.get("day", -1)
             if 0 <= day_num <= 6:
-                open_time = period.get("open", {}).get("time", "")
-                close_time = period.get("close", {}).get("time", "")
-                if open_time and close_time:
-                    hours[day_names[day_num]] = f"{open_time[:2]}:{close_time[:2]}"
+                open_h = str(open_data.get("hour", 0)).zfill(2)
+                open_m = str(open_data.get("minute", 0)).zfill(2)
+                close_h = str(close_data.get("hour", 0)).zfill(2)
+                close_m = str(close_data.get("minute", 0)).zfill(2)
+                hours[day_names[day_num]] = f"{open_h}:{open_m}-{close_h}:{close_m}"
+
+    # Price level from API
+    price = None
+    price_level = place.get("priceLevel", "")
+    if price_level == "PRICE_LEVEL_FREE":
+        price = "€"
+    elif price_level == "PRICE_LEVEL_INEXPENSIVE":
+        price = "€"
+    elif price_level == "PRICE_LEVEL_MODERATE":
+        price = "€€"
+    elif price_level == "PRICE_LEVEL_EXPENSIVE":
+        price = "€€€"
+    elif price_level == "PRICE_LEVEL_VERY_EXPENSIVE":
+        price = "€€€"
+    if not price:
+        price = infer_price_indicator(name, place.get("types", []))
 
     # Services (empty by default — manual enrichment)
     services = []
@@ -264,9 +296,27 @@ def collect_category(api_key: str, category: str):
 
     print(f"  Found {len(all_places)} unique places (filtered from multiple searches)")
 
+    # Enrich each place with Place Details
+    print(f"  Enriching with Place Details...")
+    enriched = []
+    for i, place in enumerate(all_places):
+        pid = place.get("id")
+        if not pid:
+            continue
+        try:
+            detail = places_details(api_key, pid)
+            enriched.append(detail)
+        except requests.HTTPError:
+            enriched.append(place)  # Fall back to search result
+        if (i + 1) % 20 == 0:
+            print(f"    {i + 1}/{len(all_places)} enriched...")
+        time.sleep(0.3)  # Rate limit for Place Details calls
+
+    print(f"  Successfully enriched {len(enriched)} places")
+
     # Write markdown files
     written = 0
-    for place in all_places:
+    for place in enriched:
         name = place.get("displayName", {}).get("text", "Unknown")
         slug = slugify(name)
         # De-duplicate slugs
