@@ -1,6 +1,7 @@
 ---
 name: "Sky nails(uñas)"
 neighborhood: "Eixample"
+priceIndicator: "€€"
 address: "Carrer de la Diputació, 268, Eixample, 08007 Barcelona, Spain"
 phone: "688 10 61 00"
 hours:

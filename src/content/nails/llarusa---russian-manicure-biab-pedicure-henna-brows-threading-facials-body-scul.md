@@ -1,6 +1,7 @@
 ---
 name: "Llarusa - russian manicure, BIAB, pedicure, henna brows, threading, facials, body sculpting massage, pestañas, Barcelona"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€"
 address: "Plaça de Vicenç Martorell, 2, Ciutat Vella, 08001 Barcelona, Spain"
 phone: "644 40 65 56"
 hours:

@@ -1,6 +1,7 @@
 ---
 name: "Real Thai BCN"
 neighborhood: "Eixample"
+priceIndicator: "€€€"
 address: "Carrer de València, 404, Eixample, 08013 Barcelona, Spain"
 phone: "931 71 83 79"
 website: "http://realthaibcn.com/"

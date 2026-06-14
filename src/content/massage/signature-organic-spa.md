@@ -1,6 +1,6 @@
 ---
 name: "SIGNATURE ORGANIC SPA"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
 address: "Carrer de Trafalgar, 26, Ciutat Vella, 08010 Barcelona, Spain"
 phone: "938 82 89 77"
 website: "https://signaturespa.es/"

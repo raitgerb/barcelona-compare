@@ -1,6 +1,7 @@
 ---
 name: "DASH BEAUTY STUDIO"
 neighborhood: "Eixample"
+priceIndicator: "€€"
 address: "Carrer de Casanova, 43, Eixample, 08011 Barcelona, Spain"
 phone: "652 36 84 93"
 hours:

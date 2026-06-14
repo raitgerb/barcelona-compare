@@ -1,6 +1,7 @@
 ---
 name: "Thai Center Erotic Massage Barcelona"
 neighborhood: "Les Corts"
+priceIndicator: "€€€"
 address: "Carrer de Loreto, 24, Les Corts, 08029 Barcelona, Spain"
 phone: "932 66 13 26"
 website: "https://thaicenterspa.com/?utm_source=GBP&utm_medium=clickGBP&utm_campaign=SEOLocal"

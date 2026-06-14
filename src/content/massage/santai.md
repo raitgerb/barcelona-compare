@@ -1,6 +1,7 @@
 ---
 name: "Santai"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€€"
 address: "Carrer de Pelai, 44, Planta 4, Ciutat Vella, 08001 Barcelona, Spain"
 phone: "934 14 35 32"
 website: "https://www.santaimasajes.com/?utm_source=google_my_business&utm_medium=organic&utm_campaign=ficha_google"

@@ -1,6 +1,7 @@
 ---
 name: "Nails Factory Barcelona Villarroel"
 neighborhood: "Eixample"
+priceIndicator: "€€"
 address: "Carrer de Villarroel, 75, Eixample, 08011 Barcelona, Spain"
 phone: "661 34 04 95"
 website: "https://www.nailsfactory.es/centros/nails-factory-barcelona-calle-villarroel/"

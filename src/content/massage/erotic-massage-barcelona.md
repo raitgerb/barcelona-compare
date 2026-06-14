@@ -1,6 +1,7 @@
 ---
 name: "Erotic Massage Barcelona"
 neighborhood: "Gràcia"
+priceIndicator: "€€€"
 address: "Pg. de Gràcia, 54, 7, Eixample, 08007 Barcelona, Spain"
 phone: "651 84 91 07"
 website: "http://www.barcelonaeroticmassages.com/"

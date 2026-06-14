@@ -1,6 +1,7 @@
 ---
 name: "Oh Nails Barcelona"
 neighborhood: "Eixample"
+priceIndicator: "€€"
 address: "Carrer de Roger de Llúria, 137, Eixample, 08037 Barcelona, Spain"
 phone: "931 70 78 41"
 website: "https://ohnails.com/"

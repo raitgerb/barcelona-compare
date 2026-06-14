@@ -1,6 +1,7 @@
 ---
 name: "Aire Ancient Baths | Barcelona"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€€"
 address: "Passeig de Picasso, 22, Ciutat Vella, 08003 Barcelona, Spain"
 phone: "932 20 44 18"
 website: "https://relax.beaire.com/es/aire-ancient-baths-barcelona"

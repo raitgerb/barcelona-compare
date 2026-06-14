@@ -1,6 +1,7 @@
 ---
 name: "KREM nailbar"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€"
 address: "Carrer dels Sagristans, 9, Local 4, Ciutat Vella, 08002 Barcelona, Spain"
 phone: "695 55 62 31"
 website: "https://instagram.com/krem.nailbar"

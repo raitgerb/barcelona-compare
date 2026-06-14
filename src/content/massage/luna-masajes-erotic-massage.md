@@ -1,6 +1,7 @@
 ---
 name: "Luna Masajes | Erotic Massage"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€€"
 address: "Via Laietana, 59, 3-3, Ciutat Vella, 08003 Barcelona, Spain"
 phone: "652 64 42 75"
 website: "https://lunamasajes.com/"

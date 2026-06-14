@@ -1,6 +1,7 @@
 ---
 name: "Maharlika Nails And Beauty"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€"
 address: "Carrer de Ferlandina, 65, local 1, Ciutat Vella, 08001 Barcelona, Spain"
 phone: "603 22 39 84"
 website: "https://maharlikanailsandb.wixsite.com/maharlika-nails---be"

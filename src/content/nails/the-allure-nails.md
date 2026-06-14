@@ -1,6 +1,7 @@
 ---
 name: "The Allure Nails"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€"
 address: "Carrer de la Dagueria, 18, Ciutat Vella, 08002 Barcelona, Spain"
 phone: "660 97 45 55"
 website: "https://theallurenails.es/"

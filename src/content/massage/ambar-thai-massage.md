@@ -1,6 +1,7 @@
 ---
 name: "Ambar Thai Massage"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€€"
 address: "Plaça del Bonsuccés, 7, Ciutat Vella, 08001 Barcelona, Spain"
 phone: "639 73 06 18"
 website: "http://ambarthai.com/"

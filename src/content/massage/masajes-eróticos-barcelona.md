@@ -1,6 +1,7 @@
 ---
 name: "Masajes Eróticos Barcelona"
 neighborhood: "Sarrià-Sant Gervasi"
+priceIndicator: "€€€"
 address: "Carrer de Sagués, 51, Sarrià-Sant Gervasi, 08021 Barcelona, Spain"
 phone: "602 42 38 70"
 website: "https://masajeseroticosbarcelona.com/"

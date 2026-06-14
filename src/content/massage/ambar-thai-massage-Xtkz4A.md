@@ -1,6 +1,7 @@
 ---
 name: "Ambar Thai Massage"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€€"
 address: "Av del Portal de l'Àngel, 23, Ciutat Vella, 08002 Barcelona, Spain"
 phone: "639 73 06 18"
 website: "https://ambarthai.com/inicio/"

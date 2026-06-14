@@ -1,6 +1,7 @@
 ---
 name: "Nailed It - Manicura i pedicura"
 neighborhood: "Eixample"
+priceIndicator: "€€"
 address: "Carrer de Roger de Flor, 117, Eixample, 08013 Barcelona, Spain"
 phone: "609 45 98 71"
 website: "https://www.nailedit.es/"

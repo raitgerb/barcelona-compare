@@ -1,6 +1,6 @@
 ---
 name: "Yurbban Passage Hotel & Spa"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
 address: "26 Interior, Carrer de Trafalgar, 26, Ciutat Vella, 08010 Barcelona, Spain"
 website: "https://hotels.yurbban.com/hotels/passage/?utm_source=gmb&utm_medium=organic"
 priceIndicator: "€€€"

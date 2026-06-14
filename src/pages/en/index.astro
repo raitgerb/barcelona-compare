@@ -46,7 +46,15 @@ const featuredMassage = massage.filter(b => b.data.googleRating && b.data.google
     {featuredNails.length > 0 ? (
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {featuredNails.map(business => (
-          <a href={`/en/nails/${business.id}`} class="group block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all p-5">
+          <a href={`/en/nails/${business.id}`} class="group block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all overflow-hidden">
+            <img
+              src={`/images/nails/${business.id}-0.jpg`}
+              alt={business.data.name}
+              class="w-full h-40 object-cover"
+              loading="lazy"
+              onerror="this.style.display='none'"
+            />
+            <div class="p-5">
             <div class="flex items-start justify-between gap-2">
               <h3 class="font-semibold text-stone-900 group-hover:text-stone-700 text-sm truncate">{business.data.name}</h3>
               {business.data.priceIndicator && (
@@ -61,6 +69,7 @@ const featuredMassage = massage.filter(b => b.data.googleRating && b.data.google
                 <span class="text-xs text-stone-400">({business.data.googleReviewCount})</span>
               </div>
             )}
+            </div>
           </a>
         ))}
       </div>
@@ -82,7 +91,15 @@ const featuredMassage = massage.filter(b => b.data.googleRating && b.data.google
     {featuredMassage.length > 0 ? (
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {featuredMassage.map(business => (
-          <a href={`/en/massage/${business.id}`} class="group block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all p-5">
+          <a href={`/en/massage/${business.id}`} class="group block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all overflow-hidden">
+            <img
+              src={`/images/massage/${business.id}-0.jpg`}
+              alt={business.data.name}
+              class="w-full h-40 object-cover"
+              loading="lazy"
+              onerror="this.style.display='none'"
+            />
+            <div class="p-5">
             <div class="flex items-start justify-between gap-2">
               <h3 class="font-semibold text-stone-900 group-hover:text-stone-700 text-sm truncate">{business.data.name}</h3>
               {business.data.priceIndicator && (
@@ -97,6 +114,7 @@ const featuredMassage = massage.filter(b => b.data.googleRating && b.data.google
                 <span class="text-xs text-stone-400">({business.data.googleReviewCount})</span>
               </div>
             )}
+            </div>
           </a>
         ))}
       </div>

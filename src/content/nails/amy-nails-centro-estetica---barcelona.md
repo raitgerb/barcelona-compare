@@ -1,6 +1,7 @@
 ---
 name: "AMY NAILS CENTRO ESTETICA - Barcelona"
 neighborhood: "Eixample"
+priceIndicator: "€€"
 address: "Carrer del Comte d'Urgell, 61, Eixample, 08015 Barcelona, Spain"
 phone: "936 27 58 95"
 website: "https://beauty.es.wwwcafe.de/amy-nails-centro-estetica/"

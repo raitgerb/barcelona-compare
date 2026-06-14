@@ -1,6 +1,7 @@
 ---
 name: "Noa's Secret"
 neighborhood: "Eixample"
+priceIndicator: "€€€"
 address: "Carrer de Còrsega, 263, Eixample, 08008 Barcelona, Spain"
 phone: "654 98 98 78"
 website: "https://www.noassecret.com/en/private-erotic-massage-suite-in-barcelona-noas-secret-corsega/?utm_source=gmb"

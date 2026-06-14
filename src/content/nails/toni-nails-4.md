@@ -1,6 +1,7 @@
 ---
 name: "TONI NAILS 4"
 neighborhood: "Eixample"
+priceIndicator: "€€"
 address: "Gran Via de les Corts Catalanes, 530, Eixample, 08011 Barcelona, Spain"
 phone: "600 82 67 62"
 website: "http://www.toninails4vietnam.com/"

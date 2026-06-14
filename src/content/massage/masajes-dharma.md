@@ -1,6 +1,7 @@
 ---
 name: "Masajes Dharma"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€€"
 address: "La Rambla, 113, Piso #2, Ciutat Vella, 08002 Barcelona, Spain"
 phone: "936 94 19 12"
 website: "https://masajesdharma.com/"

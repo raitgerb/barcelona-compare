@@ -1,6 +1,6 @@
 ---
 name: "Revive Spa bcn"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
 address: "Carrer d'Estruc, 34, Ciutat Vella, 08002 Barcelona, Spain"
 phone: "636 61 75 91"
 priceIndicator: "€€€"

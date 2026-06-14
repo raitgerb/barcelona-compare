@@ -1,6 +1,7 @@
 ---
 name: "Afrodita"
 neighborhood: "Eixample"
+priceIndicator: "€€€"
 address: "Carrer de Villarroel, 142, Eixample, 08036 Barcelona, Spain"
 phone: "658 24 86 60"
 website: "https://afroditabcn.com/?utm_source=GBP&utm_medium=click&utm_campaign=barcelona"

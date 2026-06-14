@@ -1,6 +1,7 @@
 ---
 name: "Time For Me - Nail & eyebrow Salon"
 neighborhood: "Gràcia"
+priceIndicator: "€€"
 address: "Travessera de Gràcia, 141, Gràcia, 08012 Barcelona, Spain"
 phone: "930 11 35 40"
 website: "http://timeformebcn.com/"

@@ -1,6 +1,7 @@
 ---
 name: "Deep Tissue II Massage Barcelona"
 neighborhood: "Eixample"
+priceIndicator: "€€€"
 address: "Rda. de Sant Pere, 16, Eixample, 08010 Barcelona, Spain"
 phone: "691 28 54 30"
 website: "http://www.anukismassages.com/"

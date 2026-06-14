@@ -1,6 +1,7 @@
 ---
 name: "mut nails - Barcelona"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€"
 address: "Carrer dels Tallers, 81, Ciutat Vella, 08001 Barcelona, Spain"
 phone: "692 05 77 07"
 website: "https://www.instagram.com/mutnailbcn?igsh=bTRpNjBwbTR1bmEy"

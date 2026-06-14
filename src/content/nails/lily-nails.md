@@ -1,6 +1,7 @@
 ---
 name: "Lily Nails"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€"
 address: "Carrer de Sant Pere Més Alt, 42, Ciutat Vella, 08003 Barcelona, Spain"
 phone: "688 58 83 46"
 hours:

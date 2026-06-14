@@ -1,6 +1,7 @@
 ---
 name: "Sunset Nail Salon Barcelona"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€"
 address: "Carrer de la Vidrieria, 13, Ciutat Vella, 08003 Barcelona, Spain"
 phone: "674 52 08 30"
 hours:

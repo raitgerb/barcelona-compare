@@ -1,6 +1,7 @@
 ---
 name: "ZEN Erotic Massage"
 neighborhood: "Eixample"
+priceIndicator: "€€€"
 address: "Carrer de Fontanella, 15, Principal 2, Eixample, 08010 Barcelona, Spain"
 phone: "651 95 35 18"
 website: "https://www.zentantra.net/"

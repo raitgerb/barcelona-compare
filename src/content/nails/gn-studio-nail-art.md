@@ -1,6 +1,7 @@
 ---
 name: "GN STUDIO Nail Art"
 neighborhood: "Eixample"
+priceIndicator: "€€"
 address: "Carrer de Viladomat, 103, Eixample, 08015 Barcelona, Spain"
 phone: "680 57 61 51"
 website: "http://gnstudio.es/"

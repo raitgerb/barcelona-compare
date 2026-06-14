@@ -1,6 +1,7 @@
 ---
 name: "Masajes Eróticos en Barcelona"
 neighborhood: "Eixample"
+priceIndicator: "€€€"
 address: "Carrer d'Aribau, 5, Derecha, Principal, Eixample, 08011 Barcelona, Spain"
 phone: "691 45 43 39"
 website: "https://masajeseroticosenbarcelona.com/"

@@ -1,13 +1,10 @@
 export const neighborhoods = [
-  'Ciutat Vella',
   'Eixample',
+  'Ciutat Vella',
   'Gràcia',
-  'Sants-Montjuïc',
   'Les Corts',
   'Sarrià-Sant Gervasi',
-  'Horta-Guinardó',
-  'Nou Barris',
-  'Sant Andreu',
+  'Sants-Montjuïc',
   'Sant Martí',
 ];
 

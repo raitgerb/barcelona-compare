@@ -1,6 +1,7 @@
 ---
 name: "UNGLES LV NAILS"
 neighborhood: "Eixample"
+priceIndicator: "€€"
 address: "Carrer de Provença, 205, local 1,08008, Eixample, 08008 Barcelona, Spain"
 phone: "936 27 66 00"
 hours:

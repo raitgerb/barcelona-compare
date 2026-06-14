@@ -1,6 +1,7 @@
 ---
 name: "Ale Nails Barcelona"
 neighborhood: "Eixample"
+priceIndicator: "€"
 address: "Carrer del Comte d'Urgell, 23, Eixample, 08011 Barcelona, Spain"
 phone: "610 91 48 82"
 website: "https://booksy.com/es-es/8775_ale-nailsbcn_estilistas-unas_48863_barcelona"

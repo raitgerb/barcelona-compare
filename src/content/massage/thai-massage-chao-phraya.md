@@ -1,6 +1,7 @@
 ---
 name: "Thai Massage Chao Phraya"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€€"
 address: "La Boqueria Market, Passatge de la Virreina, 2, A, Ciutat Vella, 08001 Barcelona, Spain"
 phone: "633 18 15 17"
 website: "https://www.thaimassagechaophraya24.com/"

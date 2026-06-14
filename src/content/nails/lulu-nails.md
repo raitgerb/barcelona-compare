@@ -1,6 +1,7 @@
 ---
 name: "LuLu Nails"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€"
 address: "Carrer d'en Xuclà, 21, Ciutat Vella, 08001 Barcelona, Spain"
 phone: "635 86 51 89"
 hours:

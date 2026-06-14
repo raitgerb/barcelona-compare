@@ -1,6 +1,7 @@
 ---
 name: "Happy Nails"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€"
 address: "Plaza de castilla 2, Carrer dels Tallers, 77, Ciutat Vella, 08001 Barcelona, Spain"
 phone: "614 04 41 77"
 hours:

@@ -1,6 +1,7 @@
 ---
 name: "Ambar"
 neighborhood: "Eixample"
+priceIndicator: "€€€"
 address: "Rambla de Catalunya, 124, 3 - 3, Eixample, 08008 Barcelona, Spain"
 phone: "614 79 77 69"
 website: "https://www.ambarmassage.com/"

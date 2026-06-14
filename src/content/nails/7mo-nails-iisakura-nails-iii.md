@@ -1,6 +1,7 @@
 ---
 name: "7mo nails II（Sakura nails III））"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€"
 address: "Carrer dels Escudellers, 31, Ciutat Vella, 08002 Barcelona, Spain"
 phone: "604 28 70 04"
 hours:

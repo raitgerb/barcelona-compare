@@ -1,6 +1,7 @@
 ---
 name: "MUMU salón de uñas - Barcelona"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€"
 address: "Carrer del Pi, 12, Ciutat Vella, 08002 Barcelona, Spain"
 website: "https://beauty.es.wwwcafe.de/mumu-salon-de-unas/"
 hours:

@@ -1,6 +1,7 @@
 ---
 name: "Luxnail & Beauty"
 neighborhood: "Eixample"
+priceIndicator: "€€"
 address: "Av. Diagonal, 334, Local 2, Eixample, 08013 Barcelona, Spain"
 phone: "931 38 75 66"
 website: "https://luxnailbeauty.com/"

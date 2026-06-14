@@ -1,6 +1,7 @@
 ---
 name: "Golden Oasis Massage Barcelona"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€€"
 address: "Carrer d'Escuder, 9, Ciutat Vella, 08003 Barcelona, Spain"
 phone: "695 92 60 15"
 website: "https://www.thaimassagesparlour.com/"

@@ -1,6 +1,7 @@
 ---
 name: "Kohothai Massage"
-neighborhood: "Barcelona"
+neighborhood: "Ciutat Vella"
+priceIndicator: "€€€"
 address: "Av del Portal de l'Àngel, 4, PISO 2 INTERIOR, Ciutat Vella, 08002 Barcelona, Spain"
 phone: "664 53 80 03"
 website: "https://kohothai.com/"
