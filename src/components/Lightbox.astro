@@ -1,0 +1,77 @@
+---
+interface Props {
+  imagePath: string;
+  photoCount?: number;
+  altText?: string;
+}
+
+const { imagePath, photoCount = 5, altText = "Photo" } = Astro.props;
+---
+
+<div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/90 flex items-center justify-center" role="dialog" aria-label="Photo viewer">
+  <button id="lightbox-close" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors z-10" aria-label="Close">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+  </button>
+  <button id="lightbox-prev" class="absolute left-4 text-white/70 hover:text-white transition-colors p-2" aria-label="Previous">
+    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+  </button>
+  <img id="lightbox-img" src="" alt="" class="max-w-[90vw] max-h-[85vh] object-contain rounded-lg" />
+  <button id="lightbox-next" class="absolute right-4 text-white/70 hover:text-white transition-colors p-2" aria-label="Next">
+    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+  </button>
+  <div id="lightbox-counter" class="absolute bottom-4 text-white/60 text-sm"></div>
+</div>
+
+<script define:vars={{ imagePath, photoCount, altText }}>
+  const lb = document.getElementById('lightbox')!;
+  const img = document.getElementById('lightbox-img') as HTMLImageElement;
+  const counter = document.getElementById('lightbox-counter')!;
+  const prevBtn = document.getElementById('lightbox-prev')!;
+  const nextBtn = document.getElementById('lightbox-next')!;
+  const closeBtn = document.getElementById('lightbox-close')!;
+
+  let current = 0;
+  let visible: number[] = [];
+
+  function build() {
+    const imgs = document.querySelectorAll('.photo-gallery img');
+    visible = [];
+    imgs.forEach((el, i) => {
+      const htmlEl = el as HTMLElement;
+      if (htmlEl.style.display !== 'none' && htmlEl.offsetParent !== null) {
+        visible.push(i);
+      }
+    });
+    if (visible.length === 0) visible = Array.from({length: photoCount}, (_, i) => i);
+  }
+
+  function show(idx: number) {
+    const real = visible[idx];
+    img.src = imagePath + '-' + real + '.jpg';
+    img.alt = altText + ' - photo ' + (real + 1);
+    counter.textContent = (idx + 1) + ' / ' + visible.length;
+    lb.classList.remove('hidden');
+    (prevBtn as HTMLElement).style.visibility = idx === 0 ? 'hidden' : 'visible';
+    (nextBtn as HTMLElement).style.visibility = idx === visible.length - 1 ? 'hidden' : 'visible';
+  }
+
+  function close() { lb.classList.add('hidden'); }
+  function next() { if (current < visible.length - 1) { current++; show(current); } }
+  function prev() { if (current > 0) { current--; show(current); } }
+
+  document.querySelectorAll('.photo-gallery img').forEach((el, i) => {
+    (el as HTMLElement).style.cursor = 'pointer';
+    el.addEventListener('click', () => { build(); current = visible.indexOf(i); if (current === -1) current = 0; show(current); });
+  });
+
+  nextBtn.addEventListener('click', next);
+  prevBtn.addEventListener('click', prev);
+  closeBtn.addEventListener('click', close);
+  lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+  document.addEventListener('keydown', (e) => {
+    if (lb.classList.contains('hidden')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowRight') next();
+    else if (e.key === 'ArrowLeft') prev();
+  });
+</script>
