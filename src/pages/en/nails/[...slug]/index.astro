@@ -2,6 +2,7 @@
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import Lightbox from '../../../../components/Lightbox.astro';
 import { getCollection } from 'astro:content';
+import { imagePath } from '../../../../lib/images';
 
 export async function getStaticPaths() {
   const businesses = await getCollection('nails');
@@ -20,7 +21,7 @@ const dayLabelsEn: Record<string, string> = {
   monday: 'Monday', tuesday: 'Tuesday', wednesday: 'Wednesday', thursday: 'Thursday',
   friday: 'Friday', saturday: 'Saturday', sunday: 'Sunday',
 };
-const imagePath = `/images/nails/${slug}`;
+const galleryPath = imagePath('nails', slug);
 ---
 
 <BaseLayout
@@ -34,7 +35,7 @@ const imagePath = `/images/nails/${slug}`;
       <!-- Photo Gallery -->
       <div class="photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory">
         {[0, 1, 2, 3, 4].map(i => (
-          <img src={`${imagePath}-${i}.jpg`} alt={`${data.name} - photo ${i + 1}`}
+          <img src={`${galleryPath}-${i}.jpg`} alt={`${data.name} - photo ${i + 1}`}
             class="snap-start min-w-[280px] h-48 object-cover rounded-xl border border-stone-100" loading="lazy" onerror="this.style.display='none'" />
         ))}
       </div>
@@ -85,5 +86,5 @@ const imagePath = `/images/nails/${slug}`;
       </div>
     </div>
   </article>
-  <Lightbox imagePath={imagePath} photoCount={5} altText={data.name} />
+  <Lightbox imagePath={galleryPath} photoCount={5} altText={data.name} />
 </BaseLayout>

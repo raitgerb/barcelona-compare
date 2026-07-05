@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { imageUrl } from '../../lib/images';
 
 const nails = await getCollection('nails');
 const massage = await getCollection('massage');
@@ -48,7 +49,7 @@ const featuredMassage = massage.filter(b => b.data.googleRating && b.data.google
         {featuredNails.map(business => (
           <a href={`/en/nails/${business.id}`} class="group block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all overflow-hidden">
             <img
-              src={`/images/nails/${business.id}-0.jpg`}
+              src={imageUrl('nails', business.id, 0)}
               alt={business.data.name}
               class="w-full h-40 object-cover"
               loading="lazy"
@@ -93,7 +94,7 @@ const featuredMassage = massage.filter(b => b.data.googleRating && b.data.google
         {featuredMassage.map(business => (
           <a href={`/en/massage/${business.id}`} class="group block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all overflow-hidden">
             <img
-              src={`/images/massage/${business.id}-0.jpg`}
+              src={imageUrl('massage', business.id, 0)}
               alt={business.data.name}
               class="w-full h-40 object-cover"
               loading="lazy"

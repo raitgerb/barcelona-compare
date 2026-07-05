@@ -1,5 +1,6 @@
 ---
 import FilterBar from './FilterBar.astro';
+import { imageUrl } from '../lib/images';
 
 interface Props {
   businesses: any[];
@@ -40,7 +41,7 @@ const labels = isSpanish ? {
       data-reviews={business.data.googleReviewCount?.toString() || '0'}
     >
       <img
-        src={`/images/${category}/${business.id}-0.jpg`}
+        src={imageUrl(category, business.id, 0)}
         alt={business.data.name}
         class="w-full h-44 object-cover"
         width="800"

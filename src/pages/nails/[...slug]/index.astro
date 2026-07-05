@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Lightbox from '../../../components/Lightbox.astro';
 import { getCollection } from 'astro:content';
+import { imagePath } from '../../../lib/images';
 
 export async function getStaticPaths() {
   const businesses = await getCollection('nails');
@@ -25,7 +26,7 @@ const dayLabels: Record<string, string> = {
   friday: 'Viernes', saturday: 'Sábado', sunday: 'Domingo',
 };
 
-const imagePath = `/images/nails/${slug}`;
+const galleryPath = imagePath('nails', slug);
 const schemaOrg = {
   "@context": "https://schema.org",
   "@type": "BeautySalon",
@@ -74,7 +75,7 @@ const schemaOrg = {
       {[0, 1, 2, 3, 4].some(i => true) && (
         <div class="photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin">
           {[0, 1, 2, 3, 4].map(i => {
-            const src = `${imagePath}-${i}.jpg`;
+            const src = `${galleryPath}-${i}.jpg`;
             return (
               <img
                 src={src}
@@ -208,5 +209,5 @@ const schemaOrg = {
       </div>
     </div>
   </article>
-  <Lightbox imagePath={imagePath} photoCount={5} altText={data.name} />
+  <Lightbox imagePath={galleryPath} photoCount={5} altText={data.name} />
 </BaseLayout>
