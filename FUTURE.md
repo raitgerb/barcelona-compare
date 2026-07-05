@@ -1,15 +1,16 @@
 # Future Work
 
-## R2 / CDN migration for images
-**Why:** Git repo currently holds ~451 photos (±35MB). At ~1,000 businesses → 5,000 photos → ±400MB — Git will choke.  
-**Approach:** Gitignore `public/images/`, serve photos from Cloudflare R2 bucket.  
+## ~~R2 / CDN migration for images~~ ✅ DONE (July 2026)
+Photos migrated to R2 bucket `barcelona-compare-images`, served via public R2.dev URL, removed from git tracking.
+
+## Custom domain for R2 images
+**Why:** Current URL (`pub-37760591f0394eafb9519ca1c4db5865.r2.dev`) is a Cloudflare hash. A custom subdomain (`images.barcelonacompare.com`) looks professional and shares domain authority.  
 **Steps:**
-1. Create R2 bucket `barcelona-compare-images`
-2. Upload all photos via `wrangler r2`
-3. Update Astro config to reference `https://images.barcelonacompare.com` (or R2 public URL)
-4. Update `scripts/weekly-refresh.py` to upload new photos to R2 instead of writing to `public/images/`
-5. Add R2 credentials to GitHub Actions / Cloudflare Pages env vars
-**Priority:** Low — repo is fine at current size. Before next category or city expansion.
+1. In Cloudflare dashboard → R2 → `barcelona-compare-images` → Settings → Custom Domains
+2. Add `images.barcelonacompare.com` (Cloudflare will auto-configure DNS since the zone is already managed)
+3. Update `R2_IMAGE_BASE_URL` env var in Cloudflare Pages to `https://images.barcelonacompare.com`
+4. Redeploy
+**Priority:** Low — cosmetic only. The `pub-` URL works fine.
 
 ## Smart photo selection
 **Why:** Google returns 10 photos per business, we pick the first 5 blindly. Some are blurry, dark, logos, or menus.  
