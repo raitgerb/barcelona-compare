@@ -27,6 +27,7 @@ const dayLabels: Record<string, string> = {
 };
 
 const galleryPath = imagePath('nails', slug);
+const googleMapsKey = import.meta.env.GOOGLE_MAPS_KEY;
 const schemaOrg = {
   "@context": "https://schema.org",
   "@type": "BeautySalon",
@@ -194,7 +195,7 @@ const schemaOrg = {
               loading="lazy"
               allowfullscreen
               referrerpolicy="no-referrer-when-downgrade"
-              src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.GOOGLE_MAPS_KEY}&q=place_id:${data.googlePlaceId}`}
+              src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsKey}&q=place_id:${data.googlePlaceId}`}
             >
             </iframe>
           </div>
