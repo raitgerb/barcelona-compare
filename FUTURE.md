@@ -45,3 +45,4 @@ python scripts/broaden.py
 **Estimated remaining:** 200-400 legitimate nail/massage businesses in the unprocessed ~875 candidates (rest are false positives from loose grid search types).
 
 **Priority:** Medium — current 848 businesses is already solid coverage. This is marginal gain.
+**Status:** Deferred (July 2026) — not worth the $25–50 in Google API costs right now. Revisit when the site has more traffic and marginal coverage matters more. This is a "later," not a "never."

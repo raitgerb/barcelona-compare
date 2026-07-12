@@ -3,7 +3,7 @@ export const ui = {
     'site.title': 'Barcelona Compare',
     'site.description': 'Encuentra los mejores negocios locales en Barcelona. Compara precios, servicios y valoraciones.',
     'nav.home': 'Inicio',
-    'nav.nails': 'Manicura',
+    'nav.nails': 'Uñas',
     'nav.massage': 'Masajes',
     'nav.about': 'Cómo funciona',
     'nav.businesses': 'Para negocios',
