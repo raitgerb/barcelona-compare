@@ -1,0 +1,102 @@
+---
+/**
+ * Shared detail-page enhancements, injected into every business page:
+ *  - breadcrumbs (visual + BreadcrumbList JSON-LD)
+ *  - prev/next navigation
+ *  - "similar nearby" block
+ */
+import { getCollection } from 'astro:content';
+import { hasPhoto } from '../lib/images';
+import ListingCard from './ListingCard.astro';
+
+interface Props {
+  category: 'nails' | 'massage';
+  slug: string;
+  neighborhood: string;
+  lang?: string;
+}
+
+const { category, slug, neighborhood, lang = 'es' } = Astro.props;
+
+const all = await getCollection(category);
+const withPhotos = all.filter(b => hasPhoto(category, b.id));
+const sorted = [...withPhotos].sort((a, b) =>
+  ((b.data.googleRating || 0) - (a.data.googleRating || 0)) ||
+  ((b.data.googleReviewCount || 0) - (a.data.googleReviewCount || 0))
+);
+
+const idx = sorted.findIndex(b => b.id === slug);
+const prev = idx > 0 ? sorted[idx - 1] : null;
+const next = idx >= 0 && idx < sorted.length - 1 ? sorted[idx + 1] : null;
+
+// Similar: same category + same neighborhood first, then same category, never self.
+const similar = sorted
+  .filter(b => b.id !== slug)
+  .sort((a, b) => {
+    const an = a.data.neighborhood === neighborhood ? 0 : 1;
+    const bn = b.data.neighborhood === neighborhood ? 0 : 1;
+    return an - bn || ((b.data.googleRating || 0) - (a.data.googleRating || 0));
+  })
+  .slice(0, 3);
+
+const isEn = lang === 'en';
+const catLabel = category === 'nails'
+  ? (isEn ? 'Nail Salons' : 'Uñas')
+  : (isEn ? 'Massages' : 'Masajes');
+const basePath = isEn ? `/en/${category}` : `/${category}`;
+const similarTitle = isEn ? 'Similar nearby' : 'También te puede gustar';
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: isEn ? '/en' : '/' },
+    { '@type': 'ListItem', position: 2, name: catLabel, item: `${basePath}/` },
+    { '@type': 'ListItem', position: 3, name: neighborhood, item: `${basePath}/?nb=${encodeURIComponent(neighborhood)}` },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+<nav class="text-sm text-stone-500 mb-6" aria-label="breadcrumb">
+  <a href={isEn ? '/en' : '/'} class="hover:text-stone-700">{isEn ? 'Home' : 'Inicio'}</a>
+  <span class="mx-1.5 text-stone-300">/</span>
+  <a href={`${basePath}/`} class="hover:text-stone-700">{catLabel}</a>
+  <span class="mx-1.5 text-stone-300">/</span>
+  <span class="text-stone-700 font-medium">{neighborhood}</span>
+</nav>
+
+{(prev || next) && (
+  <div class="flex justify-between gap-3 mb-8">
+    {prev ? (
+      <a href={`${basePath}/${prev.id}/`} class="group flex-1 min-w-0 bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all px-4 py-3">
+        <span class="block text-xs text-stone-400">← {isEn ? 'Previous' : 'Anterior'}</span>
+        <span class="block text-sm font-medium text-stone-800 truncate group-hover:text-stone-600">{prev.data.name}</span>
+      </a>
+    ) : <span class="flex-1"></span>}
+    {next ? (
+      <a href={`${basePath}/${next.id}/`} class="group flex-1 min-w-0 bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all px-4 py-3 text-right">
+        <span class="block text-xs text-stone-400">{isEn ? 'Next' : 'Siguiente'} →</span>
+        <span class="block text-sm font-medium text-stone-800 truncate group-hover:text-stone-600">{next.data.name}</span>
+      </a>
+    ) : <span class="flex-1"></span>}
+  </div>
+)}
+
+<section class="mt-12 mb-4">
+  <h2 class="text-lg font-semibold text-stone-900 mb-4">{similarTitle}</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    {similar.map(b => (
+      <ListingCard
+        name={b.data.name}
+        neighborhood={b.data.neighborhood}
+        googleRating={b.data.googleRating}
+        googleReviewCount={b.data.googleReviewCount}
+        priceIndicator={b.data.priceIndicator}
+        slug={b.id}
+        category={category}
+        lang={lang}
+      />
+    ))}
+  </div>
+</section>

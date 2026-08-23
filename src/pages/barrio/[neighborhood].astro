@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PaginatedListing from '../../components/PaginatedListing.astro';
+import { getCollection } from 'astro:content';
+import { neighborhoodGuides } from '../../data/neighborhoods';
+
+export async function getStaticPaths() {
+  return Object.keys(neighborhoodGuides).map(nb => ({
+    params: { neighborhood: nb.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-') }
+  }));
+}
+
+const { neighborhood } = Astro.params;
+const guide = Object.entries(neighborhoodGuides).find(([nb]) =>
+  nb.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-') === neighborhood
+);
+if (!guide) return Astro.redirect('/');
+const [nbName, meta] = guide;
+
+const nails = (await getCollection('nails'))
+  .filter(b => b.data.neighborhood === nbName)
+  .sort((a, b) => ((b.data.googleRating || 0) - (a.data.googleRating || 0)) || ((b.data.googleReviewCount || 0) - (a.data.googleReviewCount || 0)));
+const massage = (await getCollection('massage'))
+  .filter(b => b.data.neighborhood === nbName)
+  .sort((a, b) => ((b.data.googleRating || 0) - (a.data.googleRating || 0)) || ((b.data.googleReviewCount || 0) - (a.data.googleReviewCount || 0)));
+
+const avgRating = (list: any[]) => {
+  const rated = list.filter(b => b.data.googleRating);
+  if (!rated.length) return null;
+  return (rated.reduce((s, b) => s + b.data.googleRating, 0) / rated.length).toFixed(1);
+};
+const nAvg = avgRating(nails);
+const mAvg = avgRating(massage);
+
+// OSM embed: iframe centered on the neighborhood via Nominatim-free static bbox approach.
+// We compute a centroid from the actual businesses' addresses at build time is not possible
+// (no coords in frontmatter), so we use a hand-tuned center per barrio.
+const centers: Record<string, [number, number]> = {
+  'Eixample': [41.3925, 2.1650], 'Gràcia': [41.4022, 2.1568],
+  'Ciutat Vella': [41.3833, 2.1769], 'Sarrià-Sant Gervasi': [41.4009, 2.1282],
+  'Sants-Montjuïc': [41.3767, 2.1495], 'Sant Martí': [41.4100, 2.1990],
+  'Les Corts': [41.3881, 2.1274], 'Horta-Guinardó': [41.4194, 2.1622],
+  'Nou Barris': [41.4292, 2.1775], 'Sant Andreu': [41.4403, 2.1873],
+};
+const c = centers[nbName] || [41.39, 2.17];
+const d = 0.008;
+const bbox = `${(c[1] - d).toFixed(4)}%2C${(c[0] - d * 0.6).toFixed(4)}%2C${(c[1] + d).toFixed(4)}%2C${(c[0] + d * 0.6).toFixed(4)}`;
+const osmSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${c[0]}%2C${c[1]}`;
+
+const isEn = false; // ES guides first; EN mirror comes with the /en build-out
+const t = {
+  nailsTitle: `Salones de uñas en ${nbName}`,
+  massageTitle: `Centros de masaje en ${nbName}`,
+  statBusinesses: 'negocios',
+  statReviews: 'reseñas de Google',
+  statAvg: 'valoración media',
+  mapTitle: 'Mapa del barrio',
+};
+---
+
+<BaseLayout
+  title={`${t.nailsTitle} y ${t.massageTitle}`}
+  description={`${nails.length + massage.length} negocios en ${nbName}: ${nails.length} salones de uñas y ${massage.length} centros de masaje. Valoraciones, horarios e idiomas de cada uno.`}
+  lang="es"
+>
+  <main class="max-w-6xl mx-auto px-4 py-12">
+    <nav class="text-sm text-stone-500 mb-6" aria-label="breadcrumb">
+      <a href="/" class="hover:text-stone-700">Inicio</a>
+      <span class="mx-1.5 text-stone-300">/</span>
+      <span class="text-stone-700 font-medium">{nbName}</span>
+    </nav>
+
+    <header class="max-w-3xl">
+      <h1 class="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">{nbName}</h1>
+      <p class="mt-4 text-stone-600 leading-relaxed">{meta.es}</p>
+      <div class="flex flex-wrap gap-6 mt-6 text-sm">
+        <div><span class="block text-2xl font-bold text-stone-900">{nails.length + massage.length}</span><span class="text-stone-500">{t.statBusinesses}</span></div>
+        <div><span class="block text-2xl font-bold text-stone-900">{(nails.reduce((s,b)=>s+(b.data.googleReviewCount||0),0)+massage.reduce((s,b)=>s+(b.data.googleReviewCount||0),0)).toLocaleString('es-ES')}</span><span class="text-stone-500">{t.statReviews}</span></div>
+        {nAvg && <div><span class="block text-2xl font-bold text-stone-900">{nAvg}★</span><span class="text-stone-500">{t.statAvg}</span></div>}
+      </div>
+    </header>
+
+    <section class="mt-10 rounded-xl border border-stone-200 overflow-hidden bg-white">
+      <iframe
+        title={t.mapTitle}
+        width="100%"
+        height="280"
+        style="border:0"
+        loading="lazy"
+        src={osmSrc}
+      ></iframe>
+    </section>
+
+    {nails.length > 0 && (
+      <section class="mt-14">
+        <h2 class="text-2xl font-bold text-stone-900">{t.nailsTitle}</h2>
+        <p class="text-stone-500 mt-1 text-sm">{nails.length} salones{mAvg ? '' : ''}</p>
+        <PaginatedListing businesses={nails.slice(0, 12)} category="nails" lang="es" total={nails.length} currentPage={1} totalPages={1} />
+        <a href="/nails" class="inline-block mt-6 text-sm font-medium text-accent-nails hover:underline">Ver todos los salones →</a>
+      </section>
+    )}
+
+    {massage.length > 0 && (
+      <section class="mt-14">
+        <h2 class="text-2xl font-bold text-stone-900">{t.massageTitle}</h2>
+        <p class="text-stone-500 mt-1 text-sm">{massage.length} centros</p>
+        <PaginatedListing businesses={massage.slice(0, 12)} category="massage" lang="es" total={massage.length} currentPage={1} totalPages={1} />
+        <a href="/massage" class="inline-block mt-6 text-sm font-medium text-accent-massage hover:underline">Ver todos los centros →</a>
+      </section>
+    )}
+  </main>
+</BaseLayout>

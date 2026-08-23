@@ -4,7 +4,19 @@
 // Set in Cloudflare Pages env vars: R2_IMAGE_BASE_URL = https://images.barcelonacompare.com
 // Or for R2.dev: R2_IMAGE_BASE_URL = https://pub-XXXX.r2.dev
 
+import photoManifest from '../data/photo-manifest.json';
+
 const R2_BASE = import.meta.env.R2_IMAGE_BASE_URL || "";
+
+const manifest = photoManifest as Record<string, string[]>;
+
+/**
+ * True when at least one synced photo exists for this business.
+ */
+export function hasPhoto(category: string, slug: string): boolean {
+  const list = manifest[`${category}/${slug}`];
+  return Array.isArray(list) && list.length > 0;
+}
 
 /**
  * Resolves an image URL for a business listing.

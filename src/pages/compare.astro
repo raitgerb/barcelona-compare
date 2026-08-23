@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Compara negocios lado a lado"
+  description="Compara salones de manicura y centros de masaje en Barcelona: valoraciones, reseñas, horarios, idiomas y servicios, lado a lado."
+  lang="es"
+>
+  <main class="max-w-6xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold text-stone-900">Comparar</h1>
+    <p class="text-stone-500 mt-2">Elige 2–4 negocios en las listas y aparecen aquí, lado a lado.</p>
+
+    <!-- populated by /js/compare.js -->
+    <div id="compare-root" class="mt-8"></div>
+  </main>
+  <script src="/js/compare.js" defer></script>
+</BaseLayout>

@@ -95,6 +95,48 @@
         "type": "string"
       }
     },
+    "primaryType": {
+      "type": "string"
+    },
+    "googleMapsUri": {
+      "type": "string"
+    },
+    "googleReviews": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "author": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "relativeTime": {
+            "default": "",
+            "type": "string"
+          },
+          "languageCode": {
+            "default": "",
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "author",
+          "rating",
+          "text"
+        ]
+      }
+    },
+    "googleEditorialSummary": {
+      "type": "string"
+    },
     "$schema": {
       "type": "string"
     }

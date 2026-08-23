@@ -13,7 +13,7 @@ const businessSchema = z.object({
     name: z.string(),
     price: z.string().optional(),
   })).default([]),
-  hours: z.record(z.string()).optional(),
+  hours: z.record(z.string(), z.string()).optional(),
   languages: z.array(z.string()).default(['Español']),
   googleRating: z.number().min(0).max(5).optional(),
   googleReviewCount: z.number().int().min(0).optional(),
@@ -21,6 +21,16 @@ const businessSchema = z.object({
   photos: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
   massageTypes: z.array(z.string()).optional(),
+  primaryType: z.string().optional(),
+  googleMapsUri: z.string().optional(),
+  googleReviews: z.array(z.object({
+    author: z.string(),
+    rating: z.number().min(0).max(5),
+    relativeTime: z.string().default(''),
+    languageCode: z.string().default(''),
+    text: z.string(),
+  })).default([]),
+  googleEditorialSummary: z.string().optional(),
 });
 
 const nails = defineCollection({

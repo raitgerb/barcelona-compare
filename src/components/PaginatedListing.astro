@@ -1,6 +1,6 @@
 ---
 import FilterBar from './FilterBar.astro';
-import { imageUrl } from '../lib/images';
+import { imageUrl, hasPhoto } from '../lib/images';
 
 interface Props {
   businesses: any[];
@@ -32,25 +32,42 @@ const labels = isSpanish ? {
 ---
 
 <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="listing-grid">
-  {businesses.map(business => (
+  {businesses.map(business => {
+    const servicesList = (business.data.services || []).map((s: any) => (typeof s === 'string' ? s : s.name));
+    return (
     <a href={detailPath(business.id)}
-      class="listing-card group block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all overflow-hidden"
+      class="listing-card group relative block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-md transition-all overflow-hidden"
+      data-slug={business.id}
+      data-name={business.data.name}
+      data-nb={business.data.neighborhood}
+      data-address={business.data.address || ''}
+      data-cat={category}
       data-neighborhood={business.data.neighborhood}
       data-price={business.data.priceIndicator || ''}
       data-rating={business.data.googleRating?.toString() || '0'}
       data-reviews={business.data.googleReviewCount?.toString() || '0'}
+      data-hours={business.data.hours ? JSON.stringify(business.data.hours) : ''}
+      data-services={JSON.stringify(servicesList)}
+      data-photos={hasPhoto(category, business.id) ? '1' : '0'}
     >
-      <img
-        src={imageUrl(category, business.id, 0)}
-        alt={business.data.name}
-        class="w-full h-44 object-cover"
-        width="800"
-        height="450"
-        loading="lazy"
-        decoding="async"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        onerror="this.style.display='none'"
-      />
+      <div class="relative">
+        {!hasPhoto(category, business.id) && (
+          <div class="w-full h-44 bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center">
+            <span class="text-3xl opacity-30">{category === 'nails' ? '💅' : '💆'}</span>
+          </div>
+        )}
+        <img
+          src={imageUrl(category, business.id, 0)}
+          alt={business.data.name}
+          class={`w-full h-44 object-cover ${!hasPhoto(category, business.id) ? 'hidden' : ''}`}
+          width="800"
+          height="450"
+          loading="lazy"
+          decoding="async"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          onerror="this.style.display='none'"
+        />
+      </div>
       <div class="p-5">
         <div class="flex items-start justify-between gap-2">
           <h3 class="font-semibold text-stone-900 group-hover:text-stone-700 text-sm truncate">{business.data.name}</h3>
@@ -68,14 +85,15 @@ const labels = isSpanish ? {
         )}
         {business.data.services && business.data.services.length > 0 && (
           <div class="mt-2 flex flex-wrap gap-1">
-            {business.data.services.slice(0, 3).map(s => (
+            {business.data.services.slice(0, 3).map((s: any) => (
               <span class="text-xs px-2 py-0.5 rounded-full bg-stone-50 text-stone-500 border border-stone-100">{typeof s === 'string' ? s : s.name}</span>
             ))}
           </div>
         )}
       </div>
     </a>
-  ))}
+    );
+  })}
 </div>
 
 <div id="no-results" class="hidden mt-8 text-center py-12 bg-stone-50 rounded-xl border border-stone-200">
@@ -83,6 +101,9 @@ const labels = isSpanish ? {
   <p class="text-stone-400 text-sm mt-1">{labels.noResultsHint}</p>
 </div>
 
+<script>
+  import '../scripts/listing';
+</script>
 {totalPages > 1 && (
   <nav class="mt-10 flex items-center justify-center gap-1" aria-label={isSpanish ? 'Paginación' : 'Pagination'}>
     {currentPage > 1 ? (
@@ -119,18 +140,18 @@ const labels = isSpanish ? {
     var sort = form.querySelector('[name="sort"]');
     var neighborhood = form.querySelector('[name="neighborhood"]');
     var price = form.querySelector('[name="price"]');
-    var sortVal = sort ? sort.value : 'rating';
-    var neighborhoodVal = neighborhood ? neighborhood.value : '';
-    var priceVal = price ? price.value : '';
-    var cards = Array.from(document.querySelectorAll('.listing-card'));
+    var sortVal = (sort as HTMLSelectElement | null)?.value || 'rating';
+    var neighborhoodVal = (neighborhood as HTMLSelectElement | null)?.value || '';
+    var priceVal = (price as HTMLSelectElement | null)?.value || '';
+    var cards = Array.from(document.querySelectorAll<HTMLElement>('.listing-card'));
     var grid = document.getElementById('listing-grid');
     var noResults = document.getElementById('no-results');
-    var visible = cards.filter(function(card) {
+    var visible = cards.filter(function(card: HTMLElement) {
       if (neighborhoodVal && card.dataset.neighborhood !== neighborhoodVal) return false;
       if (priceVal && card.dataset.price !== priceVal) return false;
       return true;
     });
-    visible.sort(function(a, b) {
+    visible.sort(function(a: HTMLElement, b: HTMLElement) {
       var ra = parseFloat(a.dataset.rating || '0');
       var rb = parseFloat(b.dataset.rating || '0');
       var ca = parseInt(a.dataset.reviews || '0');
@@ -145,12 +166,13 @@ const labels = isSpanish ? {
         default: return 0;
       }
     });
+    if (!grid) return;
     grid.innerHTML = '';
     if (visible.length === 0) {
       if (noResults) noResults.classList.remove('hidden');
     } else {
       if (noResults) noResults.classList.add('hidden');
-      visible.forEach(function(card) { grid.appendChild(card); });
+      visible.forEach(function(card: HTMLElement) { grid!.appendChild(card); });
     }
   }
   document.getElementById('filters')?.addEventListener('change', filterCards);

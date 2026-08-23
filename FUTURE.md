@@ -1,5 +1,27 @@
 # Future Work
 
+## Build Plan (July 2026) — Active
+
+### Search
+**Why:** 480 businesses across 16 pages with only dropdown filters. Users can't search by name, street, or keyword.
+**Approach:** Client-side text input on listing pages that filters the visible cards by business name and neighborhood. No API calls needed — pure JS filtering of already-loaded data.
+**Priority:** High
+
+### Sort no-photo listings to bottom
+**Why:** Many business cards show blank white space instead of photos, making the grid look broken. Lower-rated businesses tend to have no photos.
+**Approach:** Add a secondary sort: within any sort order (rating, reviews, price), push businesses with 0 photos to the bottom. Or add a "has photos" boolean to the frontmatter and use it in sort logic.
+**Priority:** High
+
+### "Open now" indicator on listing cards
+**Why:** Opening hours data exists in every business markdown file. Showing open/closed status at a glance is table stakes for local directories.
+**Approach:** Client-side: compare current Barcelona time against each business's hours, show a green "Abierto ahora" / "Open now" or gray "Cerrado" / "Closed" badge on each card.
+**Priority:** Medium
+
+### Prev/Next navigation on detail pages
+**Why:** Once on a business page, the only way to see another is "← Back to salons" → scroll → find next → click. Sequential browsing is how people explore directories.
+**Approach:** Add "← Prev | Next →" links at top and bottom of each detail page, cycling through businesses in the current sort order.
+**Priority:** Medium
+
 ## ~~R2 / CDN migration for images~~ ✅ DONE (July 2026)
 Photos migrated to R2 bucket `barcelona-compare-images`, served via public R2.dev URL, removed from git tracking.
 

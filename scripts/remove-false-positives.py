@@ -30,18 +30,63 @@ def norm(s: str) -> str:
 
 # (category, accent-stripped name substring)
 DENYLIST = [
-    ("nails", "vinumplay"),               # wine shop
-    ("nails", "jaciment"),                # archaeological site
-    ("nails", "onda hair"),               # hair salon
-    ("nails", "la brush"),                # hair/lash salon
-    ("nails", "nail art beauty spa hair"),# hybrid hair salon
-    ("nails", "onda beauty center"),      # laser clinic
-    ("nails", "born massage"),            # misclassified massage&beauty
-    ("massage", "club natacio"),          # swimming club
-    ("massage", "maritim by claror"),     # gym
-    ("massage", "miin korean"),           # cosmetics shop
-    ("massage", "xinesa"),                # herbal shop
-    ("massage", "koan beauty lab"),       # k-beauty/cosmetics
+    # Medical / hospital / clinic / pharmacy
+    ("nails", "hospital"),
+    ("nails", "farmacia"),
+    ("nails", "maternitat"),
+    ("nails", "ginecolog"),
+    ("nails", "clinica"),
+    ("nails", "centre medic"),
+    ("nails", "medicina estetica"),
+    ("massage", "clinica"),
+    ("massage", "centre medic"),
+    ("massage", "medicina estetica"),
+    ("massage", "tcmsalud"),
+    # Sports / gym / padel / pool / plaza
+    ("massage", "club esportiu"),
+    ("massage", "club metropolitan"),
+    ("massage", "health performance"),
+    ("massage", "esports associats"),
+    ("massage", "sumana yoga"),
+    ("nails", "dir tres"),
+    ("nails", "padel"),
+    ("nails", "piscina"),
+    ("nails", "placa marti"),
+    # Food / wine / retail / cosmetics
+    ("nails", "mixfood"),
+    ("nails", "vinumplay"),
+    ("nails", "viandagift"),
+    ("nails", "shinycandle"),
+    ("nails", "seoul korean cosmetics"),
+    ("nails", "miin korean"),
+    ("massage", "koan beauty lab"),
+    # Escorts
+    ("massage", "escort"),
+    # Hair / barber
+    ("nails", "estilistas"),
+    ("nails", "peluqueria"),
+    ("nails", "perruqueria"),
+    ("nails", "barberia"),
+    ("nails", "barber"),
+    # Hotel (spa-in-hotel)
+    ("massage", "hotel"),
+    # Bars / restaurants / addresses / junk
+    ("nails", "la extremena"),
+    ("nails", "las meninas"),
+    ("nails", "pantera barcelona"),
+    ("nails", "carrer de sants 384"),
+    ("nails", "bsszt"),
+    ("massage", "sant cugat"),
+    # Batch-1 false positives (re-collected by the grid search)
+    ("nails", "jaciment"),
+    ("nails", "onda hair"),
+    ("nails", "la brush"),
+    ("nails", "nail art beauty spa hair"),
+    ("nails", "onda beauty center"),
+    ("nails", "born massage"),
+    ("massage", "club natacio"),
+    ("massage", "maritim by claror"),
+    ("massage", "xinesa"),
 ]
 
 
@@ -58,6 +103,7 @@ def main():
     args = parser.parse_args()
 
     removed = []
+    seen = set()
     for cat, needle in DENYLIST:
         cat_dir = CONTENT_DIR / cat
         if not cat_dir.exists():
@@ -65,6 +111,10 @@ def main():
         for md_file in cat_dir.glob("*.md"):
             name = read_name(md_file)
             if needle in norm(name):
+                key = (cat, md_file.stem)
+                if key in seen:
+                    continue
+                seen.add(key)
                 removed.append((cat, md_file, name))
                 if args.dry_run:
                     print(f"  REMOVE [{cat}] {name}")
