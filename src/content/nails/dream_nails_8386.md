@@ -17,4 +17,30 @@ languages:
 googleRating: 4.7
 googleReviewCount: 23
 googlePlaceId: "ChIJHz_st8SjpBIRHOYhYENZSBY"
+googleReviews:
+  - author: "Sanne Lanting"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "en"
+    text: "always happy with my nails!!"
+  - author: "Sun Moon"
+    rating: 5
+    relativeTime: "11 months ago"
+    languageCode: "en"
+    text: "I like to be made by handsome guy"
+  - author: "Nhat Wyen"
+    rating: 5
+    relativeTime: "11 months ago"
+    languageCode: "en"
+    text: "I will come back"
+  - author: "Wyeen K"
+    rating: 5
+    relativeTime: "11 months ago"
+    languageCode: "en"
+    text: "Very nice"
+  - author: "raphaelle bray"
+    rating: 5
+    relativeTime: "10 months ago"
+    languageCode: "en"
+    text: "Nice work! Nice people!!!"
 ---

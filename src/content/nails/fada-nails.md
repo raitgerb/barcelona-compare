@@ -9,4 +9,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJVVVxBTSxpBIRocwg92wU1yY"
+googleReviews:
+  - author: "Estefania"
+    rating: 5
+    relativeTime: "9 months ago"
+    languageCode: "es"
+    text: "10 de 10"
 ---

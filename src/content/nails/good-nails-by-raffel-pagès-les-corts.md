@@ -17,4 +17,30 @@ languages:
 googleRating: 4.9
 googleReviewCount: 97
 googlePlaceId: "ChIJDx6j9BiZpBIRg3DYdHU4SRY"
+googleReviews:
+  - author: "Paula Muñoz Gonzalez"
+    rating: 4
+    relativeTime: "a month ago"
+    languageCode: "en"
+    text: "Baby Boomer by Tamara"
+  - author: "Tisa Semrajc"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "en"
+    text: "Great manicure and pedicure, would definitely recommend 🤩"
+  - author: "Mina"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "en"
+    text: "Very professional  🤍"
+  - author: "mary ann curameng"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "en"
+    text: "Great experience in this nails salon."
+  - author: "Romane, Julie, Marie Baudat"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "es"
+    text: "Todas las chicas son muy majas y siempre hay buen ambiente. Angi me hizo el relleno de acrílico, me quedaron preciosas y muy naturales. Es muy aplicada y atenta, además de preocuparse siempre de no hacerte daño. Hay 10% de descuento para estudiantes así que me salió súper bien de precio."
 ---

@@ -16,4 +16,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJn-zxLf2jpBIRjKCUzdUfdDM"
+googleReviews:
+  - author: "Marian Daniela"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "La mejor profesional que pueda existir, la recomiendo una y mil veces. Demasiado profesional"
 ---

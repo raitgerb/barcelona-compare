@@ -17,4 +17,30 @@ languages:
 googleRating: 5
 googleReviewCount: 53
 googlePlaceId: "ChIJfyC-7fejpBIRRmX8Tp-O3oc"
+googleReviews:
+  - author: "Aurora Ostling Bjørnådal"
+    rating: 5
+    relativeTime: "11 months ago"
+    languageCode: "en"
+    text: "Shes incredible sweet and did exactly what i wanted. Shes fast and gentle. The salon is clean and you can tell Lili is a professional. The nails also turned out great. I did gel over my natural nails:) The price is really good!"
+  - author: "Giovanna Sophia Kurowsky"
+    rating: 5
+    relativeTime: "6 months ago"
+    languageCode: "en"
+    text: "She is really kind and patient, although I am not fluent in Spanish. I am happy I found this quiet and clean and professional place!"
+  - author: "Miljana Spasic"
+    rating: 5
+    relativeTime: "in the last week"
+    languageCode: "en"
+    text: "Best place to do nails in Barcelona and beyond! Fast and excellent quality !"
+  - author: "Chara Sofocleous"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "en"
+    text: "Lili nails offers absolutely amazing service, is professional and with reasonable prices. Highly recommended!"
+  - author: "Sheismia (sheismia)"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "es"
+    text: "Muy contenta con mis uñas, me realicé esta mañana las uñas acrílicas en el salón y muy satisfecha. Lili es una gran profesional, las termino muy rápido y las hizo desde 0, se me pasó el tiempo volando. Utiliza materiales de marca, el salón lo tiene muy limpio y ordenado."
 ---

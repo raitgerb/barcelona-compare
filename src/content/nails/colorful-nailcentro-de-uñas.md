@@ -16,4 +16,30 @@ languages:
 googleRating: 4.7
 googleReviewCount: 12
 googlePlaceId: "ChIJlfH48wiZpBIRXvoqsLPxC0g"
+googleReviews:
+  - author: "Isabelle"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "La mejor! Buen precio , servicio y calidad"
+  - author: "Renata Gonçalves"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "¡Todo genial! Hacen muy buen trabajo y cuidan los detalles. Las uñas quedan perfectas. Servicio muy bueno, trato agradable y amabilidad. Buen precio. Sin duda lo recomiendo. No les pongo más estrellas porque no se puede ;)"
+  - author: "Esther Rion"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "ca"
+    text: "Molt bon servei i molta amabilitat, bones professionals."
+  - author: "Maria Viladrich"
+    rating: 5
+    relativeTime: "9 months ago"
+    languageCode: "es"
+    text: "Muy buenas profesionales!"
+  - author: "esperanza martinez"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Muy rapidas limpio y amables"
 ---

@@ -16,4 +16,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJGWlw-Ci9pBIRTHEjdrXMQk0"
+googleReviews:
+  - author: "Doris Canales"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Me encanta la atención,  el profesionalismo y la basta gama de colores y precios espectaculares.  Cynthia eres lo máximo."
 ---

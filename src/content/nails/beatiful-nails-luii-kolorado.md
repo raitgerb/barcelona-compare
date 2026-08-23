@@ -18,4 +18,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJA9FTSG-9pBIR9g2q0GL3JHw"
+googleReviews:
+  - author: "Diana carolina Mejia"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "Me gustó la atención,muy buen servicio 100% recomendado"
 ---

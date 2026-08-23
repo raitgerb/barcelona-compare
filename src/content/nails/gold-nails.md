@@ -17,4 +17,30 @@ languages:
 googleRating: 4.4
 googleReviewCount: 16
 googlePlaceId: "ChIJIVBjqu-jpBIRJ-1TjhXTlmQ"
+googleReviews:
+  - author: "Claire"
+    rating: 5
+    relativeTime: "6 months ago"
+    languageCode: "en"
+    text: "The nail art was beautiful and very professional. I really liked it🥰 I also got eyelash extensions, and they look great! The style is very fashionable🤩🤩"
+  - author: "Lisa Zaripov"
+    rating: 5
+    relativeTime: "3 months ago"
+    languageCode: "en"
+    text: "The quality is very good."
+  - author: "Ralph Glimmerveen"
+    rating: 5
+    relativeTime: "in the last week"
+    languageCode: "en"
+    text: "Very good services at gold nails, this has bin the second time I visiteded the place and love their quality for pedicure.best pedicure en el born y Barcelona"
+  - author: "ling jiang"
+    rating: 5
+    relativeTime: "a week ago"
+    languageCode: "en"
+    text: "They received me and my friend Karina very warmly.I had a great time with her and we enjoyed a 30 minute foot massage together. Thank you!"
+  - author: "saso a"
+    rating: 5
+    relativeTime: "a week ago"
+    languageCode: "en"
+    text: "The service was particularly good.I love it when he rubs my feet.It feels very, very, very good."
 ---

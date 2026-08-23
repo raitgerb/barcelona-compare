@@ -16,4 +16,15 @@ languages:
 googleRating: 5
 googleReviewCount: 2
 googlePlaceId: "ChIJQ6a6DN6jpBIR4SBRbQnaliQ"
+googleReviews:
+  - author: "Disagio Tattoo"
+    rating: 5
+    relativeTime: "a week ago"
+    languageCode: "es"
+    text: "La experiencia ha sido perfecta, un trato increíble, y una profesionalidad inigualable, productos de alta calidad y materiales estériles para cada cliente. Muy 🔝, recomendado 100%. Sin duda volveré!!"
+  - author: "Andrea Valls"
+    rating: 5
+    relativeTime: "a week ago"
+    languageCode: "es"
+    text: "Me encanta la chica es súper simpática y profesional, vi sus trabajos por instagram y no dudé en ponerme en contacto con ella, ya tengo manicurista por que voy a repetir sin duda!!!🤩"
 ---
