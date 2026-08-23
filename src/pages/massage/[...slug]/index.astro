@@ -77,9 +77,12 @@ const schemaOrg = {
           <img
             src={`${galleryPath}-${i}.jpg`}
             alt={`${data.name} - foto ${i + 1}`}
-            class="snap-start min-w-[280px] h-48 object-cover rounded-xl border border-stone-100"
+            class="snap-start min-w-[280px] h-48 object-cover rounded-xl border border-stone-100 bg-stone-100"
+            width="280"
+            height="192"
             loading="lazy"
-            onerror="this.style.display='none'"
+            decoding="async"
+            onerror="this.style.visibility='hidden'"
           />
         ))}
       </div>

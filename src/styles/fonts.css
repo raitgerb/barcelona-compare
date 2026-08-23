@@ -1,0 +1,18 @@
+/* Self-hosted variable fonts — no third-party requests, no swap reflow (CLS fix).
+   Inter covers 400-700, Fraunces 600-700 (variable weight axes). */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: block;
+  src: url('/fonts/inter-var-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: block;
+  src: url('/fonts/fraunces-var-latin.woff2') format('woff2');
+}

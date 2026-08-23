@@ -38,7 +38,7 @@ const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
       <div class="photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory">
         {[0, 1, 2, 3, 4].map(i => (
           <img src={`${galleryPath}-${i}.jpg`} alt={`${data.name} - photo ${i + 1}`}
-            class="snap-start min-w-[280px] h-48 object-cover rounded-xl border border-stone-100" loading="lazy" onerror="this.style.display='none'" />
+            class="snap-start min-w-[280px] h-48 object-cover rounded-xl border border-stone-100 bg-stone-100" width="280" height="192" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'" />
         ))}
       </div>
       <div class="flex items-start justify-between gap-4 mb-6">
