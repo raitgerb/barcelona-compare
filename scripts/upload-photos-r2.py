@@ -77,10 +77,25 @@ def upload_one(local, key, token, dry_run):
 
 
 def main():
-    dry_run = "--dry-run" in sys.argv
-    upload_all = "--all" in sys.argv
+    import argparse
+    import unicodedata
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--all", action="store_true")
+    parser.add_argument("--only", type=str, default=None,
+                        help="Comma-separated slugs (upload only these)")
+    args = parser.parse_args()
+
     token = load_token()
-    slugs = get_slugs(untracked_only=not upload_all)
+    if args.only:
+        want = set(unicodedata.normalize("NFC", s.strip()) for s in args.only.split(",") if s.strip())
+        slugs = set()
+        for cat in ("nails", "massage"):
+            for md in (CONTENT_DIR / cat).glob("*.md"):
+                if unicodedata.normalize("NFC", md.stem) in want:
+                    slugs.add((cat, md.stem))
+    else:
+        slugs = get_slugs(untracked_only=not args.all)
 
     total = ok = 0
     missing = []
@@ -93,12 +108,12 @@ def main():
         for p in photos:
             key = f"images/{cat}/{p.name}"
             total += 1
-            if upload_one(p, key, token, dry_run):
+            if upload_one(p, key, token, args.dry_run):
                 ok += 1
             else:
                 print(f"  ✗ {key}")
 
-    print(f"\n{'[DRY RUN] ' if dry_run else ''}Uploaded {ok}/{total} photos to R2.")
+    print(f"\n{'[DRY RUN] ' if args.dry_run else ''}Uploaded {ok}/{total} photos to R2.")
     if missing:
         print(f"\n⚠️ {len(missing)} new businesses have NO local photos:")
         for m in missing:

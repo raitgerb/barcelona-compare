@@ -76,6 +76,14 @@ def download_photo(api_key: str, photo_ref: str, max_retries: int = 3) -> Option
 
 
 def main():
+    import argparse
+    import unicodedata
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--only", type=str, default=None,
+                        help="Comma-separated slugs to process (default: all without photos)")
+    args = parser.parse_args()
+    only = set(unicodedata.normalize("NFC", s.strip()) for s in args.only.split(",")) if args.only else None
+
     api_key = load_api_key()
     fixed = 0
     failed = 0
@@ -87,6 +95,8 @@ def main():
 
         for md_file in sorted(content_dir.glob("*.md")):
             base = md_file.stem
+            if only and unicodedata.normalize("NFC", base) not in only:
+                continue
             existing_photos = list(data_dir.glob(f"{base}-*"))
             if existing_photos:
                 continue  # Already has photos
