@@ -1,0 +1,79 @@
+---
+/**
+ * Review quotes section for detail pages.
+ * Renders top Google review excerpts + rating summary when googleReviews
+ * data exists; renders nothing otherwise (no empty sections on 94% of pages).
+ */
+import type { CollectionEntry } from 'astro:content';
+
+interface Review {
+  author: string;
+  rating: number;
+  relativeTime?: string;
+  languageCode?: string;
+  text?: string;
+}
+
+interface Props {
+  name: string;
+  googleRating?: number;
+  googleReviewCount?: number;
+  reviews: Review[];
+}
+
+const { name, googleRating, googleReviewCount, reviews } = Astro.props;
+
+// Keep reviews with substance, prefer longer texts, cap at 3.
+const shown = [...reviews]
+  .filter((r): r is Review & { text: string } => !!r.text && r.text.trim().length > 40)
+  .sort((a, b) => (b.rating - a.rating) || (b.text.length - a.text.length))
+  .slice(0, 3);
+
+const t = {
+  es: {
+    title: 'Lo que dicen los clientes',
+    based: 'basado en',
+    reviewsWord: 'reseñas en Google',
+    readAll: 'Leer todas las reseñas',
+    noReviews: '',
+  },
+  en: {
+    title: 'What clients say',
+    based: 'based on',
+    reviewsWord: 'Google reviews',
+    readAll: 'Read all reviews',
+    noReviews: '',
+  },
+};
+const lang = Astro.props && true ? 'es' : 'es';
+---
+
+{shown.length > 0 && (
+  <section class="mt-10">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <h2 class="text-xl font-bold text-stone-900">{t.es.title}</h2>
+      {(googleRating && googleReviewCount) ? (
+        <p class="text-sm text-stone-500">
+          <span class="font-bold text-stone-800">{googleRating.toFixed(1)}</span>
+          <span class="text-amber-500"> ★</span>
+          {' · '}{t.es.based} {googleReviewCount.toLocaleString('es-ES')} {t.es.reviewsWord}
+        </p>
+      ) : null}
+    </div>
+    <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+      {shown.map((r) => (
+        <figure class="bg-white rounded-xl border border-stone-200 p-5 flex flex-col">
+          <div class="text-amber-400 text-sm" aria-label={`${r.rating} de 5 estrellas`}>
+            {'★'.repeat(Math.round(r.rating))}<span class="text-stone-300">{'★'.repeat(5 - Math.round(r.rating))}</span>
+          </div>
+          <blockquote class="mt-2 text-sm text-stone-700 leading-relaxed flex-1">
+            “{(r.text as string).trim().slice(0, 220)}{(r.text as string).length > 220 ? '…' : ''}”
+          </blockquote>
+          <figcaption class="mt-3 text-xs text-stone-500">
+            {r.author}{r.relativeTime ? ` · ${r.relativeTime}` : ''}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+)}

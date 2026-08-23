@@ -2,6 +2,7 @@
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import Lightbox from '../../../../components/Lightbox.astro';
 import DetailEnhancements from '../../../../components/DetailEnhancements.astro';
+import ReviewQuotes from '../../../../components/ReviewQuotes.astro';
 import { getCollection } from 'astro:content';
 import { imagePath } from '../../../../lib/images';
 
@@ -97,6 +98,7 @@ const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
         <a href="/en/for-businesses" class="text-sm font-medium text-brand-600 hover:underline mt-1 inline-block">Claim this business →</a>
       </div>
     </div>
+    <ReviewQuotes name={data.name} googleRating={data.googleRating} googleReviewCount={data.googleReviewCount} reviews={data.googleReviews || []} />
     <DetailEnhancements category="nails" slug={slug} neighborhood={data.neighborhood} lang="en" />
   </article>
   <Lightbox imagePath={galleryPath} photoCount={5} altText={data.name} />

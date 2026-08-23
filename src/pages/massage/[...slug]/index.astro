@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Lightbox from '../../../components/Lightbox.astro';
 import DetailEnhancements from '../../../components/DetailEnhancements.astro';
+import ReviewQuotes from '../../../components/ReviewQuotes.astro';
 import { getCollection } from 'astro:content';
 import { imagePath } from '../../../lib/images';
 
@@ -201,6 +202,7 @@ const schemaOrg = {
         </a>
       </div>
     </div>
+    <ReviewQuotes name={data.name} googleRating={data.googleRating} googleReviewCount={data.googleReviewCount} reviews={data.googleReviews || []} />
     <DetailEnhancements category="massage" slug={slug} neighborhood={data.neighborhood} lang="es" />
   </article>
   <Lightbox imagePath={galleryPath} photoCount={5} altText={data.name} />
