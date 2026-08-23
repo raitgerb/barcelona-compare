@@ -6,6 +6,7 @@ phone: "620 35 23 16"
 priceIndicator: "€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 118
 googlePlaceId: "ChIJ6_4uAdW9pBIRMIr_jUqhOHk"

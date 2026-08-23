@@ -7,6 +7,7 @@ website: "https://www.ibizaposidonia.com/es/?fbclid=PAAaYWuEa20g7qZNPPds0jNQ1WGL
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 3.1
 googleReviewCount: 297
 googlePlaceId: "ChIJxSInC1OjpBIRZsbpP8Sg2vo"

@@ -9,6 +9,7 @@ hours:
   sunday: "00:00-00:00"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 1596
 googlePlaceId: "ChIJ-dP-eHGjpBIRTVQM9B_xU6o"

@@ -20,6 +20,7 @@ languages:
   - "Italiano"
   - "Português"
   - "Russian"
+  - "Inglés"
 googleRating: 4.7
 googleReviewCount: 458
 googlePlaceId: "ChIJJQYtS0GjpBIRhW7-D4e16MY"

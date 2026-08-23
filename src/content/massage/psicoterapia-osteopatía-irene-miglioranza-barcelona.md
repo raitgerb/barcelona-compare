@@ -10,6 +10,7 @@ hours:
   thursday: "14:30-18:30"
 languages:
   - "Español"
+  - "Catalán"
 googleRating: 5
 googleReviewCount: 11
 googlePlaceId: "ChIJF_3GrzHnuhIRpIjD4F9VlxQ"

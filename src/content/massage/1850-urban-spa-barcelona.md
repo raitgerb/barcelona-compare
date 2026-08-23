@@ -13,6 +13,7 @@ hours:
   thursday: "11:00-21:00"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 4.5
 googleReviewCount: 762
 googlePlaceId: "ChIJE0ur-IeipBIRHppMbpS_NHs"

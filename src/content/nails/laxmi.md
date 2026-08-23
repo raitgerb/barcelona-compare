@@ -6,6 +6,7 @@ phone: "692 92 32 27"
 priceIndicator: "€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 35
 googlePlaceId: "ChIJ-3CrVPqZpBIRuvr_nKyBcoU"

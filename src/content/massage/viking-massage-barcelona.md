@@ -13,6 +13,8 @@ hours:
   friday: "08:00-16:00"
 languages:
   - "Español"
+  - "Inglés"
+  - "Sueco"
 googleRating: 4.8
 googleReviewCount: 5
 googlePlaceId: "ChIJ2-J3YmWjpBIRI72Br-t78rk"

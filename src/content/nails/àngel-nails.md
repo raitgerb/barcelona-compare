@@ -9,7 +9,6 @@ googlePlaceId: "ChIJIVAezY2ipBIRYNHjn6dQL8Y"
 googleMapsUri: "https://maps.google.com/?cid=14280721624287400288&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA"
 primaryType: "nail_salon"
 services: []
-languages: []
 googleRating: 4.7
 googleReviewCount: 190
 googleReviews:
@@ -38,4 +37,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "I just stumbled upon this place on my travel to Barcelona and I Love my nails. The technician was very sweet and so talented. Highly recommend"
+languages:
+  - "Inglés"
 ---

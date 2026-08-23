@@ -11,7 +11,6 @@ googleMapsUri: "https://maps.google.com/?cid=8846325920910140812&g_mp=CiVnb29nbG
 primaryType: "massage"
 massageTypes: []
 services: []
-languages: []
 googleRating: 4.8
 googleReviewCount: 977
 googleReviews:
@@ -40,4 +39,6 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "The experience was wonderful, we had a couple massage. We both felt very relaxed and satisfied. We would definitely recommend and go there again. Thank you Karol and Indila 😊"
+languages:
+  - "Inglés"
 ---

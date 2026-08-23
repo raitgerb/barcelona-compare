@@ -6,6 +6,9 @@ phone: "655 94 36 37"
 priceIndicator: "€€"
 languages:
   - "Español"
+  - "Inglés"
+  - "Ruso"
+  - "Chino"
 googleRating: 4.9
 googleReviewCount: 18
 googlePlaceId: "ChIJjXSKAi6jpBIRMJyKDLeOfgw"

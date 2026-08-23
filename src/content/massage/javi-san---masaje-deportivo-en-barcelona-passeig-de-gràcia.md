@@ -6,6 +6,7 @@ phone: "678 60 10 59"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 326
 googlePlaceId: "ChIJ-QmdGByjpBIRSL1I2YNxXjk"

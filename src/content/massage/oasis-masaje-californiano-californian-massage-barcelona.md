@@ -11,7 +11,6 @@ googleMapsUri: "https://maps.google.com/?cid=5590847307206847534&g_mp=CiVnb29nbG
 primaryType: "wellness_center"
 massageTypes: []
 services: []
-languages: []
 googleRating: 4.9
 googleReviewCount: 757
 googleReviews:
@@ -40,4 +39,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "I highly recommend! I come here often, and the massages are fantastic - I feel like a new person every time I leave. They're especially good if you need to destress."
+languages:
+  - "Inglés"
 ---

@@ -14,6 +14,7 @@ hours:
   saturday: "10:00-15:00"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 4.9
 googleReviewCount: 315
 googlePlaceId: "ChIJoUjyUhijpBIRLlf9LmQOooA"

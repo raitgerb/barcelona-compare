@@ -7,6 +7,7 @@ website: "https://www.instagram.com/deporteysaludmasajes/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 49
 googlePlaceId: "ChIJ90VFLOSjpBIR41ocpZa7Xrk"

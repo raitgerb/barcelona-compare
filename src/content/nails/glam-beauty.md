@@ -12,6 +12,7 @@ hours:
   friday: "14:00-18:00"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 61
 googlePlaceId: "ChIJIZOBroijpBIR0Ag33hEGCx8"

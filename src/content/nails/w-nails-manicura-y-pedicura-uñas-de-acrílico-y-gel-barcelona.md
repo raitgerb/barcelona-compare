@@ -18,6 +18,7 @@ languages:
   - "English"
   - "Català"
   - "Français"
+  - "Inglés"
 googleRating: 4.9
 googleReviewCount: 320
 googlePlaceId: "ChIJEzyOvjijpBIR5KKdCGoPH10"

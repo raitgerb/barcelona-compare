@@ -6,6 +6,7 @@ phone: "01515 9036344"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 6
 googlePlaceId: "ChIJRwgp7tG9pBIR0_KyJ7NhIvE"

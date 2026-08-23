@@ -13,6 +13,8 @@ hours:
   friday: "10:00-20:30"
 languages:
   - "Español"
+  - "Catalán"
+  - "Inglés"
 googleRating: 4.9
 googleReviewCount: 39
 googlePlaceId: "ChIJI_6DIhqjpBIRhdPHn1dvOHk"

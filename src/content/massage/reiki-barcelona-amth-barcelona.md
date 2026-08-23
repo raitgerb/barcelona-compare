@@ -7,6 +7,7 @@ website: "http://www.reiki-barcelona.cat/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 227
 googlePlaceId: "ChIJaZtFk_aYpBIRzmWKaJJhRF4"

@@ -11,7 +11,6 @@ googleMapsUri: "https://maps.google.com/?cid=2739851078113034549&g_mp=CiVnb29nbG
 primaryType: "massage"
 massageTypes: []
 services: []
-languages: []
 googleRating: 4.7
 googleReviewCount: 98
 googleReviews:
@@ -40,4 +39,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Vanessa is a great professional. It was my first time and she took care of all my needs."
+languages:
+  - "Inglés"
 ---

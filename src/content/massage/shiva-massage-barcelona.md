@@ -15,6 +15,7 @@ hours:
   wednesday: "11:00-01:00"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 4.9
 googleReviewCount: 218
 googlePlaceId: "ChIJWRdzPNajpBIRc2qPM-YlWMM"

@@ -7,6 +7,7 @@ website: "http://www.bienestarybelleza.carrd.co/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Catalán"
 googleRating: 5
 googleReviewCount: 26
 googlePlaceId: "ChIJ651rNyajpBIRqxKpHaLvsj4"

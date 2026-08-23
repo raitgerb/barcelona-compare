@@ -11,7 +11,6 @@ googleMapsUri: "https://maps.google.com/?cid=12765618551047995456&g_mp=CiVnb29nb
 primaryType: "massage_spa"
 massageTypes: []
 services: []
-languages: []
 googleRating: 4.6
 googleReviewCount: 764
 googleReviews:
@@ -40,4 +39,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "en"
     text: "Absolutely loved this spa! I am travelling through Barcelona and the service was excellent. The masseuse was kind, knowledgeable and it was lovely to be able to shower after the massage as there was a shower in the room. Would HIGHLY recommend"
+languages:
+  - "Inglés"
 ---

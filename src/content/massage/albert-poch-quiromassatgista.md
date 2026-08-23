@@ -6,6 +6,8 @@ phone: "659 38 99 51"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Catalán"
+  - "Inglés"
 googleRating: 4.6
 googleReviewCount: 10
 googlePlaceId: "ChIJO-1as6SjpBIRHgy8jccyra4"

@@ -11,7 +11,6 @@ googleMapsUri: "https://maps.google.com/?cid=17183191477554294519&g_mp=CiVnb29nb
 primaryType: "massage_spa"
 massageTypes: []
 services: []
-languages: []
 googleRating: 4.6
 googleReviewCount: 1166
 googleReviews:
@@ -40,4 +39,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "Lucia did a very good job, I felt very comfortable with her ! The massage was not to hard and helped me relax a lot, I would definitely recommend also for not Spanish speakers ! The store is open very long what is amazing if you work long & the store is very huge and clean, prices are very good! 🤩"
+languages:
+  - "Inglés"
 ---

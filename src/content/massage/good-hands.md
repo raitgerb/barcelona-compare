@@ -7,6 +7,7 @@ website: "http://www.goodhandsbcn.com/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 102
 googlePlaceId: "ChIJeU071IG9pBIR1UGjksSmG5A"

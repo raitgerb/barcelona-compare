@@ -7,6 +7,7 @@ website: "https://calmmassagebcn-bcn.sumupstore.com/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 4.8
 googleReviewCount: 164
 googlePlaceId: "ChIJf6C5sOejpBIRSem5fK1ShJA"

@@ -6,6 +6,7 @@ phone: "662 34 94 35"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Catalán"
 googleRating: 4.7
 googleReviewCount: 32
 googlePlaceId: "ChIJN4FlA4aYpBIRgGNhemzZqOU"

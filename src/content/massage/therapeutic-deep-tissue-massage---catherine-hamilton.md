@@ -7,6 +7,7 @@ website: "http://www.catherine-hamilton.com/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 126
 googlePlaceId: "ChIJA0krdPqipBIRZntSUWehbv4"

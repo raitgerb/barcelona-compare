@@ -21,6 +21,7 @@ languages:
   - "Italiano"
   - "Português"
   - "Russian"
+  - "Inglés"
 googleRating: 4.8
 googleReviewCount: 256
 googlePlaceId: "ChIJI2EcD--ipBIRHetmy1b8vMU"

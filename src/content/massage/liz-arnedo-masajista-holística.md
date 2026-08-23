@@ -6,6 +6,8 @@ phone: "653 38 65 02"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Catalán"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 32
 googlePlaceId: "ChIJC4XKBLmjpBIRdfmgO9bQNNk"

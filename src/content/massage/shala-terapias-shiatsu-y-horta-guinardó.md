@@ -11,6 +11,7 @@ hours:
   friday: "10:00-20:00"
 languages:
   - "Español"
+  - "Catalán"
 googleRating: 5
 googleReviewCount: 84
 googlePlaceId: "ChIJb7ra_1ujpBIR5Nscmob79o0"

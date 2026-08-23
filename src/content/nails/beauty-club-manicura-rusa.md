@@ -13,6 +13,7 @@ hours:
   friday: "10:00-20:00"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 4.7
 googleReviewCount: 80
 googlePlaceId: "ChIJV23jGxajpBIRo1ukTeen-FU"

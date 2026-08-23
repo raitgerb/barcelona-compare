@@ -9,6 +9,8 @@ hours:
   monday: "09:00-12:00"
 languages:
   - "Español"
+  - "Catalán"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 39
 googlePlaceId: "ChIJF2J9Q42ZpBIRVqibLs8CON0"

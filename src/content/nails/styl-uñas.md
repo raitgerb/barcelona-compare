@@ -6,6 +6,7 @@ phone: "934 59 11 18"
 priceIndicator: "€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 4.8
 googleReviewCount: 13
 googlePlaceId: "ChIJb_BvYemipBIREI-GS9iXl5c"

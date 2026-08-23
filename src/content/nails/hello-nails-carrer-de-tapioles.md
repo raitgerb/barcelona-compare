@@ -14,6 +14,7 @@ hours:
   saturday: "10:00-14:00"
 languages:
   - "Español"
+  - "Inglés"
 googlePlaceId: "ChIJt7Et8W-jpBIRyYEjPo7jf4k"
 googleReviews:
   - author: "Valentino Barbieri"

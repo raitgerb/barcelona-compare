@@ -7,6 +7,7 @@ website: "https://realmasajes.com/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 4.9
 googleReviewCount: 34
 googlePlaceId: "ChIJjebTDpWjpBIRTe_UQfJulYY"

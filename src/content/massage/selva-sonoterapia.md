@@ -6,6 +6,7 @@ website: "http://www.selvaterapia.com/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Catalán"
 googleRating: 5
 googleReviewCount: 6
 googlePlaceId: "ChIJAV7l8AW9pBIRN1Zv2osdLxY"

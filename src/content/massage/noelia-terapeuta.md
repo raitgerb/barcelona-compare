@@ -6,6 +6,7 @@ website: "https://noeliaterapeuta.es/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Catalán"
 googleRating: 5
 googleReviewCount: 10
 googlePlaceId: "ChIJrezj_PPU7CkRBX3RF2mXRB0"

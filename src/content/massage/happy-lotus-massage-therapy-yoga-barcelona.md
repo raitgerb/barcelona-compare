@@ -7,6 +7,7 @@ website: "http://happylotusbarcelona.com/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 4.9
 googleReviewCount: 119
 googlePlaceId: "ChIJx39kc_qipBIRikkxEeEfEJ4"

@@ -12,6 +12,7 @@ hours:
   thursday: "10:00-18:00"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 94
 googlePlaceId: "ChIJE1-PxXujpBIRUTOctkL2XdE"

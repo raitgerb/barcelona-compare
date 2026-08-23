@@ -17,6 +17,7 @@ languages:
   - "Español"
   - "English"
   - "Français"
+  - "Inglés"
 googleRating: 4.9
 googleReviewCount: 116
 googlePlaceId: "ChIJ6XduVCSjpBIRsI99RLAUTeY"

@@ -13,6 +13,8 @@ hours:
   friday: "10:00-20:00"
 languages:
   - "Español"
+  - "Inglés"
+  - "Japonés"
 googleRating: 4.7
 googleReviewCount: 39
 googlePlaceId: "ChIJHdqc4ImYpBIRHDpoNsonWnM"

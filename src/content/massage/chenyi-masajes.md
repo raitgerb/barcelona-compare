@@ -13,6 +13,8 @@ hours:
   saturday: "10:00-20:00"
 languages:
   - "Español"
+  - "Inglés"
+  - "Chino"
 googleRating: 5
 googleReviewCount: 4
 googlePlaceId: "ChIJ2bGrFU_TyiARTWPAoneKi2o"

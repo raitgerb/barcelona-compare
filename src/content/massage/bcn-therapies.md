@@ -7,6 +7,7 @@ website: "https://www.bcntherapies.com/?utm_source=google&utm_medium=wix_google_
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 50
 googlePlaceId: "ChIJp0-9aPujpBIRcd4nDo1NDgQ"

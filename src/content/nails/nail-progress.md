@@ -7,6 +7,7 @@ website: "https://www.instagram.com/nailprogress.academia"
 priceIndicator: "€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 190
 googlePlaceId: "ChIJpWHv59yZpBIRNTsxVQYJcY0"

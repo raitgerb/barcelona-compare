@@ -6,6 +6,7 @@ phone: "603 95 37 52"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 9
 googlePlaceId: "ChIJ8wztPr2jpBIR3pn_W4pQMuE"

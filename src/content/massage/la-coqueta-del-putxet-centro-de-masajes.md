@@ -7,6 +7,7 @@ website: "https://purobienestar.net/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 95
 googlePlaceId: "ChIJtxyifbeZpBIRCtTyvUshNwg"

@@ -7,6 +7,7 @@ website: "https://www.cosiment.cat/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Catalán"
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJD4_mWCKjpBIRjio9IffdVKc"

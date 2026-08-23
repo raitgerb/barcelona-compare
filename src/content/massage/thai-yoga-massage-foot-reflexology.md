@@ -10,6 +10,7 @@ hours:
   tuesday: "17:00-20:00"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 32
 googlePlaceId: "ChIJwcVuqfqZpBIRDQyWTG0fRl0"

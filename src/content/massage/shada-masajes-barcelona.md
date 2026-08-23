@@ -11,7 +11,6 @@ googleMapsUri: "https://maps.google.com/?cid=16341394262631164726&g_mp=CiVnb29nb
 primaryType: "massage"
 massageTypes: []
 services: []
-languages: []
 googleRating: 4.7
 googleReviewCount: 80
 googleReviews:
@@ -40,4 +39,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "A Deeply Sensual Touch of Tantric Excellence — My 2 back to back 90-minute Luxury Sessions with Eric from Shada Masajes.  Intuitive, deeply relaxing, and profoundly tantric—Eric delivered one of the most remarkable sensual massage experiences I’ve ever had, right in the immaculately curated treatment rooms of Shada Masajes shop at the heart of Barcelona. The booking experience and communications with the shop was remarkable and professional. As someone who’s received massages across the globe over many years, I can say with confidence that my experience with Eric’s flowing finesse, and thoughtful approach using his entire body made this session a standout.  Eric’s professional approach and genuine gesture to create a safe and personal space  was notable from the sensual start of the session through to the relaxing tantric massage very well complemented by the erotic shower. The very clean and zen space Shada provided enhances the overall experience. Eric was not only one fine soul but very down to earth and charming too throughout the interaction and I felt truly honoured to have been looked after by such a professional and talented masseur like Eric who had put my satisfaction first in both occasions. His ability to adapt and innovate his approach was very apparent when I booked again with Eric the following day where he outstandingly outdid himself. I owed my peaceful sleeps for those 2 days to the Shada shop and their tall, strong and beautiful Eric.  His seamless fusion of traditional deep tissue and unique tantric techniques—gliding through the body with a rhythm that kept me in a blissful state throughout. It wasn’t just a massage; it was a deeply sensory experience that touched body, mind, and soul.  Highly recommended for anyone seeking something truly special when living or visiting Barcelona—Eric’s warmth and professionalism make all the difference.  Thank you once again, Eric and Shada Masajes. I look forward to the next time our paths cross as you’re a good reason to visit Barcelona again. 5 Stars 🌟 🌟🌟🌟🌟🙏"
+languages:
+  - "Inglés"
 ---

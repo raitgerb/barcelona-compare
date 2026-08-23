@@ -6,6 +6,7 @@ phone: "635 87 06 70"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 4.9
 googleReviewCount: 37
 googlePlaceId: "ChIJs77txBWjpBIRfIEnlKJCtAM"

@@ -9,7 +9,6 @@ googlePlaceId: "ChIJWZD2Ap2jpBIRId6p7X4Oh1Y"
 googleMapsUri: "https://maps.google.com/?cid=6234968147433741857&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA"
 primaryType: "nail_salon"
 services: []
-languages: []
 googleRating: 4.8
 googleReviewCount: 161
 googleReviews:
@@ -38,4 +37,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Introducing newly opened nail salons💅 The owner of the shop she is very cute and friendly.  I'm definitely going again😍"
+languages:
+  - "Inglés"
 ---

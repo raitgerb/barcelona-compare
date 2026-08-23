@@ -6,6 +6,7 @@ phone: "637 85 45 03"
 priceIndicator: "€€"
 languages:
   - "Español"
+  - "Catalán"
 googleRating: 4.8
 googleReviewCount: 15
 googlePlaceId: "ChIJUewyktSipBIRJfm6TGOB-2U"

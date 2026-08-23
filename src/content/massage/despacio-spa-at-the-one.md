@@ -19,6 +19,7 @@ languages:
   - "Français"
   - "Italiano"
   - "Português"
+  - "Inglés"
 googleRating: 4.9
 googleReviewCount: 59
 googlePlaceId: "ChIJAweFnpSipBIRvcGuchBAChI"

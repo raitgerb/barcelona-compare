@@ -14,6 +14,8 @@ hours:
   saturday: "16:00-20:00"
 languages:
   - "Español"
+  - "Ruso"
+  - "Ucraniano"
 googleRating: 5
 googleReviewCount: 14
 googlePlaceId: "ChIJpaPx3cWjpBIRv2oaQXnTvoE"

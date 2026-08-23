@@ -12,6 +12,7 @@ hours:
   saturday: "11:00-13:30"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 28
 googlePlaceId: "ChIJGZz1q729pBIRMuVSHM5pQ9k"

@@ -6,6 +6,7 @@ phone: "644 05 07 49"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 27
 googlePlaceId: "ChIJCcbHAl-jpBIRHtgIkIIoEw8"

@@ -7,6 +7,7 @@ website: "http://www.toninails2vietnam.com/"
 priceIndicator: "€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 4.6
 googleReviewCount: 714
 googlePlaceId: "ChIJcdjaWwCjpBIRDgkDNEytSHA"

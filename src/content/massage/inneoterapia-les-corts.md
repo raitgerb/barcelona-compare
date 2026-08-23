@@ -7,6 +7,7 @@ website: "https://inneoterapia.com/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Catalán"
 googleRating: 5
 googleReviewCount: 38
 googlePlaceId: "ChIJn8GTdHmYpBIRfJihvdX2--g"

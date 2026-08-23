@@ -11,7 +11,6 @@ googleMapsUri: "https://maps.google.com/?cid=5618405362320290287&g_mp=CiVnb29nbG
 primaryType: "massage"
 massageTypes: []
 services: []
-languages: []
 googleRating: 4.8
 googleReviewCount: 479
 googleReviews:
@@ -40,4 +39,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "I had 90 min massage with Tigi and it was incredible good! She is really nice and sweet, feeling your body’s needs and adapting the intensity and pressure according to that. I would recomend her whithout hesitations !"
+languages:
+  - "Inglés"
 ---

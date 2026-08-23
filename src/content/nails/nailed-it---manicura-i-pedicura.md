@@ -15,6 +15,7 @@ hours:
 languages:
   - "Español"
   - "Français"
+  - "Inglés"
 googleRating: 4.9
 googleReviewCount: 116
 googlePlaceId: "ChIJvQ0LAqijpBIRmwLtu19TyT4"

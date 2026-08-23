@@ -7,6 +7,7 @@ website: "http://anasalgadoquiromasaje.com/"
 priceIndicator: "€€€"
 languages:
   - "Español"
+  - "Inglés"
 googleRating: 5
 googleReviewCount: 5
 googlePlaceId: "ChIJxQnzdbiZpBIRl5MrDdUDbH0"
