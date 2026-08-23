@@ -65,6 +65,7 @@ const schemaOrg = {
 <BaseLayout
   title={`${data.name} — Masajes en ${data.neighborhood}`}
   description={`${data.name} en ${data.neighborhood}, Barcelona. ${data.googleRating ? `Valoración: ${data.googleRating}/5 (${data.googleReviewCount} reseñas).` : ''}`}
+  image={`${galleryPath}-0.jpg`}
   lang="es"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)}></script>

@@ -61,9 +61,9 @@ const breadcrumbSchema = {
 <nav class="text-sm text-stone-500 mb-6" aria-label="breadcrumb">
   <a href={isEn ? '/en' : '/'} class="hover:text-stone-700">{isEn ? 'Home' : 'Inicio'}</a>
   <span class="mx-1.5 text-stone-300">/</span>
-  <a href={`${basePath}/`} class="hover:text-stone-700">{catLabel}</a>
+  <a href="/barrio/" class="hover:text-stone-700">{isEn ? 'Neighborhoods' : 'Barrios'}</a>
   <span class="mx-1.5 text-stone-300">/</span>
-  <span class="text-stone-700 font-medium">{neighborhood}</span>
+  <a href={`/barrio/${neighborhood.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')}/`} class="hover:text-stone-700">{neighborhood}</a>
 </nav>
 
 {(prev || next) && (
