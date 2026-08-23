@@ -123,13 +123,7 @@ const faqSchema = {
 
     <header>
       <h1 class="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">Los mejores {meta.label.toLowerCase()} en {nbName}</h1>
-      <p class="mt-4 text-stone-600 leading-relaxed">
-        Hemos comparado los <strong>{ranked.length} {meta.plural}</strong> de {nbName}
-        según sus valoraciones reales de Google{avg ? `, con una nota media de <strong>${avg}★</strong>` : ''}
-        y más de <strong>{totalReviews.toLocaleString('es-ES')} reseñas</strong>.
-        El ranking pondera la nota y el número de reseñas para que no gane un 5★ con solo tres opiniones.
-        {topLangs.length > 0 && `Idiomas más comunes: ${topLangs.map(([l]) => l.toLowerCase()).join(', ')}.`}
-      </p>
+      <p class="mt-4 text-stone-600 leading-relaxed" set:html={`Hemos comparado los <strong>${ranked.length} ${meta.plural}</strong> de ${nbName} según sus valoraciones reales de Google${avg ? `, con una nota media de <strong>${avg}★</strong>` : ''} y más de <strong>${totalReviews.toLocaleString('es-ES')} reseñas</strong>. El ranking pondera la nota y el número de reseñas para que no gane un 5★ con solo tres opiniones.${topLangs.length > 0 ? ` Idiomas más comunes: ${topLangs.map(([l]) => l.toLowerCase()).join(', ')}.` : ''}`} />
       <div class="flex flex-wrap gap-6 mt-6 text-sm">
         <div><span class="block text-2xl font-bold text-stone-900">{ranked.length}</span><span class="text-stone-500">{meta.plural}</span></div>
         {avg && <div><span class="block text-2xl font-bold text-stone-900">{avg}★</span><span class="text-stone-500">valoración media</span></div>}
