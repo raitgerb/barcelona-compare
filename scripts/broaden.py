@@ -96,6 +96,12 @@ SEARCH_VARIANTS = {
 # Grid tile size in degrees (~1km at this latitude)
 GRID_STEP = 0.012  # ~1.1km N-S, ~0.9km E-W
 
+# ─── Run controls ────────────────────────────────────────────────────────
+MAX_BUSINESSES = None  # set via --max N to limit enrichment
+
+# API call counters (for cost reporting)
+CALL_COUNTS = {"text_search": 0, "nearby_search": 0, "details": 0, "photo": 0}
+
 # ─── API Helpers ──────────────────────────────────────────────────────────
 
 def load_api_key():
@@ -131,6 +137,7 @@ def places_text_search(query: str) -> dict:
         },
         "pageSize": 20,
     }
+    CALL_COUNTS["text_search"] += 1
     resp = requests.post(url, headers=headers, json=body, timeout=30)
     resp.raise_for_status()
     return resp.json()
@@ -154,6 +161,7 @@ def places_nearby_search(lat: float, lng: float, included_types: list[str]) -> d
             }
         },
     }
+    CALL_COUNTS["nearby_search"] += 1
     resp = requests.post(url, headers=headers, json=body, timeout=30)
     resp.raise_for_status()
     return resp.json()
@@ -167,19 +175,26 @@ def places_details(place_id: str) -> dict:
         "X-Goog-Api-Key": API_KEY,
         "X-Goog-FieldMask": "id,displayName,formattedAddress,rating,userRatingCount,regularOpeningHours,priceLevel,types,nationalPhoneNumber,websiteUri,googleMapsUri,location,photos",
     }
+    CALL_COUNTS["details"] += 1
     resp = requests.get(url, headers=headers, timeout=30)
     resp.raise_for_status()
     return resp.json()
 
 
 def download_photo(photo_ref: str) -> Optional[bytes]:
-    """Download photo, following redirects."""
+    """Download photo, following redirects, with retry on 429."""
     url = f"https://places.googleapis.com/v1/{photo_ref}/media"
     params = {"maxWidthPx": 800}
     headers = {"X-Goog-Api-Key": API_KEY}
-    resp = requests.get(url, headers=headers, params=params, timeout=30, allow_redirects=True)
-    if resp.status_code == 200 and len(resp.content) > 1000:
-        return resp.content
+    for attempt in range(3):
+        resp = requests.get(url, headers=headers, params=params, timeout=30, allow_redirects=True)
+        CALL_COUNTS["photo"] += 1
+        if resp.status_code == 200 and len(resp.content) > 1000:
+            return resp.content
+        if resp.status_code == 429:
+            time.sleep(2 ** attempt)  # exponential backoff
+            continue
+        break
     return None
 
 # ─── Data Helpers ─────────────────────────────────────────────────────────
@@ -460,6 +475,9 @@ def enrich_and_collect(new_places: dict):
     print("=" * 60)
 
     for i, (pid, (place, cat)) in enumerate(new_places.items()):
+        if MAX_BUSINESSES and i >= MAX_BUSINESSES:
+            print(f"\n  ⏹ Reached --max {MAX_BUSINESSES} limit. Stopping enrichment.")
+            break
         name = place.get("displayName", {}).get("text", "Unknown")
         print(f"\n  [{i+1}/{len(new_places)}] {name} ({cat})")
 
@@ -471,9 +489,17 @@ def enrich_and_collect(new_places: dict):
             detail = place
         time.sleep(0.3)
 
+        # Compute the final slug up front (append a place_id suffix on name
+        # collision) so photos, markdown and JSON all share the SAME slug.
+        # Otherwise two same-named businesses overwrite each other's photos.
+        slug = slugify(name)
+        cat_dir = CONTENT_DIR / cat
+        cat_dir.mkdir(parents=True, exist_ok=True)
+        if (cat_dir / f"{slug}.md").exists():
+            slug = f"{slug}-{pid[-6:]}"
+
         # Download photos
         photos = detail.get("photos", [])
-        slug = slugify(name)
         photo_dir = DATA_DIR / cat
         photo_dir.mkdir(parents=True, exist_ok=True)
         photos_downloaded = 0
@@ -502,16 +528,12 @@ def enrich_and_collect(new_places: dict):
                     photos_downloaded += 1
             except Exception as e:
                 print(f"    ⚠ Photo {j} failed: {e}")
-            time.sleep(0.2)
+            time.sleep(1.0)
 
         print(f"    ✓ {photos_downloaded} photos downloaded")
 
-        # Write markdown
-        cat_dir = CONTENT_DIR / cat
-        cat_dir.mkdir(parents=True, exist_ok=True)
+        # Write markdown (slug already collision-safe)
         md_path = cat_dir / f"{slug}.md"
-        if md_path.exists():
-            md_path = cat_dir / f"{slug}-{pid[-6:]}.md"
         md_content = place_to_markdown(detail, cat)
         md_path.write_text(md_content)
 
@@ -527,6 +549,12 @@ def enrich_and_collect(new_places: dict):
 # ─── Main ─────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--max", type=int, default=None, help="Limit enrichment to N businesses")
+    args = parser.parse_args()
+    MAX_BUSINESSES = args.max
+
     load_api_key()
 
     print("🔍 Loading existing place IDs...")
@@ -558,5 +586,14 @@ if __name__ == "__main__":
     print(f"   Existing: {len(existing_ids)} | New: {len(all_new)} | Total after: {len(existing_ids) + len(all_new)}")
 
     enrich_and_collect(all_new)
+
+    print(f"\n📈 API CALL SUMMARY:")
+    print(f"   Text Search:   {CALL_COUNTS['text_search']} (Pro tier, free cap 5,000)")
+    print(f"   Nearby Search: {CALL_COUNTS['nearby_search']} (Pro tier, free cap 5,000)")
+    print(f"   Place Details: {CALL_COUNTS['details']} (Enterprise tier)")
+    print(f"   Photo media:   {CALL_COUNTS['photo']} (Enterprise tier)")
+    pro_total = CALL_COUNTS['text_search'] + CALL_COUNTS['nearby_search']
+    ent_total = CALL_COUNTS['details'] + CALL_COUNTS['photo']
+    print(f"   → Pro tier: {pro_total} calls | Enterprise tier: {ent_total} calls (shared 1,000 free cap)")
 
     print(f"\n✅ Done! Run 'npm run build' to rebuild, then commit and push to deploy.")

@@ -43,10 +43,11 @@ NAIL_EXCLUDE_KEYWORDS = [
 ]
 
 MASSAGE_KEEP_KEYWORDS = [
-    "massage", "masaj", "quiromas", "fisioterap",
-    "osteopat", "reflexolog", "shiatsu", "bienestar",
+    "massage", "masaj", "massatg", "masatg", "quiromas", "fisioterap",
+    "osteopat", "osteo", "reflexolog", "shiatsu", "bienestar", "wellness",
     "terap", "relax", "spa", "hammam", "sauna",
-    "drenaje", "linfatic", "linfàtic",
+    "drenaje", "linfatic", "linfàtic", "lymph", "bodywork",
+    "tantr", "acupuntur",
 ]
 
 MASSAGE_EXCLUDE_KEYWORDS = [
