@@ -274,15 +274,20 @@ def compute_price(place: dict, category: str) -> str:
     return "€€" if category == "nails" else "€€€"
 
 
+def yaml_safe(s: str) -> str:
+    """Make a string safe for a double-quoted YAML scalar (strip inner quotes/newlines)."""
+    return s.replace('"', "'").replace("\n", " ").strip()
+
+
 def place_to_markdown(place: dict, category: str) -> str:
     """Convert enriched Place Details to Astro content markdown."""
-    name = place.get("displayName", {}).get("text", "Unknown")
-    address = place.get("formattedAddress", "Barcelona")
+    name = yaml_safe(place.get("displayName", {}).get("text", "Unknown"))
+    address = yaml_safe(place.get("formattedAddress", "Barcelona"))
     neighborhood = infer_neighborhood(address)
     rating = place.get("rating")
     review_count = place.get("userRatingCount")
-    phone = place.get("nationalPhoneNumber", "")
-    website = place.get("websiteUri", "")
+    phone = yaml_safe(place.get("nationalPhoneNumber", ""))
+    website = yaml_safe(place.get("websiteUri", ""))
     place_id = place.get("id", "")
     price = compute_price(place, category)
     hours = parse_hours(place.get("regularOpeningHours", {}))

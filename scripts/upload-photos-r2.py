@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-"""Upload new photos from data/ to Cloudflare R2.
+"""Upload photos for newly-collected businesses from data/ to Cloudflare R2.
 
-Uploads photos modified today (or all with --all) to the R2 bucket, mirroring
-the local filename to the object key (images/{cat}/{slug}-{idx}.jpg).
-
-Also reports content businesses that have no local photos (name-collision cases
-or photo-download failures) so they can be flagged.
+Iterates over UNTRACKED content files (businesses not yet committed), finds their
+photos in data/, and uploads each to R2 at images/{cat}/{slug}-{idx}.jpg.
 
 Usage:
     python scripts/upload-photos-r2.py [--dry-run] [--all]
@@ -13,7 +10,6 @@ Usage:
 import os
 import subprocess
 import sys
-from datetime import datetime, date
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
@@ -42,16 +38,36 @@ def load_token():
     raise RuntimeError("No Cloudflare R2 token found (add CLOUDFLARE_R2_TOKEN to .env)")
 
 
-def upload_one(local: Path, key: str, token: str, dry_run: bool) -> bool:
+def get_slugs(untracked_only):
+    """Return set of (cat, slug) to upload photos for."""
+    if not untracked_only:
+        slugs = set()
+        for cat in ("nails", "massage"):
+            for md in (CONTENT_DIR / cat).glob("*.md"):
+                slugs.add((cat, md.stem))
+        return slugs
+    proc = subprocess.run(
+        ["git", "-c", "core.quotePath=false", "ls-files", "--others",
+         "--exclude-standard", "src/content/*/*.md"],
+        capture_output=True, text=True, cwd=ROOT,
+    )
+    slugs = set()
+    for line in proc.stdout.split("\n"):
+        line = line.strip()
+        if not line:
+            continue
+        parts = line.split("/")
+        if len(parts) >= 4:
+            slugs.add((parts[2], parts[3][:-3]))  # strip .md
+    return slugs
+
+
+def upload_one(local, key, token, dry_run):
     if dry_run:
         return True
-    cmd = [
-        "npx", "--yes", "wrangler", "r2", "object", "put",
-        f"{BUCKET}/{key}",
-        "--file", str(local),
-        "--content-type", "image/jpeg",
-        "--remote",
-    ]
+    cmd = ["npx", "--yes", "wrangler", "r2", "object", "put",
+           f"{BUCKET}/{key}", "--file", str(local),
+           "--content-type", "image/jpeg", "--remote"]
     env = {**os.environ, "CLOUDFLARE_API_TOKEN": token}
     try:
         r = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=120)
@@ -64,17 +80,17 @@ def main():
     dry_run = "--dry-run" in sys.argv
     upload_all = "--all" in sys.argv
     token = load_token()
-
-    today_start = datetime.combine(date.today(), datetime.min.time()).timestamp()
+    slugs = get_slugs(untracked_only=not upload_all)
 
     total = ok = 0
-    for cat in ("nails", "massage"):
+    missing = []
+    for cat, slug in sorted(slugs):
         data_cat = DATA_DIR / cat
-        if not data_cat.exists():
+        photos = sorted(data_cat.glob(f"{slug}-*.jpg"))
+        if not photos:
+            missing.append(f"{cat}/{slug}")
             continue
-        for p in sorted(data_cat.glob("*.jpg")):
-            if not upload_all and p.stat().st_mtime < today_start:
-                continue
+        for p in photos:
             key = f"images/{cat}/{p.name}"
             total += 1
             if upload_one(p, key, token, dry_run):
@@ -83,17 +99,8 @@ def main():
                 print(f"  ✗ {key}")
 
     print(f"\n{'[DRY RUN] ' if dry_run else ''}Uploaded {ok}/{total} photos to R2.")
-
-    # Report content businesses with no local photos (collision / download failures)
-    missing = []
-    for cat in ("nails", "massage"):
-        content_cat = CONTENT_DIR / cat
-        data_cat = DATA_DIR / cat
-        for md in sorted(content_cat.glob("*.md")):
-            if not list(data_cat.glob(f"{md.stem}-*.jpg")):
-                missing.append(f"{cat}/{md.stem}")
     if missing:
-        print(f"\n⚠️ {len(missing)} businesses have NO local photos (collision or download failure):")
+        print(f"\n⚠️ {len(missing)} new businesses have NO local photos:")
         for m in missing:
             print(f"   - {m}")
 
