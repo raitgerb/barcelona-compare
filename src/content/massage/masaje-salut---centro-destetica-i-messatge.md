@@ -17,4 +17,30 @@ languages:
 googleRating: 5
 googleReviewCount: 2
 googlePlaceId: "ChIJHauGjQijpBIR6BW-kB4zKzk"
+googleReviews:
+  - author: "Andres Ryan"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "en"
+    text: "Not even two blocks from my apartment and I can hop over and decompress for half an hour and feel so much better after. Would go back. My masseuse was great. Wish they had head pillows that attached to their beds but I was satisfied with the quality of the massage regardless. The girls will take care of you and they take cash or card, but obviously prefer cash. 11/10"
+  - author: "Martina Lococo"
+    rating: 1
+    relativeTime: "a month ago"
+    languageCode: "es"
+    text: "Entre a este sitio creyendo que era un masaje normal. Pedí masaje de pies de diez minutos. Me quisieron cobrar 15€ por pagar con tarjeta (50% de recargo) les dije que no. Me hicieron acostar en una cama donde no sé cuántas cosas se habrán hecho sin limpieza. El masaje de pies? El peor de mi vida."
+  - author: "Joaquin"
+    rating: 5
+    relativeTime: "7 months ago"
+    languageCode: "es"
+    text: "estuve con lisa muy bien y muy simpática y guapa"
+  - author: "Lahcen Aissa"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: ""
+    text: ""
+  - author: "Adip M Zaman"
+    rating: 5
+    relativeTime: "8 months ago"
+    languageCode: ""
+    text: ""
 ---

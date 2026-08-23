@@ -17,4 +17,25 @@ languages:
 googleRating: 3.3
 googleReviewCount: 4
 googlePlaceId: "ChIJx5C_kbOjpBIRbdET-9ks6XA"
+googleReviews:
+  - author: "Ramsha Sohail"
+    rating: 1
+    relativeTime: "4 weeks ago"
+    languageCode: "en"
+    text: "Terrible massage technique. Doesn’t know any type of massage. The staff was rude and they had bed bugs. One bed bug literally came home with my hair."
+  - author: "JOSE LUIS MASIAS TRIVIÑO"
+    rating: 5
+    relativeTime: "4 months ago"
+    languageCode: ""
+    text: ""
+  - author: "Domi Mus"
+    rating: 3
+    relativeTime: "6 months ago"
+    languageCode: ""
+    text: ""
+  - author: "guillaumee goncalves"
+    rating: 4
+    relativeTime: "2 years ago"
+    languageCode: ""
+    text: ""
 ---

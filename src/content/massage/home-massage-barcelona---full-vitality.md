@@ -18,4 +18,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJmQtrX-WjpBIRij_224frxn4"
+googleReviews:
+  - author: "Iasmi Sabau"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "El mejor servicio de masaje a domicilio de Barcelona,las terapeutas son muy profesionales y la experiencia es un oasis de relajacion y paz,muchísimas gracias!"
 ---

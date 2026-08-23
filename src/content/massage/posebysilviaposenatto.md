@@ -18,4 +18,30 @@ languages:
 googleRating: 5
 googleReviewCount: 8
 googlePlaceId: "ChIJJ3xSQdeZpBIRDfN14wg3GmY"
+googleReviews:
+  - author: "Jhuly Cáceres Herrera"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Las manos de Silvia hacen milagros , súper contenta con los tratamientos, te asesora en todo momento. Además se preocupa por que sea los resultados, desde el primer día. Muy profesional, lo repetiré una y mil veces ...😊"
+  - author: "rafael López"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Gran profesional con sus tratamientos, lo recomiendo a vosotros."
+  - author: "Antonia Pinkas"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Muy buena profesional!!,  recomendada al mil, excelente servicio atención y lo mejor los resultados. 👍🏼👍🏼👍🏼👍🏼👏🏼💯💯💯"
+  - author: "Álvaro Martin"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Una excelente terapeuta y persona. Muy recomendable ⚡️ Sin lugar a dudas toda una luchadora"
+  - author: "Mencha Bolaños"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Excelentes tratamientos, me hice dermapen y maderoterapia, me encantó!!!!"
 ---

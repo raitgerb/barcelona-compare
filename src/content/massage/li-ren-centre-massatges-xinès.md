@@ -18,4 +18,30 @@ languages:
 googleRating: 4.8
 googleReviewCount: 5
 googlePlaceId: "ChIJ_5Yj21WjpBIRZAzPx_Gwyo4"
+googleReviews:
+  - author: "Jing"
+    rating: 5
+    relativeTime: "7 months ago"
+    languageCode: "es"
+    text: "¡Excelente servicio, masajes profesionales y un ambiente agradable! ¡Definitivamente vale la pena volver!"
+  - author: "Carlos Jesus"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "Un gran servicio y esperada atención. Volvería sin duda. Muy recomendable."
+  - author: "Chema"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Un trato muy cordial y con mucha profesionalidad"
+  - author: "taller fsoto"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Muy buen trato y fenomenal !!"
+  - author: "María Paz Genisio"
+    rating: 4
+    relativeTime: "2 months ago"
+    languageCode: "es"
+    text: "El masaje de Angie EXCELENTE. La ambientación del lugar no me gustó y hubiera preferido recibir el masaje en una camilla con agujero para la cara, no en una cama. De igual manera volveré"
 ---

@@ -17,4 +17,20 @@ languages:
 googleRating: 5
 googleReviewCount: 3
 googlePlaceId: "ChIJhUN-Te-jpBIReP6n9xF659I"
+googleReviews:
+  - author: "郭强"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "zh"
+    text: "非常不错一次体验，很舒服"
+  - author: "Robin Laforest"
+    rating: 5
+    relativeTime: "11 months ago"
+    languageCode: "fr"
+    text: "Incroyable moment passer massage très agréable"
+  - author: "hefang tong"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Mu y bien"
 ---

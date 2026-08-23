@@ -17,4 +17,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJac-Y_bajpBIR2NGnSi-ThG0"
+googleReviews:
+  - author: "sonia araneda"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "Carlos es un tremendo terapeuta. Me ha dado otros puntos de vista y perspectivas que jamás habría propuesto en mi cabeza acerca de situaciones y aconteceres que me preocupaban. Todo lo que me ha dicho me hace muchísimo sentido y es muy nutritivo cada vez que tengo una sesión con él. Me ha ayudado bastante, lo recomiendo al cien por ciento."
 ---

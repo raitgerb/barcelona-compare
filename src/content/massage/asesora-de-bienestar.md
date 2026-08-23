@@ -18,4 +18,10 @@ languages:
 googleRating: 1
 googleReviewCount: 1
 googlePlaceId: "ChIJWevSFemfpBIRKq_cR2Xow60"
+googleReviews:
+  - author: "Kiko vega"
+    rating: 1
+    relativeTime: "4 years ago"
+    languageCode: ""
+    text: ""
 ---

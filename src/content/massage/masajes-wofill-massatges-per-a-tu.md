@@ -18,4 +18,25 @@ languages:
 googleRating: 4
 googleReviewCount: 4
 googlePlaceId: "ChIJHeTpc9CZpBIRZYs36j6un3E"
+googleReviews:
+  - author: "Sergi Pons"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "Hoy justo he probado el masaje descontracturante y ha sido una muy buena experiencia. Al margen de transmitir profesionalidad me ha gustado como se preocupa por entender lo que necesita la persona para adaptarse a ello. Muy atento y amable en todo momento. Un descubrimiento que merece la pena. Volveré seguro y lo recomiendo sin duda."
+  - author: "Taís Marcos"
+    rating: 5
+    relativeTime: "11 months ago"
+    languageCode: "ca"
+    text: "Una experiència fantàstica. Molt atent i professional. Hi he tornat vàries vegades i sempre surto molt satisfeta. Ho recomano 100%."
+  - author: "Pablo"
+    rating: 1
+    relativeTime: "11 months ago"
+    languageCode: "es"
+    text: "Experiencia regular masaje normal precio excesivo"
+  - author: "Rodrigo Kong"
+    rating: 5
+    relativeTime: "11 months ago"
+    languageCode: "es"
+    text: "Excelente profesional y atento. Salí renovado."
 ---

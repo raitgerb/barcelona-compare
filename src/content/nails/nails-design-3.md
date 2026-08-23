@@ -17,4 +17,30 @@ languages:
 googleRating: 4.8
 googleReviewCount: 64
 googlePlaceId: "ChIJP27kIwCjpBIRtsWtvn_PqVk"
+googleReviews:
+  - author: "Anna OD"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "en"
+    text: "The most lovely experience, the team here made it so special for me and my family while they were visiting here in Barcelona. So  nice in here, so clean and the most beautiful sets of nails 💛"
+  - author: "Emma Johnson"
+    rating: 2
+    relativeTime: "2 months ago"
+    languageCode: "en"
+    text: "Nail services are just ok, but not as thorough as I prefer. The lack of time management and attention to detail isn’t worth your time. I didn’t get what I asked for even after being there over an hour and a half. I unfortunately wouldn’t go back."
+  - author: "Minh Tan Vo"
+    rating: 5
+    relativeTime: "2 weeks ago"
+    languageCode: "en"
+    text: "excellent service! 😍. Everything was perfect!"
+  - author: "Như Quỳnh Trần"
+    rating: 5
+    relativeTime: "3 months ago"
+    languageCode: "en"
+    text: "Good take care service!"
+  - author: "Nathalia Tomazi"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "en"
+    text: "Amazing experience and so relaxing!!!!"
 ---

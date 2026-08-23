@@ -23,4 +23,30 @@ services:
   - name: "Reflexología podal"
   - name: "Masaje en pareja"
   - name: "Masaje balinés"
+googleReviews:
+  - author: "Jaagou Talent Manuals"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "en"
+    text: "Thank you for this extremely good massage! 🙏 Alejandra knows exactly how to massage the critical areas and points in such a way that the positive effect occurs immediately. Positive spirit, high level professionalism and competence are perfectly combined. Impressive! Just a great experience. ✨"
+  - author: "Priya K"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "en"
+    text: "Best massage. Go."
+  - author: "Pietro Parisi"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "en"
+    text: "Excellent"
+  - author: "David Quesada Ruiz"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Muchas gracias David por este increíble masaje. Cierto es que estaba muy tenso después de un largo viaje. Repetiré con toda seguridad ya que tanto David como la recepcionista que me atendió son grandes profesionales y el centro es espectacular. Gracias de verdad."
+  - author: "Frandey Ruiz Mira"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Es un centro muy organizado, con buena energía, y excelentes profesionales. Regresare pronto. Realmente es genial 😍"
 ---

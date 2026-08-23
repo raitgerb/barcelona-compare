@@ -18,4 +18,15 @@ languages:
 googleRating: 5
 googleReviewCount: 2
 googlePlaceId: "ChIJkxL8cU-AoxIRc4z5Si9jOt4"
+googleReviews:
+  - author: "VICTOR"
+    rating: 5
+    relativeTime: "6 years ago"
+    languageCode: "en"
+    text: "Wonderful massage!!.You really relaxed all my body and my mind. 🙏god professional. Thank you."
+  - author: "Gary P Watkins"
+    rating: 5
+    relativeTime: "9 years ago"
+    languageCode: ""
+    text: ""
 ---

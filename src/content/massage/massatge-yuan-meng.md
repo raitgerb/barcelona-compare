@@ -17,4 +17,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJ_f0-LZ2ZpBIRA6-T60DMCmk"
+googleReviews:
+  - author: "Luciano Verdial López"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "Masaje muy bueno, chica muy simpática, vale la pena visitarla."
 ---

@@ -17,4 +17,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJWdaY3HmjpBIRDJFdojz5WPU"
+googleReviews:
+  - author: "ayub amena"
+    rating: 5
+    relativeTime: "9 months ago"
+    languageCode: ""
+    text: ""
 ---

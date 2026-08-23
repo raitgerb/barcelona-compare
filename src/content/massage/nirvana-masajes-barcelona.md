@@ -18,4 +18,15 @@ languages:
 googleRating: 5
 googleReviewCount: 2
 googlePlaceId: "ChIJM37btDGjpBIR7Kvl_y1BQ48"
+googleReviews:
+  - author: "Laura Vera"
+    rating: 5
+    relativeTime: "4 years ago"
+    languageCode: "es"
+    text: "Fui con mi pareja esta semana y nos encantó la atención de la masajista. El sitio es limpio y me encanta como olía. Totalmente recomendable"
+  - author: "MC Diaz"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Lugar muy limpio, acogedor con masajistas muy guapas, volveré Pronto..."
 ---

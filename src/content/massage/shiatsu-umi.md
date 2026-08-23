@@ -9,4 +9,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJdze18TOjpBIREK0VeuTa7WM"
+googleReviews:
+  - author: "Perona"
+    rating: 5
+    relativeTime: "7 years ago"
+    languageCode: "es"
+    text: "Profesional"
 ---

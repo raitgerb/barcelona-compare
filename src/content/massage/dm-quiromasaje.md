@@ -15,4 +15,25 @@ languages:
 googleRating: 5
 googleReviewCount: 4
 googlePlaceId: "ChIJBcLvMKqZpBIRcOtZ1ibtl7A"
+googleReviews:
+  - author: "Merche Freudenthal"
+    rating: 5
+    relativeTime: "4 years ago"
+    languageCode: "ca"
+    text: "Molt recomanable. Es una persona serena i transmet aquesta serenor. Massatges diferents intensitats, des de relaxant; una Marbella, fins terapèutics on la intensitat és més elevada, renovadora. Ambient molt agradable i polit. Crec que em faré asidua!"
+  - author: "Daniel Lopez Fleming"
+    rating: 5
+    relativeTime: "4 years ago"
+    languageCode: "es"
+    text: "Magnífico servicio. Además de muy simpática me solucionó un problema en el pie con sólo una sesión."
+  - author: "El Motivo de Anto"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Genial!! Isa encantadora"
+  - author: "ricard millan"
+    rating: 5
+    relativeTime: "4 years ago"
+    languageCode: "es"
+    text: "Un lujazo. Para salir como nuevo"
 ---

@@ -16,4 +16,30 @@ languages:
 googleRating: 4.9
 googleReviewCount: 112
 googlePlaceId: "ChIJd8_QDCWjpBIR__Dbz1iMba8"
+googleReviews:
+  - author: "NetFi"
+    rating: 4
+    relativeTime: "2 years ago"
+    languageCode: "en"
+    text: "Nice foods, nice services, very special experience for taste"
+  - author: "Tonya MAS"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "en"
+    text: "AMAZING!!"
+  - author: "Familia Rebés i Noguera"
+    rating: 5
+    relativeTime: "6 years ago"
+    languageCode: "en"
+    text: "Excelent!!  :)"
+  - author: "Cristina Llaona Sintes"
+    rating: 5
+    relativeTime: "3 months ago"
+    languageCode: "ca"
+    text: "La Silvia té unes mans extraordinàries, els massatges m'estan fent molt bon efecte. No ho dubteu! Us pot ajudar molt amb les vostres molèsties. Professional com pocs."
+  - author: "Bruno Belda Martínez"
+    rating: 5
+    relativeTime: "3 months ago"
+    languageCode: "ca"
+    text: "No dubtis en venir a la millor fisioterapeuta de Barcelona. Des de la primera vegada que vaig anar, va fer un diagnòstic precís i un tractament molt eficaç. 100% recomanable!"
 ---

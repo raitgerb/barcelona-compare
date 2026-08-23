@@ -16,4 +16,30 @@ languages:
 googleRating: 5
 googleReviewCount: 62
 googlePlaceId: "ChIJWUGghGyYpBIRIBiBQI4ceFg"
+googleReviews:
+  - author: "Astrid Scharlau"
+    rating: 5
+    relativeTime: "6 months ago"
+    languageCode: "es"
+    text: "Mi peluquería de confianza. Trato super amable y profesional. Tanto Raquel como Neus como Silvia son un encanto de personas. Estoy encantada con mi nuevo look y con todos los tratamientos de hidratación que me hago."
+  - author: "Susana"
+    rating: 5
+    relativeTime: "5 months ago"
+    languageCode: "es"
+    text: "Hace años que voy,  cón eso, lo digo todo. Los productos muy buenos el trato y el resultado un 10⭐⭐⭐⭐⭐ No vivo cerca pero  me compensa con creces, tener que desplazarme👍🏼"
+  - author: "Diana Guerra"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "Son unas profesionales excelentes. Ademas de simpaticas y amables, crean un ambiente muy relajado en el que sentirse como en casa. Calidad -precio muy equilibrado. Muy recomendable"
+  - author: "Bruna"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "ca"
+    text: "M'ha agradat moltíssim l'atenció al client i el resultat del meu cabell. És espectacular! Recomano molt aquesta perruqueria😍"
+  - author: "Lucia Boter Duran"
+    rating: 5
+    relativeTime: "11 months ago"
+    languageCode: "es"
+    text: "Me ha atendido Raquel y ha hecho un trabajo impecable. Son muy amables y muy profesionales!"
 ---

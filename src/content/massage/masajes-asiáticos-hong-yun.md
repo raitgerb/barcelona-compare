@@ -17,4 +17,20 @@ languages:
 googleRating: 2.7
 googleReviewCount: 3
 googlePlaceId: "ChIJVyKvnbGjpBIRIr7rgoP87fQ"
+googleReviews:
+  - author: "PERE Saumell"
+    rating: 3
+    relativeTime: "2 years ago"
+    languageCode: "ca"
+    text: "Massatge"
+  - author: "Gustavo Podgaezky"
+    rating: 2
+    relativeTime: "a year ago"
+    languageCode: ""
+    text: ""
+  - author: "Ernest Bruch Pascual"
+    rating: 3
+    relativeTime: "2 years ago"
+    languageCode: ""
+    text: ""
 ---

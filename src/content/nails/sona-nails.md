@@ -17,4 +17,30 @@ languages:
 googleRating: 4.8
 googleReviewCount: 120
 googlePlaceId: "ChIJAbU7PxijpBIRLpnUxrhkCfY"
+googleReviews:
+  - author: "Vivienne"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "en"
+    text: "Very good service!! Amazing nails and friendly people. Would 100% recommend!"
+  - author: "Maggie Ming"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "en"
+    text: "Had the nicest nail experience I've had like, ever. I'm usually scared to ask for designs but the Lyna was so kind and so patient. I showed her what kind of gel nails I wanted and she was like magic 😭 I'm really happy I went here! Thank you Lyna 🙏 I wish I could have you here in California."
+  - author: "Sarah Marks"
+    rating: 5
+    relativeTime: "4 months ago"
+    languageCode: "en"
+    text: "So glad I found Sona nails. Amazing service, great price and the staff are super lovely. Highly recommend!"
+  - author: "Lourdes Quevedo"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "en"
+    text: "I love it. The staff was so kind and my nails turned out so cute. Very affordable."
+  - author: "Oliwia Czajkowska"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "en"
+    text: "The greatest nails I ever had. Lyna is amazing . Fully recommend 🫶"
 ---

@@ -17,4 +17,30 @@ languages:
 googleRating: 3.7
 googleReviewCount: 6
 googlePlaceId: "ChIJWU_CZ7-jpBIR4PWnP2iaylc"
+googleReviews:
+  - author: "Manel Morilla"
+    rating: 1
+    relativeTime: "2 months ago"
+    languageCode: "es"
+    text: "Incomodo, no tiene jabon para duchar y sucio todos ."
+  - author: "Moisés Ramírez Lucena."
+    rating: 1
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "NO SON MASAJISTAS. CREO QUE NO TIENEN NINGÚN ESTUDIO DE MASAJES. SÁBANAS SUCIAS, LLENAS DE PELOS, ME OFRECIERON SERVICIOS INDECENTES PERO DIJE QUE NO."
+  - author: "Gustaf Sol Mec"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "Algo pequeño, pero variedad de masajes, profesionalidad y amabilidad."
+  - author: "陈俊云"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "masaje ok"
+  - author: "Gilber Hinojosa"
+    rating: 5
+    relativeTime: "6 months ago"
+    languageCode: ""
+    text: ""
 ---

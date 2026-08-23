@@ -17,4 +17,30 @@ languages:
 googleRating: 4.3
 googleReviewCount: 7
 googlePlaceId: "ChIJJ1zpu5wzlhIReJI46nhtfLI"
+googleReviews:
+  - author: "FIGUEROA ASTUDILLO"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "es"
+    text: "Excelente la masajista.exelente"
+  - author: "Javier alejandro Briceño pozo"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Un lugar único, el servicio excelente y la masajista muy profesional y simpática"
+  - author: "Ana Q"
+    rating: 5
+    relativeTime: "9 months ago"
+    languageCode: "es"
+    text: "Estupendo! He quedado como nueva"
+  - author: "Francesco Dell Erario"
+    rating: 5
+    relativeTime: "3 months ago"
+    languageCode: "es"
+    text: "Excelente"
+  - author: "Jose maria Pm"
+    rating: 1
+    relativeTime: "6 months ago"
+    languageCode: ""
+    text: ""
 ---

@@ -16,4 +16,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJnwIFcACjpBIRHW_zeV_wDuk"
+googleReviews:
+  - author: "Sara Martín Alonso"
+    rating: 5
+    relativeTime: "2 months ago"
+    languageCode: "es"
+    text: "Un viaje a la desconexión y la conexión. Una super experiencia y un alivio! Repetiría sin dudarlo"
 ---

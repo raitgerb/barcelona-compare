@@ -17,4 +17,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJPVMl7_2jpBIR0sNteefTeB4"
+googleReviews:
+  - author: "Javi “Javi” Javitote"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Me Encanta El Helado... Lo Tomo Aunque No Sea Verano... Y... En BoBa... Hay Todo El Año... Los Sabores Son Excelentes... Y... El Trato Es Muy Cercano... Y... El Personal Es Muy Profesional... Ya Estoy Pensando... Qué Variedad Pediré Mañana... 🌹🌹🌹🌹"
 ---

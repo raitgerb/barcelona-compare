@@ -17,4 +17,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJDWhpylajpBIRfMboIB3YMtA"
+googleReviews:
+  - author: "carlos espada"
+    rating: 5
+    relativeTime: "8 months ago"
+    languageCode: ""
+    text: ""
 ---

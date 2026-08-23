@@ -18,4 +18,15 @@ languages:
 googleRating: 5
 googleReviewCount: 2
 googlePlaceId: "ChIJadGyqYujpBIRZKOFvpFljjQ"
+googleReviews:
+  - author: "Joan Ramon Chápuli Güell (Jan)"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Excelente masaje y muy buen trato de la chica, muy simpática y amable, mi espalda lo agradece mucho"
+  - author: "Aminul Hoque"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: ""
+    text: ""
 ---

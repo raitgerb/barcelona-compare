@@ -17,4 +17,15 @@ languages:
 googleRating: 5
 googleReviewCount: 2
 googlePlaceId: "ChIJO4YFPcqjpBIRK-La6qR19WY"
+googleReviews:
+  - author: "Maholys Rendiles"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: ""
+    text: ""
+  - author: "nino gurgenishvili"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: ""
+    text: ""
 ---

@@ -16,4 +16,20 @@ languages:
 googleRating: 4.7
 googleReviewCount: 3
 googlePlaceId: "ChIJTTHxRyifpBIRdLc_TUlP5p0"
+googleReviews:
+  - author: "Meryem L"
+    rating: 4
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "He ido varias veces a este salón de uñas y la última vez fui a hacerme manicura y pedicura el mismo dia. Servicio ágil y práctico. Precios ajustados. Lo recomiendo"
+  - author: "Carolina Briceño"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: ""
+    text: ""
+  - author: "Jesica Vecino"
+    rating: 5
+    relativeTime: "4 months ago"
+    languageCode: ""
+    text: ""
 ---

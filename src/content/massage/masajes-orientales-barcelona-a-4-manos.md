@@ -17,4 +17,30 @@ languages:
 googleRating: 4.5
 googleReviewCount: 8
 googlePlaceId: "ChIJHRGYBDujpBIRmLLDZ-sJS3Y"
+googleReviews:
+  - author: "Godwin Thaya"
+    rating: 1
+    relativeTime: "3 years ago"
+    languageCode: "en"
+    text: "Not recommend"
+  - author: "Elena Li"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Me fui ayer para manicura y masaje ellas muy profesional y simpática me gusta este lugar volveré más veces. gracias 😊😊"
+  - author: "Andrea TC"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Fui con mi pareja y nos encantó, Yolanda y la otra chica excelentes."
+  - author: "Josep M Ribé"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Muy bien cariño, ha sido un gran día"
+  - author: "yongfang xiao"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Masajes muy bien"
 ---

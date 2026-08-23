@@ -18,4 +18,25 @@ languages:
 googleRating: 5
 googleReviewCount: 4
 googlePlaceId: "ChIJ2yiTfWWjpBIRLExf78m4Gg4"
+googleReviews:
+  - author: "Oreste Carpi"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "en"
+    text: "If you need to have a relaxing day in barcelona you definately need to spend one or two hours at this place..."
+  - author: "V Vv"
+    rating: 5
+    relativeTime: "2 months ago"
+    languageCode: "en"
+    text: "Gud"
+  - author: "Adrian Lio"
+    rating: 5
+    relativeTime: "6 months ago"
+    languageCode: "es"
+    text: "Muy buena comida y trato excelente!!"
+  - author: "Blue Sapphire"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: ""
+    text: ""
 ---

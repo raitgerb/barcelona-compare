@@ -17,4 +17,30 @@ languages:
 googleRating: 4.2
 googleReviewCount: 43
 googlePlaceId: "ChIJzRYmqWqjpBIR_qHqWHlBmw0"
+googleReviews:
+  - author: "Manni W"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "en"
+    text: "Went to get my nails done locally where I was staying. The space was really cute and chairs are soft and comfy. Well priced for acrylic nails and some nice nail art. I showed the lady from Pinterest and she did a wonderful job of copying the design. Really impressed with the nails."
+  - author: "Tine"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "en"
+    text: "Omg, i love it 🥰! She was so nice and so careful. She made sure it was what I wanted. She saved my holidays, broke a nail Saturday and walked to so many places that were closed on a Sunday. Thank you ! ❤️"
+  - author: "Emmanuel Hermoso"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "en"
+    text: "Nice place for make your nails and clean. Also for Men too. Massage is included."
+  - author: "grace ward"
+    rating: 5
+    relativeTime: "3 months ago"
+    languageCode: "en"
+    text: "Walked in for a 20€ manicure and it was one of the best around!"
+  - author: "Kajsa Landström"
+    rating: 4
+    relativeTime: "2 years ago"
+    languageCode: "en"
+    text: "Very nice experience, they were quick and thorough and very nice."
 ---

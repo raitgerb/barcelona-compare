@@ -17,4 +17,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJvZdM2UejpBIR7JzfG-t6FuA"
+googleReviews:
+  - author: "Hicham MSs"
+    rating: 5
+    relativeTime: "9 months ago"
+    languageCode: ""
+    text: ""
 ---

@@ -17,4 +17,30 @@ languages:
 googleRating: 4.6
 googleReviewCount: 17
 googlePlaceId: "ChIJs59yYVeZpBIRKLoz0J68rDc"
+googleReviews:
+  - author: "Stefanos Fafalios"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "en"
+    text: "I had an amazing massage from a very polite person that only knew what she was doing but was very willing to contribute to my shoulder pain with special movements and great tips. Although it's far from where I leave I 100% recommend and I'll definitely return."
+  - author: "Carolina Bispo"
+    rating: 5
+    relativeTime: "8 months ago"
+    languageCode: "es"
+    text: "Las dos chicas muy amables. Te sientes como en casa. Excelente la manicura y la pedicura shellac. Material desinfectando y lo abren para ti al momento. La lija de la pedicura también nueva. Volveré y lo recomiendo. Gracias"
+  - author: "Juliana Rocha"
+    rating: 5
+    relativeTime: "2 months ago"
+    languageCode: "es"
+    text: "Profesional excelente con manos de angel. Calidad, simpatia y amabilidad. Recomiendo a Maria de ojos cerrados."
+  - author: "Andrea"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "Helen hace las uñas impecables y con mucha delicadeza. Tengo las cuticulas muy finas y siempre me cortaban ¡hasta que la conseguí a ella!"
+  - author: "Juliana Spadano"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Considero Maria la mejor manicura y depiladora de Barcelona. Cruzo toda la ciudad con mucho gusto para recibir sus cuidados. Excelencia y calidad definen su trabajo. ¡La recomiendo!"
 ---

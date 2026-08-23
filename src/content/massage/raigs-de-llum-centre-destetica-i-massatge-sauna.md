@@ -17,4 +17,30 @@ languages:
 googleRating: 4.3
 googleReviewCount: 6
 googlePlaceId: "ChIJA93xdOeipBIRNBsNJvmbYRU"
+googleReviews:
+  - author: "Javier Balaña"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "Buen servicio y chicas muy simpáticas y guapas"
+  - author: "José Carlos Madueño"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Muy económico y placentero."
+  - author: "FERNANDO CASTELLANOS XIRAU"
+    rating: 2
+    relativeTime: "a year ago"
+    languageCode: "es"
+    text: "Mejor antes....."
+  - author: "Manuel Torralba"
+    rating: 5
+    relativeTime: "4 years ago"
+    languageCode: ""
+    text: ""
+  - author: "Jordi Avilés Burgueño"
+    rating: 4
+    relativeTime: "3 years ago"
+    languageCode: ""
+    text: ""
 ---

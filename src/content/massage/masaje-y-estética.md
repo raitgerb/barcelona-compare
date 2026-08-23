@@ -17,4 +17,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJ7SdoRjijpBIRUVWMqfYIWnM"
+googleReviews:
+  - author: "存子"
+    rating: 5
+    relativeTime: "5 months ago"
+    languageCode: ""
+    text: ""
 ---

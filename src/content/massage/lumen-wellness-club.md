@@ -18,4 +18,30 @@ languages:
 googleRating: 4.9
 googleReviewCount: 30
 googlePlaceId: "ChIJtQCp-xWjpBIRvR4M-xJrI_0"
+googleReviews:
+  - author: "Raphael Felipini"
+    rating: 5
+    relativeTime: "2 months ago"
+    languageCode: "en"
+    text: "Had a message with Guille and it was such a great experience. Very relaxing and positive. Best wellness club in Barcelona with no doubts. Thanks to all the team and place from beginning to end. Will defo be back."
+  - author: "Dean Farah"
+    rating: 5
+    relativeTime: "2 months ago"
+    languageCode: "en"
+    text: "Incredible ambient and even more amazing staff. I had a massage with Adrian who seems to be a highly skilled professional that is very knowledgeable about his craft. He’s got hands of gold to say the least. Thank you!"
+  - author: "Derek O Shea - Theta Healing Therapist"
+    rating: 5
+    relativeTime: "2 months ago"
+    languageCode: "en"
+    text: "Such a relaxing experience from start to finish. And extremely professional ⭐️ My appointment was with Adrian. I highly recommend 🙏🏼 Thank you for the amazing service. Looking forward to my next appointment."
+  - author: "Matheus Barreto"
+    rating: 5
+    relativeTime: "2 months ago"
+    languageCode: "en"
+    text: "I loved the center and had a great experience with different massage therapists. I really want to go back, highly recommend!"
+  - author: "Gordon Taylor"
+    rating: 5
+    relativeTime: "2 months ago"
+    languageCode: "en"
+    text: "Very nice massage with Guille! The essential oils really helped to relax and enjoy"
 ---

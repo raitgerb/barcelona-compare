@@ -17,4 +17,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJeViaBCujpBIRyrKW1WH76Gs"
+googleReviews:
+  - author: "Manuel Rey"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Estuve la semana pasada y muy buen trato Masaje muy bueno, Buenas señoritas. Yoyo fue la que me atendio para ir con una de sus Chicas. Aire Acondicionado y Ducha, recomiendo este local. Yoyo tiene otra tienda por el Liceo tambien muy buen sitio."
 ---

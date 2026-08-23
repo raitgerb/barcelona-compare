@@ -18,4 +18,25 @@ languages:
 googleRating: 5
 googleReviewCount: 4
 googlePlaceId: "ChIJgwk9U4aZpBIRoJ7uLw1YhcY"
+googleReviews:
+  - author: "Sandra lorena Mina"
+    rating: 5
+    relativeTime: "in the last week"
+    languageCode: "es"
+    text: "Uñas perfectas Nails Manicura acrílicas"
+  - author: "atencionalclientesiv"
+    rating: 5
+    relativeTime: "in the last week"
+    languageCode: ""
+    text: ""
+  - author: "Sandra Loren Mina"
+    rating: 5
+    relativeTime: "3 weeks ago"
+    languageCode: ""
+    text: ""
+  - author: "Sandra lorena Rivera"
+    rating: 5
+    relativeTime: "3 weeks ago"
+    languageCode: ""
+    text: ""
 ---

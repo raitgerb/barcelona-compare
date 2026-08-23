@@ -16,4 +16,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJMdyvqHmjpBIRleU6b-jf2YQ"
+googleReviews:
+  - author: "Hugo Desbriel"
+    rating: 5
+    relativeTime: "5 months ago"
+    languageCode: "es"
+    text: "Espectacular, Excelente servicio, Depilacion de cejas, dermapen ( increíble para activar el colageno) y masaje facial 10/10. Lo recomendo 100%"
 ---

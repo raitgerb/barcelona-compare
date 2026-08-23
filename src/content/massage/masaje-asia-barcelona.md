@@ -17,4 +17,30 @@ languages:
 googleRating: 5
 googleReviewCount: 5
 googlePlaceId: "ChIJabAnJaejpBIRjOppx9t-IuE"
+googleReviews:
+  - author: "Pebber"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "en"
+    text: "As described"
+  - author: "fang xiao"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Lugar limpio y acogedor Muy buen masaje."
+  - author: "rafael ferrés"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Muy bien"
+  - author: "josep manuel martín farré"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: ""
+    text: ""
+  - author: "Juan Vernet"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: ""
+    text: ""
 ---

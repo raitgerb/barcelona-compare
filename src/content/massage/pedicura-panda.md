@@ -17,4 +17,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJG5aTNg-jpBIRB2RbROqo3bo"
+googleReviews:
+  - author: "陈大卫"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "zh"
+    text: "脚修的好！足疗做的也好！"
 ---

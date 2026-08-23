@@ -10,4 +10,10 @@ hours:
 languages:
   - "Español"
 googlePlaceId: "ChIJxVh9EgC9pBIR2Qxusaih9j0"
+googleReviews:
+  - author: "guillem ROMERO LOPEZ"
+    rating: 5
+    relativeTime: "a month ago"
+    languageCode: "es"
+    text: "un profesional de 10, me deja nuevo y un encanto de persona. gracias por todo"
 ---

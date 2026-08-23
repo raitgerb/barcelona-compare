@@ -12,4 +12,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJe9pkrPSipBIRq6Ptj6uhKY0"
+googleReviews:
+  - author: "Germán Palomares"
+    rating: 5
+    relativeTime: "in the last week"
+    languageCode: "es"
+    text: "Una experiencia increíble, lo recomiendo al 100%."
 ---

@@ -18,4 +18,25 @@ languages:
 googleRating: 5
 googleReviewCount: 4
 googlePlaceId: "ChIJk56-JqG9pBIRLUqw1L3Eayw"
+googleReviews:
+  - author: "Irina R"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Tenía dolor de espalda desde hacía semanas. Me recomendaron contratar un masaje con Germán y lo recomiendo muchísimo! Es profesional e incluso supo encontrar la causa del dolor. Gracias!"
+  - author: "Miriam Galvan"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Germán es un buen profesional, trabajó muy bien la zona contracturada y completó el masaje con un chequeo completo del cuerpo. Muy recomendable"
+  - author: "Oscar Peñuelas"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: "es"
+    text: "Recibí por parte de Germán una atención profesional, cuidada y adaptada a mi necesidad (contractura de trapecio sobre todo)!"
+  - author: "Marco Antonio Martínez Gallardo"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Unas manos mágicas y un buen profesional. Lo recomiendo al 100%."
 ---

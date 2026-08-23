@@ -10,4 +10,10 @@ languages:
 googleRating: 1
 googleReviewCount: 1
 googlePlaceId: "ChIJy1IQW3GjpBIRPHoOo-lpsow"
+googleReviews:
+  - author: "Paulo Matias"
+    rating: 1
+    relativeTime: "11 months ago"
+    languageCode: ""
+    text: ""
 ---

@@ -17,4 +17,20 @@ languages:
 googleRating: 5
 googleReviewCount: 3
 googlePlaceId: "ChIJU6oZRTujpBIR03zYi-gmLYU"
+googleReviews:
+  - author: "Nancy Yaghi"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "en"
+    text: "A M A Z I N G !!!!!"
+  - author: "N القرني"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: ""
+    text: ""
+  - author: "Mariana Geraldes"
+    rating: 5
+    relativeTime: "3 years ago"
+    languageCode: ""
+    text: ""
 ---

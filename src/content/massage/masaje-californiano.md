@@ -9,4 +9,10 @@ languages:
 googleRating: 4.5
 googleReviewCount: 2
 googlePlaceId: "ChIJzc-kXUG9pBIRPfwV-1DUzT0"
+googleReviews:
+  - author: "Yasar Nawaz"
+    rating: 4
+    relativeTime: "2 years ago"
+    languageCode: ""
+    text: ""
 ---

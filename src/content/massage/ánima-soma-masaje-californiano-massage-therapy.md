@@ -13,4 +13,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJp_0EKlC9pBIRwyeGfP-oAEs"
+googleReviews:
+  - author: "Victoria Guirao"
+    rating: 5
+    relativeTime: "6 months ago"
+    languageCode: "es"
+    text: "Francamente, los mejores masajes que me han hecho, habiendo probado tantos, volvería a elegir este siempre. Ange fue muy de a poco y eso me hizo sentir muy cómoda. Me gustó el ambiente y que no hubieran olores muy fuertes, como en otros lugares. De maravilla, de verdad, recomiendo a todos los que andan adoloridos y muy sedentarios por el trabajo."
 ---

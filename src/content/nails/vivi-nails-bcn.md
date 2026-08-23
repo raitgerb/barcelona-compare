@@ -15,4 +15,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJEV_rngiZpBIRaikLCYdBuxg"
+googleReviews:
+  - author: "Dennis Blackwell"
+    rating: 5
+    relativeTime: "a week ago"
+    languageCode: ""
+    text: ""
 ---

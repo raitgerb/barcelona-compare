@@ -8,4 +8,10 @@ languages:
 googleRating: 5
 googleReviewCount: 1
 googlePlaceId: "ChIJm57bDm2jpBIRGSk9spXgX5c"
+googleReviews:
+  - author: "Rafael Cantero Paniagua"
+    rating: 5
+    relativeTime: "2 years ago"
+    languageCode: "es"
+    text: "Buenisims"
 ---

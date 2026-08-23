@@ -18,4 +18,20 @@ languages:
 googleRating: 5
 googleReviewCount: 3
 googlePlaceId: "ChIJf-1q_USjpBIRUb7ERGpxV_Y"
+googleReviews:
+  - author: "Ting Ting"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "zh"
+    text: "老板非常好，按摩技术高，仪器先进，不枉此子女！非常感谢！"
+  - author: "姜吉隆"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "zh"
+    text: "吸氧吸氢睡眠仓，确实可以享受一下"
+  - author: "Zhimei Qiao"
+    rating: 5
+    relativeTime: "a year ago"
+    languageCode: "zh"
+    text: "专业的中医按摩，疼痛缓解效果明显"
 ---
