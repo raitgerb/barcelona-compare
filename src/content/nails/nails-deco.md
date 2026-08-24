@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Servicio excelente; te sientes cómoda ya en la primera vez! Gran variedad de servicios y colores para manicura o pedicura. Trato amable y cercano. Sin dudarlo volveré!"
+serviceTags:
+  - pedicura
 ---

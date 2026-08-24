@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Terrible. Hurried service. My gel nails were awful and lifted 3 days later. Did my pedicure in 7 mins. Overall, horrible service. Avoid!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "I came on vacation and saw that there are many nail salons in Barcelona.  I passed by the door of this store and saw that the inside was clean and tidy, so I went in for hand and foot care.  Hand care dead skin trimmed very clean.  The ingrown nails on both sides of the big toe of the toenails were also cut!  !  !  Now I walk hard and step on my toes without pain👍"
+serviceTags:
+  - pedicura
 ---

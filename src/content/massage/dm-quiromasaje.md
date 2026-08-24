@@ -37,4 +37,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "es"
     text: "Un lujazo. Para salir como nuevo"
+serviceTags:
+  - quiromasaje
 ---

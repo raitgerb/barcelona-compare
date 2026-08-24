@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "Las chicas son súper amables y la atención fue muy buena. La pedicura muy bien pero me hice una manicura simple con color y, al día siguiente, el esmalte se despegó entero, como en una sola pieza. Probablemente usaron top coat en lugar de base y por eso no se fijó bien y se despegó entero. Una pena, porque el trato fue excelente, pero la manicura no duró nada."
+serviceTags:
+  - pedicura
 ---

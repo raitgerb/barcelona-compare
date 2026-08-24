@@ -36,4 +36,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "es"
     text: "Todo espectacular, el servicio, el ambiente, las uñas, todo perfecto"
+serviceTags:
+  - pedicura
 ---

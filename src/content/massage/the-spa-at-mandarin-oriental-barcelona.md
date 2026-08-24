@@ -46,4 +46,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "The best massage I’ve ever had!  Atmosphere and service was excellent as well!!"
+serviceTags:
+  - spa-bienestar
 ---

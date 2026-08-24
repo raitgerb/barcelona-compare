@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "She did a good job. She was very careful"
+serviceTags:
+  - gel-acrilicas
 ---

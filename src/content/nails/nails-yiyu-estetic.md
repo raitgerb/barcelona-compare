@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Reserved an appointment the night before but woman was 15 minutes late. Woman doing nails (who greeted me) was nice about it; asked if I’d wait. Woman doing eyelashes asked if I wanted natural or voluminous. I said in the middle, which is what I got (see photos). I said no cat eye (make it even all the way around). She gave me some samples at the end which was nice. Only 65 euros."
+serviceTags:
+  - gel-acrilicas
+  - nail-art
 ---

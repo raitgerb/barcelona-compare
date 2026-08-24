@@ -67,4 +67,8 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "it"
     text: "Alessandra è bravissima, simpatica e professionale ❤️✨ super consigliata !!"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
+  - pedicura
 ---

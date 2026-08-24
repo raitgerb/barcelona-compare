@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Alessandro is a highly skilled and very experienced osteopath who listens and adapts the treatment to your needs. The pain in my foot which I have been carrying for several months is finally starting to go away after just a few sessions. I can't sit still for too long so he recommended me how I can still do sports while giving my foot some rest and recovery time. He is also super friendly so the sessions are always very pleasant."
+serviceTags:
+  - deportivo
 ---

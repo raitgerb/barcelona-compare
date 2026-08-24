@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "en"
     text: "I’ve been coming here regularly for nails and eyebrows. They do a great job,  service is friendly and prices are very good. Ikram is super nice!"
+serviceTags:
+  - gel-acrilicas
 ---

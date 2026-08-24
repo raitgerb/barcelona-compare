@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "This is by far the best salon in the area!! The level of service and care they take is outstanding! The prices are incredibly reasonable. It came to 49€ for a gel pedicure and acrylic French tip manicure, so of course I had to tip them :) they deserve it for working so hard. Thank you ladies!!!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

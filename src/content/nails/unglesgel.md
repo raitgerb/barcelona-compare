@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "5 years ago"
     languageCode: "en"
     text: "The best place to get your nails done in Barcelona! 👌🏼🔥"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
 ---

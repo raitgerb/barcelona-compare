@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "muy simpáticas, muy buen servicio y mucha variedad de colores y estilos. 100% recomendado 🩷"
+serviceTags:
+  - pedicura
 ---

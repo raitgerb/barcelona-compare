@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PaginatedListing from '../../components/PaginatedListing.astro';
 import { getCollection } from 'astro:content';
 import { neighborhoodGuides } from '../../data/neighborhoods';
+import { SERVICES, MIN_CITY, MIN_COMBO } from '../../lib/services';
 
 export async function getStaticPaths() {
   return Object.keys(neighborhoodGuides).map(nb => ({
@@ -56,6 +57,32 @@ const t = {
   statAvg: 'valoración media',
   mapTitle: 'Mapa del barrio',
 };
+
+const nbSlug = neighborhood;
+
+// Money-page cross-links: district pages (≥MIN_CITY) + combo pages (≥MIN_COMBO)
+const moneyLinks: Array<{ href: string; label: string }> = [];
+{
+  const allBiz = [...(await getCollection('nails')), ...(await getCollection('massage'))]
+    .filter(b => b.data.neighborhood === nbName);
+  const districtN = (cat: 'nails' | 'massage') => allBiz.filter(b => b.collection === cat).length;
+  for (const cat of ['nails', 'massage'] as const) {
+    if (districtN(cat) >= MIN_CITY) {
+      moneyLinks.push({ href: `/mejores/${cat}/${nbSlug}/`, label: `Los mejores ${cat === 'nails' ? 'salones de uñas' : 'centros de masaje'} de ${nbName}` });
+    }
+    const tagCounts = new Map<string, number>();
+    for (const b of allBiz) {
+      if (b.collection !== cat) continue;
+      for (const t of ((b.data.serviceTags ?? []) as string[])) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+    }
+    for (const svc of SERVICES[cat]) {
+      const n = tagCounts.get(svc.slug) ?? 0;
+      if (n >= MIN_COMBO) {
+        moneyLinks.push({ href: `/mejores/${cat}/${nbSlug}/${svc.slug}/`, label: `${svc.es.keyword.charAt(0).toUpperCase()}${svc.es.keyword.slice(1)} en ${nbName} (${n})` });
+      }
+    }
+  }
+}
 
 // ItemList schema: top businesses in this barrio (rich-result eligibility)
 const itemListSchema = {
@@ -123,6 +150,17 @@ const itemListSchema = {
         <p class="text-stone-500 mt-1 text-sm">{massage.length} centros</p>
         <PaginatedListing businesses={massage.slice(0, 12)} category="massage" lang="es" total={massage.length} currentPage={1} totalPages={1} />
         <a href="/massage" class="inline-block mt-6 text-sm font-medium text-accent-massage hover:underline">Ver todos los centros →</a>
+      </section>
+    )}
+
+    {moneyLinks.length > 0 && (
+      <section class="mt-14">
+        <h2 class="text-xl font-bold text-stone-900">Comparativas de {nbName}</h2>
+        <div class="mt-4 flex flex-wrap gap-2">
+          {moneyLinks.map(l => (
+            <a href={l.href} class="text-sm px-4 py-2 rounded-full border border-stone-200 hover:border-brand-400 hover:text-brand-600 transition-colors text-stone-700">{l.label}</a>
+          ))}
+        </div>
       </section>
     )}
   </main>

@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "Amazing experience at N&F Sant Antoni. Very friendly and professional, good quality and fast. Will definitely come back and recommend it to my friends. Gracias ❤️"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

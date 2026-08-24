@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "He quedado encantada. El local muy bonito. Mis uñas han quedado perfectas y me han tratado con mucha delicadeza. Volveré seguro"
+serviceTags:
+  - pedicura
 ---

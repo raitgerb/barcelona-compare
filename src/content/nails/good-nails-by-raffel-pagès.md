@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "they are amazing and my nails stay for so long natalie & vanessa"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

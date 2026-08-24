@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Recomiendo este salón por su excelente y professional servicio! Pamela me hice unas uñas muy preciosas!! 💞💞💞💞"
+serviceTags:
+  - gel-acrilicas
 ---

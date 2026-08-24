@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "Fantastic experience, thank you so much for the amazing Thai massage session. Looking forward for more!"
+serviceTags:
+  - tailandes
 ---

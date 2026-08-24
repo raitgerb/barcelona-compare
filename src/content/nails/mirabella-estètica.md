@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "5 years ago"
     languageCode: "en"
     text: "They made two of my fingers bleed and burned my other nails sanding the shellac off after they botched the first attempt at painting my nails. The water for my feet was absolutely freezing and overall the place was very dirty. Two hours and two bloody fingers later I had a mediocre manicure and pedicure. Don’t be fooled by the ratings, the good reviews must be fake."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

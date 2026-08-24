@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Great service, I had a manicure & pedicure, was happy with the outcome. I highly recommend this salon"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

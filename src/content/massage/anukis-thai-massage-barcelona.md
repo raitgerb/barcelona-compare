@@ -41,4 +41,6 @@ googleReviews:
     text: "Lucia did a very good job, I felt very comfortable with her ! The massage was not to hard and helped me relax a lot, I would definitely recommend also for not Spanish speakers ! The store is open very long what is amazing if you work long & the store is very huge and clean, prices are very good! 🤩"
 languages:
   - "Inglés"
+serviceTags:
+  - tailandes
 ---

@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Very friendly and nice. Nails were done very nice and cleanly. I recommend it. Also nice price."
+serviceTags:
+  - gel-acrilicas
 ---

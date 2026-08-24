@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "4 weeks ago"
     languageCode: "es"
     text: "Excelente experiencia con el servicio de manicura y pedicura. El equipo es muy atento y amable, y te dan muchas facilidades con las citas. Es un lugar totalmente recomendado también para hombres."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

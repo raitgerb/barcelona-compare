@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "6 years ago"
     languageCode: "en"
     text: "Beautiful job on my nails! Everyone is so friendly and accommodating!"
+serviceTags:
+  - nail-art
 ---

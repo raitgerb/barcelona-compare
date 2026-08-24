@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "Una experiencia excelente de principio a fin. María me atendió genial: es profesional, cercana y hace que te sientas en las mejores manos desde el primer momento. El ambiente es tan acogedor que realmente es como estar en casa. Se nota el cariño y la dedicación en cada detalle. Sin duda, un sitio al que volveré y que recomiendo al 100% 😍"
+serviceTags:
+  - pedicura
 ---

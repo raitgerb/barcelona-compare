@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "The best nail salon in BCN.The salon is very clean and organized,a lot of options for colors and styles.Both of the owners are super friendly and kind.I’ve been doing nails with Miao Miao for 2 years now.She’s definitely the best!Highly recommend."
+serviceTags:
+  - gel-acrilicas
 ---

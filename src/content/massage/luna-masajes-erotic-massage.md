@@ -49,4 +49,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "It was my first time to visit this place and the experience was so amazing and perfect 👌..from the Entrance, Welcome from the host, service and everything else was so enjoyable..definitely i visit again and recommend my friends also...  From anyone working over that place, it's a 5 🌟 ..Brenda i give her double 5*5 🌟..10 🌟 for her..she was so amazing and very polite and professional with her massage 💆‍♀️.."
+serviceTags:
+  - pareja
 ---

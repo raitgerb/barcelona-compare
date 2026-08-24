@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "es"
     text: "Fany es una auténtica profesional, el resultado de 20 sobre 10, muy atenta y dedicada a su trabajo, puedo notar la pasión que siente por la manicura y pedicura cada vez que vengo, es pura vocación, sin duda para repetir y repetir. Súper top!!!!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

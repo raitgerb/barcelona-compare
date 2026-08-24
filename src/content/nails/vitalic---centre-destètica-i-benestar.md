@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "es"
     text: "Uno de mis lugares favoritos, donde poder relajarme, donde se para el tiempo y entonces la magia ocurre. La magia tiene dos nombres, Laura y Vitalic.  Gracias Laura por cuidarnos tanto, por tu cercanía y por esos tratamientos increíblemente efectivos y que siempre saben a sorpresa. Y como siempre un millón de gracias adicionales por tu amabilidad, el cariño que le pones a todo y tus cálidas palabras.  Si lo pruebas, repites. ¡Ten cuidado! ♥️"
+serviceTags:
+  - pedicura
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "es"
     text: "Hoy me hice las uñas,  y me atendio Kam! Tant atenta agradable dulce, espero que le vaya muy bien, un trabajo limpio y muy bonito"
+serviceTags:
+  - pedicura
 ---

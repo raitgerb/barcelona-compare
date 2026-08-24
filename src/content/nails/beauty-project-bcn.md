@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "High quality nail services, good price quality ratio 🥰"
+serviceTags:
+  - pedicura
 ---

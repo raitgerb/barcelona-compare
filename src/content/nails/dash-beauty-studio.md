@@ -42,4 +42,7 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "Such a beautiful place! Everything is amazing- from design, staff and service provided to the quality and the ambience light, scent and music! One of the best eye brows design I ever made by master Vlada."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

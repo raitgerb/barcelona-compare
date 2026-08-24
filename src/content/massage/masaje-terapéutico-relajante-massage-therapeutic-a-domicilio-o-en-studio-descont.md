@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "Top!"
+serviceTags:
+  - deportivo
+  - quiromasaje
 ---

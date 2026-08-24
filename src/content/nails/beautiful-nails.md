@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "La chica muy maja. Manicura semipermanente por 20€"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

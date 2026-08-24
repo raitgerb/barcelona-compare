@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "As soon as I sat down, I heard them laughing and whispering. I used Google Translate — and yes, they were clearly making fun of me in Chinese!! They were straight up talking shit about me, in front of me, while doing the job. when you’re not even close to what you’re mocking — you’d better stay silent.  Update: I think you mistaken me with someone else attached the proof that I paid and my nails.. hope you remember now"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I struggle to find good place to do my nails and they made me amazing nails, they are also really kind also ! You can go 100%"
+serviceTags:
+  - pedicura
 ---

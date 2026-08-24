@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "El local está sucio y muy dejado. Las chicas son muy agradables y trabajan bien pero el centro está dejado, así como tampoco hay una higiene adecuada de los instrumentos que usan para las manicuras y pedicuras. Creo que debería estar impoluto ya que puede ser peligroso para los clientes. Adjunto foto. No lo recomiendo"
+serviceTags:
+  - pedicura
 ---

@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "The service was great, but I was disappointed by the lack of transparency regarding the price. I specifically asked for the €12 basic manicure, but I was charged €18, even though I didn’t get any nail polish. The basic manicure itself was well done, but I would have appreciated clearer communication about the final cost, not adding things and not telling me that would cost more. It’s not about price, but about honesty."
+serviceTags:
+  - nail-art
+  - pedicura
 ---

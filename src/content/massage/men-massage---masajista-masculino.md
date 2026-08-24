@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "Easily the best massage I’ve ever received. Carlos creates a transcendent experience by blending multiple massage techniques accompanied by an intentional and relaxing playlist. He was very thorough, comforting, kind. I left feeling physically and spiritually rejuvenated. 10/10 recommend."
+serviceTags:
+  - tailandes
 ---

@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "Friendly girls! The service is good for the low price. They work fast and efficient. I’m happy"
+serviceTags:
+  - pedicura
 ---

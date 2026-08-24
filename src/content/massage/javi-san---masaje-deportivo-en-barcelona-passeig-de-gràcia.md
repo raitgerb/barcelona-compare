@@ -36,4 +36,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "One of the best massages I’ve had in years.  Very relaxing and comfortable.  Javi was very professional and I felt amazing when I left.  Highly recommended if you need someone to refresh you and make you feel great."
+serviceTags:
+  - deportivo
 ---

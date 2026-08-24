@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "amazing work, lovely people, will now be my go to spot whenever I'm back in bcn 🥹🫶🩵"
+serviceTags:
+  - nail-art
 ---

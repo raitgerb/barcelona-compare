@@ -35,4 +35,6 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "es"
     text: "Muy perfecto"
+serviceTags:
+  - pedicura
 ---

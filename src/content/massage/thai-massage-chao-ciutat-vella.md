@@ -47,4 +47,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "I had a really nice experience here. My boyfriend and I were here together, and the atmosphere was calm and relaxing from the start.  I had a deep oil massage, which felt very good and helped me unwind. My boyfriend had a Thai massage and was also happy with his treatment.  Tony and Maggi were both friendly and professional, and we felt comfortable throughout the whole session.  Overall, a pleasant experience! We‘ll come back again if we visit Barcelona another time"
+serviceTags:
+  - tailandes
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "6 years ago"
     languageCode: "en"
     text: "I had a wonderful experience in this place and I am extremely satisfied with the level of care and service I received. My nails look absolutely fabulous! 😍 ❤️ I will not hesitate to go back and I am really looking forward to another day of being pampered. Certainly not your common nail bar! Oh, and they have a great terrace by the way 😀🌞"
+serviceTags:
+  - pedicura
 ---

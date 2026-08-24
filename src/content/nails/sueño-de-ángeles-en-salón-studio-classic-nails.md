@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Siempre hago con ella y me encanta como me quedan las uñas, Angeles es muy amable y muy profesional, la recomiendo 100%"
+serviceTags:
+  - gel-acrilicas
 ---

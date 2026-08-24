@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "I love love love this salon ! I’ve went to this salon 4-5 times and got my nails and feet done and I’m leaving happy every time ! Even if I don’t speak Spanish they are always trying their best to communicate with me. They are very patient and always take my expectations and visions very seriously. They never let me leave unhappy with the results and really really take their time to make it perfect. Will always come back 💅🏾💗"
+serviceTags:
+  - pedicura
 ---

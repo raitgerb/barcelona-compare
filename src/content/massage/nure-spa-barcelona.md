@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Wonderful and relaxing experience!"
+serviceTags:
+  - spa-bienestar
 ---

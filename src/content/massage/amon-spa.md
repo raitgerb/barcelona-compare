@@ -57,4 +57,9 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I did the Hamam body scrub. The price was 90€ 30-40min. I think it should be 1hr for 90€. The body scrub did not removed the dead skin. The young woman used the soft gloves 🧤 but it felt ok . In order to remove dead skin they use silicone gloves. The woman used four different soap 🧼 on my body and wash my hair. I luv the Egyptian theme. Book appointment/ they speak little bit of English."
+serviceTags:
+  - deportivo
+  - pareja
+  - quiromasaje
+  - spa-bienestar
 ---

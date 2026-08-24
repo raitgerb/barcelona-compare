@@ -1,0 +1,68 @@
+---
+// /mejores/{category}/{x}/{y}/ — combo pages: {district}/{service} or
+// {service}/{district}. Whichever pair clears the MIN_COMBO gate renders.
+import MoneyPage from '../../../../../components/MoneyPage.astro';
+import { getCollection } from 'astro:content';
+import { SERVICES, slugify, findService, MIN_COMBO } from '../../../../../lib/services';
+
+export async function getStaticPaths() {
+  const paths: Array<{ params: { category: string; x: string; y: string }; props: Record<string, unknown> }> = [];
+  for (const cat of ['nails', 'massage'] as const) {
+    const all = await getCollection(cat);
+
+    const nbBySlug = new Map<string, { name: string; count: number }>();
+    for (const b of all) {
+      const nb = b.data.neighborhood;
+      if (!nb || nb === 'Barcelona') continue;
+      const s = slugify(nb);
+      const cur = nbBySlug.get(s) ?? { name: nb, count: 0 };
+      cur.count += 1;
+      nbBySlug.set(s, cur);
+    }
+    // tag counts per neighborhood
+    const tagCounts = new Map<string, Map<string, number>>(); // nb -> tag -> n
+    for (const b of all) {
+      const nb = b.data.neighborhood;
+      if (!nb || nb === 'Barcelona') continue;
+      let m = tagCounts.get(nb);
+      if (!m) { m = new Map(); tagCounts.set(nb, m); }
+      for (const t of ((b.data.serviceTags ?? []) as string[])) {
+        m.set(t, (m.get(t) ?? 0) + 1);
+      }
+    }
+    const taggedTotal = (tag: string) =>
+      [...tagCounts.values()].reduce((s, m) => s + (m.get(tag) ?? 0), 0);
+
+    for (const [slugA, a] of nbBySlug) {
+      for (const svc of SERVICES[cat]) {
+        const comboN = tagCounts.get(a.name)?.get(svc.slug) ?? 0;
+        // district/service combos need local depth
+        if (comboN >= MIN_COMBO) {
+          paths.push({
+            params: { category: cat, x: slugA, y: svc.slug },
+            props: { mode: 'combo', neighborhood: a.name, serviceSlug: svc.slug },
+          });
+        }
+        // service/district mirror — only if service is big enough city-wide
+        if (taggedTotal(svc.slug) >= MIN_COMBO && comboN >= MIN_COMBO) {
+          paths.push({
+            params: { category: cat, x: svc.slug, y: slugA },
+            props: { mode: 'combo', neighborhood: a.name, serviceSlug: svc.slug },
+          });
+        }
+      }
+      // service/service-style fallback: plain district page at depth-2 when the
+      // district itself qualifies (so /mejores/nails/eixample/ always works)
+    }
+    // also allow /mejores/{cat}/{district} to be reachable from depth-2 URLs:
+    // /mejores/{cat}/{service}/{district} covered above.
+    void 0;
+  }
+  return paths;
+}
+
+const { category } = Astro.params;
+const props = Astro.props as { mode: 'combo'; neighborhood?: string; serviceSlug?: string };
+---
+
+<MoneyPage lang="es" category={category as 'nails' | 'massage'} mode="combo" neighborhood={props.neighborhood} serviceSlug={props.serviceSlug} />

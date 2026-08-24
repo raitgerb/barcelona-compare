@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Mani was super nice and gave me a great manicure. All the staff were very happy and helpful"
+serviceTags:
+  - pedicura
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "I came here as a walk-in in a desperate attempt to find somewhere to get my nails done (showed up for my appointment at my usual salon nearby only to find it closed)  I’m pretty picky about my nails and I like to some hand drawn designs, but I had accepted I would probably just have to get simple nails… wrong!! Even without an appointment, I was able to get my nails done and get a design I wanted 🥰🥰🥰  My camera quality isn’t great but my nails turned out perfect and exactly like the picture I showed. A lot of attention to detail and making sure all the nail shape/size were even and matched.  Thank you!!"
+serviceTags:
+  - pedicura
 ---

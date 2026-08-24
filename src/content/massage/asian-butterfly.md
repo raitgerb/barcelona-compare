@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "Skip this one. Change the pricing while you are on the table, they smear you in oil (for which you pay extra) and the massage is the weakest you’ll ever get. They did offer me a happy ending though. Not sure if wouldve been part of the 50 bucks I paid for 45mins…so if you’re looking for that, we’ll, give it a go…"
+serviceTags:
+  - deportivo
 ---

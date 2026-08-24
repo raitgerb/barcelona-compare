@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "one of the best saloon you would have ever tried would be this one in barcelona !!! very clean, professional and reasonably priced! Go for Giselle you wont regret! best eyebrows you will have in your life😍"
+serviceTags:
+  - pedicura
 ---

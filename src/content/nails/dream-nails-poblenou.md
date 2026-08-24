@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "I have my pedicure done here and absolutely loved my experience! The salon was clean and staff so welcoming from the moment I walked in. My pedicure turned out perfect — super detailed, neat, and exactly what I asked for. You can really tell they care about quality and customer satisfaction. Highly recommend to anyone looking for amazing nails and great service!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

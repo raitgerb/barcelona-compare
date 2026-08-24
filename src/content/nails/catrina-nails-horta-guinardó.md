@@ -40,4 +40,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Si buscas una experiencia de manicura personalizada y llena de cariño, es el lugar adecuado. Respecto a su trabajo es impecable y nunca me ha durado tanto una manicura, más de 4 semanas intactas. Su atención al detalle y cuidado es espectacular. Además, su amabilidad y calidez te hacen sentir como en casa. Llevo más de dos años haciendo la manicura con ella y aunque me queda lejos de casa, el resultado lo merece :). La recomiendo 100%."
+serviceTags:
+  - gel-acrilicas
 ---

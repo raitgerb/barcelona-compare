@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "Great, professional, clean and efficient. I’ll be back."
+serviceTags:
+  - pedicura
 ---

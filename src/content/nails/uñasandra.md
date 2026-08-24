@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "es"
     text: "Los flyers colocados en un soporte junto a la entrada se vuelan con el aire y terminan tirados por la calle y en el parking de al lado. Esto genera suciedad y una imagen poco cuidada del entorno.  Como consejo, sería recomendable cambiar este hábito y utilizar un sistema que no ensucie el espacio público."
+serviceTags:
+  - pedicura
 ---

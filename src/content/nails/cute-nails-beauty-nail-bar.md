@@ -54,4 +54,7 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "I have been going to Iulia for 3 years now, almost 4. She is so attentive to details and makes my nails look amazing all the time. If you really want a good Russian manicure I really recommend Cute nails. Best nail salon in Barcelona."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

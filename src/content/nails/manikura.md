@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "I had an express manicure and pedicure here, including removal of a semi permanent pedicure from my toes. Two ladies attended me at the same time and they were really nice, quiet, and professional.  Salon is clean and spacious with no toxic acrylic smell, which is very important. Nail files are used one time only and they offer you for takeaway.  Express treatment involves a brief massage as well. I left relaxed and happy with the treatment. They definitely know what they're doing and they do it well. It's fair price too. I will definitely visit again. It's more than a nail salon, more like a spa feel.  Thank you, I hope you will keep up the good work 🙏🏻😇🤗"
+serviceTags:
+  - pedicura
 ---

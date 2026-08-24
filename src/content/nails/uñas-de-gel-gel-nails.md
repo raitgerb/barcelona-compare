@@ -17,4 +17,6 @@ languages:
 googleRating: 3
 googleReviewCount: 6
 googlePlaceId: "ChIJd--YIQCjpBIRJzWB5WOu8Yk"
+serviceTags:
+  - gel-acrilicas
 ---

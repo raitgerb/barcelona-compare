@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "MAL SERVICIO. Me hicieron las uñas hace dos días, me hicieron un relleno, al llegar a casa me di cuenta de que el trabajo estaba mal hecho (culpa mía por no fijarme bien en el establecimiento). He ido hoy a reclamar y me han dado la opción de arreglarlas, pero honestamente no quería que una persona que me había hecho un mal trabajo me las volviera a tocar, les he pedido que me las quitaran y querían cobrarme 10€ por quitarme el mal trabajo que habían hecho. Me han devuelto el dinero del servicio después de mucha discusión, han estado hablando en un idioma que yo no entiendo entre ellas, cosa que es muy injusta porque pueden estar diciendo cualquier cosa de mí y yo no poder enterarme. Muy mal servicio por parte de la dueña, NO VAYÁIS."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

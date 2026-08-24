@@ -48,4 +48,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Had my first ever manicure experience and the results were phenomenalllll. I brought in a photo with a unique trendy design with a gradient and the nail technician really took her time to perfect it. There is no rushing here. The space is also designed beautifully inside. In the end it looked pretty much same as the reference photo and they turned out beautiful. Thank youuu Picasso ;)"
+serviceTags:
+  - pedicura
 ---

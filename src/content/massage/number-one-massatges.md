@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "It’s not as clearn nor fancy like other massage shops, but the quality of massage is excellent and the price is incredibly cheap. I got Thai oil massage from a guy who said just working on Sundays and Mondays(?) but he did the best oil massage I’ve ever had in my life. He was humble and said other female colleagues are better, but his massage worked really good for me. Thank you so much!"
+serviceTags:
+  - tailandes
 ---

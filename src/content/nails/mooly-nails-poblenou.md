@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "best nail salon ever! They were super kind and the work was fantastic! At Mooly Nails Poblenou they work very precisely and everything is very clean. I am very happy with the result.. the nail is so nicely shaped and the acrylic is very thin so it looks quite natural. Thank you so much!❤️"
+serviceTags:
+  - pedicura
 ---

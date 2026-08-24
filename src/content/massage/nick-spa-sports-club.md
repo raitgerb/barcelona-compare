@@ -46,4 +46,7 @@ googleReviews:
     languageCode: "en"
     text: "It has all you need. Many classes, fully equipped gym over 2 floors and functional outdoor space. The spa is incredible and staff very friendly 😊"
 googleEditorialSummary: "Trendy, modern fitness center & spa featuring a restaurant, personal training, classes & more."
+serviceTags:
+  - deportivo
+  - spa-bienestar
 ---

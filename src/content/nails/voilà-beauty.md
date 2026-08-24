@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "Thank you. Our therapist was from Moldova - we (husband & wife) really enjoyed our pedi and will be back. Xxl"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

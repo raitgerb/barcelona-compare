@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Probé muchos salones de uñas en Barcelona, pero para mí este es el mejor por muchas razones. Siempre cuidan mis uñas, hacen exactamente lo que les pido y además son muy amables conmigo. La relación calidad-precio también es la mejor. Siempre volveré aquí."
+serviceTags:
+  - gel-acrilicas
 ---

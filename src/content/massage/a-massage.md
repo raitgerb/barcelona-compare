@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Best sports massage, not too hard really finds the problem areas and works them well. Felt so great after."
+serviceTags:
+  - deportivo
 ---

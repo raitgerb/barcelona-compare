@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Tiago did one of the finest jobs that I have ever had in a massage, he was friendly respectful and the massage was definitely relaxing!"
+serviceTags:
+  - deportivo
 ---

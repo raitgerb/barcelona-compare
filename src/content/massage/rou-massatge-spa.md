@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "es"
     text: "Muy buena atención y todas muy majas."
+serviceTags:
+  - spa-bienestar
 ---

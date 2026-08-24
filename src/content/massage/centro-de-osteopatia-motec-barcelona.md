@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Desde hace años padezco de cefalea y dolor de espalda. Por recomendación de mi Doctora acudí al Centro de Osteopatía Motec y desde que me trata Vanesa Galindo mis dolores han disminuido muchísimo. Tengo mucha suerte de tratarme con ella, tiene una gran sensibilidad y empatía que hace que me sienta muy bien durante las sesiones. Su trabajo es suave y efectivo; me equilibra mi cuerpo desbloqueando las zonas  que tengo más cargadas; me enseña a ser consciente de mi respiración y me aconseja para mejorar. La verdad es que es una gran osteopata, muy formada y con una gran experiencia. La recomiendo a todos el mundo que necesite un profesional en este campo."
+serviceTags:
+  - deportivo
 ---

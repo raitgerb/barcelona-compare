@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Ed es un profesional muy atento a su trabajo. Tiene manos de oro y el masaje es muy relajante y te hace sentir muy bien después de la sesión. Fui para relajarme y trabajar los músculos de las espaldas, pues en mi trabajo siempre estoy sentado y eso no es bueno para el cuerpo. Después de la sesión con Ed, me sentí mucho mejor."
+serviceTags:
+  - reflexologia
 ---

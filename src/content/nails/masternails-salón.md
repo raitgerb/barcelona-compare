@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "es"
     text: "Estoy muy contenta con el servicio en depilación láser. Desde el primer momento me sentí en buenas manos, y los resultados están siendo muy buenos. Laura, ha sido súper profesional y amable en todo momento. Me explicó todo el proceso con detalle y hizo que me sintiera muy cómoda. Sin duda, la recomiendo totalmente"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

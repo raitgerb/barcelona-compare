@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Alejandro es un muy buen profesional y hace que disfrutes de la sesión mucho. Lo recomiendo absolutamente porque todo el equipo son profesionales en lo que hacen"
+serviceTags:
+  - deportivo
 ---

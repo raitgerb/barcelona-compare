@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "The salon is owned by an amazing, caring and skilled girl. She really knows what she is doing and got a nice attention to detail. I did a full pedicure + semipermanent and a gel set, and also an eyebrows and labial épilation and everything was on point. I really recommend booking an appointment there if you want a nice and clean mani/pedi or waxing!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

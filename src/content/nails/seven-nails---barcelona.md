@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Walked in randomly while walking back to the hotel with my sisters. Great experience for Mani and Pedi. Calm owners / staff and professional materials and color, clean and neat space."
+serviceTags:
+  - pedicura
 ---

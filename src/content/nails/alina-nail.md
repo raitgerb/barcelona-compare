@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Voy a empezar diciendo que ofrecen un pésimo servicio. Muy decepcionada. He ido con mi madre a hacernos las uñas, ella la manicura y yo las acrílicas; nos ha atendido la misma chica. He salido con la sensación de que hemos regalado el dinero. Entiendo que la práctica hace la experiencia pero cuando se trata de ofrecer un servicio por el cual tus clientes están pagando, debes procurar ofrecerlo de la mejor manera, NO con una chica que no sabe y que aprende durante la marcha. A mi madre le ha dejado cada uña de diferente forma y diferente tamaño y en cuanto a pintar, tanto a mí como a ella nos ha dejado grumos bastante notorios. Es una lástima que tenga que dejar tal reseña, puesto que estas son perjudiciales para el negocio, sin embargo, estoy tan furiosa por el servicio que me siento en la obligación de advertir a futuros clientes.  Y si se preguntan “¿Por qué no pidió que se las volviera a pintar?” o “¿Por qué no pidió que se lo hiciera otra persona?” Pues ciertamente, le pedimos a la chica que volviera a pintarlas mas era evidente que por más que lo intentara no sabía, y los conocimientos de el resto de la plantilla eran limitados, es decir, era un trabajo en cadena.  Si quieres que te den un buen servicio, no vayas a Alina Nails."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

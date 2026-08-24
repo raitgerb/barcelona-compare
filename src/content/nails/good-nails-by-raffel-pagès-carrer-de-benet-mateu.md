@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "es"
     text: "Muy contenta con Stefany  y el equipo , Stefany es detallista ,amable y puntual. Ha resucitado mis uñas 😉 Os recomiendo la vitamina,porque las uñas crecen más fuertes y  más rápido. Gracias"
+serviceTags:
+  - pedicura
 ---

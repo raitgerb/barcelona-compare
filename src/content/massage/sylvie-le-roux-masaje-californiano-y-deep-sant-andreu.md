@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "A truly great massage, the combination of Californian and deep tissue was the perfect balance of relaxation and would recommend it to anyone!"
+serviceTags:
+  - deportivo
 ---

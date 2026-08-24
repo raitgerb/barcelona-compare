@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Impresionante el trabajo profesional que me ha realizado. Llegué con la mitad de las uñas porque me las muerdo y me ha reconstituido las uñas con una mezcla que requiere de gran destreza artística. Todo un trabajo artesanal de casi 3 horas para obtenir unas uñas naturales sin materiales pegados. Gracias por la profesionalidad"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

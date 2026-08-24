@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "So far, I have had very good results with their facial treatments.  My most recent facial treatment was with Rebecca. She is a skilled, professional:-  it was such a relaxing experience and my skin looks amazing. I also purchase some of their organic products for home use because they work well for me."
+serviceTags:
+  - pedicura
 ---

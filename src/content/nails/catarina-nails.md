@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Very nice shop and so close to our hotel.  I appreciate the two ladies did a great job on my pedi/mani."
+serviceTags:
+  - pedicura
 ---

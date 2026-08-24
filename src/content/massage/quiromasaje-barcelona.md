@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Amazing!!"
+serviceTags:
+  - quiromasaje
 ---

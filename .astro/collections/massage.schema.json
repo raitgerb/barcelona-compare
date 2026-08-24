@@ -134,6 +134,12 @@
         ]
       }
     },
+    "serviceTags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "googleEditorialSummary": {
       "type": "string"
     },

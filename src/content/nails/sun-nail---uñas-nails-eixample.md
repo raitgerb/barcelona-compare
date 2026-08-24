@@ -49,4 +49,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Most amazing nails I’ve ever had! These women are artists 🌸 Thank you for giving me the most beautiful design. If I lived in Barcelona, I’d return every month!"
+serviceTags:
+  - pedicura
 ---

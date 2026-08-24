@@ -47,4 +47,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "My wife and i came here when we landed in the morning and had to kill time for a check-in at the hotel after dropping our bags off. Generally speaking getting a massage after a stiff 7+ hour flight is a great idea, but man this place was good. We frequent spa spots locally and on travels and i must say this is one of the best places we have been to. The  setup is very nice and they have plenty of rooms. We did a 60 min massage and 30 min bath combo which helped us recover greatly. I had a Balinese massage and the techniques were good. I got just the right amount of pressures without feeling any pain. The front people are very courteous as well! I don't know if it is a Barcelona thing but everyone seems to speak good English as well, which is great for a traveling folks. We lived the experience so much we reserved to come back a day before our flight for another 90 min session."
+serviceTags:
+  - spa-bienestar
+  - tailandes
 ---

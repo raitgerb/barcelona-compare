@@ -43,4 +43,8 @@ googleReviews:
     relativeTime: "7 years ago"
     languageCode: "en"
     text: "I am here for the first time. This is a super good beauty nail shop and the environment is very good. I like here very much !"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
+  - pedicura
 ---

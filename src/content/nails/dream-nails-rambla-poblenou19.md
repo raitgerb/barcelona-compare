@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "The absolute BEST place in Barcelona to get your nails done.  I love their service and how nice they always are. Last time I was there we ended up singing Karaoke songs! The vibe is amazing.  But oh: look at the beauties too!!!"
+serviceTags:
+  - pedicura
 ---

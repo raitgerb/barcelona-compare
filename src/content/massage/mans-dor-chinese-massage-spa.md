@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: ""
     text: ""
+serviceTags:
+  - spa-bienestar
 ---

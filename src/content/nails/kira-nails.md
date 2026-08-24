@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "After years outside of Spain, I finally found the only nail salon I can trust. They have not only removed my gelish nail polish safely but have helped me grow back my natural nails after previous local disasters!!! (real-life horrors, almost lose my nails completely) They do the removal with a mix of filing, acetone dip, and machine, HOWEVER, they know how to do it and your nail won't suffer from it. They are extremely NON-AGGRESSIVE to your natural nail and for this, I am forever loyal. NOBODY ELSE CAN TOUCH MY NAILS. Thank you, ladies, Yayo and Sayaka are both amazing artists and professionals!"
+serviceTags:
+  - pedicura
 ---

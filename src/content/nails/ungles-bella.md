@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Fast, precise and affordable!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

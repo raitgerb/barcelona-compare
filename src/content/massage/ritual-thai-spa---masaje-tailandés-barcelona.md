@@ -55,4 +55,10 @@ googleReviews:
     relativeTime: "10 months ago"
     languageCode: "en"
     text: "I absolutely loved this spa! The atmosphere is simply wonderful — relaxing, cozy, and you feel completely comfortable from the very first moment. The service is top-notch, with every detail carefully thought out. Special thanks to the massage therapist — an amazing professional with strong, confident hands, just the way I like it. The massage was incredibly high-quality and deeply relaxing; I experienced complete relaxation and pure pleasure. I’m thrilled and will definitely come back again!"
+serviceTags:
+  - pareja
+  - quiromasaje
+  - reflexologia
+  - spa-bienestar
+  - tailandes
 ---

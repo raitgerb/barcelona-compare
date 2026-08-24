@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Pongo 1 estrella porque no puedo poder 0.  Me ha hecho las uñas YANIRA , la nivelación de refuerzo es cualquier cosa menos una nivelación,  le dije en reiteradas ocasiones que estaban mal que si podía emparejar y rellenar las partes que faltaban , ignorando por completo lo que yo decía , y mi desconfirmismo.  YANIRA no sabe trabajar con refuerzo, no es empatica,  y mucho menos delicada para hacerlo me ha dejado muy lastimado al rededor de mis uñas."
+serviceTags:
+  - gel-acrilicas
 ---

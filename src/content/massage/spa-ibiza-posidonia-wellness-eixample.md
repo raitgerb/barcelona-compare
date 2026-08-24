@@ -37,4 +37,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Horrible service! When we arrived at the spa at the agreed time, nobody was at the reception. After waiting for 1,5 hours, the staff members didn't even apologise or give us an explanation. The only thing he said was that they were doing a massage and didn't hear nobody coming in, even though the hotel receptionist called them several times! I don't recommend this place to anybody!"
+serviceTags:
+  - spa-bienestar
 ---

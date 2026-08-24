@@ -52,4 +52,9 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "Enjoyed my first massage experience in BCN. Will definitely be back!"
+serviceTags:
+  - pareja
+  - quiromasaje
+  - reflexologia
+  - spa-bienestar
 ---

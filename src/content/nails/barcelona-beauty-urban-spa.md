@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "This has to be the best manicure and pedicure in the world without a doubt! The care and attention that both Eli and Mante give makes all the difference.  I came to Barcelona Beauty Urban Spa three times over two years and each manicure was perfect and lasted over a month.  The best manicure I received was in June 2025 for my wedding. Eli went above and beyond to make sure my nails were perfect.  I will be counting down the days until I come back to Barcelona so I can return to this spot!"
+serviceTags:
+  - pedicura
 ---

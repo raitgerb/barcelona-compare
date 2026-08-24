@@ -49,4 +49,7 @@ googleReviews:
     relativeTime: "3 weeks ago"
     languageCode: "en"
     text: "Amazing massage by  Layla! Very friendly staff. Quick to respond. Highly recommend!"
+serviceTags:
+  - deportivo
+  - tailandes
 ---

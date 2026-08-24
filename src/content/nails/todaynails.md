@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "10 months ago"
     languageCode: "en"
     text: "Stopped by tonight and they did an amazing job with my shellac manicure! I was very impressed. The technician did an amazing job."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

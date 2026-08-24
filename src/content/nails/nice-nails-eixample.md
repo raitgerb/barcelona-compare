@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "I was just there while visiting Barcelona. This salon is amazing. My friend that lives here recommended it to me, and it did not disappoint. The staff is super kind and welcoming, good price and fast service + the nails look great🤩🤩"
+serviceTags:
+  - gel-acrilicas
 ---

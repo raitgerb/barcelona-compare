@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "She was so sweet and able to accommodate me last minute. Service was way better than my expectations, would come back here anytime I’m in bcn!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

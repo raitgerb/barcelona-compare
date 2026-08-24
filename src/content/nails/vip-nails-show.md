@@ -36,4 +36,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "en"
     text: "Nails are completely different sizes and two already broke off not even a week after getting them done. 50€ for not even a design and different sizes and two broken nails. Horrible"
+serviceTags:
+  - pedicura
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Loved my experience here! The manicure was super well done—great trimming, filing, and the nail color looks amazing and lasts. The owner is so friendly and really cares about making sure you’re happy with everything. I felt really comfortable and respected the whole time. Definitely coming back and highly recommend!"
+serviceTags:
+  - gel-acrilicas
 ---

@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "Best massage ever! I strongly recommend visiting them. 30 minute massage is 25€ and it is really good one!"
+serviceTags:
+  - gel-acrilicas
 ---

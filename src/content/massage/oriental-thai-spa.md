@@ -47,4 +47,7 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "fr"
     text: "Super bien."
+serviceTags:
+  - spa-bienestar
+  - tailandes
 ---

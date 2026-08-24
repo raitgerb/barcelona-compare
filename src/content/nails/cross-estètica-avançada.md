@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "No sabía q necesitaba un madaje hasta queprobe uno de este centro, un masaje de 1h duper completo, laura estando atenta en cualquier momento, la sala el ambiente todo ide para q consigas relajarte hasta cuando te esta haciendo un masaje descontracturante. una experiencia genial sali de ahi como nueva, repetire sin duda!"
+serviceTags:
+  - pedicura
 ---

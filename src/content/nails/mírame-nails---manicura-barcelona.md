@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "7 years ago"
     languageCode: "es"
     text: "Excelente servicio, de la más alta calidad ! Y con un personal muy amable y profesional. Siempre quedo encantada con mis cejas y pestañas. 100% satisfacción garantizada. Lo recomiendo personalmente !"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

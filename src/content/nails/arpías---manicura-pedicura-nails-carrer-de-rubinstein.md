@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I’ve given this place multiple chances with different technicians, and every single time it’s been a disappointment. The cuticle work is consistently awful choppy, uneven, and just plain lazy. Every time I leave, I look down at my hands and wonder how I paid so much for something that looks so messy and unfinished.  The prices are ridiculous for what you get. They charge extra for everything even for removal, which should be standard. Want a simple design? That’s an upcharge. Want clean work? Apparently that’s too much to ask.  Honestly, they should stop pouring money into influencer marketing and pretty Instagram posts and start investing in actual, skilled manicurists. It feels like a trap they lure you in with aesthetics, but the quality just isn’t there. It’s clear they’re expanding too fast without prioritizing proper training or consistency.  Save your time and money this place is all hype and zero delivery."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

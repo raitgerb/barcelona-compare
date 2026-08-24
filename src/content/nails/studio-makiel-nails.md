@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Muy buena experiencia. Atencion , servicio, y predisposición genial. Se esmeró muchísimo en la manicura y pedicura semipermanente."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

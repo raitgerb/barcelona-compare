@@ -44,4 +44,8 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "To truly appreciate a good nail salon, you need to see the before and after—and as you can tell, the result is perfect! There’s just a bit of natural growth, but the nails are still in amazing shape. The team was super fast, the price was great, and the quality speaks for itself. I’ll definitely be coming back!"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
+  - pedicura
 ---

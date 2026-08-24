@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "ca"
     text: "Les noies son molt simpàtiques i m’han deixat les ungles impecables. M’he fet una semi amb disseny que m’ha costat 23€, que crec que està super bé comparant preus amb altres llocs❤️❤️ Moltes gràciees🥰🥰"
+serviceTags:
+  - pedicura
 ---

@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "Doing here my laser depilation with Elena, and very very grateful for her excellent work! The result is impressive, I really don’t know why I didn’t start it earlier :) Elena is very nice, I always feel so comfortable with her"
+serviceTags:
+  - pedicura
 ---

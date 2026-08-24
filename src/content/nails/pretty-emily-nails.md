@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 weeks ago"
     languageCode: "en"
     text: "Went to do pedi and mani on Thursday, the staff is soooo nice and they do an amazing work, will recommend this place 100%!!"
+serviceTags:
+  - pedicura
 ---

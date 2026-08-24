@@ -41,4 +41,6 @@ googleReviews:
     text: "Absolutely loved this spa! I am travelling through Barcelona and the service was excellent. The masseuse was kind, knowledgeable and it was lovely to be able to shower after the massage as there was a shower in the room. Would HIGHLY recommend"
 languages:
   - "Inglés"
+serviceTags:
+  - spa-bienestar
 ---

@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I had an amazing experience at Prettify. Came in without an appointment and they found time in the next hour to fit me in into their tight schedule for a gel refill. I do gel since many years now and this is one of the best manicure I’ve ever had. Super precise, perfect shape and nice color! The specialist took her time to check everything in detail and did a great job. Now I know where to get my nails done  when in Barcelona :)"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

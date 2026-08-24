@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "Atención excelente, meticulosidad. Nos atendieron muy bien, mi madre que va en silla de ruedas nos ayudaron a acceder al sitio, y se adoptaron a la escasa movilidad.   Los servicios que ofrecen con delicadeza, mucha limpieza , que te sientas a gusto. El local esta muy bien decorado, todo en un ambiente con madera y musica muy relajante de spa.  Repetiré sin duda.   No se puede comprar los servicios de otros centros de uñas y por eso pagas esa diferencia, que sopesando la calidad no es tanto."
+serviceTags:
+  - gel-acrilicas
 ---

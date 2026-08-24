@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "Amazing experience: massage, spa pedicure, and manicure…. Immaculate results and such an enjoyable chat with all the women who work there 🥰"
+serviceTags:
+  - pedicura
 ---

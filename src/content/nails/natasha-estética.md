@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "5 years ago"
     languageCode: "es"
     text: "No me ha gustado la experiencia. El local es pequeño  y eso no seria un inconveniente si no fuese por lo desorganizado y poco limpio que está. La chica se quitó la mascarilla para comer y hablar durante el servicio y me dejó las pieles muy destrozadas alegando que se debía a  que tenía la piel fina. Ya me he hecho este tipo de manicura en otros centros y nunca me ha pasado. También me hice un servicio de permanente de pestañas y lo mismo, que no salía la pestaña muy marcada porque tenia el pelo muy rebelde.  Os paso fotos de la manicura para que lo valoréis."
+serviceTags:
+  - gel-acrilicas
 ---

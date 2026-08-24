@@ -51,4 +51,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "One of the best massages I ever had with Carolina! 10/10 would recommend!  The place was clean, luxurious and professional."
+serviceTags:
+  - pareja
+  - spa-bienestar
 ---

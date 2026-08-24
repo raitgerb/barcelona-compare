@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "10 months ago"
     languageCode: "en"
     text: "Lisa was so good defo recommend"
+serviceTags:
+  - gel-acrilicas
 ---

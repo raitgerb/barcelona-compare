@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Súper encantadasima con mis uñitas, la super recomiendo, un servicio totalmente especial para sentirte a gusto🫰🏻🩷"
+serviceTags:
+  - pedicura
 ---

@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "Very good service i love my summer nails !"
+serviceTags:
+  - pedicura
 ---

@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "10 months ago"
     languageCode: "es"
     text: "Lali es encantadora, tiene unos tratamientos muy top y te explica todo super bien, además tiene unos precios muy competitivos. Ya tiene una nueva clienta  :)"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

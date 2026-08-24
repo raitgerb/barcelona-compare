@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "es"
     text: "Servicio impecable. German es muy profesional, y muy buna persona, puntual y atento en todo momento. Se nota su conocimiento y experiencia en cada técnica, después de cada sesion siento una gran mejoría. Lo recomiendo 100%."
+serviceTags:
+  - quiromasaje
 ---

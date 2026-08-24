@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "Loved everything about it!! Thank you Giulia"
+serviceTags:
+  - pedicura
 ---

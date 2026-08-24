@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "es"
     text: "Llevo tres visitas a este sitio y las tres han sido una decepción. Las dos primeras veces vine a manicura: trabajo hecho a toda velocidad, con cero cuidado, y las uñas se caían a los dos días. El trato, nulo — ni te miran a la cara.  Hoy he venido a por una pedicura con Angélica, y ha sido la peor experiencia de las tres. Desde el principio le avisé de que tuviese cuidado con una uña que me dolía y que estaba a punto de caerse. Su respuesta fue limarme directamente sobre la piel, sin ningún cuidado, con una brusquedad que no tiene ningún sentido en un servicio que se supone que es de cuidado personal.  Lo que remató la experiencia: mientras todavía me estaba haciendo el servicio, me vino con el datáfono para que la pagase. Que me cobren antes de terminar lo dice todo sobre cómo entienden el trato al cliente.  Tres oportunidades son más que suficientes. No recomiendo este sitio a nadie que quiera un trabajo bien hecho y un trato mínimamente digno"
+serviceTags:
+  - pedicura
 ---

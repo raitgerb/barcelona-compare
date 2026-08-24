@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "12 months ago"
     languageCode: "en"
     text: "“I got my nails done here and unfortunately the price did not match the quality. Within a short time, my nails started chipping and the color began coming off. For what I paid, I expected the work to last much longer. I haven’t gone back since.”"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

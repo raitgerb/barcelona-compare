@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "You have to stop here! After walking 30,000 steps yesterday and close to 20 km my feet were in pain and in 15 min they took care of the pain and I feel like new! To the people complaining about the extra 5€ oil, I was very well informed and even showed the extra price on a calculator, everything was super clear and honest and if you don’t want the magic oil then say no and that’s it! You don’t need to leave a 1 star review just because they are trying to upsell you on an already cheap service!"
+serviceTags:
+  - pedicura
 ---

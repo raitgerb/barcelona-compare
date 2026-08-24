@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a week ago"
     languageCode: "en"
     text: "The service was particularly good.I love it when he rubs my feet.It feels very, very, very good."
+serviceTags:
+  - nail-art
+  - pedicura
 ---

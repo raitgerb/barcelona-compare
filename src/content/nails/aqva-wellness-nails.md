@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "It is the best place I have been to, in Barcelona. The salon is super clean, Martina is a great beautician and gives excellent beauty and products' advice. I got a facial and a manicure and I am super happy with it. My skin feels wonderful! The prices are also great! A must-visit :))"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -42,4 +42,7 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "es"
     text: "Mi centro de confianza desde hace 2 años. A parte del diseño de las uñas que es elegante y sofisticado, usan muy buenos productos para el cuidado de las uñas por lo que de natural quedan fuertes y sanas. La atención de Thayná es muy buena y efectiva a parte de ser muy buena profesional. Lo recomiendo!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

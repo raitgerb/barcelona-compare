@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Me hice las uñas aquí hace unas semanas; la señora muy maja he hizo todo el procedimiento limpio, en las paredes habían muchos diplomas de cursos y por eso ni me preocupe, pero por desgracia al salir del salón me di cuenta que las uñas no estaban bien alineadas y también que el esmalte no estaba uniforme, algo que con la luz se suele notar mucho. No es un trabajo de 5 estrellas ya que en una semana el esmalte de  dos uñas se me levantó a los lados. Vuelvo a repetir que l señora lo hizo muy pulcro todo pero no se merece las 5 estrellas, no se si es por el material o por la técnica pero en 1 semana y 3 días me tuve que volver ha hacer las uñas. Una pena. Las fotos son a la semana de hacerme las uñas."
+serviceTags:
+  - pedicura
 ---

@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "I got my nails done hoping for a fresh look, but ended up with an infection and painful cuticles."
+serviceTags:
+  - gel-acrilicas
 ---

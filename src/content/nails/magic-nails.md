@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "Recomiendo este centro 100x100, increíble cómo trabajan las chicas, el trato genial y unas uñas perfectas... Lo que más me ha gustado es que se han preocupado mucho por mis uñas. Muy muy contenta😍, va a ser mi centro de confianza."
+serviceTags:
+  - pedicura
 ---

@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "en"
     text: "Very good sport massage, one hour covers all parts of body, by far the best i v tried in Spain, from a standard of Chinese athlete"
+serviceTags:
+  - deportivo
 ---

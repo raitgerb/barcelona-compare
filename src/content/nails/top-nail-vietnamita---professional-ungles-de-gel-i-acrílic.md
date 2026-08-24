@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Great nail studio! I’ve been going there since May and they’ve always provided a great service. Thanks Isabella for these!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

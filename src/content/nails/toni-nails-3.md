@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "Wonderful service from the team! Hari was particularly attentive to my needs with the design on my hands. Very happy and will be back!  I also love doing the pedicure there! The massage chairs are nice touch :)"
+serviceTags:
+  - pedicura
 ---

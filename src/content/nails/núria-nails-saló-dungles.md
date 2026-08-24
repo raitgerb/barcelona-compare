@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "La mejor de toda la ciudad. Salgo siempre encantada!!!!"
+serviceTags:
+  - nail-art
 ---

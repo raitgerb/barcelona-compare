@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "8 years ago"
     languageCode: "en"
     text: "Yesterday I went to do my nails as I need it to be done urgently. They removed my previous shellac but they need it some instructions as the old gel needed to be removed. They removed the gel manually with acetone and nail file. I’ve done a first layer of porcelain (acrylic) and then permanent colour for a reasonable price. Customer service was good, the girls listened to me and tried to understand all my concerns and that was lovely!  The place is clean and looks new. Many thanks guys!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

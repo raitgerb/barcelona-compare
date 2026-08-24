@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "es"
     text: "Contentísima con el resultado. Era la primera vez que iba a Lorena, pero me quedé maravillada con la dedicación y el nivel de detalle. Sin duda repetiré!"
+serviceTags:
+  - pedicura
 ---

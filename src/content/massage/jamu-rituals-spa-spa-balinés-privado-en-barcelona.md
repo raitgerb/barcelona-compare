@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Amazing place! The atmosphere was incredible and massage was super good. Highly recommend. Going to come back soon."
+serviceTags:
+  - spa-bienestar
 ---

@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Wonderful manicure! My daughter-in-law and I walked in without appointments and they were able to take us right away. Lovely staff, incredibly comfortable chairs - I napped while my nails were drying! 😊Nails have never looked better."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

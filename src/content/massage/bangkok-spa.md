@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "A great Spa in BCN! If you are looking to relax in a nice environment, this is the place for you! Great massage, ambiance I also very calming."
+serviceTags:
+  - spa-bienestar
+  - tailandes
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Had a pedicure that felt more like a spa. Will definitely come back to get a matching mani as well. Attention is amazing as you would expect from a small business run by a girl boss."
+serviceTags:
+  - pedicura
 ---

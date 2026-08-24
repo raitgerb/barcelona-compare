@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Llevo ya 3 años haciéndome las uñas con Ane y es que no la cambio por nada. Siempre es súper detallista, se nota que le pone muchísimo amor a su trabajo y eso se refleja en el resultado. Siempre me ha hecho lo que le pido, dejándolas increíbles. Además, es súper atenta, te hace sentir cómoda desde que llegás y siempre tiene buena onda. Si buscás un lugar donde te mimen y salgas feliz con tus uñas, este es el lugar ❤️"
+serviceTags:
+  - pedicura
 ---

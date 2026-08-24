@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "Absolutely amazing Thai massage!  The massage therapist that my husband and I encountered were phenomenal, every bit as good as the best massage we’ve had in Thailand. We each had a 90 minute massage and the therapists worked quickly and thoroughly to heal areas of the body and stretch out injured and sore muscles. I highly recommend Thai Chada if you’re tired and I’ve been walking too much and traveling this is the place! Wonderful and thank you again!"
+serviceTags:
+  - tailandes
 ---

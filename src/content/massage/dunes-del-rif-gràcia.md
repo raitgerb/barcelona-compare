@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "en"
     text: "Favorite massage place!! I go to Dunas del Rif very regularly and the service is always excellent. Treatments are impeccable and very relaxing.  Special thanks to Ester, who usually takes care of me she’s professional, attentive, and always gives great wellness advice 👌"
+serviceTags:
+  - spa-bienestar
 ---

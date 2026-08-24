@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Gigi is wonderful . She’s soo exciting and I love her soo much . I love my nails . It’s perfect, very good service and very kind people"
+serviceTags:
+  - gel-acrilicas
 ---

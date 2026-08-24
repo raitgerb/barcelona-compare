@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Cool place, friendly staff, nice massage. The massage I had taken was not Thai massage but it was very effective especially after having one week of continuous tennis games. Must try if you are a fan of massage."
+serviceTags:
+  - spa-bienestar
+  - tailandes
 ---

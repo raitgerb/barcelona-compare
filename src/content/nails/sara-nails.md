@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "One of the best manicures I have gotten in Barcelona. The lady was so gentle and cleanup my nails so throughly, she removed my prior nail polish without too much damage , cut them file them and did great Job on the semipermanent. Best 18 euros spent"
+serviceTags:
+  - gel-acrilicas
 ---

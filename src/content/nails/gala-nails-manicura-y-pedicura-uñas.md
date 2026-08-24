@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Lau y Gabi son las mejores en Barcelona! Me llevo haciendo la manicura con ellas hace años y siempre repito. Las uñas 10/10 y el servicio 10000/10. El local es hermoso también y siempre están con la mejor actitud. Muy recomendadas!💕"
+serviceTags:
+  - pedicura
 ---

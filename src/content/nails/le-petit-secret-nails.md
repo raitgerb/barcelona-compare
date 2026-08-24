@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I found my new nails place it’s very hard to find a good one. My manicure lasted about 3 weeks. The price is worth it and the girls are really nice."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "Fantastic, as usual. At first other guests were a bit noisy, but after they left - it felt absolutely luxurious experience. And Krista’s massage and facial treatment just resurrected me from my deadly week. Will be back more"
+serviceTags:
+  - spa-bienestar
 ---

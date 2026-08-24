@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "Huge place no AC, they have 2 fans which wouldn’t be so much of a problem except that the place is NOT clean and it blows nail dust everywhere. No music or anything which makes it a bit strange. They don’t use any towels or anything which makes the whole experience feel a bit unhygienic. There aren’t any real nail chairs so pedicures are a bit awkward. Also there were 3 girls in there one talking very loudly on the phone but aparently only one of them actually works the other two just sort of hang around on their phones. The color card I was asked to pick from was from a brand completely unknown to me, they proudly displayed OPI but didn’t actually let me choose from it. Once she started painting my nails I quickly discovered the color card did not match the colors at all."
+serviceTags:
+  - pedicura
 ---

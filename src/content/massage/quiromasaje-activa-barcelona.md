@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Wow! The reviews were right!! I wish I would have known about this place earlier! 1000% recommend!"
+serviceTags:
+  - quiromasaje
 ---

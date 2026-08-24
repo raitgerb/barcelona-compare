@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "EXCELENTE EXPERIENCIA. De principio a fin el masaje fue increíble, Gustavo es muy profesional y atento a todos los detalles. Su sala de masajes está muy limpia y adaptada para el completo relax. Lo recomiendo muchísimo y sin duda lo repetire. El mejor masaje de Barcelona. Gracias por todo Gustavo. Hasta pronto."
+serviceTags:
+  - tailandes
 ---

@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Luciana is very professional, knowledgeable and caring. The massage was great."
+serviceTags:
+  - deportivo
 ---

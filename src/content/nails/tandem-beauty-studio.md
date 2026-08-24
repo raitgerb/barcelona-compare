@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 years ago"
     languageCode: "en"
     text: "Best place in the neighborhood!! Very friendly, clean and amazing services. Carla, Sandra and the rest of the team treat you like family! A must try! Good prices and very accomodating"
+serviceTags:
+  - pedicura
 ---

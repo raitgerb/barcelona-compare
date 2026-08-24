@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "I had my acrylics done here and Amanda did an amazing job. She was gentle, patient, and really paid attention to the details I wanted. The shape and finish came out perfect, and the whole experience was relaxing and professional. I’m so happy with my nails and will definitely be coming back. Highly recommend Amanda if you want beautiful, long-lasting acrylics!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

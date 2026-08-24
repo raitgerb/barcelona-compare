@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Excellent service with detailed and friendly staff"
+serviceTags:
+  - pedicura
 ---

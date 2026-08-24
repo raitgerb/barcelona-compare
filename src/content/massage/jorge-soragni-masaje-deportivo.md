@@ -38,4 +38,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Recomiendo el lugar un 10 de 10"
+serviceTags:
+  - deportivo
 ---

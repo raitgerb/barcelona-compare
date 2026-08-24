@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "Tuve una experiencia excelente en Ada Spa. El masaje fue muy profesional, con la presión perfecta y adaptado a mis necesidades. Desde que entré el ambiente era tranquilo, limpio y muy relajante. Salí con una gran sensación de bienestar. El personal fue muy amable y atento en todo momento. Sin duda volveré y lo recomiendo a cualquiera que busque un masaje de calidad."
+serviceTags:
+  - spa-bienestar
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 years ago"
     languageCode: "ca"
     text: "Lloc per les ungles meravellós. Noies molt professionals i molt amables (agraïment especial per la Mercy) m'han fet una manicura semipermanent i estic encantada. Recomanable 💯!"
+serviceTags:
+  - gel-acrilicas
 ---

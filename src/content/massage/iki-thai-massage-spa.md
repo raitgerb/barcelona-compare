@@ -47,4 +47,7 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "Me and my boyfriend booked the couple massage today and it was fantastic . Recommended"
+serviceTags:
+  - spa-bienestar
+  - tailandes
 ---

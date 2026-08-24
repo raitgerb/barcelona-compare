@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "I‘ve been going to this nail studio for the past year every month and every single set was amazing! Just the very best studio in Barcelona absolutely recommend 💖💖"
+serviceTags:
+  - nail-art
 ---

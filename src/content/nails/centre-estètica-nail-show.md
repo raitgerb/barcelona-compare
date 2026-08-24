@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "Amazing foot massage. Wish I picked a longer one. After just 15 min my feet are ready to walk another 25k steps!! I will come back."
+serviceTags:
+  - pedicura
 ---

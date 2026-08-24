@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "El mejor salón para hacerte las uñas, por el cuidado y el acabado, además de todo tipo de diseños hechos siempre a mano 🥰"
+serviceTags:
+  - nail-art
 ---

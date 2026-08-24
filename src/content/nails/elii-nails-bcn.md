@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "es"
     text: "Perfectas duraderas productos de calidad y sobre todo la atención de Eli es maravillosa muy profesional y cuida muy bien mis uñas.. 😍✨✨✨"
+serviceTags:
+  - gel-acrilicas
 ---

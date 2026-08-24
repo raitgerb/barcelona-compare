@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Me encanta el trabajo que hacen en mis uñas, siempre con una atención impecable y un resultado perfecto. Son detallistas, profesionales y usan productos de excelente calidad. El trato es maravilloso. ¡Definitivamente mi lugar de confianza para el cuidado de mis uñas! Muchas gracias Chicas!"
+serviceTags:
+  - gel-acrilicas
 ---

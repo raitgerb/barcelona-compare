@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "This has been my go to place. They are just excellent. Everytime, I go there with some pain and come back the happiest! Kathy, the owner of the place is a great masseuse. They have other good masseuses whom I tried and they are amazingly good as well. I strongly recommend if you need an authentic Thai massage"
+serviceTags:
+  - tailandes
 ---

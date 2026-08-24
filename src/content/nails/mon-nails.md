@@ -31,4 +31,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "Servicio super excelente 😎👌🏻"
+serviceTags:
+  - pedicura
 ---

@@ -39,4 +39,7 @@ googleReviews:
     text: "Introducing newly opened nail salons💅 The owner of the shop she is very cute and friendly.  I'm definitely going again😍"
 languages:
   - "Inglés"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

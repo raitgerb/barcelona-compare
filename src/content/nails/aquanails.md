@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "es"
     text: "Muy buena experiencia porque quedaron hermosas mis uñas y la atención de 10 🫶🏽"
+serviceTags:
+  - gel-acrilicas
 ---

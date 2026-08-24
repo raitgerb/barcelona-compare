@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "es"
     text: "Clàudia es fantástica. Tiene una forma muy única de cuidar el cuerpo y la energía, con mucha atención y dedicación. Durante la sesión te sientes cuidada y sostenida por ella en todo momento. Además gracias a sus indicaciones yo seguí mejorando después de las sesiones y siento mi sistema nervioso y mi cuerpo más abierto y relajado. La recomiendo 100%!!"
+serviceTags:
+  - quiromasaje
 ---

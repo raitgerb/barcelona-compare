@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Perfect nails!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

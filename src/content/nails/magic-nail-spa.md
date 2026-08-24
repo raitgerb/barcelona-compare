@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "fr"
     text: "Merci pour la qualité de votre travail, je suis toujours très contente 🥰"
+serviceTags:
+  - nail-art
+  - pedicura
 ---

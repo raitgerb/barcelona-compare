@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "in the last week"
     languageCode: "en"
     text: "Amazing experience, thank you for everything!"
+serviceTags:
+  - deportivo
 ---

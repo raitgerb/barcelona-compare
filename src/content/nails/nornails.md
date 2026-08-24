@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "The best nails I've ever had done: the manicure was very precise, just the way I like it. And even the nail polish was applied without the slightest smudge. Lucky to live 5 minutes from them!! They are also very kind and nice, even though I don't speak Spanish yet they made an effort to have a few words with me. I will be back soon :)"
+serviceTags:
+  - pedicura
 ---

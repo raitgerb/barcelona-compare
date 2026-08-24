@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Una experiencia increíble con David. El masaje no solo fue relajante, sino que realmente me ayudó a canalizar mi energía y sentirme en armonía. Profesional, atento y con una técnica impecable. ¡Totalmente recomendado!"
+serviceTags:
+  - tailandes
 ---

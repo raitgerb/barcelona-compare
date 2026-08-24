@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "10 months ago"
     languageCode: "es"
     text: "Hoy me realicé una sesión de HIfu para reafirmar el rostro con Heidi me ha gustado mucho  su trato profesional y cercano me he sentido muy a gusto Súper recomendó el lugar y el tratamiento tengo 41 años y empiezo a notar cierta flacidez y este tratamiento es ideal me lo hice hace unos años y sin dudas vuelvo a hacérmelo porque desde la primera sesión se nota No duele para nada y finalizó con una crema hidratante y masaje Ya estoy mirando que otro tratamiento voy. A realizarme"
+serviceTags:
+  - spa-bienestar
 ---

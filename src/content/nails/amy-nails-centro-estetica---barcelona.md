@@ -48,4 +48,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "Very nice staff and loved my nails! Also done very fast for my mani and pedi!"
+serviceTags:
+  - pedicura
 ---

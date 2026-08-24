@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "They did a beautiful job with my nails, I’ve never had them look this nice. I definitely recommend this place, it’s clean and has a lovely attentive staff."
+serviceTags:
+  - gel-acrilicas
 ---

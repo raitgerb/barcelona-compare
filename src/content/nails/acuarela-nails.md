@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Me lo recomendó una amiga, y decidí ir. Estoy super contenta con el trato con el que me recibieron y con el resultado de las uñas. Ya tengo mi sitio de confianza."
+serviceTags:
+  - gel-acrilicas
 ---

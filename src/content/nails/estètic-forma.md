@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "ca"
     text: "Natàlia és una gran professional i una persona que sap cuidar-se dels seus pacients/clients amb afecte però sense intromissió. És també sempre molt puntual. La recomano al 100% tan pels seus tractaments INDIVA que per la seva manicura."
+serviceTags:
+  - pedicura
 ---

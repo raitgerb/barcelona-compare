@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I was walking around the neighborhood and came across this salon. I can’t recommend it enough, I got my nails done and the staff was so friendly and did an amazing job. There was a great selection of colors and I will definitely be a frequent customer! Thank you! ☀️💅"
+serviceTags:
+  - pedicura
 ---

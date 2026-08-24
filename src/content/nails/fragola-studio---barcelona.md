@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "Amazing service and staff!!! Would recommend 100%"
+serviceTags:
+  - pedicura
 ---

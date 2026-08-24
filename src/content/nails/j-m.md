@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Exceptional !! It was my first foot massage, i am a runner and i often have stiff feet or pain in them. After the massage i felt like flying. You can feel the relaxation throughout your whole body during the massage it is amazing.  Elena was really friendly and fun and her technique was just something that i wish everybody could experience. On my next visit of Barcelona i am surely comming back.  Highly recommended !!"
+serviceTags:
+  - pedicura
 ---

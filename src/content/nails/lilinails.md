@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "Love my nails ! They saved my day ! Good price"
+serviceTags:
+  - pedicura
 ---

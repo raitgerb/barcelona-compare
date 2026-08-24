@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "ca"
     text: "Molt profesional, es molt curosa amb la seva feina i tot està netisim. Karen és encantadora."
+serviceTags:
+  - gel-acrilicas
 ---

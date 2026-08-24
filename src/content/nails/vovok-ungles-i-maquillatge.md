@@ -42,4 +42,7 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Llevo un año haciéndome las uñas en Vovok y siempre que voy salgo encantada, Raquel no puede ser mas profesional y tenerlo todo cuidado al detalle. Sin duda es mi momento favorito del mes."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

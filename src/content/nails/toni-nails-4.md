@@ -50,4 +50,7 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "Wow!! I am so shocked. Amazing place, the staff were so welcoming and they actually help you pick out a style and color and doesn’t rush you. The skill is the best I’ve seen coming from USA, my nails came out beyond what my expectations were. Trust them with your nails!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

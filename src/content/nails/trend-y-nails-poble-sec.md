@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Most impressed. I’ve tried many nail places in my life and it’s rare to see such an attention to detail, really going beyond the service to make my nails beautiful. Isa is a true perfectionist, and I’d love to work with her forever. Also, very reassuring to see how clean the place is, and all of the tools are spotless - it’s not everywhere they change the tools for each client to ensure hygiene and cleanliness."
+serviceTags:
+  - nail-art
+  - pedicura
 ---

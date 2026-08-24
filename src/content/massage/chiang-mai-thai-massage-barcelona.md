@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "Lovely place, best massage and so friendly. Cannot recommend enough"
+serviceTags:
+  - tailandes
 ---

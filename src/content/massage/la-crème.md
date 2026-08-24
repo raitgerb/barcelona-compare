@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "es"
     text: "descubrí este lugar gracias a una oferta de Masaje Facial Japonés MURI SHINAI, no tengo palabras...el mejor masaje facial que he podido disfrutar. Tanto así como mi mente. Pero lo mejor ha sido pedir cita para tratarme una tensión de cervicales y hombros y sentir que hasta no dar con la misma ( contractura en el cuello) no ha dejado el \"masaje\". Estoy muy agradecida. Y seguro volveré."
+serviceTags:
+  - reflexologia
 ---

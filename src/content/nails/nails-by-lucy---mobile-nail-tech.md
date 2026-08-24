@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "Amazing service and beautiful final result! Lucy is friendly, professional and knowledgeable, and her nail art is literal art! I’ve had other nail techs damage my nails and they never last long, I’ve been to Lucy several times and my nails are always happy. 🧡"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
 ---

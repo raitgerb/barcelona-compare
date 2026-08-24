@@ -56,4 +56,9 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Great location next to the LV store! Amazing service! Next level massages! Would definitely recommend!"
+serviceTags:
+  - deportivo
+  - pareja
+  - quiromasaje
+  - spa-bienestar
 ---

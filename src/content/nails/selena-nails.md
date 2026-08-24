@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Highly recommend this salon! I’ve been in many other nail shops and I am very happy I finally found her. Very reasonable price, good detailing and wide options of colors and style. Selena is very kind and professional. One of the most important thing for me to choose nail shop is how they remove the semipermanent. She doesn’t use the machine and remove it perfectly without destroying the nails. I’m coming every 2 weeks since my first time and my nails are healty and last perfectly until I go back for change."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

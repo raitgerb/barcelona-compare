@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "es"
     text: "Todo muy bien súper recomendado  muy cuidadosa y muy profesional"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

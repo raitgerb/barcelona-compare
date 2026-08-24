@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "en"
     text: "Fast, friendly service!"
+serviceTags:
+  - pedicura
 ---

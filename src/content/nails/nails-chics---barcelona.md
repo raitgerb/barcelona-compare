@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "My favorite place to get my nails done, very nice atmosphere, fair prices and my nails are perfect every single time! Highly recommend!!"
+serviceTags:
+  - gel-acrilicas
 ---

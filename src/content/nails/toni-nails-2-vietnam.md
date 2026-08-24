@@ -37,4 +37,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "en"
     text: "I’m delighted with my manicure. The finished result is perfect aside from how paper thin my nails are, but worth the price I would say. Only problem I experienced was the lack of professionalism and hygiene from the man upstairs who did the removal and filing. He had no idea what a BIAB was (this was my previous manicure) and I had to google it to show him, then also had to insist for him not to use acetone to remove it. So instead he picked it off with his own bare fingers, no gloves. I was relieved to be sent to the girl downstairs for the rest of the manicure as she was professional, kind and (somewhat) hygienic and the cat eye she did is pretty damn cool."
+serviceTags:
+  - nail-art
 ---

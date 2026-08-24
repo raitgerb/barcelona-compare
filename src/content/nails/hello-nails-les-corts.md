@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Great service and they spoke english"
+serviceTags:
+  - gel-acrilicas
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "ca"
     text: "Fa més de 10 anys que és el meu centre de estètica i cura d’ungles! Centre de referència a Les Corts!"
+serviceTags:
+  - gel-acrilicas
 ---

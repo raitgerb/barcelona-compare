@@ -30,6 +30,7 @@ const businessSchema = z.object({
     languageCode: z.string().default(''),
     text: z.string(),
   })).default([]),
+  serviceTags: z.array(z.string()).optional(),
   googleEditorialSummary: z.string().optional(),
 });
 

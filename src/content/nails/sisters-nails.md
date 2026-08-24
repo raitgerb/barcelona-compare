@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Good quality service.  Amicable staff. I went for a mani and pedi, and they have this offer that included a 15min foot massage, which was very relaxing. The place is excellent; they make you feel comfortable and have reasonable prices. I’m happy with the results and cannot wait to return."
+serviceTags:
+  - pedicura
 ---

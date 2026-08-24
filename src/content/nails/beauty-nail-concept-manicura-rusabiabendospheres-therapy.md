@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "I’m doing Endospheres treatments with Paula, and she is very professional, kind, and pleasant. I can already see some subtle results after just a few sessions.  I also had a Russian manicure with Daniela, and it turned out amazing! She works beautifully, and it lasted for more than a month. Highly recommended!"
+serviceTags:
+  - nail-art
+  - pedicura
 ---

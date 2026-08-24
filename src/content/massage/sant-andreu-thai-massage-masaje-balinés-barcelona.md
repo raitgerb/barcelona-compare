@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 weeks ago"
     languageCode: "es"
     text: "Tuve una experiencia excelente. Desde que llegué me hicieron sentir muy cómoda, el ambiente es súper relajante, limpio y cuidado en cada detalle. El masaje fue increíble, salí totalmente renovada y relajada. Se nota el profesionalismo y la dedicación con la que trabajan. Sin dudas volveré y lo recomiendo al 100% para quienes quieran regalarse un momento de bienestar. ¡Gracias por la atención!"
+serviceTags:
+  - tailandes
 ---

@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "es"
     text: "El día de mi boda sentí que brillaba como una estrella gracias a Esther. ¡He disfrutando tanto la experiencia con ella!. Primero me hizo, tres meses antes de la boda, la prueba de peinado y maquillaje en su local. Peina con muchísimo cariño y se está todo el rato que haga falta para que quede bien. Después quedé con ella para el día antes de la boda, también en su local, me hizo la manicura permanente perfecta, y la pedicura semipermanente espectacular. Sirvió para relajarme mucho antes del gran dia. Además, tiene un montón de colores, diseños y detalles para elegir para las uñas. Por otro lado, decidí contratar la depilación de cejas y bigote como un añadido extra al pack. El día siguiente era la boda y Esther vino a mi casa a las 10.00h. Me casaba a las 17h. Menos mal que vino pronto porque así pudo trabajar mejor y sin prisa. Esther es súper agradable, buena chica y puedes confiar en ella. Me gustó mucho el detalle que tuvo de esperarse al fotógrafo para colocarme el velo bien, cuando se podría haber ido antes. Fue muy amable. En resumen, la recomiendo 100%, todos los invitados me decían que qué guapa y que recogido más bonito."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

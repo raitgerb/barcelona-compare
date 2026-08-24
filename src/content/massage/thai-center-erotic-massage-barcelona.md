@@ -51,4 +51,7 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "Very very lovely experience I would have here with eli 🥰"
+serviceTags:
+  - pareja
+  - tailandes
 ---

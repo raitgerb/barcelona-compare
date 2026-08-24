@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "He leído varias opiniones negativas pero por mi experiencia en el centro, que ya son varias son al contrario. Super contenta con el personal que es amable y el servicio muy bueno! Limpian muy bien pedicura y manicura y el esmalte me dura bastante. Precios razonables… yo siempre salgo contenta en comparación a cadenas o sitios más de moda. Yo recomiendo que vengáis!"
+serviceTags:
+  - pedicura
 ---

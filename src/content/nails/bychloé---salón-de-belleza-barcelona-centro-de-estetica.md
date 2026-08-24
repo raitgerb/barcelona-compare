@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "Very nice ladies who work here, super kind and friendly! Got my 2nd pedicure here and love it, will come back every time now - Shan is the best 🤩🤩"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

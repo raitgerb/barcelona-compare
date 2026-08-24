@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "Every time I come here, the experience is excellent. The quality of the massages is always outstanding, the place is spotless, and the welcome is absolutely impeccable.  I can only highly recommend this establishment.  See you again very soon!  Sebastien Doucet"
+serviceTags:
+  - tailandes
 ---

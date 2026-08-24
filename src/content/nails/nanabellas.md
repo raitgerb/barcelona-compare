@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Son muy agradables.. excelente servicio y hacen unas uñas hermosas  me encanta siempre hacerme las uñas aquí!  diseños preciosos muy limpio y la atención es insuperable"
+serviceTags:
+  - gel-acrilicas
 ---

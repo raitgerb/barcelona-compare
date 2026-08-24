@@ -51,4 +51,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "en"
     text: "Visited the Despacio Spa at The One and had such an amazing experience with masseuse Silvia! She explained the use of essential oils with detail, whilst taking such care throughout the massage. Would definitely recommend and plan on visiting again soon!"
+serviceTags:
+  - spa-bienestar
 ---

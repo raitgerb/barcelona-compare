@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "Stumbled upon this place by accident and honestly: they nailed my rubber base / BIAB nails. They’ve done such a beautiful job, I’ll definitely be returning!!! Thank you!"
+serviceTags:
+  - gel-acrilicas
 ---

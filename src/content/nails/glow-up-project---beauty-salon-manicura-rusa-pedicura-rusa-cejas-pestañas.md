@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "During my trip to Barcelona I was looking for a nice saloon and this was by far the best I could find. Girls were super professional and lovely! Highly recommend."
+serviceTags:
+  - pedicura
 ---

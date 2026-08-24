@@ -52,4 +52,7 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "all good and fast, thank you 😊❤️"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

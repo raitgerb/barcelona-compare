@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 weeks ago"
     languageCode: "ca"
     text: "Ja fa un temps que hi vaig, m’agrada molt com fa el massatge terapéutic i totes les explicacions  que dona si hi veu alguna  anomalía. Es un gran terapeuta amb molta experiencia Totalment recomendable👍"
+serviceTags:
+  - deportivo
 ---

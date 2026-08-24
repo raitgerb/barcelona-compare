@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "Very bad service. She tried to do as quickly as she can and the service was very bad. When I asked to please take off these dirt parts outside the nail she did with cuticle nippers. Also, she was very unfriendly and talked all the time in her language."
+serviceTags:
+  - gel-acrilicas
 ---

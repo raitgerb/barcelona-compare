@@ -1,0 +1,35 @@
+---
+// /en/mejores/{category}/{x}/ — EN mirrors of district + city-service pages.
+import MoneyPage from '../../../../../components/MoneyPage.astro';
+import { getCollection } from 'astro:content';
+import { SERVICES, slugify, MIN_CITY } from '../../../../../lib/services';
+
+export async function getStaticPaths() {
+  const paths: Array<{ params: { category: string; x: string }; props: Record<string, unknown> }> = [];
+  for (const cat of ['nails', 'massage'] as const) {
+    const all = await getCollection(cat);
+    const counts = new Map<string, number>();
+    for (const b of all) {
+      const nb = b.data.neighborhood;
+      if (nb && nb !== 'Barcelona') counts.set(nb, (counts.get(nb) ?? 0) + 1);
+    }
+    for (const [nb, n] of counts) {
+      if (n >= MIN_CITY) {
+        paths.push({ params: { category: cat, x: slugify(nb) }, props: { mode: 'district', neighborhood: nb } });
+      }
+    }
+    for (const svc of SERVICES[cat]) {
+      const n = all.filter(b => ((b.data.serviceTags ?? []) as string[]).includes(svc.slug)).length;
+      if (n >= MIN_CITY) {
+        paths.push({ params: { category: cat, x: svc.slug }, props: { mode: 'service', serviceSlug: svc.slug } });
+      }
+    }
+  }
+  return paths;
+}
+
+const { category } = Astro.params;
+const props = Astro.props as { mode: 'district' | 'service'; neighborhood?: string; serviceSlug?: string };
+---
+
+<MoneyPage lang="en" category={category as 'nails' | 'massage'} mode={props.mode} neighborhood={props.neighborhood} serviceSlug={props.serviceSlug} />

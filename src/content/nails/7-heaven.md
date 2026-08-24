@@ -40,4 +40,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Vine a 7 Heaven por recomendación de una amiga y la verdad es que estupendo, la atención es genial y que decír de mis uñas, increíbles, atención al detalle, acabado súper lindo, 100% recomendado. Volveré💅🏽🌟"
+serviceTags:
+  - gel-acrilicas
 ---

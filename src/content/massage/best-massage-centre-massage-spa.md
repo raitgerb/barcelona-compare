@@ -15,4 +15,6 @@ hours:
 languages:
   - "Español"
 googlePlaceId: "ChIJNxDEhkqjpBIR8OJ-x9ZDQmM"
+serviceTags:
+  - spa-bienestar
 ---

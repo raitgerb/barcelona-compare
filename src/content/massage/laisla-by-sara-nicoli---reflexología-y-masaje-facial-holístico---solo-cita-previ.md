@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Ayer tuve la oportunidad de hacerme un masaje facial con Sara y la experiencia fue simplemente maravillosa. Desde el primer momento conseguí relajarme por completo, desconectar y dedicarme ese ratito solo para mí. Salí con la piel increíble: súper suave, luminosa, llena de energía y con una sensación de frescura espectacular. Se nota el cuidado, la dedicación y el cariño que Sara pone en cada detalle. Lo disfruté muchísimo y lo recomiendo totalmente. Sin duda volveré, porque después de esta experiencia ya quiero probar más tratamientos con ella. ¡Gracias, Sara, por un momento tan especial! 💖"
+serviceTags:
+  - reflexologia
 ---

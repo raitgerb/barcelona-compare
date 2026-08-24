@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "es"
     text: "Excelente trabajo, Olga fue encantadora, precio competitivo. Todo fantastico"
+serviceTags:
+  - pedicura
 ---

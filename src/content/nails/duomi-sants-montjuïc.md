@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "El viernes fui por primera vez, pedí que me hiciera un esmaltado se mi permanente en manos y pies. Me hizo un trabajo muy completo (Me cortó las uñas, las limo, me saco los callos, y además me hizo un masaje en los pies), estoy muy contenta con el trabajo, demasiado prolijo todo. Volvere♥️"
+serviceTags:
+  - pedicura
 ---

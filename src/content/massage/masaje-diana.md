@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "Good massage"
+serviceTags:
+  - deportivo
 ---

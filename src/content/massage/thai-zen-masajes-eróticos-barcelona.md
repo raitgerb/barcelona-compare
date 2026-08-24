@@ -56,4 +56,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "This place is absolute fantastic from the moment you walk in, the details are out of this world! The smell, the music, the service, the decoration, the comfort and the massage wow! They thought of everything ! Valentina and Sofia were incredible ❤️ Will come back to Barcelona soon and visit again!"
+serviceTags:
+  - pareja
+  - tailandes
 ---

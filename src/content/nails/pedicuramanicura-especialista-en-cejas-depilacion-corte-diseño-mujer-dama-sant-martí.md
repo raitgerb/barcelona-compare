@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Very good quality. Tried manicure, pedicure and wax depilation and all top service ;)"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

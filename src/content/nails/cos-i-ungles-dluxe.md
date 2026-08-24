@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Chicas que estén en Barcelona y estén buscando un lugar para sacarse las cejas. Este centro es 10/10. Recomiendo 100% me encantó como me saco las cejas.  Tenia tiempo buscado un lugar donde me dejaran las cejas lindas ✨️🫶🏻"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -35,4 +35,7 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "es"
     text: "Una maravilla de atención y profesionalidad! He ido de “urgencia” porque se me había estropeado una uña y me atendieron enseguida! Súper amable! Vuelvo seguro!!! Un 10!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

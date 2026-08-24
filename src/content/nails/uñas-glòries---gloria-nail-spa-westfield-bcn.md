@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "en"
     text: "The girl is super nice and she made a really good job"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

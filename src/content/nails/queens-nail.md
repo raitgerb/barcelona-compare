@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Worst salon I’ve ever been to in Barcelona. - - -Not the shape I wanted -WAY to thick -uneven! -hurts - 3 nails are croocked"
+serviceTags:
+  - pedicura
 ---

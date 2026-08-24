@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Irene has been a game-changer for my shoulder and neck pain. After five years of physiotherapy in London, I was recommended to her by a friend after I moved to Barcelona, and I couldn't be happier. Her weekly treatments have significantly improved my long-standing shoulder and neck issue. Irene's expertise, friendliness, and genuine helpfulness make her an outstanding chiropractor. I highly recommend her services for anyone seeking effective and personalised care. 5 stars without a doubt!"
+serviceTags:
+  - reflexologia
 ---

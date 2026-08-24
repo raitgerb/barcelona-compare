@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "I love this set so much. The salon is so clean and people are friendly !"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

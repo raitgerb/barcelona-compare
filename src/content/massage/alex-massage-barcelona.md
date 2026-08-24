@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Excellent sports massage. Alex is a true professional. I always leave feeling much better. Highly recommend!"
+serviceTags:
+  - deportivo
 ---

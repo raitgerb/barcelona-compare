@@ -55,4 +55,7 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "Easily best gel manicure I’ve ever gotten, anywhere in the world. The manager did it and she was a great person to talk to and super talented. The photo is taken two weeks since it was done - it is holding up so well!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

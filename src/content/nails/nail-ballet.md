@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Tenía mucho tiempo intentando conseguir a alguien que me diera confianza de poner mis manos. Y hoy creo que lo he conseguido. Es una chica muy agradable y atenta. Quede enamorada de mis uñas. Realmente fue 100% lo que esperaba. Sin duda alguna se convertirá en mi manicurista de confianza"
+serviceTags:
+  - gel-acrilicas
 ---

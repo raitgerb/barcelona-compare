@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "Really good"
+serviceTags:
+  - deportivo
+  - tailandes
 ---

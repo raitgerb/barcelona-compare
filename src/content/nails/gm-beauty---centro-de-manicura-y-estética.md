@@ -41,4 +41,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "es"
     text: "Hice la reserva hace un mes para poder tener cita para estas fiestas Una vergüenza Lo primero que nadie te dice que tienes que pagar en efectivo , ya que te encuentras un cartel en la puerta así que búscate la vida para sacar en un cajero. No bastante con eso entras con tu cita que no existe porque si la pides por la web( que no se para que la tienen) no le es valida porque tienes que llamar o escribir al número Vamos que me he quedado tirada para estas fiestas por mala gestión total y sin tener citas en otros centros por navidad Cero recomendado"
+serviceTags:
+  - pedicura
 ---

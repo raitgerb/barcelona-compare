@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "5 years ago"
     languageCode: "es"
     text: "Recomendable experiencia. Hemos probado: -Corte de cabello para hombre y mujeres. -Corte de cabello para niñas.  Instalaciones adecuadas. Precio justo.  Medidas Covid - mascarilla obligatoria. - Gel hidro- alcohólico. - Servicio por cita.  Atendido por su dueña Iveta, que siempre te atiende con una sonrisa y trato excelente.  Citas vía WhatsApp 722 22 66 36"
+serviceTags:
+  - gel-acrilicas
 ---

@@ -51,4 +51,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Vanesa welcomes you with a sweetness that disarms you. Her approach is warm, attentive, and natural. Every minute with her feels genuine and special — and the room’s ambiance made the whole experience even more relaxing."
+serviceTags:
+  - pareja
+  - tailandes
 ---

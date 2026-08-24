@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "6 years ago"
     languageCode: "en"
     text: "Good"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

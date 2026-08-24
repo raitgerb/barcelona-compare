@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "My favorite nail studio in Barcelona! She’s bubbly, fun & super professional! The quality of her work is simply out of space. In love 🥰♥️"
+serviceTags:
+  - nail-art
 ---

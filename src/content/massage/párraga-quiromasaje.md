@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "Fui ayer por un dolor muy fuerte de ciática y la verdad muy contenta, persona encantadora y muy amable lo recomiendo 💯 por 💯 volver muy pronto para seguir con el tratamiento . Eres un crac muchas gracias 🙏"
+serviceTags:
+  - quiromasaje
 ---

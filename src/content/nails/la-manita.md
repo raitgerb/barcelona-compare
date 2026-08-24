@@ -43,4 +43,8 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "The owner of this salon is always so happy and welcoming - makes a nice change to many similar salons in the city. They do a good job - I've had a few gel pedi's and normal manicures. Well-priced too - would recommend."
+serviceTags:
+  - gel-acrilicas
+  - nail-art
+  - pedicura
 ---

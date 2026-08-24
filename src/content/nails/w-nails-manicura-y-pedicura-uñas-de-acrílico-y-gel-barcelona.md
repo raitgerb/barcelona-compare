@@ -56,4 +56,7 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "such a lovely place. not many places for 15 for gel other than castedrfellea i’ve seen. staff super nice."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

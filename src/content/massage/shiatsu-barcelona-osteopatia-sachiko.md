@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I have been to two sessions with Gemma. I had some pain in the back, and the therapy helped me to relax the back and to take the pain away. Relaxing music on the background made the whole experience very nice."
+serviceTags:
+  - deportivo
 ---

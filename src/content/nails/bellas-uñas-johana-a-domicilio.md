@@ -36,4 +36,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Ha venido Johana a mi casa y me ha encantado su trabajo y su forma de hacer la manicura. La verdad es que es super cómodo que pueda venir a casa a realizar el servicio, repetiré!"
+serviceTags:
+  - gel-acrilicas
 ---

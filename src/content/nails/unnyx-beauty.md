@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Mi experiencia ha sido maravillosa. Les he conocido a través de Google maps, he llamado y tuve la suerte de que tuvieran espacio para atenderme. Desde el primer momento me han atendido súper bien. El lugar esta en un área accesible, es un espacio amplio, la estructura interna muy bien organizada, todo muy limpio. La persona que me ha atendido ha sido muy meticulosa, se ha tomado su tiempo para hacer un excelente trabajo. Mis uñas han quedado impactantes, el trato me ha enamorado, hasta café me han dado. Muchísimas gracias por vuestros servicios y su excepcional trabajo. Estoy segura de que volveré."
+serviceTags:
+  - pedicura
 ---

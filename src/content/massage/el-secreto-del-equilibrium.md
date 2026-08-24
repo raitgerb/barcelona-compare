@@ -40,4 +40,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Hoy he hecho mi primera sesión con Marc. Me ha tratado una lesión cervical que arrastro desde hace tiempo. Muy contento y ya he agendado otra sesión."
+serviceTags:
+  - reflexologia
 ---

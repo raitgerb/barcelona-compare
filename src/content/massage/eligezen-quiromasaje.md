@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Natália tiene las manos perfectas. Creo que tiene una asociación con la NASA porqué te lleva a la Luna siempre. Siempre que voy, salgo otra persona. Más leve, menos estresado, y seguramente, con menos dolor en los hombros y espalda.  Además, Natalia es muy cariñosa y siempre te recibe bien."
+serviceTags:
+  - quiromasaje
 ---

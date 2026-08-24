@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Super recomendable! He llegado con mucho dolor de cervicales y espalda y he salido como nueva, trabaja muy bien,super amable. Un excelente profesional, sin duda volveré."
+serviceTags:
+  - quiromasaje
 ---

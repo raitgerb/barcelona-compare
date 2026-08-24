@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "El peor centro de manicure donde he ido. Pedi un tono morado me ponen un rosado vibrante horrible y como solución me ponen brillo en todas y me hacen una montaña que no reconocen que es pura capas mal puesta de pintura 15€ para algo que no quería , muy mal trato para solucionar y aceptar cuando comenten un error"
+serviceTags:
+  - gel-acrilicas
 ---

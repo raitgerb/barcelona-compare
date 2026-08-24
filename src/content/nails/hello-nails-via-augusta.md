@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "One of the lowest quality and most unprofessional salons I have ever been to. They know nothing about customer service and respect. They also charge very high prices. First they tell you one price and then they charge you another. I do not recommend them at all."
+serviceTags:
+  - nail-art
 ---

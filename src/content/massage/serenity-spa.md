@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Amazing spot, great customer focused service"
+serviceTags:
+  - spa-bienestar
 ---

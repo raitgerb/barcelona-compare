@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Very happy with my manicure done by Marta. She was thorough, and I didn’t feel like she was rushing. The salon is comfortable and in a convenient location. Highly recommend!"
+serviceTags:
+  - pedicura
 ---

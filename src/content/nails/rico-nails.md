@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Very nice experience, they were quick and thorough and very nice."
+serviceTags:
+  - nail-art
 ---

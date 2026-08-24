@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Very happy and a regular client - good ambience, service and prices. Only once I was very disappointed - Judith was NOT detail-oriented and delivered a poor quality job. Besides, overall still worth a 5 star."
+serviceTags:
+  - nail-art
 ---

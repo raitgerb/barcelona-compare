@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Fuimos mi pareja y yo hacernos las uñas y en menos de una semana yo tengo todas las decoraciones caídas y una uña se me ha partido por la mitad sin hacer nada, la verdad no merece la pena. Solo me dicen de arreglar Me las y no devolverme el dinero ya que no veo que esté bien su trabajo y me tengo que ir a otro centro de uñas ha hacer me otra cosa. No recomendado"
+serviceTags:
+  - gel-acrilicas
 ---

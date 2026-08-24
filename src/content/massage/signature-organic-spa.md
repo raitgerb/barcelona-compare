@@ -48,4 +48,7 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "A nightmare. I have no other word to describe my experience at this spa. When I received my birthday voucher today and heard how much they charge for a massage (the most expensive in the city!) I was expecting an amazing experience that I could share with my tens of thousands of followers on social media, but the bigger the expectations, the bigger the disappointment. Rachel was very nice, but I'm being a little harsh when I say she knows how to give a massage. It felt like someone just put oil on you and rubbed you in. I don't know if she learned to give a massage or where, but if I were her, I would sue whoever told her she was qualified to give massages to others. I expect a place that charges that much to test the abilities of the employees before they invite clients because this is the worst experience I've ever had. One that I will work to make sure others don't fall for. I just wanted it to end because it felt amateurish and childish. I felt like I was being cheated and sent a first-rate student. As if it was a joke at my expense.  I really didn't get value for our money and it embarrasses me that I went through this terrible experience."
+serviceTags:
+  - pareja
+  - spa-bienestar
 ---

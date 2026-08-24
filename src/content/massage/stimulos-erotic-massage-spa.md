@@ -46,4 +46,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "ca"
     text: "L’altra vegada vaig venir al vostre centre i vaig escollir una noia rossa que, si no m’equivoco, es deia Clara. Tanmateix, la recepcionista va insistir a recomanar-me una altra noia, la Viviana, i, per la manera com m’ho va plantejar, vaig acabar acceptant el canvi. En aquell moment em va fer vergonya dir que, en realitat, volia mantenir la meva elecció i ser atès per la Clara.  Sincerament, la noia que m’interessava era la Clara i em va decebre no poder estar amb ella. A més, no vaig quedar satisfet amb el servei de la massatgista que finalment em van assignar per la insistència de la recepcionista. Precisament per això m’hauria agradat que s’hagués respectat la meva elecció des del principi.  Crec que, quan un client escull una persona en concret, aquesta decisió s’hauria de respectar i no hauria d’estar condicionada per recomanacions o insistències, llevat que hi hagi algun motiu important que s’expliqui clarament.  Per aquest motiu, no crec que torni al centre. Només volia compartir la meva experiència de manera sincera i amb tot el respecte, perquè considero que poder triar lliurement la persona que t’atén és un aspecte molt important."
+serviceTags:
+  - spa-bienestar
+  - tailandes
 ---

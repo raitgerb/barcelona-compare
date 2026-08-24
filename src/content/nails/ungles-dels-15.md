@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "es"
     text: "Fantásticos! Fui con un par de imágenes de referencia y salí con lo que buscaba. Gracias ♡"
+serviceTags:
+  - gel-acrilicas
 ---

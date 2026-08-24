@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "I had a great experience at Zen Massage. Dayana did an incredible job at making me feel comfortable and explaining the process, and the therapist, Tayra, was amazing; she provided a one-of-a-kind experience. Overall, I would highly recommend Zen."
+serviceTags:
+  - pareja
 ---

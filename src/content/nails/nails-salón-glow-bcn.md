@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Muy pero MUY contenta con la atención de Ana María, la dueña del local.  Muy clara con respecto a lo que incluye el servicio y su duración, muy sencillo agendar una visita con ella.  Para los que buscan una pedicura y manicura real, enfocada en que tus uñas y cutículas no solo se vean bien pero que estén bien tratadas.  También me ha hecho la semi permanente en las manos, encantada con la atención al detalle, la calidad del esmalte, la aplicación y el acabado.  Se ha ganado una clienta!  Si conoces a alguien que necesita atención más profunda a nivel de callos en los pies, no tengas vergüenza, Ana no se espanta y es muy profesional, “solo” quiere brindar un excelente servicio, algo no tan sencillo de encontrar en Barcelona 😉  Además tiene una garantía de una semana si algo pasa con el esmalte 😊"
+serviceTags:
+  - pedicura
 ---

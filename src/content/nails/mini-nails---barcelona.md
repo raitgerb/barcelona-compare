@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "Always perfect nails and nice ladies. The place could be cleaner though."
+serviceTags:
+  - pedicura
 ---

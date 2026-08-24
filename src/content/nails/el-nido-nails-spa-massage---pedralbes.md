@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "ca"
     text: "He anat per 1a vegada i per ser una pedicura completa la veritat es que li falta coses. En 35’ estava llesta i ni una simple exfiant ni fer be les pells de la planta del peu. Els altres centres triguen 1h i queden molt millor pel mateix preu. El personal be llastima que el servei ha quedat insuficient. El centre precios i molt comode"
+serviceTags:
+  - pedicura
 ---

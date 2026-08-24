@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Fui ayer a pintar uñas de manos y pies y la chica que me atendió no recuerdo su nombre pero fue terrible me dejó poco en la uñas , se lo comenté y no le gustó el comentario y encima me miró como si le hubiera dicho un insulto solo le dije que tenía polvo aún en la una y ya la estaba pintando y que pintara más arriba que me dejaba la raíz sin pintar y casi me mata con la mirada y me dijo aún no he acabado y hoy me encuentro el esmalte ya levantado y ni hablar de las uñas de los pies me las pinto otra chica y me hizo un corte en el pie con la lima y me dijo tan tranquila que puede ser que la Lima estuviera afilada y por eso me cortó y así se quedó ! Yo alucino creo que sabe hacerlo mejor mi madre que no ve nada que estás chicas y lo peor es la mala educación y el orgullo absurdo que tienen!! Pague 43€ por unas uñas de pie semipermanente y manos esmalte normal! No duró ni 24 horas no pongo el ticket por qué salí tan enfadada que no caí en cuenta No soy de hablar mal de ningún negocio,pero si sirve para que mejoren y como mínimo tengan un poco menos de prepotencia se le agradece. Una vergüenza nunca más"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

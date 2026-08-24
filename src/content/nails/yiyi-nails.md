@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "The ladies that did our nails were super friendly! Even though the language was a bit of a hassle, they made sure that they understood us correctly!  We got exactly what we wanted and only payed €45 (gel removal + extension on 3 nails + gel + color) and €35 (gel polish removal + builder gel + color swirl design)  We could still get them done at 10:00 (till 11:30!) even though they were supposed to close at 10:30."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

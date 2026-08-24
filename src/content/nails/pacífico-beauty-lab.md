@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "I had a wonderful experience here! I went in for a spa manicure and pedicure with Sebas as well as a maternity massage, and I couldn’t be happier with the service. The staff were so warm, welcoming, and professional! The place is stunning and beautiful. Everything was done with such care and excellence. I can’t wait to get my nails done here again!  The maternity massage was absolutely amazing. I felt so much relief afterward and the swelling and fluid retention in my legs noticeably went down, and I left feeling completely relaxed. They made sure I was comfortable at all times and really took great care of me. Being 8 months pregnant, this was exactly what I needed to release all the tension I had been feeling.  I am so grateful! Highly recommend!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

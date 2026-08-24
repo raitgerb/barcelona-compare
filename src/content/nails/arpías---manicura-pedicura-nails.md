@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "He ido a Arpías porque tengo la piel atopica y sensible. Por eso no puedo ir a cualquier centro. Al conocer la manera en que trabajan me he sentido muy tranquila y en buenas manos porque todos los materiales que usan están esterilizados, la atención es 100% personalizada y sobretodo sin prisas mirando hasta el último detalle. Los diseños que hacen son preciosos, pueden hacer más de lo que está en el catálogo de diseños de uñas. Y sobretodo cuidan tanto de tu piel y de tus uñas, no liman ni maltratan las uñas, cuando me hago una semipermanente y luego de un tiempo me la quito mi uña no está débil, al contrario están más bonitas y fuertes. Yo recomendaría Arpías 100% por 100%."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

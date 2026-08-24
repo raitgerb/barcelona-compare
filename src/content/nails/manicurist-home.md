@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Llevaba tiempo con las uñas muy débiles,debido a las manicuras semipermanentes. Por fin gracias a Edna y a su técnica,mis uñas se están recuperando,a parte de llevar una manicura perfecta. Recomendable 100%, excelente profesional y excelente persona."
+serviceTags:
+  - gel-acrilicas
 ---

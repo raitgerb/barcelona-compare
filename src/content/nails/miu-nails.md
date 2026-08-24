@@ -43,4 +43,8 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Very successful manicure and pedicure. Excellent nail results, but their attitudes are not professional, these talented nail artists need to stop yelling and laughing at each other and playing videos on their phones while working. Also, the place isn't clean. They wear masks during treatments, but the floors are dirty and the tables are covered in nail dust. During pedicure, I saw a room upstairs with a bed in the back with a crumpled blanket (probably someone slept in there and didn't tidy up), and there was one of a slipper under the bed and a customer had a treatment in that room, maybe depilacion. These are images that degrade the quality of a business"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
+  - pedicura
 ---

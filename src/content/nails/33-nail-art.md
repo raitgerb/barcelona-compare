@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "en"
     text: "such beautiful work!! i love my nails"
+serviceTags:
+  - nail-art
+  - pedicura
 ---

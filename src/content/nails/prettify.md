@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "La manicura más detallada y divertida que me han hecho nunca! Con gran cuidado de las manos y un detallismo genial, gracias a Jacky."
+serviceTags:
+  - pedicura
 ---

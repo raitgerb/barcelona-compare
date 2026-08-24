@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "Elisaveta was absolutely amazing! She took my bitten nails and transformed them with gel tips. The best manicure I have ever received! Can’t recommend them enough."
+serviceTags:
+  - gel-acrilicas
 ---

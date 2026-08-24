@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "12 months ago"
     languageCode: "en"
     text: "I’ve been going to Casanova Center for nearly three years and couldn’t be happier. The atmosphere is welcoming, the place is always spotless, and the service is top-notch. I especially recommend Laurent, she really listens to what you want and understands your style, making sure you get exactly the manicure design you ask for, always with excellent quality."
+serviceTags:
+  - pedicura
 ---

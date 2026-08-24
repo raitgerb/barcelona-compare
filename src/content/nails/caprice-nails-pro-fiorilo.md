@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "pt"
     text: "Massagista professional.As meninas são muito atenciosas.preços econômicos.recomendo a todos meus amigos."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

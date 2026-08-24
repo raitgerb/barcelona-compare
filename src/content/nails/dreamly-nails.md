@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I loved it. The owner is really friendly and patient with customers, I love the experience and the nails are really cute and pretty. I would 100% go back again."
+serviceTags:
+  - gel-acrilicas
 ---

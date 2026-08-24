@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Perfect work"
+serviceTags:
+  - pedicura
 ---

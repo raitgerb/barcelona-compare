@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Great pedicure with normal nailpolish, good hygenic. I added a foot reflexology and asked for a strong one and she delivered 👌 would definitely recommend. Free WiFi at the place too."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

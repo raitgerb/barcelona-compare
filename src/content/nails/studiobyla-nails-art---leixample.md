@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I couldn’t recommend this more! Best nail experience I have ever had and Laura works with such precision and attention to detail! Beyond her craft she is just a great gal and could be happier to support her business!!"
+serviceTags:
+  - gel-acrilicas
 ---

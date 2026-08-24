@@ -42,4 +42,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Llegué con unas uñas desastrosas y Allison me ha dejado estas uñas tan bonitas. Las ha tratado con cariño y mimo, dedicando todo el tiempo necesario. Es una gran profesional. Lo recomiendo al 100%"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

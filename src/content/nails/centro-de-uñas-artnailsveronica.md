@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Veronica does an incredible job every time! My nails last at least a month ❤️"
+serviceTags:
+  - nail-art
+  - pedicura
 ---

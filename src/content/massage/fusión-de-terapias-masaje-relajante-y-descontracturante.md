@@ -46,4 +46,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "Conozco a Carlos desde hace años… ¡literalmente es un angel caído del cielo! Profesional, respetuoso, amable, con un gran conocimiento sobre relajación, el cuerpo y su liberación de tensión.  Aplica varias técnicas combinadas y eso hace que sus sesiones sean aún más ricas. Es un espacio de calma, auto cuidado y mimo. El conseguirá que el tiempo se pare…  ¡Además, gran alquimista que combina a la perfección el trabajo con aceites y aromaterapia!  Lo recomendaría siempre, gracias Fusión de Terapias y Carlos por darnos esa paz que nuestro cuerpo necesita."
+serviceTags:
+  - quiromasaje
 ---

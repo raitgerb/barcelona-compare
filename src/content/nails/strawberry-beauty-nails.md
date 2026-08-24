@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Hace más de un año que me hago las uñas con Denisse y no puedo recomendarla más. Es una profesional increíble: súper detallista, cuidadosa y siempre logra exactamente lo que le pido (¡o incluso mejor!). Se nota que le apasiona lo que hace y el cariño que pone en cada trabajo para que el resultado sea perfecto.  Además, el ambiente en su centro es muy agradable, limpio y acogedor, lo que hace que la experiencia sea aún mejor. Siempre me siento cómoda y bien atendida. Mis uñas duran muchísimo y siempre salgo feliz con el resultado.  Después de más de un año viniendo, puedo decir que la recomiendo totalmente. Si buscas a alguien de confianza que haga un trabajo impecable, Denisse es la mejor opción. ⭐💅"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -43,4 +43,8 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "Definitely my favorite spot in Barcelona🤍🦢 Just love coming here. As a painter I care about my nails a lot and the service is very high quality. I usually do my nails with Polina shes so nice🪻Xx"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
+  - pedicura
 ---

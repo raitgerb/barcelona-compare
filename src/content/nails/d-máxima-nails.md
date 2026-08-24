@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "The best girl. I've never had such good nails I would like more sterilization .I am very satisfied in all other ways .thanks a lot"
+serviceTags:
+  - pedicura
 ---

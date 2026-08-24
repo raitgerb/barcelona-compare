@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Te hacen la manicura sin ganas y lo mas rapido que pueden. El año pasado habian dos chicas diferentes y 10/10, las que hay ahora no valen nada. Hay mas sitios asi en la rambla onze de septembre que valen mucho mas la pena por el mismo precio"
+serviceTags:
+  - gel-acrilicas
 ---

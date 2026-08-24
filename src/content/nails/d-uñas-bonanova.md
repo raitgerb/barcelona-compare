@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "The person that did my waxing today was really nice, but I am sorry to say that the waxing itself was the worst experience I had in many many years. I have wax left on different parts on my body, hair not properly eradicated but cut, parts of my skin traumatized and very red for the way the stripes and the roll were used. I don't like to write reviews with low stars but was really not a good experience for me and I hope that this will incentivate the esthetician to take more care and improve their service."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

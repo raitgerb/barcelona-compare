@@ -40,4 +40,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I came for a 90min thaï massage last week. José is caring and professional. His place is clean and neat. The massage was not too soft neither too hard, the right pressure to relax. Jose was very accommodating to schedule the session all through whatsapp. A great experience and service, i highly recommend this place!"
+serviceTags:
+  - reflexologia
+  - tailandes
 ---

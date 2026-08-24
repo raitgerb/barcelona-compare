@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "El servicio de manicura y pedicura a domicilio es digno de un premió, puntual, profesional y con precios accesibles. Mi recomendación para esta profesional."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

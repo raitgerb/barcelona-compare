@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I think this salon is one of the best nails salon in Barcelona. Doesn’t matter how complicated the design, they just make it perfectly and quickly. I try new cool techniques every time I come here, and the result is beyond amazing. The staffs are also a big plus, they are friendly and always give me good suggestion on the color and design"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

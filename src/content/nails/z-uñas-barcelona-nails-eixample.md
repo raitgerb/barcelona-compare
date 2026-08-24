@@ -49,4 +49,7 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "Loved the service!  Kathi is incredibly kind and welcoming, and I had a wonderful experience at the beauty center. I had a beautiful semi-gel manicure and a semi-permanent pedicure, and I’m very happy with the results.  The salon is spotless, and I was impressed by how carefully they disinfect all the tools before use, which made me feel very comfortable and confident.  I highly recommend this place to anyone looking for professional service in a clean and relaxing environment!🧡 PERFETTONI."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

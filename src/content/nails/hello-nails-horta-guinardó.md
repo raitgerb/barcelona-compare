@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "My experience with Perla was very good. She was very kind and did a great manucure!"
+serviceTags:
+  - pedicura
 ---

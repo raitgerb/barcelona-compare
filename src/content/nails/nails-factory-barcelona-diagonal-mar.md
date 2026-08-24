@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "worst nail experience I’ve ever had, I wanted acrylic nails but the lady wasn’t trained at all. They were all crooked and different forms, the lengths were off aswell. Two nails already fell/broke off. Lady wasn’t responsive bc she didn’t speak any English. Have to get them redone asap!"
+serviceTags:
+  - pedicura
 ---

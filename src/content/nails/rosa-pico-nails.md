@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "Great gel manicure—looks beautiful, was quick and very reasonably priced."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a week ago"
     languageCode: "en"
     text: "Amazing place"
+serviceTags:
+  - tailandes
 ---

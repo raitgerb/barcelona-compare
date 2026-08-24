@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I needed a pedicure so walked into this woman's place on a whim. She unfortunately had no space at that time but this incredibly nice customer in front of me suggested I take her spot and she would take the later spot that morning! I then received the most precise pedicure ever! I left a very happy customer and can't gush enough about this experience!"
+serviceTags:
+  - pedicura
 ---

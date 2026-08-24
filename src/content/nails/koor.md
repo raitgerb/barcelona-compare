@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "The best nail salon in Barcelona in my heart! The boss is super warm and talented in nail beauty and technique. I got shocked since my hand can even look slender and elegant! The environment in the store is comfortable and clean, and everyone is friendly! Hope you also enjoy it!"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
 ---

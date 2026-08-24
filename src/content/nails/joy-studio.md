@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "This nail salon is so good!! I would recommend it to everyone!! She is very passionate about her job and I’m always happy with the result! She puts effort and love into all of her work, I will never stop going to her! Great price, great result, great location and great service! Love it!!!"
+serviceTags:
+  - pedicura
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Ayer asistí por manicura y pericura, me atendió un chico vietnamita de cabello rubio, muy amable, trabaja muy bonito, pues la verdad estoy conforme con el servicio."
+serviceTags:
+  - gel-acrilicas
 ---

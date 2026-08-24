@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "People are so nice and I like their work. They make it with so much effort and its beautiful. I like it alot"
+serviceTags:
+  - pedicura
 ---

@@ -34,4 +34,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: ""
     text: ""
+serviceTags:
+  - tailandes
 ---

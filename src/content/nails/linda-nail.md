@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "es"
     text: "Es la primera vez que he ido y he salido super contenta. Trato genial y resultado espectacular. 💯 Calidad precio"
+serviceTags:
+  - pedicura
 ---

@@ -50,4 +50,8 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "The best massage I've ever had!! not oil, very respectful and professional, not even a physiotherapy massage can compare! Loved the stretching and pressure limb by limb! The setting was great! very nice, quiet, with good lightning and music! It was so relaxing and cozy! Will repeat again for sure! 🙌"
+serviceTags:
+  - pareja
+  - spa-bienestar
+  - tailandes
 ---

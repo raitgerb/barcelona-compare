@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "es"
     text: "A la hora de quitar las uñas te lo hacen por 5 euros pero literal te quitan las uñas.te dejan los pegotes de pegamento y cuando te pasan las limas esas te achicharran los dedos de lo que llega a quemar.me han dejado las unas destrozadas( las mías) se quiebran a la mínima y aún tienen pegamento que hoy con calma intentaré quitármelo.....pero no vuelvo ni loca a parte de que son sucios y muy maleducados ya que para hacerlas uno de ellos estaba haciendo una videoconferencia mientras me estaba a mi atendiendo en fin..... Son lo peor"
+serviceTags:
+  - pedicura
 ---

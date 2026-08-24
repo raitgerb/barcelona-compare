@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "I did manicure und pedicure in the salon and everything was wonderful! Nails are very nice :)"
+serviceTags:
+  - pedicura
 ---

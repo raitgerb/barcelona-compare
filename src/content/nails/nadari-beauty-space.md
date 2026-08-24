@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I’m absolutely delighted with my new hair color! Yulia is a true professional who listened carefully to my wishes and suggested the perfect shade for me. The result looks natural, vibrant, and exactly how I imagined it. The whole process was comfortable and enjoyable. Highly recommend Yulia for anyone looking for flawless hair coloring!"
+serviceTags:
+  - pedicura
 ---

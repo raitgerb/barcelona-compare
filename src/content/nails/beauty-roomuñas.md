@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Excellent service!!! The owner of the place is very kind. She puts a lot of detail and perfection to her work. I don't usually give good reviews for the manicure because it is very difficult to find a person who works well and carefully without damaging the nail. I highly recommend this place!"
+serviceTags:
+  - pedicura
 ---

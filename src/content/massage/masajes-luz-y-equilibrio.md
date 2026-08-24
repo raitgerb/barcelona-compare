@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "My experience with Leo was fantastic. The setting, facilities and his calming presence made for a perfect massage. His passion and professionalism was obvious from the start and he made sure to talk you through elements of the massage when necessary. I have done both a relaxing and sports massage with him and am really lookig forward to the next one. Can't recommend him enough!"
+serviceTags:
+  - deportivo
 ---

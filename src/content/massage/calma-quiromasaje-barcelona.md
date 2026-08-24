@@ -27,4 +27,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "Muy bien trato y apto para coches muy bajos, en esta zona no hay ninguno así"
+serviceTags:
+  - quiromasaje
 ---

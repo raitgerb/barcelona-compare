@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Perfect !"
+serviceTags:
+  - deportivo
 ---

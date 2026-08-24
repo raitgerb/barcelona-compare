@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "es"
     text: "Se nota la dedicación en cada detalle. Además de hacer uñas preciosas, es muy amable y hace que te sientas cómoda todo el tiempo. ¡Súper recomendada!"
+serviceTags:
+  - pedicura
 ---

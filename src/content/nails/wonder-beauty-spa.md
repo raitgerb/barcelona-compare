@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "¡Mila ha sido simplemente maravillosa! Atenta, profesional y con un trato excepcional desde el primer momento. Mi hijo fue a hacerse una limpieza facial profunda y salió encantado, con la piel estupenda y las cejas perfectamente depiladas con hilo. Sin duda, ha ganado dos nuevos clientes. ¡Un 10 en todos los sentidos! Gracias de corazón por el cuidado y la dedicación."
+serviceTags:
+  - pedicura
 ---

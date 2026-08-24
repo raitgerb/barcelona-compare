@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "Best massage ever with Xira, she is a Spanish goddess. I'll be back"
+serviceTags:
+  - pareja
 ---

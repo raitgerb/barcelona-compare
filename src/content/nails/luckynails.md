@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "Thank you very much for my nails. The Lady was very nice.  I'm very happy. Merci beaucoup 😄"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -50,4 +50,8 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "They do beautiful nails and they are friendly with good hygiene, however both times I’ve been the nail technician made my fingers bleed at the cuticles. This time two of my fingers are now infected.  Edit: in response to your reply, I did not have an appointment it was a walk in. An apology would have been better. My finger was infected after the rough cuticle work at your nail salon. Just denying it does not solve the problem."
+serviceTags:
+  - gel-acrilicas
+  - nail-art
+  - pedicura
 ---

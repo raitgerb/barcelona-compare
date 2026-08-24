@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "The nicest staff and the best set of nails Ive ever had!"
+serviceTags:
+  - gel-acrilicas
 ---

@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "10 months ago"
     languageCode: "en"
     text: "Love this place! They were super attentive and kind and this hard gel set took about an hour and forty minutes and was €45. Thank you so much."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

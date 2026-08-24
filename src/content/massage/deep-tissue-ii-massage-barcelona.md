@@ -50,4 +50,9 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "Es un centro muy organizado, con buena energía, y excelentes profesionales. Regresare pronto. Realmente es genial 😍"
+serviceTags:
+  - pareja
+  - quiromasaje
+  - reflexologia
+  - tailandes
 ---

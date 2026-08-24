@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Excelente servicio, dedicación y desempeño . Me encanta cada trabajo que me hace , cada diseño ❤️1000/10 . Simplemente espectacular."
+serviceTags:
+  - pedicura
 ---

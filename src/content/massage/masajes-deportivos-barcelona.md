@@ -37,4 +37,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "Llegue con un dolor vascular y se remedio entre las primeras 2 sesiones , una persona muy profesional , buena recepción y puntualidad en las citas"
+serviceTags:
+  - deportivo
 ---

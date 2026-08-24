@@ -37,4 +37,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "I had a 90 minute Thai / oil massage and a 90 minute yoga / Thai massage combo sessions with Kate. Kate is both an excellent massage therapist, and a very good yoga teacher. Kate was able to quickly identify the problem areas during our first massage session, and relax the tightness in the muscles. She found and treated the pain points that have been missed by my regular massage therapist. The oil part of the massage was so relaxing, I simply fell asleep on the table - yet it clearly felt very effective. During the yoga class, Kate provided the corrections for the things I wasn't doing correctly in my regular classes, and gave very useful suggestions for improvements. Kate has also been very responsive and accommodating with regard to booking the sessions. The location is very central and super convenient. Working with Kate has been one of the highlights of my trip to Barcelona. Highly recommended."
+serviceTags:
+  - tailandes
 ---

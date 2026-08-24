@@ -37,4 +37,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Great massage - I was in Barcelona with friends for golfing and needed message.  I located Good hands from internet as closest to our place.  She was not planning to work that day but on my request agreed to provide the massage.  I was pleasantly surprised with quality of massage and the professionalism and the knowledge.  Ivane gave me some exercises that would help loosen my glut.  Thank you for the great massage.  Will definitely recommend her."
+serviceTags:
+  - deportivo
 ---

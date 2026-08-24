@@ -40,4 +40,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Manicura semipermanente muy bonita y Judit es un encanto, además de dejarte las uñas preciosas pasas un rato super agradable con ella. Volveré sin duda"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -47,4 +47,7 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "Bad service and unfriendly not respectful team , they speak you in a unfriendly way and you feel not good.she make me so bad French nails that I have to brake it up and go to other nails shop on the side . They help me and confirm that was a very bad work. They make it so much better and help me. Never again!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Es mi primera vez en este centro y me ha gustado mucho. Carolina me ha dejado las uñas muy bonitas, el resultado me encanta. Rápida, eficiente y muy maja. Seguramente repita 😊"
+serviceTags:
+  - gel-acrilicas
 ---

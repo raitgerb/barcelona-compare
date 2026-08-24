@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I've been waiting for 30 minutes and people who arrived after me and had appointments 30 minutes to an hour after me passed in front of me. I asked the ladies and they ignored me. Extremely rude!! Milagros and Liz were nothing but disrespectful. Will not be coming back"
+serviceTags:
+  - pedicura
 ---

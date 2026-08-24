@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 years ago"
     languageCode: "es"
     text: "Un trabajo fantástico y joaquin es sin duda una persona maravillosa. 100% recomendable y yo repetiré 😊"
+serviceTags:
+  - quiromasaje
 ---

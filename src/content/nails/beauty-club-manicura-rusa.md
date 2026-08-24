@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "This is a great beauty salon in Barcelona. The service and the way they treat their clients are amazing. All the staff are true professionals, and I have experienced a wide range of treatments there, from manicures to lash lamination."
+serviceTags:
+  - pedicura
 ---

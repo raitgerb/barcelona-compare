@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "Amazing experience. Victoria and Daniela were both incredibly professional, welcoming, and attentive from beginning to end. I came in needing deep recovery after intense training, and the massage was exactly what I needed — strong pressure, very targeted, and deeply relaxing at the same time.  You can tell they really know what they are doing. I left feeling lighter, recovered, and genuinely refreshed. Highly recommend if you are looking for a quality deep tissue massage in Barcelona."
+serviceTags:
+  - tailandes
 ---

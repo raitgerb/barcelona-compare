@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I just have been to Spain for my lovely holiday and am so excited to have my nails done before I get back to London. And luckily I found Fenomenail, they were so friendly and professional. They were very calm to me because (to be honest) I’m fancy but they explained and gave me some advices for my nails, beside it they told me how to keep my nails strong and healthy. I absolutely come back and highly recommend this nail shop to everyone"
+serviceTags:
+  - pedicura
 ---

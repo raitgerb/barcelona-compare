@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "fr"
     text: "Je suis ravie d'avoir fait confiance à Adri pour mes ongles :) Elle est très accueillante et on la sent passionnée!! Super choix de couleurs, textures et une technique au top. Merci!"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
 ---

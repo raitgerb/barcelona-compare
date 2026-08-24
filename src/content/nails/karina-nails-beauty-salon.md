@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I've been going to Karina for several years, and she’s amazing! Her work is always perfect, and my nails look flawless every time. She’s professional, friendly, and really cares about her clients. I love how clean and comfortable her space is. If you’re looking for a great nail technician, I highly recommend her!"
+serviceTags:
+  - pedicura
 ---

@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "The pictures are before and after. Woww, what a professionals they have. After 4 weeks my nails are still the same as the moment I left the salon (I have a rubber base gel polish color). They are super friendly and great service ❤️ The kind lady who helped me had a lot of patience and worked in a really professional way, making sure the nail polish was not on my skin but using the maximum of the actual nail with a small brush. I showed them a design that I found online and they were excited to give me what I wanted. I don't speak Spanish but I felt really welcome and with Google Translate it was easy to communicate."
+serviceTags:
+  - gel-acrilicas
 ---

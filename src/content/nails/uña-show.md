@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "es"
     text: "He ido 2 veces. Me han atendido genial y me han dejado muy bien la manicura. Son muy atentas y cuidadosas. Os lo recomiendo !!!"
+serviceTags:
+  - pedicura
 ---

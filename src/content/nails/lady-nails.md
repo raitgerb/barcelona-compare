@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "es"
     text: "Si , soy Vietnamita y vivo y trabajo en Espana . Vine a hacerme la manicura y , me canto! Fueron muy cuidadosas y amables. Los precios eran razonables . No me deddico a lo mismo que ellas, asi que no conocía muchos disenos de unas , Pero me aconsjaron sobre una manicura que se adaptaba a mi trabajo . Quedé muy contenta con mi manicura y pedicura. El massge de pies estaba incluido. Sin duda volveré! Deberían venir a probarlo, saldrán sintiéndose de maravilla! 😍😍"
+serviceTags:
+  - pedicura
 ---

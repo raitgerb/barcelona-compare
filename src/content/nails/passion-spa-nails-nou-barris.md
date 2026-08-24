@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Mi nuevo sitio de confianza. Adjunto fotos de las dos últimas veces que he ido (manicura semipermanente con Keratina). Muy profesionales, resultado inmejorable, súper fácil pedir cita por WhatsApp."
+serviceTags:
+  - gel-acrilicas
 ---

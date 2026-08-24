@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "He ido a hacerme la manicura con gel para mi boda, ya tenía idea muy precisa y solo para mi Anna compró piedras especiales y me hizo un diseño increíble con mucho profesionalismo (Anna es muy perfeccionista y eso cambia todo!!!) recibí muchos comentarios positivos sobre mi manicura. Mil gracias"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
 ---

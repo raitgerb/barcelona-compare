@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "The greatest nails I ever had. Lyna is amazing . Fully recommend 🫶"
+serviceTags:
+  - gel-acrilicas
 ---

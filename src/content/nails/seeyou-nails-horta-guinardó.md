@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "Sofía es muy amable y hace genial su trabajo, nunca me había durado tanto la semi hasta que empecé a ir a su salón, resultados impecables durante varias semanas! Buena limpieza, esteriliza todos los utensilios tras su uso. Sin duda, la recomiendo!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

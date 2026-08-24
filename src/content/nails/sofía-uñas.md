@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "es"
     text: "Sofía es una muy buena profesional, trabaja con mucha delicadeza, te asesora y aconseja lo mejor para ti. Los productos que utiliza son de muy buena calidad, no usan torno para no castigar la uña. Mi experiencia con las uñas siempre ha sido mala, me he hecho semi permanente, gel y a la semana se me han empezado a romper. La primera foto es del 28/03/26 y la segunda es de hoy prácticamente no hay diferencia, son de gel( han crecido un poco) tienen el mismo brillo que el primer día. Encantada volveré."
+serviceTags:
+  - gel-acrilicas
 ---

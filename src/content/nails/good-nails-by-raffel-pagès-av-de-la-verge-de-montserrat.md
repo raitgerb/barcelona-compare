@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "es"
     text: "No se por dónde empezar... Fatal todo, he salido muy descontenta. Me ha atendido Dolores, y aparte de que me ha puesto las pegatinas sin ton ni son (fijaros en los arbolitos, que no están centrados), donde me ha puesto la estrella fugaz se ve que no está bien adherida a la uña (se ve el papelito y arrugas, horrible!). Se lo he dicho y no me lo ha querido arreglar. Finalmente, la uña del dedo gordo, me ha puesto el diseño encima de la punta, teniendo espacio de sobra para colocar la pegatina bien (fijaros el trozo que sobra abajo). Aparte de esto, yo le he enseñado un diseño de lo que quería: uñas blancas opacas y el final con oro en topitos. Pues las uñas son semitransparentes, no blancas. Y, aunque le he insistido que quería topitos, en vez de darme una solución (porque tienen esmalte dorado con topitos) me ha insistido en ponerlas doradas lisas. Nada que ver con lo que buscaba. Aparte de esto, es muy antipática e insistente. No me escuchaba y, apesar de haber reservado 1h, no me dejaba hablar para expresarme e insistía en hacer lo que ella decía, todo con prisas. HORRIBLE. 25€ me ha cobrado por esto... dónde voy yo con la uña que se nota la pegatina mal puesta? En serio, no vayáis... tenéis otros lugares mucho mejores."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

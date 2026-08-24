@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Good quality service and good environment With Moroccan high quality Argan oil"
+serviceTags:
+  - pedicura
 ---

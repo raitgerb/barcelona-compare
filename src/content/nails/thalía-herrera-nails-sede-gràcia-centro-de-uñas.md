@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "es"
     text: "Excelente salón, siempre hacen un trabajo impecable y muy limpio, el trato es increíble un ambiente donde puedes estar relajada y sin estrés, cuando no sabes que hacerte te asesoran de la mejor manera para que quedes a gusto✨💅  Totalmente recomendado marca la diferencia no se compara con ningún otro son las mejores chicas 🩷🩷"
+serviceTags:
+  - pedicura
 ---

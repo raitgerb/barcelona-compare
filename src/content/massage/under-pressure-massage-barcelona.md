@@ -53,4 +53,8 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "Excellent massage, conversation and recommendations! Fixes the knot I had for weeks that other therapists in different countries hadn't been able to fix. Best I've felt in weeks"
+serviceTags:
+  - deportivo
+  - quiromasaje
+  - tailandes
 ---

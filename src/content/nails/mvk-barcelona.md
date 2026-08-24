@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I had such a lovely experience at this salon! From the moment I walked in, everyone was warm, friendly, and made me feel very welcome. The service was excellent and my nails turned out absolutely beautiful. You can really tell they care about their clients and pay attention to every detail. ❤️  Thank you Yulia and Maria for taking care of my nails!"
+serviceTags:
+  - pedicura
 ---

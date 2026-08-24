@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "For any woman who, like me, might be uncomfortable with the idea of being massaged by a male therapist, rest assured that the service is very professional and safe and I felt perfectly relaxed throughout my massage, so (if you feel comfortable doing so) don't let it stop you from going!  The space is pleasant and the atmosphere is relaxing, I highly recommend this service."
+serviceTags:
+  - deportivo
 ---

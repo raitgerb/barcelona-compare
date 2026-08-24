@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a week ago"
     languageCode: "en"
     text: "Super good experience she was fast and did a great job"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

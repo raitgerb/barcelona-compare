@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "Best place to get your nails done in Barcelona, so professional and clean ✨"
+serviceTags:
+  - pedicura
 ---

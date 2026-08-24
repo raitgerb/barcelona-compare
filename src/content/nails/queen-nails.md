@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Selected this salon based on the other reviews and it did not disappoint. Great pedicure and manicure. The girls were Chinese so I had a chance to practise my Mandarin."
+serviceTags:
+  - nail-art
+  - pedicura
 ---

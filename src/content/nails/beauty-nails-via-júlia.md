@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "es"
     text: "Llevo tres/cuatro meses haciéndome las uñas en este salón y la verdad que muy contenta.  Des del principio me han tratado bien y cuando he pedido una modificación de alguna cosa no me han puesto mala cara. Como en todos lados ha habido diseños que me han gustado menos pero el que me hice la última vez fue ESPECTACULAR, lo hicieron muy bien tanto la forma de la uña almendrada como el pintado fue tal qual el diseño que pedí. Vaya currazo hicieron.  MUCHAS GRACIAS!! 🌸✨🤍"
+serviceTags:
+  - gel-acrilicas
 ---

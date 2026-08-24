@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Super gooddd, the prices are pretty affordable and the nails are so prettyyyyy i love it"
+serviceTags:
+  - pedicura
 ---

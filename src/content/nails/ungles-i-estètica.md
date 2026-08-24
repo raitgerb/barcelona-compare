@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "ca"
     text: "Recomano 100% fer-te els peus i les ungles en aquest lloc, amb l’Alin i Afwan!! Són les dues encantadores, i unes autèntiques cracks!!! El meu novio, els meus pares i jo hem vingut i ens encanta aquest lloc!!"
+serviceTags:
+  - nail-art
 ---

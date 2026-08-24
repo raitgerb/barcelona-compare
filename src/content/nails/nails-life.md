@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "7 years ago"
     languageCode: "es"
     text: "Me han cortado el pie haciéndome la pedicura. Utilizan bisturi para cortar las duricias y se le ha ido la mano. La higiene pobre. Reutilizan las limas con otros clients."
+serviceTags:
+  - pedicura
 ---

@@ -49,4 +49,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "My boyfriend and I booked a couples massage today, hoping for a relaxing experience. Unfortunately, it was difficult to relax because the two massage therapists spent a large part of the session talking to each other. Even though they were whispering, they were also laughing, and it was distracting throughout the massage.  A massage should be a peaceful and calming experience, and the constant conversation between the staff made that impossible. I understand that people communicate at work, but during a treatment, clients should be able to enjoy a quiet atmosphere.  I hope this feedback helps improve the experience for future customers."
+serviceTags:
+  - tailandes
 ---

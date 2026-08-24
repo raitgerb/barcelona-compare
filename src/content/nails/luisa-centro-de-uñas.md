@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Amazing pedicure and Manicure! Ladies were very nice!"
+serviceTags:
+  - pedicura
 ---

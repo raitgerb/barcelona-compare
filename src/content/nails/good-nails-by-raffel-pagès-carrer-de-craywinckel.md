@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Las chicas un 10 Rita, Rocio y Ángela!! Llevo creo que dos años  yendo allí cada 15 días. La encarga de apuntar las citas una mal educada, habla mal a los clientes gritando, vía whatsapp el trato es deplorable.  Quiero agregar que ahora usan una marca de esmalte de baja calidad, más barata,se pela y luego cuando llevas tu esmalte de Semilac ( la marca que utilizaban al comienzo y la dejaron de utilizar por utilizar otro de menor calidad) no te incluye la garantía por tanto venden producto y no servicios. Después de varias quejas me respondieron que básicamente es la política de la empresa. Gracias a su política pierden una clienta que va desde que abrieron casa 15 días. No recomiendo este sitio. Éxitos"
+serviceTags:
+  - pedicura
 ---

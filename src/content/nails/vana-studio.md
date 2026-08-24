@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "10 months ago"
     languageCode: "en"
     text: "The best manicure of my life! Ana is an absolute artist and perfectionist. I will only be seeing her for the rest of my time here in BCN."
+serviceTags:
+  - gel-acrilicas
 ---

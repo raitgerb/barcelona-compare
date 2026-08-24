@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "My wife did her manicure and pedicure, very friendly owner accommodating even without appointment… my wife was very happy and turned out as her wish.."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

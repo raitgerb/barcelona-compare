@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "en"
     text: "Ivette was amazing, today I had a very hard day and she created a beautiful and safe space for me to relax and destress. Thank you the Spa is beautiful and the staff couldn’t be better 🤍🙏🏽"
+serviceTags:
+  - deportivo
+  - spa-bienestar
 ---

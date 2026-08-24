@@ -50,4 +50,8 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I got the best massage here. 68€ for the best one hour ever! An appropriate way to end my 2-week vacation. I was too shy to ask the name of my masseuse. She was so nice and wonderful. Will definitely return when next I’m in Barcelona! Highly recommend."
+serviceTags:
+  - pareja
+  - spa-bienestar
+  - tailandes
 ---

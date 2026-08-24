@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Ayer descubrí por primera vez este salón para hacerme uñas acrílicas y he de decir que es un lugar limpio, los trabajadores son super simpáticos y escuchan y aconsejan lo mejor para el diseño, el trabajo termino impecable y me sentí muy cómoda."
+serviceTags:
+  - gel-acrilicas
 ---

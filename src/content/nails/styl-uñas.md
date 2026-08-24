@@ -36,4 +36,6 @@ googleReviews:
     relativeTime: "7 years ago"
     languageCode: "es"
     text: "Clienta desde hace 21 años. Profesionalidad y trato inmejorable. Las mejores de Barcelona!!!"
+serviceTags:
+  - pedicura
 ---

@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "Always happy with the nails, and a very good prize."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

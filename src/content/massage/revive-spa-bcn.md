@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "My wife and discovered Rivive a few minutes walk from the Olha Barcelona. The owner Tess and her sister Jess gave us the best manicure & pedicure we ever had. Went back for a massage,  outstanding as well!"
+serviceTags:
+  - spa-bienestar
 ---

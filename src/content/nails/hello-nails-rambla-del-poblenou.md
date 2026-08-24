@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "I had a very disappointing experience at this nail salon. First of all, customers are not allowed to use the bathroom, which is quite unreasonable and uncomfortable during an appointment.  On top of that, the gelish manicure did not last long at all. It started chipping much sooner than expected, which makes the service feel overpriced for the quality provided.  Overall, it was not worth it and I would not recommend this salon."
+serviceTags:
+  - gel-acrilicas
 ---

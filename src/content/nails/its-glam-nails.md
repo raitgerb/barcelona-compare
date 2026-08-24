@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Really great experience getting my nails done here. Got the normal manicure and it dried fast. The owners are quite kind. Solid work and highly recommend."
+serviceTags:
+  - pedicura
 ---

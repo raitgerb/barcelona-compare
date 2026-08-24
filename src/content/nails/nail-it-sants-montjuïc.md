@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Had a great experience here with Deilys as my nail technician! The service and professional and she was very detailed. Highly recommend seeing her for your service!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

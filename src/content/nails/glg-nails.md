@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "Hermosas uñas esmaltado!! Precio calidad estupendo. Recomiendo!!"
+serviceTags:
+  - gel-acrilicas
 ---

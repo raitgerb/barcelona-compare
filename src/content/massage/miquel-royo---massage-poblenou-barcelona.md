@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "ca"
     text: "Excel·lent! Tenia dolor a les lumbars i amb un massatge descontracturant m'ho ha solucionat. El Miquel molt atent i professional.  100% recomanable!"
+serviceTags:
+  - tailandes
 ---

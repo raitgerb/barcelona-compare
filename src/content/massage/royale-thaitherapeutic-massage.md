@@ -42,4 +42,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Very puntual girl... All I can say is it's a perfect gift for myself... A combination of sports and relaxing massage is perfect for a very tiring week... 2hands are up for Regina very accommodating and she knows what she's doing"
+serviceTags:
+  - deportivo
+  - tailandes
 ---

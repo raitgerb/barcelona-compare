@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "es"
     text: "Me sirvió un chico. Es muy amable y divertido. Siempre me cuidan con mucha atención. Trabajan muy rápido y el precio es muy razonable. Definitivamente volveré la próxima vez ."
+serviceTags:
+  - gel-acrilicas
 ---

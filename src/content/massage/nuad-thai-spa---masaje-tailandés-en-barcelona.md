@@ -49,4 +49,8 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "I thoroughly enjoyed the maternity massage, and left the center feeling super relaxed. The place is beautiful and the tea with a pastry at the end is a very nice touch."
+serviceTags:
+  - pareja
+  - spa-bienestar
+  - tailandes
 ---

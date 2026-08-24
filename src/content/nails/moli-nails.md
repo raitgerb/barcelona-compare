@@ -52,4 +52,8 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "One of the best manicures I’ve ever had! 1h30 of pure precision and attention to detail. Thank you, Sylvia, for your amazing work!"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
+  - pedicura
 ---

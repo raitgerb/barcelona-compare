@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Today I had a semipermant at Hello Nails (Port del Angel). I would give only one star because of the following: Paula pressed the file too hard on my fingernails (my nails still hurts after 3 h of mani), and after she asked me if I want to cut my cuticls for extra 7 euro. I accepted this because I don't know how it s possible to do a manicure without paying attentions to the cuticls to look good and neat. She started to eliminate them, but instead of cutting the cuticls somehow she started to snatch them. It was very painful and now the area near cuticls is damaged. Regarding the layers of color, these are visible uneven and with air bubbles. In the end I paid almost 18 eur to damage the nails. I don t recomand Paula. I will give another try to another place. Hopefully someone will take into consideration all this reviews."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

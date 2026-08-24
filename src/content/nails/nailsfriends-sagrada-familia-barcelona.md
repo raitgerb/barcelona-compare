@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "5 years ago"
     languageCode: "en"
     text: "I did a manicure with a \"normal\" ( but apparently long lasting) nail polish (CND) and one week after it still holds strong! I started to notice some chipping 3-4 days later and I do all the house chores. The girls were amazing too, I think the service and their behaviour were exceptional. Such a good environment to be around, more than anywhere else I have seen, their willingness to help and give their honest opinion was highly appreciated!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

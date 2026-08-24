@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "en"
     text: "Amazingly well-done pedicure! Valentina took great care of me, and besides the really friendly chats, I loved the cleanliness of the salon and the final result. Highly recommended."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

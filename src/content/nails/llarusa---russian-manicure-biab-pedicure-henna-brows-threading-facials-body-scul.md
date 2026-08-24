@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "I truly loved this small salon! They are experts in doing eyebrows. I did eyebrows lamination for the first time and I’m super happy with the result. I’ll definitely go again soon 😊🥰"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

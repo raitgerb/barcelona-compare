@@ -52,4 +52,8 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "We booked the ETERNAL LOVE ritual at Bali Spirit Luxury Spa yesterday and it was pure bliss! Two hours of complete relaxation with a perfect blend of treatments that left us feeling refreshed and relaxed. The serene atmosphere and skilled therapists truly made it an unforgettable experience. Highly recommended for couples seeking a moment of tranquility and luxury in the heart of the city."
+serviceTags:
+  - pareja
+  - quiromasaje
+  - spa-bienestar
 ---

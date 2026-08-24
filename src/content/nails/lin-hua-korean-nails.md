@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Great friendly service, not rushed, really detailed and meticulous on my manicure. Best one I’ve had yet, super cleaned up and evenly done."
+serviceTags:
+  - pedicura
 ---

@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Nail art toppp🫶🏻🫶🏻"
+serviceTags:
+  - nail-art
+  - pedicura
 ---

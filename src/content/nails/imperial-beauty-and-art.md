@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "Alexis is really kind and made my hair sooo shiny and healthy! I will definitely be back!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

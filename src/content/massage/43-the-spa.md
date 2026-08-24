@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "The spa is very beautiful. The view is great. However, I was extremely frustrated that they told me incorrect information multiple times in emails which led me to miss 30 out of 45 minutes of the allotted time I had to relax in the spa only before my service. I shifted my schedule around to hunt down a swimsuit last minute on a Sunday only to find out that I didn't need one when I got there. I cut short my other plans and rushed here and there because they told me the wrong thing a couple of times. They said I couldn't use the private spa water area and sauna without one. It wasn't the esthetician's fault. She was very nice. I'm still very annoyed about it because I won't have another chance to enjoy the it because of their mistakes. I don't live in Barcelona. If the spa wasn't as beautiful, I'd give them fewer stars. My skin is extremely acne-prone and sensitive to products which I mentioned and the products from the facial caused many red breakouts overnight. Where I don't have breakouts, I have small clogged pores where I don't even usually break out."
+serviceTags:
+  - spa-bienestar
 ---

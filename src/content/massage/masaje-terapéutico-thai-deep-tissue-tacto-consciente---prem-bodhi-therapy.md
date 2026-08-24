@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Toni was incredible. He knows how to work all the knots, and my mobility feels increased already. He is also very kind and caring, and a good conversationalist. Would go again next time im in barca."
+serviceTags:
+  - tailandes
 ---

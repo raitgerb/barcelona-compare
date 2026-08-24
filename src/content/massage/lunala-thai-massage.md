@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Great communication about availability. We had a nice duo foot massage after days of walking, feel light as a feather. Wasn’t on the menu but no problem at all when we asked via mail."
+serviceTags:
+  - reflexologia
+  - tailandes
 ---

@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Avoid at all costs! Worst experience ever! Just wanted to get my gel nails removed, but they did such a bad job. My cuticles were all damaged and the nails were buffered off too thin! This is to help another fellow traveller!"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
 ---

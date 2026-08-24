@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "10 months ago"
     languageCode: "es"
     text: "Si pudiera poner 0 estrellas, lo pondría. He ido en varias ocasiones con una manicurista muy buena, deje de ir porque veía maltrato a las trabajadoras, falta de respeto a las clientas y un ambiente muy turbio. Vi también a unas chicas de practicas, a las cuales tampoco se les trataba bien. Literalmente me senti muy incomoda la ultima vez y por eso no he vuelto. Las estilistas son fantásticas, los jefes no. No recomiendo el lugar, si el servicio y el trato de las chicas."
+serviceTags:
+  - pedicura
 ---

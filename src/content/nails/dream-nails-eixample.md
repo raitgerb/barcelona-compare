@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I had a classic manicure (no Shellac, no gel polish) and really liked the result. The place felt safe and professional, and I even saved it as a favorite to return again.  However, as shown in the photo, the difference between my nails before and one month later is noticeable. While the manicure itself was great, my nails still need about two more months to fully recover and return to their normal state.  Overall, a good experience, but be mindful that even without gel, nails might still need some time to heal."
+serviceTags:
+  - gel-acrilicas
 ---

@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Have been here a few times and they're really professional and do a great job. Also for a great price"
+serviceTags:
+  - nail-art
 ---

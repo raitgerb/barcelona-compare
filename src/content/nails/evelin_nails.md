@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "es"
     text: "Evelyn es muy profesional y un encanto de persona. Llevo años viniendo con ella y no le confío mis uñas a nadie mas!! La recomiendo al 100%"
+serviceTags:
+  - pedicura
 ---

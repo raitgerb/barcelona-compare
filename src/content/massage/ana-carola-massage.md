@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I visited Ana Carola Massage today, and I must say, it was an exceptional experience. Here are a few highlights from my visit:  Super Clean Environment: The place was impeccably clean, which immediately put me at ease. Cleanliness is a big deal for me, and Ana Carola Massage did not disappoint.  Best Treatment Ever: I received acupuncture for my very bad lower back pain, which has been a significant issue since my large back surgery six years ago. The treatment was incredibly effective, and I already feel an improvement after just one session.  Professional and Kind Service: Ana Carola, thank you for being such a kind and professional person. Your expertise and gentle approach made the entire experience so much better.  I’m definitely planning to return in a week for a follow-up treatment. The initial results have been so promising that I can’t wait to see further improvements.  Thank you once again, Ana Carola, for the outstanding service. Highly recommended!  Edited from here and under.  I didn't need a follow treatment. All my pain went away, but I decided to go for a relaxing massage. Again I must say WOW. It was so nice and relaxing. Carola is super professional and know what she is doing. Thank you again, and I will be back"
+serviceTags:
+  - deportivo
 ---

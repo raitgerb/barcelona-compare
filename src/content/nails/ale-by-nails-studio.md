@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "es"
     text: "Excelente servicio. Michell hizo un trabajo increíble con mis uñas; quedó atenta a cada detalle y logró exactamente el diseño que quería. Además de ser muy profesional, fue amable y cuidadosa durante todo el proceso. Mis uñas quedaron hermosas y de excelente calidad. Sin duda volveré y la recomiendo totalmente. ¡Gracias, Michell! 💅✨"
+serviceTags:
+  - gel-acrilicas
 ---

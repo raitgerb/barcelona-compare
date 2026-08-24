@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "10 months ago"
     languageCode: "en"
     text: "Randomly walked by and figured why not get a foot massage after walking around so much the last few days. Didn’t disappoint, the foot massages we got were VERY good and VERY good on the price too. Labubu was nice and funny! Had a good time in there"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

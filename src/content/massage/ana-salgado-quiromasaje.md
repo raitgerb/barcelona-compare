@@ -37,4 +37,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Fui por dolor en las cervicales y salí muy contenta. Además, es súper amable y cercana."
+serviceTags:
+  - quiromasaje
+  - reflexologia
 ---

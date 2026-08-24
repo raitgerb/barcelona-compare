@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "en"
     text: "I really enjoyed my visit to this massage studio. The place was cozy and calming, and the employee was extremely kind and professional. It was a great experience, and I will definitely come back!"
+serviceTags:
+  - tailandes
 ---

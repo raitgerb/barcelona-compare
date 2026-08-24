@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I'm in love with my manicure. My nails were prepped with care and detail. Super efficient and friendly service. They accepted me and my friend as a walk in service. The price is also very affordable."
+serviceTags:
+  - gel-acrilicas
 ---

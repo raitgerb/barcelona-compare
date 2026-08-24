@@ -41,4 +41,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "es"
     text: "Me ha encantado el servicio muy atenta repetiré sin duda mil gracias"
+serviceTags:
+  - gel-acrilicas
 ---

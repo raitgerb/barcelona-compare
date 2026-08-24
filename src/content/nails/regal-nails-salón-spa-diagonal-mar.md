@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Despite all the comments I read about this saloon, I had a really nice experience there. The staff listened to all of my wishes and made sure it was matching with my expectations, even though we struggled with the language haha! Let’s see if the gel lasts, but it seems pretty strong. I will probably go back there during my stay if I need to redo my nails. Thank you very much!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

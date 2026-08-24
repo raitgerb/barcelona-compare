@@ -49,4 +49,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Tra My did my nail art! Very beautiful and she’s very efficient while really great at fulfilling my idea! I mentioned flower, glitter, this Mach my dress and phone case :) It just took her one second to come up this beautiful design!! Wow!"
+serviceTags:
+  - nail-art
 ---

@@ -41,4 +41,7 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "es"
     text: "Uñas perfectas como siempre. 100% recomiendo este salón. Iryna es una excelente profesional. Además de ser una gran persona y una conversadora encantadora, es sin duda la mejor especialista en Barcelona. Me encanta tanto su trabajo como su trato personal. La recomiendo sinceramente. Trabaja rápido, con mucha precisión y calidad, siempre teniendo en cuenta los deseos del cliente. Siempre hace una manicura limpia. Es una experta en diseños complejos y detallados, creando verdaderas obras de arte en las uñas. Además, su técnica para construir la arquitectura de la uña perfecta y elegante es impresionante. ¡Sin duda, la mejor elección! Todo está genial."
+serviceTags:
+  - nail-art
+  - pedicura
 ---

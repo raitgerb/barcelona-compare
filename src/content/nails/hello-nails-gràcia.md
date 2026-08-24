@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "Arrived 15 minutes early!    I asked to use loo.  Was told toilets were not for clients.   My Spanish was not good enough to understand her reason why so I took my nails and my butt to another salon… so it’s Goodby Hello nails!"
+serviceTags:
+  - gel-acrilicas
 ---

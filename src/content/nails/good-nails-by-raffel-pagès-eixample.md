@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "en"
     text: "I went there for a pedicure and I’m not happy with the result. My toes were actually hurting after so much filling and the nails were cut really short, no shape was given, the nail polish was applied over the cuticules and doesn’t look profesional."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

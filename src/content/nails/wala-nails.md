@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "Men pedicure + good massage, I am just happy! Very good feelings. Thanks, like to visit You again!"
+serviceTags:
+  - pedicura
 ---

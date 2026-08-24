@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "I can wholeheartedly recommend this massage studio in Barcelona. Everyone I’ve met here has been incredibly friendly, professional, and genuinely kind.  The studio itself is clean, calm, and well maintained.  They offer both pre-bookings and drop-in appointments, which makes it very convenient.  A very special thank you to Pim for being exceptionally attentive, kind, and caring. She is incredibly skilled and has helped me so much with my back pain. ❤️"
+serviceTags:
+  - tailandes
 ---

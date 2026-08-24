@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I love there service and very meticulous and very clean and all the tools are sterilized. Me gusta mucho sus trabajos,trabajo super,muy limpio. Venemos siempre desde aqui con mi hija"
+serviceTags:
+  - gel-acrilicas
 ---

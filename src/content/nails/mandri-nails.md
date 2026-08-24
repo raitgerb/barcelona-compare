@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "So kind and gentle, I used a Groupon with my appointment and I'm very happy with the result"
+serviceTags:
+  - pedicura
 ---

@@ -49,4 +49,7 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "en"
     text: "I had a great experience with Melissa and I am very happy with the results. She helped me to decide the color and the design. They gifted me a caticule oil. Thanks a lot again."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

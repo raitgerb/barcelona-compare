@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "Llevo ya años viniendo aqui y son increibles, es el mejor sitio que he ido, te las dejan perfectas, hacen diseños y ademas duran, nunca se me han roto, seguire viniendo siempre🥰"
+serviceTags:
+  - pedicura
 ---

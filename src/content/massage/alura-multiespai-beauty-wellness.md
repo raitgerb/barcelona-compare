@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Amazing, amazing, amazing! The Thai massage is absolutely spectacular."
+serviceTags:
+  - tailandes
 ---

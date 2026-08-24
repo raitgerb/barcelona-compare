@@ -38,4 +38,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Increíble servicio a domicilio! Soy cliente habitual y estoy encantada. Me hace las uñas con un plus de masaje, las cejas, y también atiende a la niña y a mi marido. Es la mejor manicura y pedicura que he tenido en España: profesional, cuidadosa y muy detallista. Siempre con buen gusto y un trato excelente. Recomiendo totalmente sus servicios! ⭐️⭐️⭐️⭐️⭐️"
+serviceTags:
+  - pedicura
 ---

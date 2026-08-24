@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "Super lovely staff! I was able to come without an appointment (and very grown out nails!) and they were super accommodating although I know very little Spanish 😆  Daisy was great and really took her time to get the shape and design I wanted, which was amazing! Sadly two nails started lifting 2 weeks after my appointment - I like to keep my acrylics for 3 weeks and also need to pay extra for a repair so that’s a little annoying.  The pricing was quite good - I’ve paid the equivalent of €15 more elsewhere so I was happy."
+serviceTags:
+  - pedicura
 ---

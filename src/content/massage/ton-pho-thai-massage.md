@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "5 years ago"
     languageCode: "en"
     text: "Great massage. Booked the Royal Thai for 90 mins and it did not disappoint! Feel like I got reborn. Can definitely recommend. All very professional, clean and friendly."
+serviceTags:
+  - tailandes
 ---

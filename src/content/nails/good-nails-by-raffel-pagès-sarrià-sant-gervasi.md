@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Very good service"
+serviceTags:
+  - pedicura
 ---

@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Each visit exceeds my expectations, and this time Camila did an amazing job. 🌸 She’s skilled and very nice. The semi-permanent nails are high quality and long-lasting. Highly recommend! 💗"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

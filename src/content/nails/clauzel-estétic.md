@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "Claudia es la mejor en su especialidad. Hace varios años que solo confío en ella para mi manicura i pedicura, así como higienes faciales….y que decir de la depilación facial con hilo…es una pasada! Claudia pone cariño y profesionalidad en todo lo que hace, la recomiendo 100%!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -41,4 +41,6 @@ googleReviews:
     relativeTime: "5 years ago"
     languageCode: "es"
     text: "Atención y trabajo exquisitos. Hace muchos años que me dejo aconsejar por ella y su equipazo!!!"
+serviceTags:
+  - gel-acrilicas
 ---

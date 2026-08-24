@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "First time getting a Thai Massage. Great experience, very relaxing and my muscles feel great! The place was very clean and cozy. The lovely lady checked in on me throughout the massage to make sure the amount of pressure she was using was ok. My session was much needed, thank you!"
+serviceTags:
+  - tailandes
 ---

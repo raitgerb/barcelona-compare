@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Fui al salón de Ruslana por primera vez esta semana y estoy muy impresionada con mi manicura. Tiene una increíble atención a los detalles y utiliza un kit esterilizado cada vez. También tenía una gran variedad de colores. Fue muy agradable conversar con ella e incluso me enseñó algunas palabras nuevas en español. Estoy muy feliz de haberla encontrado y la recomiendo encarecidamente. ☺️"
+serviceTags:
+  - pedicura
 ---

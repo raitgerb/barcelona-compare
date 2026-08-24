@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Tuve una experiencia increíble. Desde el primer momento, el trato fue impecable. Se tomó el tiempo de escucharme, adaptarse a las necesidades específicas de mi piel y explicarme cada paso del proceso. Fue muy cuidadosa, profesional y atenta en todo momento, además de transmitirme muchísima empatía y confianza. Me dio consejos súper útiles para cuidar mi piel después de la limpieza, y el resultado fue espectacular: noté la piel mucho más limpia, luminosa y suave. Sin duda, volvería a repetir. ¡100 % recomendable!"
+serviceTags:
+  - gel-acrilicas
 ---

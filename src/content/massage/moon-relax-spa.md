@@ -41,4 +41,6 @@ googleReviews:
     text: "The experience was wonderful, we had a couple massage. We both felt very relaxed and satisfied. We would definitely recommend and go there again. Thank you Karol and Indila 😊"
 languages:
   - "Inglés"
+serviceTags:
+  - spa-bienestar
 ---

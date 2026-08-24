@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "Muy contenta con mis uñas, me realicé esta mañana las uñas acrílicas en el salón y muy satisfecha. Lili es una gran profesional, las termino muy rápido y las hizo desde 0, se me pasó el tiempo volando. Utiliza materiales de marca, el salón lo tiene muy limpio y ordenado."
+serviceTags:
+  - gel-acrilicas
 ---

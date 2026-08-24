@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "12 months ago"
     languageCode: "es"
     text: "Cindy es estupenda y una gran profesional!!! Te sientes como en casa, su trabajo es muy limpio y súper bonito siempre. Mi manicurista de confiiii 💖💖💖"
+serviceTags:
+  - gel-acrilicas
 ---

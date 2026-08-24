@@ -48,4 +48,7 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "Ana gave me a lovely builder/hard gel mani here with fill and beautiful shaping and gel french tip.  Paid a lot of attention to detail, asked for feedback throughout.  Also had my first ever lash lift with Anju which was very easy - she was very reassuring and thoughtful.  Would come back here again if I was staying long enough."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

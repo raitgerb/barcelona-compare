@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Considero Maria la mejor manicura y depiladora de Barcelona. Cruzo toda la ciudad con mucho gusto para recibir sus cuidados. Excelencia y calidad definen su trabajo. ¡La recomiendo!"
+serviceTags:
+  - pedicura
 ---

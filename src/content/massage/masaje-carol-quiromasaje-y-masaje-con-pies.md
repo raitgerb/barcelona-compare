@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Excellent massage. Original technique. Cosy space. Carol is a magician with her feet. If you like deep & strong massage, you will like it."
+serviceTags:
+  - deportivo
+  - quiromasaje
 ---

@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Loved the nails! Lisa was wonderful and helped me find something that worked with my vision. She even warmed my cold feet up once my manicure and pedicure were over. Definitely recommend 🫶🏼"
+serviceTags:
+  - pedicura
 ---

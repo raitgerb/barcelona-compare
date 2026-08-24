@@ -51,4 +51,7 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "I was looking for a studio that does long-lasting, affordable Russian manicure nails and I have found it. This is my go-to place now. The first time I did my nails (simple neutral base), they lasted 6 weeks and still looked perfect (see 1st photo - this is after 6 weeks of growing out). I went back to do French manicure & they look so precise & perfect. Do not hesitate to come here - extremely high quality work!"
+serviceTags:
+  - nail-art
+  - pedicura
 ---

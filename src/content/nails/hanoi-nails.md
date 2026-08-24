@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "Hanoi Nails es un pequeño local especializado en manicura y pedicura, y se nota. Hoa es increíble, que mimo, cuidado y detalle le pone a su trabajo. Fui para hacerme las uñas para una boda, buscamos los mejores colores de acuerdo a mi vestido, probamos como me sentía con un toque extra de brillo... Una experiencia maravillosa. Se acaba de convertir en mi sitio de referencia para hacerme la manicura y pedicura."
+serviceTags:
+  - pedicura
 ---

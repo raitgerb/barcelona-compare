@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Before we started I asked for no polish. The man doing my nails sanded the top of my nails and ruined the shine of my nature nails. He was extremely rough with me, my cuticles and fingers. He made multiple nail beds bleed. Don’t get me started on my manicure.  I do not recommend this place."
+serviceTags:
+  - gel-acrilicas
 ---

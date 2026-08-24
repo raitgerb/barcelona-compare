@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "es"
     text: "Di con este sitio por cosas de la vida, vivo en vic e iba a hacer unas cosas en Bcn. Mientras esperaba Yajaira me hizo las uñas y me encantaron aunque no hubo moñito 3D ella resolvio y lo saco adelante, estaba Lauri y Paula y me senti super bien con todas. Me queda algo retirado pero para ser sincera, volvere... Gracias a todas♡"
+serviceTags:
+  - gel-acrilicas
 ---

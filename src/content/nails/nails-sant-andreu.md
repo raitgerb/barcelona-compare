@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "my fave nail salon"
+serviceTags:
+  - pedicura
 ---

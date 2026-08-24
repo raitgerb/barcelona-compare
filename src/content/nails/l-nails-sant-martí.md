@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Very professional and clean space with friendly staff who did a proper and thorough manicure. Thank you."
+serviceTags:
+  - nail-art
 ---

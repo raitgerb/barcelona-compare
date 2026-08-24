@@ -46,4 +46,6 @@ googleReviews:
     languageCode: "en"
     text: "Great attitude, relaxing treatment and overall wonderful experience"
 googleEditorialSummary: "France-based chain selling skincare, bath & hair products (many made with natural ingredients)."
+serviceTags:
+  - spa-bienestar
 ---

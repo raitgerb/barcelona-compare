@@ -50,4 +50,8 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "en"
     text: "I visited Le Patio Spa a few days ago and went home feeling incredibly relaxed. We basically had the whole place to ourselves and the staff was amazing! We enjoyed a deeply relaxing massage and finished the experience in the jacuzzi with a glass of delicious cava. It was the perfect way to spend a Sunday in Barcelona. Highly recommended!"
+serviceTags:
+  - pareja
+  - quiromasaje
+  - spa-bienestar
 ---

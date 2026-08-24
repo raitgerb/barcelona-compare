@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "8 years ago"
     languageCode: "en"
     text: "A nice place to get a manicure or pedicure."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

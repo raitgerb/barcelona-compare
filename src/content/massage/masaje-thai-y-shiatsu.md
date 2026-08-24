@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "es"
     text: "Maravillosa experiencia! Agostina fue muy cuidadosa y sensible desde el inicio y durante toda la sesión.. me ayudó a desconectarme y a poder entrar en un estado de total relajación, y a la vez consciente de los masajes y esriramientos que iba recibiendo, siento que con su profesionalismo logra entregar un viaje que mezcla distintas herramientas de sus estudios de yoga y masajes.. lo percibí y me encantó! Es muy generosa y preocupada.. También el uso de aromas y de música ambiental relajante, contribuían a la creación de una atmósfera muy mágica y placentera.. cada detalle bien cuidado, totalmente recomendada!!"
+serviceTags:
+  - tailandes
 ---

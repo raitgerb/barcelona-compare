@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "I just had one of the best sports deep tissue massages I’ve ever had in my entire life. Ask for Jackie. See was amazing!"
+serviceTags:
+  - deportivo
+  - spa-bienestar
 ---

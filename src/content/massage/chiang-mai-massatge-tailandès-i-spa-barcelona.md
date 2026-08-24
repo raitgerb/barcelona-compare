@@ -50,4 +50,9 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "I’ve been here several times and it doesn’t deceive, best thai massage in town!! The service and quality of treatment are the best, tea ans sweets at the end. My place to go!"
+serviceTags:
+  - pareja
+  - quiromasaje
+  - spa-bienestar
+  - tailandes
 ---

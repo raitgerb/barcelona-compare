@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Wax was not good. When I got back to my hotel I noticed many missed hairs…Girls were nice but just not professional. I now have to get another wax somewhere else to get the misses hairs."
+serviceTags:
+  - pedicura
 ---

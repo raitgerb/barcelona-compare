@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Claudia me ha arreglado las uñas, literalmente. Estuve durante mucho tiempo mordiéndomelas, hasta el punto de casi no tener, pese a lo complicado que es crear estructuras de uñas en esas condiciones, ella lo hizo posible✨. Es la hada madrina de las uñas. Hoy en día, las tengo como muestro en la foto, es increíble el cambio que han pegado. Creo que también cabe destacar que utiliza productos respetuosos con el medio ambiente, sin crueldad animal, y los adapta dependiendo de si tienes alergias o no, por lo que mis uñas no se ven dañadas en parte gracias a eso. Por si todo esto fuese poco, acepta todos los diseños que le pidas por difíciles que sean, el trato que recibes es personalizado... ¿qué más se puede pedir?"
+serviceTags:
+  - pedicura
 ---

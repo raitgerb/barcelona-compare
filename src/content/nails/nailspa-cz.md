@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Nice place for a pedicure -Zuany did mine and I can recommend - good service and kind."
+serviceTags:
+  - pedicura
 ---

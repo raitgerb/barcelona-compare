@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "My favourite studio! Professional and kind! Was ready with a manicure after half an hour and great attention to detail."
+serviceTags:
+  - pedicura
 ---

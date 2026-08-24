@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Es la maestra de masajes. Cada vez está increíble y ella se enfoca en puntos específicos y siempre me ha ayudado mucho. Recomendaría absolutamente a Patri! Foto: Yo después de un masaje de Patri 😌"
+serviceTags:
+  - reflexologia
 ---

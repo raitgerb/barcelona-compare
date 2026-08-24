@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Excellent in every way. The massage was arguably the best one I had. Tough but she definitely knew what she was doing. The facilties are great too. Rooms have showers, aircon, everything super clean but still feels authentic. And everyone very kind and attentive. I’m definitely coming back!"
+serviceTags:
+  - tailandes
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 weeks ago"
     languageCode: "es"
     text: "Me hice una pedicura con Fergy y no puedo estar más contenta con el resultado. Me dejó las uñas perfectas: tanto la forma como el color eran exactamente lo que le pedí. Y, como detalle que dice mucho de ella, incluso me curó una pequeña herida que tenía en el pie.  Fue un momento de auténtica desconexión. No intentó llenar el silencio con preguntas, algo que agradecí muchísimo, porque pude relajarme y disfrutar plenamente del tratamiento.  Recomiendo totalmente la pedicura en este centro. Volveré encantada."
+serviceTags:
+  - pedicura
 ---

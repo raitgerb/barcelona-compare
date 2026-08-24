@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Wonderful experience! Get the foot massage! Got a pedicure and gel french manicure and foot massage for 50€."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

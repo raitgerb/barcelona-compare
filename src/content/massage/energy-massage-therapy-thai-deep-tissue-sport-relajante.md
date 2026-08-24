@@ -43,4 +43,9 @@ googleReviews:
     relativeTime: "in the last week"
     languageCode: "en"
     text: "Best treatment and massage I ever had. Fantastic! I have never felt so spoiled ❤️Nico is doing fantastic job, i felt amazing from the start till the next morning. Thank you 😊 …"
+serviceTags:
+  - deportivo
+  - quiromasaje
+  - reflexologia
+  - tailandes
 ---

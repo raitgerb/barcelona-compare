@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Extremely recommended! I don’t do eyebrows treatments often but I am really happy with the result!  Great service, cleanliness and attention to detail, will come back for sure!"
+serviceTags:
+  - pedicura
 ---

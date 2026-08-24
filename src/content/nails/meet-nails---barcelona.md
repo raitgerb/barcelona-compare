@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Super friendly, great service! Very happy with my nails will for sure come back."
+serviceTags:
+  - pedicura
 ---

@@ -15,4 +15,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "Llevo años haciendome la manicura y pedicura con Kira y puedo confirmar que si quieres el mejor servicio, atención y calidad, la elijas a ella.  10/10"
+serviceTags:
+  - pedicura
 ---

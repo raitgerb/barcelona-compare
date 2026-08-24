@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 years ago"
     languageCode: "en"
     text: "AVOID THIS PLACE! What a bad massage for 35€ it was . It was more like tickling, girl was doing it with one hand while other was doing I don’t know what. Girl was rude and did not have any idea how to Thai massage. She burned me, scratched me and did not even apologise. They are all unprepared to give professional massage who did not even finish one course of massage. Horrible mistake to go there."
+serviceTags:
+  - tailandes
 ---

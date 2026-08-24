@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "Yo no he ido nunca aquí,pero me vienen cargos de este establecimiento.Deben tener un gancho de alguna trabajadora para poder cobrar."
+serviceTags:
+  - pedicura
 ---

@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I got the prettiest nails I have ever had here! It was quick and easy, very affordable !"
+serviceTags:
+  - pedicura
 ---

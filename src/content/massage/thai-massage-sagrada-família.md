@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Best massage I ever had better than in Thailand"
+serviceTags:
+  - tailandes
 ---

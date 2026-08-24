@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "Masaje muy recomendable! Lucy trabaja a conciencia, se nota su experiencia y el amor que le pone a su trabajo, he salido como nueva. Con ganas de repetir!!"
+serviceTags:
+  - quiromasaje
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Laura was a sweet heart and she had patience with my friend and I. I choose the color 157 which is a light pink. You must book in advance and be on time."
+serviceTags:
+  - pedicura
 ---

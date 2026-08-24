@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "Todas las chicas son muy majas y siempre hay buen ambiente. Angi me hizo el relleno de acrílico, me quedaron preciosas y muy naturales. Es muy aplicada y atenta, además de preocuparse siempre de no hacerte daño. Hay 10% de descuento para estudiantes así que me salió súper bien de precio."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

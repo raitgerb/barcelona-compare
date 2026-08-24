@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "For me, the best place for manicures and pedicures in Barcelona! Very personal, hygienic and with a perfect finish 💅"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

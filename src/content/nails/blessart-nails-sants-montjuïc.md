@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "es"
     text: "Mi sitio de manicura de confianza! Es increible lo bien que lo hacen y el trato tan bueno con el que te reciben, te sientes super querida y mimada. Aunque todas lo hacen genial, siempre pido hora con Juli, que es maravillosa💖 Se lo he recomendado a mis amigas y todas me dan la razon"
+serviceTags:
+  - gel-acrilicas
 ---

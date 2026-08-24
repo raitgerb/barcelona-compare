@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "es"
     text: "Hace mucho tiempo que me puse en las manos de Sandra. Una gran profesional que cree en su trabajo y transmite el deseo de mejorar tu salud sólo entrar por la puerta. La he recomendado a amigos, y han quedado igual de encantados. Masajes de todo tipo para la necesidad de cada momento. 100%recomendable. Gracias, Sandra!"
+serviceTags:
+  - deportivo
 ---

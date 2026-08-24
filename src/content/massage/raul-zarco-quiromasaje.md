@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "en"
     text: "Really good massage. Effective, personalised and respectful. Highly recommend."
+serviceTags:
+  - quiromasaje
 ---

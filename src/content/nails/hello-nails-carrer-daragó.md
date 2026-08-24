@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Horrible service, lack of skill, RACISM. A very good example of \"price is not all\", my finger was cut and bleeding. 🤯  The senior staff (not in this photo, there were two people working) filed my pinky too hard without proper care, she cut my finger right above the nail, I was bleeding. She didn't say sorry, she just applied some unknown cream on that wound and went on even though I expressed it's painful.  When I showed her my phone screen with translation page to communicate with her, she called me \"China\", I said I'm not Chinese, then she pretended to be busy and ignored what I said. Apparently, all Asians are Chinese to her."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

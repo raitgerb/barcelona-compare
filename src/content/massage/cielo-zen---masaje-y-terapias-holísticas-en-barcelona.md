@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "en"
     text: "I had an amazing experience. I felt so much better after the massage. Alex is very professional. I loved it!"
+serviceTags:
+  - deportivo
+  - tailandes
 ---

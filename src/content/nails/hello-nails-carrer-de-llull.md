@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "AMAZING! Such nice nail artists. Angela did my nails and she was so careful and took her time to make them perfect!"
+serviceTags:
+  - nail-art
 ---

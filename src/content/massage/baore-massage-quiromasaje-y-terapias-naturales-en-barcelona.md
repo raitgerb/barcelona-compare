@@ -41,4 +41,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "es"
     text: "Muy buena masaje. Elena es atenta, respectuosa y profesional."
+serviceTags:
+  - quiromasaje
 ---

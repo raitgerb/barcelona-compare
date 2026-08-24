@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "I've had an absolutely amazing experience here! The booking was easy, the communication in advance was perfect & it was great that I could communicate my massage preferences online before the appointment, not having to fill anything out upon arrival. The space is extremely beautiful, calm and peaceful. Everything was just right - the temperature in the room (I tend to freeze at other places in Barcelona), the music, the smells. A big compliment goes out to José Luis who did a massage which corresponded 100% to my needs!!! I will for sure be back again"
+serviceTags:
+  - deportivo
 ---

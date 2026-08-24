@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Excellent job done by Orianna! She was quick and great! I’d come back again!"
+serviceTags:
+  - gel-acrilicas
 ---

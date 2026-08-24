@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Such a great experience! Stuff is super professional, doing a great job, I am so happy with my nails. But on top super friendly and funny. It was almost like having a good time with friends. I will definitely come back! Kisses and hugs to the girls!"
+serviceTags:
+  - gel-acrilicas
 ---

@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "Absolutely incredible. Very very rare to find such a good thai massage, genuinely amazed. The therapist was Soai but I think they are likely all extremely good. The prices are also lower than some of the “fancier” looking places, this one is really authentic. Will be my go to place in bcn"
+serviceTags:
+  - tailandes
 ---

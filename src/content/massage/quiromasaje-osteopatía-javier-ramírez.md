@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Wonderful massage therapist and incredible person. I was floating on air after my massage!"
+serviceTags:
+  - quiromasaje
 ---

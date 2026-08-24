@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Marie is very kind and very professional. The place is very clean and the service is great! I have already made a new appointment for my manicure ✨"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
 ---

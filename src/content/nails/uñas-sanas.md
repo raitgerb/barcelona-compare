@@ -42,4 +42,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Acabo de hacerme las uñas y he salido encantada. Me han cuidado mucho las manos.  Por tan solo 15€ me han ablandado y quitado las cutículas, con un cuidado y una atención increíble. Me han limado las uñas con una lima, no he visto ni un solo torno, cosa que me parece espectacular porque en la mayoría de los sitios te lastiman las primeras capas de la uña con los tornos. Me ha tratado con mucha paciencia y profesionalidad. Al finalizar el esmaltado, me ha hecho un masaje en las manos con crema y luego me ha aplicado un aceite para cutículas. Tienen dos gamas de pintura semi permanente, una de 15€ y otra, con mas calidad, de 20€.  El grupo de chicas es muy amable, volveré sin duda. Hacía tiempo que no me sentía tan bien atendida 😊👍🏾"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

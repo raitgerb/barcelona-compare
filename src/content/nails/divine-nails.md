@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "12 months ago"
     languageCode: "es"
     text: "Realmente me gusto el color y el trato. El ambiente esta muy bien, un poco fuerte la música y una de las manicuristas cantando en voz alta, no te esperas eso cuando quieres hacerte las uñas. Por otro lado me cobraron de más. En principio eran 17e y termino siendo 20e. La explicación que me dio es que me hablando puesto un gel fortalecedor  a mis uñas. Me parece muy bien, lo pago. Pero 3e por eso. Me pareció muy mal. Por otro lado tenía la cita a las 18pm y me atendieron a y media, entiendo que a veces las cosas se complican pero si tienes que ir a trabajar o algo, no respetan el horario. Muy mal! Me paso 2 veces."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

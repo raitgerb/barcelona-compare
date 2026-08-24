@@ -52,4 +52,8 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "Lots of people offer massages, but not many have the gift - this is what distinguishes Carrie. Her massages don't just feel good, they have more depth and are layered with therapeutic value.  Carrie is highly qualified, attuned to the body's needs, very experienced and puts her all into giving an amazing massage.  Enjoy!"
+serviceTags:
+  - quiromasaje
+  - reflexologia
+  - tailandes
 ---

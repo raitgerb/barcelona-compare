@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Amo venir a mimarme aquí. Las chicas son increíbles y el ambiente es hermoso. Jacksi me hizo un diseño espectacular, ¡quedé feliz con el resultado!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

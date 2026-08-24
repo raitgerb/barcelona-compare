@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "10 months ago"
     languageCode: "en"
     text: "Completely in love with my new nails ! Thank you very much Ahn, I had a great experience and the result is amazing 🫶"
+serviceTags:
+  - nail-art
 ---

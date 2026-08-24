@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Hemos ido al spa, por un regalo de la caja experiencia de la Vida es bella. El spa en si está muy bien.  Bastante completo en varias piscinas. La qué mas nos ha encantado es la de cítricos y la de piedras, aunque uno de los grifos para los pies no funcionaba.  El vestuario es compartido, aunque solamente tiene 4 compartimentos para cambiarse. El personaje es amable y te dan toalla cuando entras.  Quizás repitamos en un futuro."
+serviceTags:
+  - spa-bienestar
 ---

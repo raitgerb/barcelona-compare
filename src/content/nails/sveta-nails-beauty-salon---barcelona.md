@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "Siempre me deja las uñas preciosas! Sveta es muy cuidadosa y detallista. Se nota que es una profesional!"
+serviceTags:
+  - gel-acrilicas
 ---

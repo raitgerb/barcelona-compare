@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "The spa was beautiful and very traditional in appearance. The atmosphere was relaxing, and I loved the argan oil gift that came with my treatment; it smelled amazing. However, I was a bit disappointed in the scrub and massage. I expected a more vigorous traditional scrub, but it felt more like a light application of mud/oil. The massage was also very light; more like an oil rub. It was a nice experience overall, but not as strong as some of the reviews suggested."
+serviceTags:
+  - spa-bienestar
 ---

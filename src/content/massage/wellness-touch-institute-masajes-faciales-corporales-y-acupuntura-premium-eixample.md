@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "Best experience ever! Personal attention 100%. A very good massage as well. I can highly recommend"
+serviceTags:
+  - deportivo
 ---

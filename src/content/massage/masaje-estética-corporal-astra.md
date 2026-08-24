@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "es"
     text: "Me encantó!!!!! Inés es muy buena profesional . E ido por un dolor de mis pies y también me ha tratado la espalda estoy como nueva . Vuelvo a repetir .!!! Muchas gracias !!!!"
+serviceTags:
+  - tailandes
 ---

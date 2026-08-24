@@ -37,4 +37,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "I am so happy to have found Catherine. After trying many other massage therapists who did not meet the brief of what I needed, it was amazing to find someone who takes such care in listening to me and working out exactly what my body needs. Do not hesitate to call her for therapeutic massage. Your shoulders (along with the rest of you) will thank you"
+serviceTags:
+  - deportivo
 ---

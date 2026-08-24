@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Dropped from 5 stars to 2 because my nails started lifting 2 days later. Day 5 now and 5 of them are lifting with one almost complete off. Unacceptable no matter how nice the nails look when they're done."
+serviceTags:
+  - gel-acrilicas
 ---

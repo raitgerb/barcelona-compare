@@ -48,4 +48,8 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "What an amazing experience we had here! My friend and I were traveling from America that day and we got slightly delayed but the wonderful woman at the front desk was super accommodating and made us feel like a priority the entire time. We had wonderful massages and then got to enjoy their bath and sauna area which was gorgeous and very relaxing! Would 100% recommend this place to anyone that needs a relaxing and smooth experience. Thank you so much for having us, we will be back!"
+serviceTags:
+  - pareja
+  - quiromasaje
+  - spa-bienestar
 ---

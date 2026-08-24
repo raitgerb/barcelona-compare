@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "They did a great job with my nails. They were super cute & it was reasonably priced. They do not speak any English, beyond one staff member. However, we were able to work together with google translate with my limited Spanish knowledge. They were super helpful. I would recommend making an appointment in advance. Semi-permanent is the same as what in the US would be called a gel manicure. They also call it Shellac."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

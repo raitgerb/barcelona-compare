@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "es"
     text: "Excelente profesionalidad.Celia entendio perfectamente mis molestias musculares.💪 Muy recomendable\". ambiente muy relajante"
+serviceTags:
+  - spa-bienestar
 ---

@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "Everything was great. the place is completely clean, the service is fast. I got a basic manicure and had my cuticles and the skin around my nails terrible and they left them perfect again. I'll keep coming back for sure. No need to search for another place."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "es"
     text: "Ha sido, sin duda, el peor salón de uñas al que he ido en Barcelona. Nunca en mi vida había visto que una manicura semipermanente se hiciera en solo 10 minutos. El trabajo fue muy apresurado y el resultado fue pésimo. Mis uñas quedaron mal hechas, desiguales y muy lejos de lo que esperaba.  Durante la manicura, la técnica, que creo que se llama May, fue muy brusca y me hizo sangrar varias veces. Ni siquiera se disculpó, simplemente siguió trabajando como si nada hubiera pasado.  Además, el trato fue muy poco profesional. Desde que entré me sentí incómoda y nada bienvenida. May fue muy antipática, me miraba de forma desagradable y su actitud conmigo fue muy irrespetuosa. Personalmente, por la forma en que me trató, sentí que fui tratada de manera diferente por mi origen, lo cual hizo que la experiencia fuera aún más desagradable.  En definitiva, ha sido la peor experiencia que he tenido en un salón de uñas en Barcelona. Salí con las uñas mal hechas, las cutículas sangrando y sintiéndome completamente irrespetada. No volveré jamás y no lo recomiendo en absoluto."
+serviceTags:
+  - gel-acrilicas
 ---

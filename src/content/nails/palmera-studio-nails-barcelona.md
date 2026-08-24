@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a week ago"
     languageCode: "en"
     text: "they are extremely good at both hands and feet! insane attention to detail ❤️"
+serviceTags:
+  - nail-art
+  - pedicura
 ---

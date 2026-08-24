@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Absolutely loved my nails and the staff is so friendly! Highly recommend!"
+serviceTags:
+  - pedicura
 ---

@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "A very nice spa, with a circuit that you can stick to, but you don't have to. It has several saunas and steam rooms, as well as a pool with different areas. It also has a relax area where you can lie down on warmed up loungers and get some refreshing water."
+serviceTags:
+  - spa-bienestar
 ---

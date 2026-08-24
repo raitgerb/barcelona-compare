@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "es"
     text: "Feliz con mi mani/pedí. Vita muy profesional, me dejó mis uñas perfectas y pies como nuevos! Super recomiendo"
+serviceTags:
+  - gel-acrilicas
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "The girls were very friendly and welcoming. The one that did my manicure took her time to make sure everything is perfect! I will be back!"
+serviceTags:
+  - pedicura
 ---

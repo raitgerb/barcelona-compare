@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "They did a very good job and I would definitely come back when in Barcelona! Especially for the Price of €30, I was surprised by the good service and the time they put into it. My friend was also very happy!"
+serviceTags:
+  - pedicura
 ---

@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I recently visited this nail salon in Pobleneu for a spa pedicure, and I couldn't be happier with the service. The salon is super clean, and the staff really listens to what you want, super responsive. They even offer you cold water while you get your nails done. I was impressed by how thorough they were, and unlike other salons in the area that might be a just a tad cheaper, here I didn't regret the extra euro at all. I left feeling super satisfied, knowing I wouldn't need to redo a sloppy job. Highly recommend!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

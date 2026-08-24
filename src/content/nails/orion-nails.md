@@ -42,4 +42,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Fatal, poca variedad de colores, llegan a ser los mismos colores los que tiene. Hacen la forma de las uñas como quieren, la longitud de las uñas igual, pintan las uñas fatal, el borde de la uña lo dejan a trozos o, no te hacen la cutícula ni aunque la pidas, solo te la echan para atrás para que se disimule. Por no hablar que no te limpian debajo de la uña, y te dejan el dedo lleno de gel, pegamento, pintura, de todo. Llevo como un año yendo, al principio muy bien, eran otras personas pero ahora cada vez van a peor. Lo único que tienen bueno es lo de los sellos. En la foto no se aprecia pero hay una uña limada de lado, pintado mal al borde la cutícula, y pegamento en el dedo."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "Sara did my nails, I asked for extensions which she didn’t know how to do, instead of filing them down she kept adding more acrylic gel on top of them which made them super thick and fat. I asked her to make them thinner to which she said that they would break if she doesn’t. I also did a French metallic tip which looked very messy and rushed, she blamed it on not having enough time to do it, as well as starting our appointment 30 minutes late 🙄👎 never going back Bye bye nails"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

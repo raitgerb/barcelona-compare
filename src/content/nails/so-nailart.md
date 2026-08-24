@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "es"
     text: "Sofia és super atenta y súper meticulosa. Se fija y cuida cada detalle. Además te hace sentir muy cómoda y recomiendo 100%  hacerte las uñas con ella 🥰"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
 ---

@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I’m on vacation in Barcelona and by chance I found this nail salon, cleanliness, attention and quality of work perfect. Thank you very much"
+serviceTags:
+  - pedicura
 ---

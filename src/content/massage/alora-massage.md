@@ -41,4 +41,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "He tenido una gran experiencia con el masaje de Clara. Es una gran profesional con una gran sensibilidad y técnicas adaptadas a cada momento y persona. Un diez y a repetir una próxima vez."
+serviceTags:
+  - pareja
 ---

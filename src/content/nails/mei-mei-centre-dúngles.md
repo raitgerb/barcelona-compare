@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "7 years ago"
     languageCode: "es"
     text: "Yo voy siempre para hacerme las uñas de porcelana francesas, me duran muy bien y me las dejan muy bonitas."
+serviceTags:
+  - gel-acrilicas
 ---

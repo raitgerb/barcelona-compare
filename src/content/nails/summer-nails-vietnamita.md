@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "best experience ever not only were they very fast, but my nails turned out absolutely perfect. amazing prices for best quality service! highly recommend!"
+serviceTags:
+  - pedicura
 ---

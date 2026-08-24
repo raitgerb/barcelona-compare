@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "8 months ago"
     languageCode: "es"
     text: "Una experiencia absolutamente maravillosa 🤍 Fuimos mi hermana y yo y, para empezar, llegamos al centro equivocado… aun así nos esperaron más de 20 minutos y nos recibieron con una sonrisa de oreja a oreja.  Nos hicimos una higiene facial y un masaje corporal y, sinceramente, nos fuimos a otro planeta. La atención fue exquisita: delicadeza, sensibilidad, cuidado y muchísimo amor en cada gesto. Nos sentimos mimadas desde el primer segundo.  Mil gracias por tratarnos tan bonito Lu y Natalia. A partir de ahora, sin duda, seréis nuestro momento favorito de hermanas. Repetiremos seguro."
+serviceTags:
+  - gel-acrilicas
 ---

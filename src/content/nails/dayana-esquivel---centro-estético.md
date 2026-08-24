@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Se ha convertido en mi sitio favorito donde hacerme las uñas! Hace todo tipo de diseños, es una artista. Yo me hago acrilicas y las deja súper naturales, súper lisas. Sitio pequiñito y familiar. Totalmente recomendado!"
+serviceTags:
+  - gel-acrilicas
 ---

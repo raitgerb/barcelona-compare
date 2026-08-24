@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Un 10 como profesional, un 10 el trato y un 10 las uñas!! El local de @azure_bcn no se ve nada más entrar, pero una vez pasas a su estudio te sientes súper cómoda. Keila es una profesional y se nota que le encanta su trabajo. Limpieza, productos de calidad y cuidado impecable. Cuida cada detalle y se adapta a tus necesidades. Hasta ahora, la mejor manicura y pedicura que me he hecho en Barcelona."
+serviceTags:
+  - pedicura
 ---

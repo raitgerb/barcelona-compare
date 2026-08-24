@@ -39,4 +39,6 @@ googleReviews:
     relativeTime: "3 weeks ago"
     languageCode: ""
     text: ""
+serviceTags:
+  - gel-acrilicas
 ---

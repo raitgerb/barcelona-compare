@@ -42,4 +42,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I recently visited Similan Thai Masajes, and it was an amazing experience from start to finish. The ambiance was peaceful, with soft music. Mina was incredibly skilled, applying the perfect amount of pressure and targeting all the right spots. I left feeling completely relaxed. If you're looking for an authentic Thai massage and top-notch service, I highly recommend it. Thanks again. Andrew"
+serviceTags:
+  - spa-bienestar
+  - tailandes
 ---

@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "es"
     text: "Me encanta venir a Arpías de Calle Benet Mateu. Siempre me atienden súper bien y es un lugar donde realmente consigo relajarme y desconectar. Hema es quien me atiende siempre y es increíblemente profesional, cuida cada detalle y te hace sentir en muy buenas manos. ¡Totalmente recomendado! 💅✨"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

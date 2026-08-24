@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I love the nails i got!! So nice and very good with nails!! Will come back!!"
+serviceTags:
+  - gel-acrilicas
 ---

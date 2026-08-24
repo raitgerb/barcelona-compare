@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "es"
     text: "Fui una vez para un masaje y la verdad que me encantó. Además me dió mucha información sobre alimentación y buenos hábitos. Genial"
+serviceTags:
+  - quiromasaje
 ---

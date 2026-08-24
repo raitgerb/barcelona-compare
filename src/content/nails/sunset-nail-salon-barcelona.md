@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "I’m in love with my nails! Can’t stop looking at the shimmering nails. The nail salon handled everything with good care and consulted me well. Will come back 🫶"
+serviceTags:
+  - gel-acrilicas
+  - nail-art
 ---

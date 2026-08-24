@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "en esta experiencia nos hemos dado cuenta y fijado de que el personal nos criticaba en su idioma natal y no hace el trabajo como se le ha pedido; la clienta ha pedido una uña almendrada y le ha acabado haciendo una bailarina mezclada con forma stiliteto; además se le demanda que una uña está más larga que la otra y lo niega vacilando a la clienta y tratándola con desgana; recomendamos no acudir a este local, perdón y gracias"
+serviceTags:
+  - pedicura
 ---

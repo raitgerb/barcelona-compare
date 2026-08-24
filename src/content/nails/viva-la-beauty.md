@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I got my nails done in the United States. I was visiting Barcelona and one of my nails broke. Jess was able to fix it and it looked even better than the ones I got in the United States!!"
+serviceTags:
+  - pedicura
 ---

@@ -32,4 +32,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: ""
     text: ""
+serviceTags:
+  - pedicura
 ---

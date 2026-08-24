@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "I had an amazing experience with Caini, she delivered exactly what I wanted. Very friendly too :)"
+serviceTags:
+  - pedicura
 ---

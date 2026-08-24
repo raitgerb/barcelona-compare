@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Brenda did and amazing job with manicure, pedicure and the nail polish. I strongly recommend her. Thank you so much for amazing service and your kindness."
+serviceTags:
+  - pedicura
 ---

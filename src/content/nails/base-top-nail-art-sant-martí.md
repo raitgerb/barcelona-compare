@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "Excelente trato  al detalle de manicura y pedicura. Me gustó mucho la atención  y el tratamiento. Realmente lo recomiendo al 100%.  Me atendió Arantxa. Muchas gracias"
+serviceTags:
+  - nail-art
+  - pedicura
 ---

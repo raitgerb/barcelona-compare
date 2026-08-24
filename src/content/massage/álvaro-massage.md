@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "I booked in for two full body, 90 min relaxation massages whilst on holiday in Barcelona this week. The first with Cristina and the second with Raul. Once I had found the correct door (!) both experiences were amazing, whilst being quite different. I will be sure to book in again when we return in July. Excellent ⭐️"
+serviceTags:
+  - deportivo
+  - tailandes
 ---

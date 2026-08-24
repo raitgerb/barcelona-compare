@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "es"
     text: "He encontrado a Sonia buscando terapia manual aproximidad. Puedo decir que es uno de los mejores masajes descontracturantes que he tenido en mi vida. La técnica utilizada fue la indicada. Sin duda regresaré cuando visite barcelona. Mil gracias por tu trabajo y pasión."
+serviceTags:
+  - quiromasaje
 ---

@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "3 weeks ago"
     languageCode: "en"
     text: "I had the most amazing experience ever! The products smell amazing and the people are so kind. David styled my hair and he was so sweet and my hair now looks so beautiful!!"
+serviceTags:
+  - spa-bienestar
 ---

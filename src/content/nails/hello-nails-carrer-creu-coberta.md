@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "PLEASE CHOOSE ANOTHER NAIL SALON!! BETTER WITH RUSSIAN MASTERS!!! Bad hygiene!!! I asked to clean the tools and the girl was not very happy to do so, cause she said it was already clean. File was overused, when it should be new for each client. Now I am worried for my nails, cause 2 weeks passed but its still in pain😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭 I hope that the girl made it too harsh and that its not hongos or an infection…I guess she took off semipermanent with layer of my nail…. 😓😓😓"
+serviceTags:
+  - gel-acrilicas
 ---

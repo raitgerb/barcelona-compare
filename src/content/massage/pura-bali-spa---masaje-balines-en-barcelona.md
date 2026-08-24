@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "Felt super comfortable. The women were all very warm, friendly and spoke very good English. Clean, calm place and super relaxing massage."
+serviceTags:
+  - spa-bienestar
+  - tailandes
 ---

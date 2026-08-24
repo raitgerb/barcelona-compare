@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "es"
     text: "Es la segunda vez que voy, para hacerme el relleno de las uñas de gel y me encanta. Además duran muchísimo, no son frágiles. El precio está bien. Y las chicas son muy simpáticas, se toman todo el tiempo necesario en dejarte la uña perfecta. Muy contenta, repetiré claramente!! 😁"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

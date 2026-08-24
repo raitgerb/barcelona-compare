@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "He venido muchas veces, personal super profesional y amable, estoy muy contenta , 100 % recomendable"
+serviceTags:
+  - pedicura
 ---

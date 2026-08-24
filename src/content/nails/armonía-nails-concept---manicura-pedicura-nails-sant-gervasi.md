@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "es"
     text: "Una experiencia fantástica. El lugar es muy acogedor y todo está muy limpio. El servicio de manicura fue súper cuidado, profesional y detallista.El resultado quedó precioso. Además, la atención fue muy amable en todo momento. ¡Sin duda volveré y lo recomiendo al 100%! ☺️"
+serviceTags:
+  - pedicura
 ---

@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "If you’re looking for a massage that leaves you feeling completely refreshed & rebooted then Vaidile is the person you’re looking for. Don’t take my word for it though, treat yourself and you’ll be back for more! Thank you for taking me to cloud 9, being warm, professional & attentive throughout. You have magic hands."
+serviceTags:
+  - deportivo
 ---

@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "After my 7h ✈️ my back got destroyed and it was my first vacation in ages. I quickly found Gerard and his practice near the Sagrada Familia without being tourist trap kind of place.  It was a great experience, he managed to control the damage with a deep tissue massage and his knowledge, if you need to visit a professional while in Barcelona, look no further, you won’t regret it."
+serviceTags:
+  - deportivo
+  - quiromasaje
 ---

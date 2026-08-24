@@ -37,4 +37,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "The service was top drawer from start to finish. Very professional. Exactly what you want after a long day. Highly recommend to anyone visiting Barcelona."
+serviceTags:
+  - tailandes
 ---

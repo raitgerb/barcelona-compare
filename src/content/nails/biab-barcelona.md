@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Hands-down the best salon in town. My nails always look perfect and they stay that way for a very long time. The girls are all lovely too and really take their time. Added benefit in the summer is the AC!"
+serviceTags:
+  - gel-acrilicas
 ---

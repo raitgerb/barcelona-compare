@@ -50,4 +50,8 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Good value for money. Even though the shop was pretty busy, the lady really took her time with me. The only downside is that if you walk in without an appointment, you might have to wait a while."
+serviceTags:
+  - gel-acrilicas
+  - nail-art
+  - pedicura
 ---

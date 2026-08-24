@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Amazing, clean, friendly service. MAKE sure to schedule an appointment. They are located upstairs in the building. They offer many services and we did gel nails. 💅"
+serviceTags:
+  - gel-acrilicas
 ---

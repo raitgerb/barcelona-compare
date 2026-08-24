@@ -46,4 +46,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "Wow. An excellent respite from the crazy world. I indulged myself with a facial and a massage. My therapist Alva was perfect for what I needed.  A gentle massage followed by a clarifying facial.  With the winds of winter drying out my skin, the facial was the perfect antidote.  Will visit monthly!"
+serviceTags:
+  - spa-bienestar
 ---

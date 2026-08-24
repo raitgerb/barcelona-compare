@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Una chica super agradable, risueña, buena persona. Hace las uñas esupendas y preciosas. Volveré siempre con ella."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

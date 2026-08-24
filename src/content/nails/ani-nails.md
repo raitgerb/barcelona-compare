@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "en"
     text: "Just had a permanent mani-pedi done today and am pleased with the result and price €40 total.  If you want UV polish for a good price, this is definitely a place to visit, but you may have to sit and wait for a while and there are no massages included in the treatment. Another unusual thing was that my hands were not moisturized which wasn’t a problem because I can do that at home but I usually expect it.  The reason I didn’t give 5 stars is because they reused old nail files and none of the metal tools were taken out of a fresh packet, and I did not see them cleaned with a spray or wipe before being using on me. Luckily I didn’t have any cuts or scratches so I’m not too worried, but they could certainly improve this and sanitize in front of clients and use fresh products like the toe separators and nail files."
+serviceTags:
+  - pedicura
 ---

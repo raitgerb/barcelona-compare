@@ -48,4 +48,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "This is the worst branch ever!! The girl is very rude. We agreed 16.90 for this design and after they make my nails they asked me 18.90 like there is a hidden charges!! Like wth where the 2euro came from? They said for premium. Where is the premium there? We already agreed for the price of 16.90 then after they asked me more than! And she even argue with me! How rude!! Look at this pictures. It has bubbles and its only 4days since they do my nails and its already removing. Im not even washing dishes or whatsoever!! I file a complaint about this girl(I dont know her name but you can see her in the video the girl wearing white sando)"
+serviceTags:
+  - pedicura
 ---

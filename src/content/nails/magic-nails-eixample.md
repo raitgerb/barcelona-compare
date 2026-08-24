@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "He tenido el placer de conocer este centro de uñas y estoy encantada con la nivelación de semipermanente en mis manos. El trabajo de la manicurista muy  profesional y meticuloso. Mirado hasta el último detalle a más de ser una persona encantadora! La pedicura realizada por la otra profesional también muy detallado e impecable! Se nota que saben lo hacen y a conciencia! Nos vemos en unas semanitas!! Gracias chicas y un placer!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

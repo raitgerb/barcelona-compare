@@ -41,4 +41,6 @@ googleReviews:
     relativeTime: "6 years ago"
     languageCode: "es"
     text: "Cuidan tus uñas de maravilla mientras pasas una rato agradable. Buenas profesionales, buen producto y muy buen trato. Que más se puede pedir! Muy recomendable"
+serviceTags:
+  - gel-acrilicas
 ---

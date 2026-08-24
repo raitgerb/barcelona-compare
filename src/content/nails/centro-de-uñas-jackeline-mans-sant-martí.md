@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "4 years ago"
     languageCode: "es"
     text: "Es el mejor sitio donde me he hecho las uñas, y he ido a muchos. Las chicas son muy amables y siempre te recomiendan que hacerte y todas las hacen preciosas. Lo recomiendo. Siempre a la última con diseños de actualidad. Y mi favorita Lady que hace unas uñas divinas"
+serviceTags:
+  - pedicura
 ---

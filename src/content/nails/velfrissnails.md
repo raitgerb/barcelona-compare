@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "Lo mejor que e probado desde que me empecé a hacer la técnica de refuerzo con semipermanente, me dura un mes, no me molesta para trabajar y sobre todo no daña mi uña. En pedicura los mejores resultados que e tenido es con la parafina, noto mis pies más suaves por más tiempo. 100% recomendable y el trato excelente súper encantadora la dueña."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

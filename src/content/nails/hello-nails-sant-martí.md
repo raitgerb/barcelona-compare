@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I tried going there couple of times, and most of the time the quality was very bad"
+serviceTags:
+  - gel-acrilicas
 ---

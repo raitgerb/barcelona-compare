@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "I am soooooo happy I found this salon. They gave me exactly the set I showed on a picture (results on pic 1). Everyone that works there is friendly, funny and work hard. They look like they have fun. The atmosphere is nice. They are talented, fast and the prices are great. My nails lasted 5 weeks!! (pic 2) I am very impressed. I went back yesterday for the same design (video). Someone else helped me this time, and Im soooo happy again. Thank you so much! 🙏🙏🙏🙏😍😍"
+serviceTags:
+  - pedicura
 ---

@@ -52,4 +52,7 @@ googleReviews:
     relativeTime: "11 months ago"
     languageCode: "en"
     text: "Love this studio! I have been going here for some months now and I can definitely recommend it. The girls are very friendly and professional, I am very happy with my nails every time and they last long. My favorite nail studio in Barcelona!"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

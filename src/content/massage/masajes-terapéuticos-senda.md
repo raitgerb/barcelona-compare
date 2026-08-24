@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Encantado con el masaje; adaptado a tus necesidades, desde relajación a más enfocado a la contractura. Se nota que Helena está formada y disfruta de su profesión. Repetiré sin duda, porque además ofrece diferentes tipos de terapia y técnicas que parecen muy interesantes"
+serviceTags:
+  - reflexologia
 ---

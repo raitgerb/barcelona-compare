@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Muy contenta con mi bono de tratamiento con aparetología para reducir grasa y volumen y mi limpieza facial con punta de diamante. Realmente funciona, nunca había tenido mucha fe en estos tratamientos de pérdida de volumen y estoy gratamente sorprendida. Volveré!!"
+serviceTags:
+  - pedicura
 ---

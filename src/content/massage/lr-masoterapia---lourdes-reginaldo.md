@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Un 10 para Lourdes y su manera de trabajar, una Gran profesional que mezcla diversas técnicas. Me hizo un masaje descontracturante increíble y eficaz, tengo experiencia por mi carrera deportiva con fisios y masajistas pero la técnica de Lourdes tocó puntos que nunca me habían tocado...salí de allí como nuevo. Recomendable al 100%.... volveré."
+serviceTags:
+  - deportivo
 ---

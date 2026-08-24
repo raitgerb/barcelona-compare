@@ -45,4 +45,7 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "An incredible experience, a pleasant atmosphere, perfect massage technique, and a wonderful presence… I’d gladly go back anytime"
+serviceTags:
+  - deportivo
+  - tailandes
 ---

@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I had an incredible experience at this spa in Barcelona! From the moment I walked in, I felt a wave of calm wash over me. The ambiance was serene, with soft lighting, soothing music, and a fresh, relaxing scent in the air. The staff was welcoming and attentive, making sure every detail was perfect for my visit.  I enjoyed a massage and facial, both of which were exceptional. The therapists were professional, skilled, and took the time to understand my needs, making personalized adjustments that truly enhanced my experience. The treatments left me feeling refreshed, rejuvenated, and completely relaxed.  I would highly recommend this spa to anyone looking for a top-notch wellness experience. It's the perfect escape from the hustle and bustle of daily life, and I can't wait to return in December!"
+serviceTags:
+  - pedicura
 ---

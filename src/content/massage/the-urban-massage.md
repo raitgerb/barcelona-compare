@@ -50,4 +50,8 @@ googleReviews:
     relativeTime: "6 years ago"
     languageCode: "en"
     text: "Great experience, I invited my boyfriend to spend one hour relax massage in couple. Gentle stuff, sure recommended."
+serviceTags:
+  - deportivo
+  - pareja
+  - quiromasaje
 ---

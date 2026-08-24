@@ -42,4 +42,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Me ha gustado mucho. Es un sitio que han abierto hace poco y la profesional (Noa) es cercana y agradable. Se nota que se preocupa por ofrecer un trabajo de calidad. Tenía las uñas horribles y se ha tomado el tiempo necesario en poder dejarlas lo mejor posible. En mi caso ha sido una pedicura semipermanente francesa. Os recomiendo visitar el local."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

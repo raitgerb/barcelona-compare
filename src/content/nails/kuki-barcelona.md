@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "en"
     text: "It was a relaxing feet massage after such a hectic city walk. Super relaxing and much needed. I would highly recommend!"
+serviceTags:
+  - nail-art
 ---

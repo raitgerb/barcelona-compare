@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Gigi did my nails while I was in Barcelona this past week and she is amazing!! She did an incredible job and was super friendly and professional. Highly recommend."
+serviceTags:
+  - gel-acrilicas
+  - nail-art
 ---

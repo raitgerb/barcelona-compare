@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 months ago"
     languageCode: "en"
     text: "so perfff 🩵"
+serviceTags:
+  - gel-acrilicas
 ---

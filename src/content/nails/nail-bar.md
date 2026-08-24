@@ -51,4 +51,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "en"
     text: "Really like the place and the quality! Very high, the technique is amazing! Thank you!"
+serviceTags:
+  - pedicura
 ---

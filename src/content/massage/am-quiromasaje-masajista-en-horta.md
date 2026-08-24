@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "Excelente profesional. Inmejorable trato desde el primer minuto. Te dice los estiramientos que tienes que hacer y te hace seguimiento. Más de año y medio confiando en Toni, con diferentes masajes dependiendo lo que necesites. Muy recomendable."
+serviceTags:
+  - quiromasaje
 ---

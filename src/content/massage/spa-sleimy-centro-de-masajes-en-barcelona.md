@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Sleimy is the place to go for well-being!! I first went to this massage center in an emergency, suffering from a very stiff neck and back. They were extremely professional, caring, and effective in helping me through it. Since then, I’ve become a regular client — enjoying their deep tissue massages, relaxing massages, and exploring the many other treatments they offer.  Nuria and Milagros have all treated me, and each one is incredibly professional, skilled, and attentive. From energetic massages to Reiki, every session has been exceptional. All their products are ecological and of the highest quality, which makes the whole experience even better.  The atmosphere, the quality of care, and the results keep me coming back. I highly recommend this place to anyone in Barcelona looking for outstanding massage therapy and holistic treatments."
+serviceTags:
+  - spa-bienestar
 ---

@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "Air pockets in my thumbs for semi permanent. The other fingers were fine for some reason. They were rushing as I was once or the last customers. Since they’re nice and the place clean, I’ll give it another try. I’ll update upon my next session. But for now, 1  star since the gel nail polish will clearly come off in a day or two.  Update: They fixed my nails when I returned in a week or so. Day 3 post-fix, and they’re perfect! The person who was in charge of foot massage knew acupressure points. Sadly, I didn’t get her name. In any event, I totally trust their work and ethics. Again, very clean and friendly service."
+serviceTags:
+  - gel-acrilicas
 ---

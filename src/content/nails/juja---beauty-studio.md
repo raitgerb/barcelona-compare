@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Juja is the best! She saved my nails from breaking and is very talented with all the designs she does. I recommended her to all my friends and now we all go there. I highly recommend juja as your go to place."
+serviceTags:
+  - nail-art
 ---

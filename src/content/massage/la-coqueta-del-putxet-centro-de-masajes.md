@@ -37,4 +37,6 @@ googleReviews:
     relativeTime: "6 months ago"
     languageCode: "en"
     text: "Matuca is an artist!! Her hands are magical！"
+serviceTags:
+  - reflexologia
 ---

@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "en"
     text: "Been going there many times while in Barcelona, only because it’s next to the place I stay when in town. Their work is good, the salon is nice. The only thing is that they really dislike tourists. They make absolutely everything in their power to make you feel unwelcomed. I’m always nice and I tried everything, tried my bad spanish, give them more tips, tried being overly nice, nothing works and every time I leave feeling like I was a nuisance. Too bad. Irina does great manis and is a bit nicer."
+serviceTags:
+  - gel-acrilicas
 ---

@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "en"
     text: "I had a really positive experience here today. I needed my nails done for my wedding and the girl really helped me choose a colour and shape. She was meticulous in her detail, took her time and spoke English as well as Spanish and Chinese. She was also unusually friendly so that made the experience extra pleasant. 🙏 thank you!"
+serviceTags:
+  - gel-acrilicas
 ---

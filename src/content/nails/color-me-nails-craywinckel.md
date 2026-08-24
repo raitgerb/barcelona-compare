@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "2 months ago"
     languageCode: "es"
     text: "Tremendamente antipática la chica q lleva el cartel con el nombre de Qiqi. No es nada cuidadosa y parece q le estás haciendo un favor por ir. Me ha dejado las uñas muy mal limadas y y la pintura del color deja mucho q desear. Este local sin ShaSha ha perdido mucho… No volveré seguro y no lo recomiendo."
+serviceTags:
+  - pedicura
 ---

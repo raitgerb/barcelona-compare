@@ -35,4 +35,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "100% recomendado excelente servicio, te atienden súper bien, llevo varios meses haciendome las uñas y la verdad que excelente. Usan muy buenos materiales y duran demasiado"
+serviceTags:
+  - gel-acrilicas
 ---

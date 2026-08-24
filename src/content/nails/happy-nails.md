@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "I’m very picky with y nails but I never leave this place disappointed. A lot of care and attention to detail. I’ve been to a lot of nail salons in Barcelona but this one is definitely the best."
+serviceTags:
+  - nail-art
 ---

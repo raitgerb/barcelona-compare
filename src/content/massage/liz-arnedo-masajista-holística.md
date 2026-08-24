@@ -37,4 +37,6 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "es"
     text: "Me han dado de regalo de cumpleaños un masaje con Liz lo que ha sido una muy espléndida experiencia, no sólo porque me ha ayudado a descontracturarme y relajarme, sino porque hizo acordarme a los masajes tailandeses. Agradecida por su profesionalismo, la recomiendo."
+serviceTags:
+  - tailandes
 ---

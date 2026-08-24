@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "3 years ago"
     languageCode: "es"
     text: "Son muy amables! He ido varias veces y me ha encantando como se han quedado las uñas. Volveré!"
+serviceTags:
+  - pedicura
 ---

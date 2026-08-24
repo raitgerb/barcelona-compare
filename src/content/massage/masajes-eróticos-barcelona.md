@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "4 months ago"
     languageCode: "es"
     text: "Una experiencia inmejorable. Desde el primer momento se respira calma y bienestar. Llevo años confiando en Laura para mis masajes y su profesionalidad es impecable; siempre termino renovado. Sin duda, el mejor centro de masajes eróticos de la zona. El trato es excepcional, las instalaciones están muy cuidadas y el servicio es sobresaliente. Además, la relación calidad-precio es fantástica. Lo recomiendo al cien por cien."
+serviceTags:
+  - pareja
 ---

@@ -50,4 +50,8 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Amazing! Girls were great, took their time, and are fantastic artists. Highly recommend."
+serviceTags:
+  - gel-acrilicas
+  - nail-art
+  - pedicura
 ---

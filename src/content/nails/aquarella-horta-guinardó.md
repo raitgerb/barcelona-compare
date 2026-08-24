@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "5 months ago"
     languageCode: "es"
     text: "Un lugar único en el barrio, la atención y el trabajo que hacen es maravilloso, es mi sitio de confianza para arreglarme y pasar un buen rato 😊"
+serviceTags:
+  - pedicura
 ---

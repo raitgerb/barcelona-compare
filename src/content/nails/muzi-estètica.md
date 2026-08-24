@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "en"
     text: "Really good, the workers are friendly and they work with presicion."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

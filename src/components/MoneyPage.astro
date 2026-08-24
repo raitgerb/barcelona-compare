@@ -1,0 +1,208 @@
+---
+// Reusable "best of" money page: district, city-service, and barrio×service
+// modes, in ES and EN. Used by /mejores and /en/mejores routes.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ListingCard from './ListingCard.astro';
+import { SERVICES, findService, loadRanked, bundleStats, slugify, type CatKey } from '../lib/services';
+
+interface Props {
+  lang: 'es' | 'en';
+  category: CatKey;
+  mode: 'district' | 'service' | 'combo';
+  neighborhood?: string;   // display name, e.g. "Gràcia"
+  serviceSlug?: string;
+}
+
+const { lang, category, mode, neighborhood, serviceSlug } = Astro.props;
+const svc = serviceSlug ? findService(category, serviceSlug) : undefined;
+
+const CAT_META: Record<CatKey, { es: string; en: string }> = {
+  nails: { es: 'salones de uñas', en: 'nail salons' },
+  massage: { es: 'centros de masaje', en: 'massage centers' },
+};
+const catLabel = CAT_META[category][lang];
+
+const ranked = await loadRanked(category, {
+  neighborhood: mode === 'district' || mode === 'combo' ? neighborhood : undefined,
+  tag: mode === 'service' || mode === 'combo' ? serviceSlug : undefined,
+});
+const stats = bundleStats(ranked);
+const top = ranked.slice(0, 20);
+
+const t = {
+  es: {
+    home: 'Inicio', barrios: 'Barrios', servicios: 'Servicios',
+    best: 'Los mejores', in: 'en',
+    introService: (kw: string) => `Hemos identificado los <strong>${stats.total}</strong> centros que ofrecen <strong>${kw}</strong> en Barcelona a partir de sus servicios anunciados y las menciones en sus reseñas de Google.`,
+    introDistrict: (nb: string) => `Hemos comparado los <strong>${stats.total} ${catLabel}</strong> de ${nb} según sus valoraciones reales de Google`,
+    introCombo: (kw: string, nb: string) => `Los <strong>${stats.total}</strong> centros de ${nb} donde puedes reservar <strong>${kw}</strong>, ordenados por la valoración real de sus clientes en Google.`,
+    reviewed: 'reseñas analizadas', avgRating: 'valoración media', businesses: 'centros',
+    howRank: '¿Cómo hacemos el ranking?',
+    howRankBody: 'Usamos la valoración de Google ponderada por el número de reseñas (media bayesiana): un local con 4.9★ y 800 opiniones puntúa más que uno con 5★ y 5 opiniones. Los datos se actualizan periódicamente desde Google Maps.',
+    exploreIn: 'Explora', exploreBody: (x: string) => `¿Prefieres verlo en el mapa o filtrar por abierto ahora? Consulta la guía completa o compara lado a lado desde cualquier lista.`,
+    otherServices: 'Otros servicios relacionados', districtsFor: 'También por distrito',
+    seeGuide: 'guía completa de', compare: 'compara todos',
+  },
+  en: {
+    home: 'Home', barrios: 'Neighborhoods', servicios: 'Services',
+    best: 'Best', in: 'in',
+    introService: (kw: string) => `We've identified the <strong>${stats.total}</strong> venues offering <strong>${kw}</strong> in Barcelona, based on their listed services and mentions in Google reviews.`,
+    introDistrict: (nb: string) => `We compared the <strong>${stats.total} ${catLabel}</strong> in ${nb} based on their real Google ratings`,
+    introCombo: (kw: string, nb: string) => `The <strong>${stats.total}</strong> venues in ${nb} where you can book <strong>${kw}</strong>, ranked by real customer ratings on Google.`,
+    reviewed: 'reviews analyzed', avgRating: 'average rating', businesses: 'venues',
+    howRank: 'How does the ranking work?',
+    howRankBody: "We weight Google's rating by review count (Bayesian average): a place with 4.9★ across 800 reviews ranks above one with 5★ and 5 reviews. Data refreshes periodically from Google Maps.",
+    exploreIn: 'Explore', exploreBody: (x: string) => `Prefer a map view or filtering by open-now? Check the full guide or compare side by side from any list.`,
+    otherServices: 'Related services', districtsFor: 'By neighborhood',
+    seeGuide: 'full guide to', compare: 'compare all',
+  },
+}[lang];
+
+// Cross-links
+const allServices = SERVICES[category];
+const siblingServices = allServices.filter(s => s.slug !== serviceSlug);
+const districtPageHref = neighborhood && mode !== 'district'
+  ? `/${lang === 'en' ? 'en/' : ''}${category}/${slugify(neighborhood)}` : null;
+
+const title = (() => {
+  const nb = neighborhood ?? 'Barcelona';
+  const yearSuffix = '(2026)';
+  if (mode === 'district') return `${t.best} ${catLabel} ${t.in} ${nb} ${yearSuffix}`;
+  return `${t.best} ${svc!.en.plural && lang === 'en' ? svc!.en.plural : svc!.es.plural} ${t.in} ${nb} ${yearSuffix}`;
+})();
+
+const kwDisplay = mode === 'district'
+  ? catLabel
+  : (lang === 'en' ? svc!.en.keyword : svc!.es.keyword);
+
+const description = mode === 'district'
+  ? `${stats.total} ${catLabel} ${t.in} ${neighborhood} comparados por valoración, reseñas e idiomas. Media de ${stats.avg ?? '—'}★ sobre ${stats.totalReviews.toLocaleString('es-ES')} reseñas de Google.`
+  : `${stats.total} opciones de ${kwDisplay} ${t.in} ${neighborhood ?? 'Barcelona'}, ordenadas por valoración real (${stats.avg ?? '—'}★ sobre ${stats.totalReviews.toLocaleString('es-ES')} reseñas). Ranking actualizado.`;
+
+const nbSlug = neighborhood ? slugify(neighborhood) : null;
+const basePath = lang === 'en' ? '/en/mejores' : '/mejores';
+
+const listSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: title.replace(/ \(2026\)$/, ''),
+  numberOfItems: top.length,
+  itemListElement: top.map((r, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: r.entry.data.name,
+    url: new URL(`/${lang === 'en' ? 'en/' : ''}${category}/${r.entry.id}/`, Astro.site).href,
+  })),
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: lang === 'es'
+        ? `¿Cuáles son los mejores sitios para ${kwDisplay} ${t.in} ${neighborhood ?? 'Barcelona'}?`
+        : `Where are the best places for ${kwDisplay} in ${neighborhood ?? 'Barcelona'}?`,
+      acceptedAnswer: { '@type': 'Answer', text: lang === 'es'
+        ? `Según las valoraciones de Google, los mejores incluyen ${top.slice(0, 3).map(r => r.entry.data.name).join(', ')}. Compara precios, horarios e idiomas en esta guía.`
+        : `Based on Google ratings, the top options include ${top.slice(0, 3).map(r => r.entry.data.name).join(', ')}. Compare prices, hours and languages in this guide.` },
+    },
+    {
+      '@type': 'Question',
+      name: lang === 'es'
+        ? `¿Cuántos centros ofrecen ${kwDisplay} ${t.in} ${neighborhood ?? 'Barcelona'}?`
+        : `How many venues offer ${kwDisplay} in ${neighborhood ?? 'Barcelona'}?`,
+      acceptedAnswer: { '@type': 'Answer', text: lang === 'es'
+        ? `Hemos identificado ${stats.total} centros${neighborhood ? ` en ${neighborhood}` : ''}, con una valoración media de ${stats.avg} sobre 5 basada en más de ${Math.round(stats.totalReviews / 100) * 100} reseñas de Google.`
+        : `We identified ${stats.total} venues${neighborhood ? ` in ${neighborhood}` : ''}, with an average rating of ${stats.avg} out of 5 based on over ${Math.round(stats.totalReviews / 100) * 100} Google reviews.` },
+    },
+  ],
+};
+---
+
+<BaseLayout {title} {description} {lang}>
+  <script type="application/ld+json" set:html={JSON.stringify(listSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <main class="max-w-4xl mx-auto px-4 py-12">
+    <nav class="text-sm text-stone-500 mb-6" aria-label="breadcrumb">
+      <a href={lang === 'es' ? '/' : '/en'} class="hover:text-stone-700">{t.home}</a>
+      <span class="mx-1.5 text-stone-300">/</span>
+      <a href={`${basePath}/${category}/`} class="hover:text-stone-700">{lang === 'es' ? (category === 'nails' ? 'Uñas' : 'Masajes') : (category === 'nails' ? 'Nails' : 'Massage')}</a>
+      <span class="mx-1.5 text-stone-300">/</span>
+      <span class="text-stone-700 font-medium">{title.replace(/ \(2026\)$/, '')}</span>
+    </nav>
+
+    <header>
+      <h1 class="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">{title.replace(/ \(2026\)$/, '')}</h1>
+      <p class="mt-4 text-stone-600 leading-relaxed" set:html={
+        mode === 'district' ? t.introDistrict(neighborhood!) :
+        mode === 'combo' ? t.introCombo(kwDisplay, neighborhood!) :
+        t.introService(kwDisplay)
+      } />
+      <div class="flex flex-wrap gap-6 mt-6 text-sm">
+        <div><span class="block text-2xl font-bold text-stone-900">{stats.total}</span><span class="text-stone-500">{t.businesses}</span></div>
+        {stats.avg && <div><span class="block text-2xl font-bold text-stone-900">{stats.avg}★</span><span class="text-stone-500">{t.avgRating}</span></div>}
+        <div><span class="block text-2xl font-bold text-stone-900">{stats.totalReviews.toLocaleString('es-ES')}</span><span class="text-stone-500">{t.reviewed}</span></div>
+      </div>
+    </header>
+
+    <section class="mt-10 space-y-3">
+      {top.map((r, i) => (
+        <div class="flex items-start gap-4 bg-white rounded-xl border border-stone-200 p-4 hover:border-stone-300 hover:shadow-sm transition-all">
+          <span class={`text-xl font-bold w-8 shrink-0 text-center ${i < 3 ? 'text-brand-600' : 'text-stone-300'}`}>{i + 1}</span>
+          <div class="min-w-0 flex-1">
+            <ListingCard
+              name={r.entry.data.name}
+              neighborhood={r.entry.data.neighborhood}
+              googleRating={r.entry.data.googleRating}
+              googleReviewCount={r.entry.data.googleReviewCount}
+              priceIndicator={r.entry.data.priceIndicator}
+              slug={r.entry.id}
+              {category}
+              {lang}
+            />
+          </div>
+        </div>
+      ))}
+    </section>
+
+    {(siblingServices.length > 0 || nbSlug) && (
+      <section class="mt-12 flex flex-wrap gap-2">
+        {mode !== 'service' && allServices.map(s => (
+          <a href={`${basePath}/${category}/${s.slug}/`} class="text-xs px-3 py-1.5 rounded-full border border-stone-200 hover:border-brand-400 hover:text-brand-600 transition-colors text-stone-600">
+            {lang === 'en' ? s.en.keyword : s.es.keyword}
+          </a>
+        ))}
+        {nbSlug && (
+          <a href={`${basePath}/${category}/${nbSlug}/`} class="text-xs px-3 py-1.5 rounded-full border border-stone-200 hover:border-brand-400 hover:text-brand-600 transition-colors text-stone-600">
+            {lang === 'es' ? 'Todo en' : 'Everything in'} {neighborhood}
+          </a>
+        )}
+      </section>
+    )}
+
+    <section class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-8 text-sm text-stone-600">
+      <div>
+        <h2 class="font-bold text-stone-900 mb-2">{t.howRank}</h2>
+        <p>{t.howRankBody}</p>
+      </div>
+      <div>
+        <h2 class="font-bold text-stone-900 mb-2">{t.exploreIn} {neighborhood ?? (lang === 'es' ? 'Barcelona' : 'Barcelona')}</h2>
+        <p>{t.exploreBody(kwDisplay)}</p>
+        {nbSlug && mode !== 'district' && lang === 'es' && (
+          <p class="mt-2">
+            <a href={`/barrio/${nbSlug}/`} class="text-brand-600 hover:underline font-medium">{t.seeGuide} {neighborhood}</a>
+            {' · '}
+            <a href={`${basePath}/${category}/`} class="text-brand-600 hover:underline font-medium">{t.compare} {catLabel}</a>
+          </p>
+        )}
+        {nbSlug && mode !== 'district' && lang === 'en' && (
+          <p class="mt-2">
+            <a href={`${basePath}/${category}/`} class="text-brand-600 hover:underline font-medium">{t.compare} {catLabel}</a>
+          </p>
+        )}
+      </div>
+    </section>
+  </main>
+</BaseLayout>

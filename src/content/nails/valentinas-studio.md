@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Me ha encantado y se queda en el preferido 🥰, me gusta la atención, la perfección y la zona. ¡En 3 semanas vuelvo seguro! Ya tengo sitio de uñas. Muchas gracias"
+serviceTags:
+  - gel-acrilicas
 ---

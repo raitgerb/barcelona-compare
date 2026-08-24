@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "Today i had my massage with Nuria. She is absolutely AMAZING, Her hands are magical. Such a great experience. The salon is beautiful,they have hairdryer for curly hair like mine and water coffee or tea! Super super nice! Totally worth it ! Thank you again Nuria 💚"
+serviceTags:
+  - spa-bienestar
 ---

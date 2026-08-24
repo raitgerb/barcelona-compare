@@ -40,4 +40,6 @@ googleReviews:
     relativeTime: "9 months ago"
     languageCode: "es"
     text: "Maravillosa compañera ❤️ Dispuesta a ayudar en todo lo que puede, con una calidad humana que mucha falta hace en este mundo y con una energía vital que traspasa kilómetros.  Tenía que dejar esta reseña para que todos tus clientes sepan la clase de persona que van a encontrar en tu centro: EXCEPCIONAL.  Porque la calidad del servicio y profesionalidad son indudables pero, como decía al principio, la calidad humana a veces brilla por su ausencia en muchos centros. Y puedo confirmar, sin temor a equivocarme, que no es el caso en absoluto.  Sin duda, una de mis paradas cuando suba a Barcelona será desvirtuarte después de tantos años de intercambio de ideas."
+serviceTags:
+  - pedicura
 ---

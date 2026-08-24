@@ -42,4 +42,7 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "es"
     text: "Tenia una cita programada a las 11:30 y siendo las 12:30 no me habían atendido. Me comentó media hora antes que me cogerian en breves…. Le pedí EDUCADAMENTE si tenía hora para la tarde… ya que atendía a otras clientas antes que a mi y su respuesta fue: “unas uñas tardan en hacerse” de malas formas. Creo que a un cliente se le tiene que tratar bien, tenga o no la razón, porque el servicio deja mucho que desear… No es el trabajo, sino como se hace el trabajo.   No volveré."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

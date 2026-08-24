@@ -45,4 +45,6 @@ googleReviews:
     relativeTime: "7 months ago"
     languageCode: "en"
     text: "10/10 very clean and professional place. Super relaxed after the massage! Highly recommend"
+serviceTags:
+  - spa-bienestar
 ---

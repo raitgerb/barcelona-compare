@@ -42,4 +42,6 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "es"
     text: "10/10 sin lugar a duda🤩! Recomendación al 100%. Llevo muchos años haciéndome la manicura y pedicura con Iulia y siempre es todo un acierto. Lo hace increíblemente bien, es super detallista, dedicada a su trabajo, encantadora y muy cuidadosa. El resultado final siempre es impecable. A parte de la calidad de su trabajo (que cabe recalcar que es Excelente), Iulia es un encanto y te hace pasar un ratito super enriquecedor. Cuida mucho a la clienta y cuida muchísimo de la higiene y todos los detalles. Muchas gracias Iulia por tu impecable trabajo, por todo tu amor y dedicación❤️☺️ eres la mejor!!!!"
+serviceTags:
+  - pedicura
 ---

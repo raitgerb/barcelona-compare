@@ -44,4 +44,6 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Service- Pedicure Overall OK, but few details that can be improved: 1. When I confirmed that I want the short nails the nail master cut them to the root. It shouldn't be done that way, you should always leave 1 mm. Because when the next step of filing came the master need to file into my skin and it was painful / my skin ripped on 2 toes. 2. The dead skin Removal was very superficial, with no hot water to soften the skin, just filing. 3. Master applied the cream on my feet that make them suuuuper slippery. When I putted my sandals back I felt like walking on the ice. It's dangerous. I needed to ask tissue to remove residues of cream, but it didn't helped much. I don't think it's a good practice. I believe that better solution is to avoid application of fatty creams on bottom of the foot."
+serviceTags:
+  - pedicura
 ---

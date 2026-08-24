@@ -43,4 +43,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "en"
     text: "Needed to fill gel mani, so I just walked in the saloon without reservation (at 8pm). It took 50 mins to finish and all went great. I was satisfied with the result, however the ambience of saloon could be better. Recommended for basic mani/pedi 👍🏼"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

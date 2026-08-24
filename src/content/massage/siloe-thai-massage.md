@@ -38,4 +38,6 @@ googleReviews:
     relativeTime: "in the last week"
     languageCode: "es"
     text: "El mejor masaje de Barcelona, súper recomendado 👏🏻👏🏻👏🏻 muchísimas gracias!!"
+serviceTags:
+  - tailandes
 ---

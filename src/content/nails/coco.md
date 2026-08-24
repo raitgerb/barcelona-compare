@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Les escribo para expresar mi decepción con el servicio que recibí hoy en COCO CENTRE. Había reservado una cita para un tratamiento de drenaje linfático, pero al llegar, tuve que esperar 20 minutos solo para que me informaran que no había un terapeuta disponible para realizar el tratamiento.  Esta situación no solo desperdició mi tiempo al viajar al centro, sino que también me dejó sin posibilidad de reprogramar, ya que el servicio no está disponible en este momento. Este nivel de servicio es inaceptable. Me hicieron perder una hora de mi vida.  Me gustaría cancelar mi cita completamente y solicitar un reembolso completo. Por favor, aborden este problema con prontitud para asegurar que no le suceda a otros clientes en el futuro. Gracias por su atención a este asunto."
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

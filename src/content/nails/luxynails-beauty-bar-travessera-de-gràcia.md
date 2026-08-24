@@ -44,4 +44,7 @@ googleReviews:
     relativeTime: "a year ago"
     languageCode: "en"
     text: "This is my favorite place for manicure, pedicure and other treatments in the neighborhood. The employees are really kind and I love spending time there! Highly recommended 😊"
+serviceTags:
+  - gel-acrilicas
+  - pedicura
 ---

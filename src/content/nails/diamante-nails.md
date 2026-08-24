@@ -43,4 +43,6 @@ googleReviews:
     relativeTime: "a month ago"
     languageCode: "es"
     text: "Mi experiencia  ha sido muy decepcionante. Fui a hacerme la manicura y en ningún momento pedí uñas de poligel, pero aun así me las hicieron porque no entendieron bien lo que quería.  Me cobraron 80 €!! por la manicura, la pedicura, el poligel ( que no pedi) y por rasparme los pies, un precio que me parece excesivo para la calidad del servicio recibido. Además, tardaron muchísimo en terminar… Lo peor es que el trabajo estaba mal hecho. A los 8 días, las uñas de poligel empezaron a despegarse y se me han caído prácticamente por completo. Unas uñas bien realizadas deberían durar varias semanas, no poco más de una semana,para colmo la francesa esta mal hecha y 0 alineada, un desastre total! Creo que la chica no tenia ni idea de hacer uñas. No volveré ni lo recomendaría. Por el precio que cobran, esperaba mucha más profesionalidad, mejor atención y un resultado de calidad"
+serviceTags:
+  - pedicura
 ---
