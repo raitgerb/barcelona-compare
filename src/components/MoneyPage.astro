@@ -199,6 +199,8 @@ const faqSchema = {
         )}
         {nbSlug && mode !== 'district' && lang === 'en' && (
           <p class="mt-2">
+            <a href={`/en/barrio/${nbSlug}/`} class="text-brand-600 hover:underline font-medium">{t.seeGuide} {neighborhood}</a>
+            {' · '}
             <a href={`${basePath}/${category}/`} class="text-brand-600 hover:underline font-medium">{t.compare} {catLabel}</a>
           </p>
         )}

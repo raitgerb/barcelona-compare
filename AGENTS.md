@@ -42,11 +42,21 @@ public/
 - Slugs are normalized (no special chars, lowercase, hyphens)
 - Photos served from R2 CDN: `pub-37760591f0394eafb9519ca1c4db5865.r2.dev`
 
-## Current state (July 2026)
-- 848 businesses collected
-- Photos migrated to R2, removed from git
-- ~875 candidates remain uncollected (mostly outer barrios)
-- Sitemap auto-generated via `@astrojs/sitemap`
+## Current state (August 2026)
+- 2,475 pages live (commit d6572e1, Aug 23): derived languages-served from review languageCodes, per-business og:image, barrio↔guide cross-links, ItemList schema on 10 guides, 19 money pages at /mejores/{category}/{barrio}/ (Bayesian ranking + FAQPage schema)
+- Fonts self-hosted (Inter/Fraunces woff2, preloaded)
+- Backlog: rating-distribution bars, review keywords, search over streets/services, /en/compare + EN guides + EN mejores pages, Catalan locale, un-pause weekly refresh cron a0357cbcaf3b
+- Google Places editorialSummary coverage ~3% for this niche — do NOT re-propose the $37 fetch; script kept at scripts/fetch-editorial.py
+
+## R2 images
+- Bucket `barcelona-compare-images` (account 135a01b78b043167860618dd0030c5f6), key prefix `images/{cat}/{slug}-{idx}.jpg`
+- Upload: `npx --yes wrangler r2 object put {bucket}/{key} --file <local> --content-type image/jpeg --remote` — **--remote is MANDATORY** (wrangler 4.x defaults to local storage; without it objects never reach the public r2.dev URL)
+- Auth: CLOUDFLARE_R2_TOKEN in repo .env (= 'barcelona-compare-r2' token), NOT the ambient CLOUDFLARE_API_TOKEN ('Hermes Agrippa' token lacks R2)
+- 'Hermes Agrippa' token lacks Web Analytics SQL permission — analytics provisioning needs the dashboard
+
+## Deploy verification + gotchas
+- Verify deploys via CF API: GET accounts/{135a01b78b043167860618dd0030c5f6}/pages/projects/barcelona-compare/deployments — read latest_stage + commit_hash
+- .gitignore must be ROOT-anchored '/data/' — bare 'data/' silently excluded src/data/* from commits, breaking CF Pages build while local builds passed (Aug 2026, cost one failed deploy)
 
 ## Future work (see FUTURE.md)
 - Custom domain for R2 images (`images.barcelonacompare.com`)

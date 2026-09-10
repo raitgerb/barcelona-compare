@@ -1,0 +1,50 @@
+---
+// /en/barrio/ — English neighborhood guide hub.
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { neighborhoodGuides } from '../../../data/neighborhoods';
+
+const nails = await getCollection('nails');
+const massage = await getCollection('massage');
+const all = [...nails, ...massage];
+
+const entries = Object.entries(neighborhoodGuides)
+  .map(([nb, meta]) => {
+    const count = all.filter(b => b.data.neighborhood === nb).length;
+    return { nb, meta, count };
+  })
+  .filter(e => e.count > 0)
+  .sort((a, b) => b.count - a.count);
+
+const slugify = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
+
+const accents = ['bg-accent-nails', 'bg-accent-massage', 'bg-brand-500'];
+---
+
+<BaseLayout
+  title="Barcelona neighborhood guides — nail salons & massage centers"
+  description="Explore the best nail salons and massage centers neighborhood by neighborhood: Eixample, Gràcia, Ciutat Vella, Sarrià-Sant Gervasi and more."
+  lang="en"
+>
+  <main class="max-w-6xl mx-auto px-4 py-12">
+    <header class="max-w-3xl">
+      <h1 class="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">Guides by neighborhood</h1>
+      <p class="mt-3 text-stone-600">Every Barcelona district has its own beauty scene. Pick yours:</p>
+    </header>
+
+    <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {entries.map(({ nb, meta, count }, i) => (
+        <a href={`/en/barrio/${slugify(nb)}/`} class="group relative block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-md transition-all overflow-hidden">
+          <div class={`h-1.5 w-full ${accents[i % accents.length]} opacity-70`}></div>
+          <div class="p-5">
+            <div class="flex items-baseline justify-between gap-2">
+              <h2 class="font-bold text-stone-900 group-hover:text-brand-700 transition-colors">{nb}</h2>
+              <span class="text-xs text-stone-400 shrink-0">{count} businesses</span>
+            </div>
+            <p class="text-sm text-stone-500 mt-2 line-clamp-2">{meta.vibe}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </main>
+</BaseLayout>
