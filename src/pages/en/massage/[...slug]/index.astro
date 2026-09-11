@@ -38,12 +38,14 @@ const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
   <article class="max-w-3xl mx-auto px-4 py-12">
     <div class="bg-white rounded-xl border border-stone-200 p-6 md:p-8">
       <!-- Photo Gallery -->
-      <div class="photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory">
+      <!--owner:gallery-->
+        <div class="photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory">
         {[0, 1, 2, 3, 4].map(i => (
           <img src={`${galleryPath}-${i}.jpg`} alt={`${data.name} - photo ${i + 1}`}
             class="snap-start min-w-[280px] h-48 object-cover rounded-xl border border-stone-100 bg-stone-100" width="280" height="192" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'" />
         ))}
       </div>
+      <!--/owner:gallery-->
       <div class="flex items-start justify-between gap-4 mb-6">
         <div><h1 class="text-2xl font-bold text-stone-900">{data.name}</h1>
         <p class="text-stone-500 mt-1">{data.address}, {data.neighborhood}</p>
@@ -68,6 +70,7 @@ const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
           </p>
         </div>
       )}
+      <!--owner:services-->
       {data.services && data.services.length > 0 && (
         <section class="mb-8"><h2 class="text-lg font-semibold text-stone-900 mb-3">Services & Prices</h2>
           <div class="divide-y divide-stone-100">{data.services.map((service: any) => (
@@ -75,12 +78,17 @@ const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
             {typeof service !== 'string' && service.price && <span class="font-medium text-stone-900">{service.price}</span>}</div>))}</div>
         </section>
       )}
+      <!--/owner:services-->
+
+      <!--owner:hours-->
       {data.hours && Object.keys(data.hours).length > 0 && (
         <section class="mb-8"><h2 class="text-lg font-semibold text-stone-900 mb-3">Opening Hours</h2>
           <div class="divide-y divide-stone-100">{days.map(day => { const h = data.hours?.[day]; if (!h) return null;
             return <div class="flex justify-between py-2 text-sm"><span class="text-stone-500 w-24">{dayLabelsEn[day]}</span><span class="text-stone-700">{h}</span></div>;})}</div>
         </section>
       )}
+      <!--/owner:hours-->
+
       {data.languages && data.languages.length > 0 && (
         <section class="mb-8"><h2 class="text-lg font-semibold text-stone-900 mb-2">Languages</h2>
           <div class="flex flex-wrap gap-2">{data.languages.map((lang: string) => <span class="text-sm px-3 py-1 rounded-full bg-stone-100 text-stone-600">{lang}</span>)}</div>

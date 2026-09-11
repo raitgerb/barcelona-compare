@@ -1,0 +1,545 @@
+---
+// Owner dashboard for the self-service listing editor (B2B Phase 1).
+//
+// Static page + client-side JS: the login code, the session token and the saves
+// all go through /api/owner/*. Owners are not technical, so the flow is three
+// steps on one page — identify the business, enter the emailed code, edit — and
+// every field shows the value that is live right now.
+//
+// Used by /gestion (es) and /en/manage (en).
+
+interface Props {
+  lang?: 'es' | 'en';
+}
+
+const { lang = 'es' } = Astro.props;
+
+const copy = {
+  es: {
+    title: 'Gestiona tu ficha',
+    intro:
+      'Edita los servicios, los precios, el horario y las fotos de tu ficha. Los cambios se publican al instante.',
+    breadcrumb: 'Para negocios',
+    step1: '1. Identifica tu negocio',
+    business: 'Tu negocio',
+    businessHint:
+      'El enlace «Gestiona tu ficha» de tu página ya lo rellena. También sirve el nombre de la URL (por ejemplo /nails/mi-salon/ → mi-salon).',
+    email: 'El email con el que reclamaste la ficha',
+    sendCode: 'Enviar código',
+    step2: '2. Introduce el código',
+    codeHint: 'Te hemos enviado un código de 6 dígitos (válido 15 minutos).',
+    verify: 'Entrar',
+    resend: 'Enviar otro código',
+    step3: '3. Edita tu ficha',
+    services: 'Servicios y precios',
+    servicesHint: 'Una línea por servicio. El precio es opcional (por ejemplo «25 €» o «desde 30 €»).',
+    addService: 'Añadir servicio',
+    serviceName: 'Servicio',
+    servicePrice: 'Precio',
+    remove: 'Quitar',
+    priceNote: 'Nota sobre los precios (opcional)',
+    priceNotePlaceholder: 'Por ejemplo: precios orientativos, consulta disponibilidad.',
+    hours: 'Horario',
+    hoursHint: 'Formato 10:00-20:00. Deja un día vacío si está cerrado.',
+    photos: 'Fotos',
+    photosHint:
+      'Desmarca las fotos de Google que no quieras mostrar. Puedes añadir hasta 3 fotos propias con su URL (https).',
+    photo: 'Foto',
+    showPhoto: 'Mostrar',
+    ownPhoto: 'Foto propia',
+    save: 'Guardar y publicar',
+    reset: 'Volver a los datos originales',
+    logout: 'Salir',
+    viewProfile: 'Ver mi ficha',
+    saved: 'Guardado. Tus cambios ya están publicados en tu ficha.',
+    resetDone: 'Hemos vuelto a los datos originales de tu ficha.',
+    loginSaved: 'Sesión guardada en este dispositivo.',
+    codeSent: 'Si ese email es el propietario, te hemos enviado un código de 6 dígitos.',
+    needBusiness: 'Escribe el nombre de tu negocio tal como aparece en la URL de tu ficha.',
+    needEmail: 'Escribe el email con el que reclamaste la ficha.',
+    needCode: 'Escribe el código de 6 dígitos.',
+    working: 'Un momento…',
+    storageKey: 'bc_owner_session_v1',
+    days: {
+      monday: 'Lunes',
+      tuesday: 'Martes',
+      wednesday: 'Miércoles',
+      thursday: 'Jueves',
+      friday: 'Viernes',
+      saturday: 'Sábado',
+      sunday: 'Domingo',
+    },
+  },
+  en: {
+    title: 'Manage your listing',
+    intro: 'Edit your services, prices, opening hours and photos. Changes go live immediately.',
+    breadcrumb: 'For businesses',
+    step1: '1. Find your business',
+    business: 'Your business',
+    businessHint:
+      'The “Manage your listing” link on your page fills this in. The name in your listing URL works too (e.g. /en/nails/my-salon/ → my-salon).',
+    email: 'The email you claimed the listing with',
+    sendCode: 'Send code',
+    step2: '2. Enter the code',
+    codeHint: 'We emailed you a 6-digit code (valid for 15 minutes).',
+    verify: 'Sign in',
+    resend: 'Send another code',
+    step3: '3. Edit your listing',
+    services: 'Services & prices',
+    servicesHint: 'One row per service. The price is optional (for example “€25” or “from €30”).',
+    addService: 'Add service',
+    serviceName: 'Service',
+    servicePrice: 'Price',
+    remove: 'Remove',
+    priceNote: 'Note about your prices (optional)',
+    priceNotePlaceholder: 'For example: indicative prices, please ask about availability.',
+    hours: 'Opening hours',
+    hoursHint: 'Format 10:00-20:00. Leave a day empty if you are closed.',
+    photos: 'Photos',
+    photosHint:
+      'Untick the Google photos you do not want to show. You can add up to 3 of your own photos by URL (https).',
+    photo: 'Photo',
+    showPhoto: 'Show',
+    ownPhoto: 'Own photo',
+    save: 'Save and publish',
+    reset: 'Restore the original data',
+    logout: 'Sign out',
+    viewProfile: 'View my listing',
+    saved: 'Saved. Your changes are live on your listing.',
+    resetDone: 'Your listing is back to the original data.',
+    loginSaved: 'Signed in on this device.',
+    codeSent: 'If that email owns the listing, we have sent a 6-digit code.',
+    needBusiness: 'Enter your business as it appears in your listing URL.',
+    needEmail: 'Enter the email you claimed the listing with.',
+    needCode: 'Enter the 6-digit code.',
+    working: 'One moment…',
+    storageKey: 'bc_owner_session_v1',
+    days: {
+      monday: 'Monday',
+      tuesday: 'Tuesday',
+      wednesday: 'Wednesday',
+      thursday: 'Thursday',
+      friday: 'Friday',
+      saturday: 'Saturday',
+      sunday: 'Sunday',
+    },
+  },
+} as const;
+
+const t = copy[lang];
+const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
+const field =
+  'w-full rounded-lg border border-stone-300 px-3 py-2 text-stone-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500';
+const buttonPrimary =
+  'inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors disabled:opacity-60';
+const buttonSecondary =
+  'inline-flex items-center justify-center px-4 py-2 rounded-lg border border-stone-300 text-stone-700 font-medium hover:border-stone-400 hover:text-stone-900 transition-colors disabled:opacity-60';
+const card = 'rounded-xl border border-stone-200 bg-white p-6';
+---
+
+<div class="max-w-3xl mx-auto px-4 py-12" id="owner-app" data-lang={lang}>
+  <nav class="text-sm text-stone-500 mb-6" aria-label="breadcrumb">
+    <a href={lang === 'es' ? '/for-businesses' : '/en/for-businesses'} class="hover:text-stone-700">{t.breadcrumb}</a>
+    <span class="mx-1.5 text-stone-300">/</span>
+    <span class="text-stone-700 font-medium">{t.title}</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold text-stone-900 tracking-tight">{t.title}</h1>
+  <p class="mt-3 text-stone-600">{t.intro}</p>
+
+  <p id="owner-status" role="status" aria-live="polite" class="hidden mt-6 p-4 rounded-lg text-sm"></p>
+
+  <!-- Step 1: identify the business -->
+  <section id="owner-step-login" class={`mt-8 ${card}`}>
+    <h2 class="font-semibold text-stone-900">{t.step1}</h2>
+    <div class="mt-4 grid gap-4">
+      <label class="block">
+        <span class="block text-sm font-medium text-stone-700 mb-1">{t.business}</span>
+        <input id="owner-business" class={field} autocomplete="off" />
+        <span class="block text-xs text-stone-500 mt-1">{t.businessHint}</span>
+      </label>
+      <label class="block">
+        <span class="block text-sm font-medium text-stone-700 mb-1">{t.email}</span>
+        <input id="owner-email" type="email" class={field} autocomplete="email" />
+      </label>
+      <div>
+        <button id="owner-send-code" class={buttonPrimary}>{t.sendCode}</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 2: the 6-digit code -->
+  <section id="owner-step-code" class={`mt-6 hidden ${card}`}>
+    <h2 class="font-semibold text-stone-900">{t.step2}</h2>
+    <p class="mt-1 text-sm text-stone-600">{t.codeHint}</p>
+    <div class="mt-4 flex flex-wrap items-end gap-3">
+      <label class="block">
+        <span class="block text-sm font-medium text-stone-700 mb-1">{t.codeHint}</span>
+        <input id="owner-code" class={`${field} tracking-[0.4em] text-center`} inputmode="numeric" maxlength="6" autocomplete="one-time-code" />
+      </label>
+      <button id="owner-verify" class={buttonPrimary}>{t.verify}</button>
+      <button id="owner-resend" class={buttonSecondary}>{t.resend}</button>
+    </div>
+  </section>
+
+  <!-- Step 3: the editor -->
+  <section id="owner-step-editor" class="mt-6 hidden">
+    <div class={card}>
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h2 class="font-semibold text-stone-900">{t.step3}</h2>
+        <div class="flex items-center gap-3 text-sm">
+          <a id="owner-profile-link" href="#" target="_blank" rel="noopener" class="font-medium text-brand-600 hover:underline">{t.viewProfile}</a>
+          <button id="owner-logout" class="text-stone-500 hover:text-stone-700">{t.logout}</button>
+        </div>
+      </div>
+      <p id="owner-business-name" class="mt-1 text-sm text-stone-500"></p>
+    </div>
+
+    <div class={`mt-6 ${card}`}>
+      <h3 class="font-semibold text-stone-900">{t.services}</h3>
+      <p class="mt-1 text-sm text-stone-600">{t.servicesHint}</p>
+      <div id="owner-services" class="mt-4 space-y-3"></div>
+      <button id="owner-add-service" class={`${buttonSecondary} mt-3`}>{t.addService}</button>
+      <label class="block mt-5">
+        <span class="block text-sm font-medium text-stone-700 mb-1">{t.priceNote}</span>
+        <input id="owner-price-note" class={field} maxlength="120" placeholder={t.priceNotePlaceholder} />
+      </label>
+    </div>
+
+    <div class={`mt-6 ${card}`}>
+      <h3 class="font-semibold text-stone-900">{t.hours}</h3>
+      <p class="mt-1 text-sm text-stone-600">{t.hoursHint}</p>
+      <div class="mt-4 space-y-2">
+        {dayKeys.map((day) => (
+          <div class="flex items-center gap-3">
+            <span class="w-28 text-sm text-stone-500">{t.days[day]}</span>
+            <input id={`owner-hours-${day}`} class={field} placeholder="10:00-20:00" autocomplete="off" />
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class={`mt-6 ${card}`}>
+      <h3 class="font-semibold text-stone-900">{t.photos}</h3>
+      <p class="mt-1 text-sm text-stone-600">{t.photosHint}</p>
+      <div class="mt-4 flex flex-wrap gap-4">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <label class="flex items-center gap-2 text-sm text-stone-700">
+            <input id={`owner-photo-${i}`} type="checkbox" class="rounded border-stone-300" />
+            {t.photo} {i + 1}
+          </label>
+        ))}
+      </div>
+      <div class="mt-5 space-y-2">
+        {[0, 1, 2].map((i) => (
+          <label class="flex items-center gap-3">
+            <span class="w-28 text-sm text-stone-500">{t.ownPhoto} {i + 1}</span>
+            <input id={`owner-photo-url-${i}`} class={field} placeholder="https://…" autocomplete="off" />
+          </label>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <button id="owner-save" class={buttonPrimary}>{t.save}</button>
+      <button id="owner-reset" class={buttonSecondary}>{t.reset}</button>
+    </div>
+  </section>
+</div>
+
+<script define:vars={{ lang, t, dayKeys }}>
+  const APP = {
+    lang,
+    copy: t,
+    days: dayKeys,
+  };
+
+  const el = (id) => document.getElementById(id);
+  const state = {
+    business: '',
+    placeId: '',
+    slug: '',
+    name: '',
+    token: '',
+    override: null,
+    defaults: null,
+  };
+
+  const show = (id, visible) => el(id)?.classList.toggle('hidden', !visible);
+
+  function status(message, kind) {
+    const node = el('owner-status');
+    if (!node) return;
+    node.textContent = message || '';
+    node.className = message
+      ? `mt-6 p-4 rounded-lg text-sm ${kind === 'error' ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'}`
+      : 'hidden mt-6 p-4 rounded-lg text-sm';
+  }
+
+  async function api(path, options = {}) {
+    const headers = {};
+    if (options.body) headers['content-type'] = 'application/json';
+    if (options.token) headers['x-owner-session'] = options.token;
+    const response = await fetch(path, {
+      method: options.method || 'GET',
+      headers,
+      body: options.body ? JSON.stringify(options.body) : undefined,
+    });
+    let data = {};
+    try {
+      data = await response.json();
+    } catch {
+      data = {};
+    }
+    if (!response.ok) {
+      const error = new Error(data.message || data.error || `HTTP ${response.status}`);
+      error.status = response.status;
+      error.code = data.error;
+      throw error;
+    }
+    return data;
+  }
+
+  function remember() {
+    try {
+      localStorage.setItem(
+        APP.copy.storageKey,
+        JSON.stringify({ placeId: state.placeId, slug: state.slug, token: state.token }),
+      );
+    } catch {
+      /* private mode: the session simply does not persist */
+    }
+  }
+
+  function forget() {
+    try {
+      localStorage.removeItem(APP.copy.storageKey);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function recall() {
+    try {
+      const raw = localStorage.getItem(APP.copy.storageKey);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function addServiceRow(name = '', price = '') {
+    const row = document.createElement('div');
+    row.className = 'owner-service-row flex flex-wrap gap-2';
+    row.innerHTML = `
+      <input class="owner-service-name flex-1 min-w-[10rem] rounded-lg border border-stone-300 px-3 py-2 text-stone-900 focus:border-brand-500 focus:outline-none" placeholder="${APP.copy.serviceName}" />
+      <input class="owner-service-price w-28 rounded-lg border border-stone-300 px-3 py-2 text-stone-900 focus:border-brand-500 focus:outline-none" placeholder="${APP.copy.servicePrice}" />
+      <button type="button" class="owner-service-remove px-3 py-2 text-sm text-stone-500 hover:text-red-600">${APP.copy.remove}</button>
+    `;
+    row.querySelector('.owner-service-name').value = name;
+    row.querySelector('.owner-service-price').value = price;
+    row.querySelector('.owner-service-remove').addEventListener('click', () => row.remove());
+    el('owner-services').appendChild(row);
+  }
+
+  function collectServices() {
+    const rows = [...document.querySelectorAll('.owner-service-row')];
+    const services = [];
+    for (const row of rows) {
+      const name = row.querySelector('.owner-service-name').value.trim();
+      const price = row.querySelector('.owner-service-price').value.trim();
+      if (!name) continue;
+      services.push(price ? { name, price } : { name });
+    }
+    return services;
+  }
+
+  function fillForm(override, defaults) {
+    const services = override && override.services !== null
+      ? override.services
+      : (defaults?.services || []).map((name) => ({ name }));
+    el('owner-services').innerHTML = '';
+    if (services.length === 0) addServiceRow();
+    else services.forEach((service) => addServiceRow(service.name || '', service.price || ''));
+
+    el('owner-price-note').value = (override && override.priceNote) || '';
+    const hours = override && override.hours !== null ? override.hours : defaults?.hours || {};
+    APP.days.forEach((day) => {
+      el(`owner-hours-${day}`).value = (hours && hours[day]) || '';
+    });
+
+    const hidden = (override && override.hiddenPhotos) || [];
+    for (let i = 0; i < 5; i += 1) el(`owner-photo-${i}`).checked = !hidden.includes(i);
+
+    const added = (override && override.addedPhotos) || [];
+    for (let i = 0; i < 3; i += 1) el(`owner-photo-url-${i}`).value = added[i] || '';
+  }
+
+  async function loadDefaults(slug) {
+    if (!slug) return null;
+    try {
+      const response = await fetch('/data/businesses.json');
+      if (!response.ok) return null;
+      const list = await response.json();
+      return list.find((item) => item.slug === slug) || null;
+    } catch {
+      return null;
+    }
+  }
+
+  function openEditor(payload) {
+    state.placeId = payload.business.placeId;
+    state.slug = payload.business.slug || '';
+    state.name = payload.business.name || '';
+    state.override = payload.override || null;
+    show('owner-step-login', false);
+    show('owner-step-code', false);
+    show('owner-step-editor', true);
+    el('owner-business-name').textContent = state.name ? `${state.name} · /${state.slug}/` : `/${state.slug}/`;
+    el('owner-profile-link').href = `/nails/${state.slug}/`;
+    // The dashboard is shared by both categories; use the listing's own URL shape.
+    if (payload.business.category === 'massage') el('owner-profile-link').href = `/massage/${state.slug}/`;
+    if (APP.lang === 'en') {
+      el('owner-profile-link').href = `/en/nails/${state.slug}/`;
+      if (payload.business.category === 'massage') el('owner-profile-link').href = `/en/massage/${state.slug}/`;
+    }
+    fillForm(state.override, state.defaults);
+  }
+
+  async function withSession() {
+    const stored = recall();
+    if (!stored || !stored.placeId || !stored.token) return false;
+    state.placeId = stored.placeId;
+    state.token = stored.token;
+    state.slug = stored.slug || '';
+    try {
+      const payload = await api(`/api/owner/profile/${encodeURIComponent(state.placeId)}`, { token: state.token });
+      state.defaults = await loadDefaults(payload.business.slug);
+      openEditor(payload);
+      return true;
+    } catch (error) {
+      if (error.status === 401) forget();
+      return false;
+    }
+  }
+
+  async function sendCode() {
+    const business = el('owner-business').value.trim();
+    const email = el('owner-email').value.trim();
+    if (!business) return status(APP.copy.needBusiness, 'error');
+    if (!email) return status(APP.copy.needEmail, 'error');
+    status(APP.copy.working);
+    try {
+      const payload = await api('/api/owner/session', { method: 'POST', body: { business, email, lang: APP.lang } });
+      state.business = business;
+      state.placeId = payload.business?.placeId || '';
+      state.slug = payload.business?.slug || '';
+      state.name = payload.business?.name || '';
+      show('owner-step-code', true);
+      status(
+        payload.code
+          ? `Modo asistido (operador): el código es ${payload.code}`
+          : payload.sent
+            ? APP.copy.codeSent
+            : APP.copy.codeSent,
+        'ok',
+      );
+      el('owner-code')?.focus();
+    } catch (error) {
+      status(error.message, 'error');
+    }
+  }
+
+  async function verify() {
+    const code = el('owner-code').value.trim();
+    if (!code) return status(APP.copy.needCode, 'error');
+    status(APP.copy.working);
+    try {
+      // The place id returned by step 1 is the canonical key (slugs can repeat
+      // across duplicate Google listings), so prefer it for the code exchange.
+      const payload = await api('/api/owner/session/verify', {
+        method: 'POST',
+        body: { business: state.placeId || state.business || el('owner-business').value.trim(), code },
+      });
+      state.token = payload.token;
+      state.placeId = payload.business.placeId;
+      state.slug = payload.business.slug || '';
+      state.name = payload.business.name || '';
+      remember();
+      const profile = await api(`/api/owner/profile/${encodeURIComponent(state.placeId)}`, { token: state.token });
+      state.defaults = await loadDefaults(profile.business.slug);
+      openEditor(profile);
+      status(APP.copy.loginSaved, 'ok');
+    } catch (error) {
+      status(error.message, 'error');
+    }
+  }
+
+  async function save() {
+    if (!state.placeId) return;
+    status(APP.copy.working);
+    const body = {
+      services: collectServices(),
+      priceNote: el('owner-price-note').value.trim(),
+      hours: Object.fromEntries(APP.days.map((day) => [day, el(`owner-hours-${day}`).value.trim()])),
+      hiddenPhotos: [0, 1, 2, 3, 4].filter((i) => !el(`owner-photo-${i}`).checked),
+      addedPhotos: [0, 1, 2].map((i) => el(`owner-photo-url-${i}`).value.trim()).filter(Boolean),
+    };
+    try {
+      const payload = await api(`/api/owner/profile/${encodeURIComponent(state.placeId)}`, {
+        method: 'PUT',
+        token: state.token,
+        body,
+      });
+      state.override = payload.override;
+      fillForm(state.override, state.defaults);
+      status(APP.copy.saved, 'ok');
+    } catch (error) {
+      status(error.message, 'error');
+    }
+  }
+
+  async function reset() {
+    if (!state.placeId) return;
+    if (!confirm(APP.lang === 'en' ? 'Remove your edits and go back to the original data?' : '¿Quitar tus cambios y volver a los datos originales?')) return;
+    status(APP.copy.working);
+    try {
+      await api(`/api/owner/profile/${encodeURIComponent(state.placeId)}`, { method: 'DELETE', token: state.token });
+      state.override = null;
+      fillForm(null, state.defaults);
+      status(APP.copy.resetDone, 'ok');
+    } catch (error) {
+      status(error.message, 'error');
+    }
+  }
+
+  function logout() {
+    forget();
+    state.token = '';
+    state.placeId = '';
+    show('owner-step-login', true);
+    show('owner-step-code', false);
+    show('owner-step-editor', false);
+    status('');
+  }
+
+  el('owner-send-code')?.addEventListener('click', sendCode);
+  el('owner-resend')?.addEventListener('click', sendCode);
+  el('owner-verify')?.addEventListener('click', verify);
+  el('owner-add-service')?.addEventListener('click', () => addServiceRow());
+  el('owner-save')?.addEventListener('click', save);
+  el('owner-reset')?.addEventListener('click', reset);
+  el('owner-logout')?.addEventListener('click', logout);
+  el('owner-code')?.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') verify();
+  });
+
+  const params = new URLSearchParams(location.search);
+  const prefilled = params.get('b');
+  if (prefilled && el('owner-business')) el('owner-business').value = prefilled;
+
+  (async () => {
+    if (await withSession()) return;
+    show('owner-step-login', true);
+  })();
+</script>

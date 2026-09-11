@@ -1,0 +1,6 @@
+# Owner dashboard is a private surface: keep it out of the index.
+/gestion/*
+  X-Robots-Tag: noindex, nofollow
+
+/en/manage/*
+  X-Robots-Tag: noindex, nofollow

@@ -75,7 +75,8 @@ const schemaOrg = {
   <article class="max-w-3xl mx-auto px-4 py-12">
     <div class="bg-white rounded-xl border border-stone-200 p-6 md:p-8">
       <!-- Photo Gallery -->
-      <div class="photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory">
+      <!--owner:gallery-->
+        <div class="photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory">
         {[0, 1, 2, 3, 4].map(i => (
           <img
             src={`${galleryPath}-${i}.jpg`}
@@ -90,6 +91,7 @@ const schemaOrg = {
         ))}
       </div>
 
+      <!--/owner:gallery-->
       <div class="flex items-start justify-between gap-4 mb-6">
         <div>
           <h1 class="text-2xl font-bold text-stone-900">{data.name}</h1>
@@ -147,6 +149,7 @@ const schemaOrg = {
         </section>
       )}
 
+      <!--owner:services-->
       {data.services && data.services.length > 0 && (
         <section class="mb-8">
           <h2 class="text-lg font-semibold text-stone-900 mb-3">Servicios y precios</h2>
@@ -161,6 +164,9 @@ const schemaOrg = {
         </section>
       )}
 
+      <!--/owner:services-->
+
+      <!--owner:hours-->
       {data.hours && Object.keys(data.hours).length > 0 && (
         <section class="mb-8">
           <h2 class="text-lg font-semibold text-stone-900 mb-3">Horario</h2>
@@ -178,6 +184,8 @@ const schemaOrg = {
           </div>
         </section>
       )}
+
+      <!--/owner:hours-->
 
       {data.languages && data.languages.length > 0 && (
         <section class="mb-8">
