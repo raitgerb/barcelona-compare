@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Compare businesses side by side"
+  description="Compare nail salons and massage centers in Barcelona: Google ratings, reviews, opening hours, languages and services, side by side."
+  lang="en"
+>
+  <main class="max-w-6xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold text-stone-900">Compare</h1>
+    <p class="text-stone-500 mt-2">Pick 2–4 businesses from the lists and they show up here, side by side.</p>
+
+    <!-- populated by /js/compare.js -->
+    <div id="compare-root" class="mt-8"></div>
+  </main>
+  <script src="/js/compare.js" defer></script>
+</BaseLayout>

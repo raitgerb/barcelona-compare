@@ -204,6 +204,11 @@ const faqSchema = {
             <a href={`${basePath}/${category}/`} class="text-brand-600 hover:underline font-medium">{t.compare} {catLabel}</a>
           </p>
         )}
+        <p class="mt-2">
+          <a href={lang === 'en' ? '/en/compare/' : '/compare/'} class="text-brand-600 hover:underline font-medium">
+            {lang === 'en' ? 'Compare them side by side' : 'Compáralos lado a lado'}
+          </a>
+        </p>
       </div>
     </section>
   </main>

@@ -15,7 +15,9 @@ interface CompareItem { slug: string; name: string; cat: string; img: string }
   'use strict';
 
   // ---------- i18n ----------
-  var L = (document.documentElement.lang === 'en')
+  var LANG = (document.documentElement.lang === 'en') ? 'en' : 'es';
+  var COMPARE_PATH = LANG === 'en' ? '/en/compare/' : '/compare/';
+  var L = (LANG === 'en')
     ? {
         open: 'Open now', closed: 'Closed', compare: 'Compare', addCmp: 'Add to compare',
         trayEmpty: 'Pick 2–4 salons to compare', clear: 'Clear', view: 'Compare →',
@@ -77,7 +79,7 @@ interface CompareItem { slug: string; name: string; cat: string; img: string }
       '<div class="max-w-6xl mx-auto m-3 rounded-2xl bg-stone-900 text-white shadow-2xl px-4 py-3 flex items-center gap-3">' +
       '  <div id="bc-tray-items" class="flex-1 flex items-center gap-2 overflow-x-auto"></div>' +
       '  <button id="bc-tray-clear" class="text-xs text-stone-400 hover:text-white whitespace-nowrap">' + L.clear + '</button>' +
-      '  <a id="bc-tray-go" href="/compare" class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium whitespace-nowrap">' + L.view + '</a>' +
+      '  <a id="bc-tray-go" href="' + COMPARE_PATH + '" class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium whitespace-nowrap">' + L.view + '</a>' +
       '</div>';
     document.body.appendChild(tray);
     tray.querySelector('#bc-tray-clear')!.addEventListener('click', function () {
@@ -135,7 +137,7 @@ interface CompareItem { slug: string; name: string; cat: string; img: string }
     var tray = trayEl();
     var note = document.createElement('div');
     note.className = 'absolute -top-9 left-1/2 -translate-x-1/2 bg-stone-800 text-white text-xs px-3 py-1.5 rounded-lg shadow';
-    note.textContent = L.compare === 'Compare' ? 'Compare salons of the same category' : 'Compara negocios de la misma categoría';
+    note.textContent = LANG === 'en' ? 'Compare salons of the same category' : 'Compara negocios de la misma categoría';
     tray.querySelector('div')!.appendChild(note);
     setTimeout(function () { note.remove(); }, 2200);
   }

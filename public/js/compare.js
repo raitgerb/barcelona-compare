@@ -9,17 +9,20 @@
   if (!root) return;
 
   var lang = document.documentElement.lang === 'en' ? 'en' : 'es';
+  var base = lang === 'en' ? '/en' : '';
   var T = lang === 'en'
     ? { rating: 'Rating', reviews: 'Reviews', price: 'Price', hours: 'Hours', langs: 'Languages',
         services: 'Services', contact: 'Contact', empty: 'Nothing selected yet.',
         emptyHint: 'Browse nail salons or massages and tick "Compare" on the ones you like.',
         closed: 'Closed', today: 'Today', view: 'View', browseNails: 'Browse nail salons',
-        browseMassage: 'Browse massage centers', noData: 'Could not load business data.' }
+        browseMassage: 'Browse massage centers', noData: 'Could not load business data.',
+        remove: 'Remove' }
     : { rating: 'Valoración', reviews: 'Reseñas', price: 'Precio', hours: 'Horario', langs: 'Idiomas',
         services: 'Servicios', contact: 'Contacto', empty: 'Todavía no has seleccionado nada.',
         emptyHint: 'Explora salones de uñas o masajes y marca «Comparar» en los que te interesen.',
         closed: 'Cerrado', today: 'Hoy', view: 'Ver', browseNails: 'Ver salones de uñas',
-        browseMassage: 'Ver centros de masaje', noData: 'No se pudieron cargar los datos.' };
+        browseMassage: 'Ver centros de masaje', noData: 'No se pudieron cargar los datos.',
+        remove: 'Quitar' };
 
   var DAY_KEYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
   var DAYS = lang === 'en'
@@ -49,7 +52,7 @@
   }
 
   function detailPath(b) {
-    return b.cat === 'nails' ? '/nails/' + b.slug + '/' : '/massage/' + b.slug + '/';
+    return base + (b.cat === 'nails' ? '/nails/' + b.slug + '/' : '/massage/' + b.slug + '/');
   }
   function imgPath(b) {
     return '/images/' + b.cat + '/' + b.slug + '-0.jpg';
@@ -71,8 +74,8 @@
         '<p class="text-lg text-stone-700">' + T.empty + '</p>' +
         '<p class="text-sm text-stone-500 mt-1">' + T.emptyHint + '</p>' +
         '<div class="mt-6 flex gap-3 justify-center">' +
-        '<a href="/nails/" class="px-4 py-2 rounded-xl bg-accent-nails text-white text-sm font-medium">' + T.browseNails + '</a>' +
-        '<a href="/massage/" class="px-4 py-2 rounded-xl bg-accent-massage text-white text-sm font-medium">' + T.browseMassage + '</a>' +
+        '<a href="' + base + '/nails/" class="px-4 py-2 rounded-xl bg-accent-nails text-white text-sm font-medium">' + T.browseNails + '</a>' +
+        '<a href="' + base + '/massage/" class="px-4 py-2 rounded-xl bg-accent-massage text-white text-sm font-medium">' + T.browseMassage + '</a>' +
         '</div></div>';
       return;
     }
@@ -127,7 +130,7 @@
           '<details class="mt-4"><summary class="text-xs text-stone-500 hover:text-stone-700 cursor-pointer">' + T.hours + '</summary>' +
             '<div class="mt-2 space-y-0.5">' + hoursRows + '</div></details>' +
         '</div>' +
-        '<button class="cmp-remove m-4 mt-0 text-xs text-stone-400 hover:text-red-600" data-slug="' + esc(b.slug) + '">✕ Quitar</button>' +
+        '<button class="cmp-remove m-4 mt-0 text-xs text-stone-400 hover:text-red-600" data-slug="' + esc(b.slug) + '">✕ ' + T.remove + '</button>' +
       '</div>';
     }).join('');
 
