@@ -13,6 +13,7 @@ Living backlog. Update in place; mark shipped items with the commit hash.
 - ✅ **EN money pages** — `/en/mejores/{cat}/`, district, service and combo routes (shipped with ea9bbe0)
 - ✅ **EN barrio guides** — `/en/barrio/` hub + 10 district guides, EN nav + homepage + money-page cross-links (337c7b8)
 - ✅ **EN compare page + lang-aware tray** — `/en/compare/` mirrors `/compare/`; tray CTA, comparison detail links and browse buttons follow the page language; cross-linked from EN homepage + money pages (204d0ae, Sep 11)
+- ✅ **Business registry (B2B Phase 0)** — D1 `barcelona-compare-registry` keyed by `placeId`: claimed/verified flags, owner email, tier, claim dates + append-only audit trail; read/write path proven end to end through the deployed Pages Functions (ec0e017, Sep 11; `docs/business-registry.md`)
 - ✅ R2/CDN migration for images (July 2026)
 
 ---
@@ -26,11 +27,15 @@ what they're paying for.
 ### Phase 0 — Foundation (1 week, €0 to run)
 - **Claim flow with email verification.** "Claim this business" → owner enters email →
   6-digit code → `claimed` + `verified` flags on the record. Requires a small backend
-  (Cloudflare Pages Function + D1); site stays static.
-- **Business registry** keyed by `googlePlaceId`: claim status, owner email, tier,
-  claim date. JSON in a private repo or D1.
-- **Rewrite `/for-businesses`** into a real landing page: value prop, tier comparison,
-  FAQ, claim CTA. (Current page is a placeholder with a mailto line and "coming soon".)
+  (Cloudflare Pages Function + D1); site stays static. **Unblocked** — the registry
+  data layer (`functions/_lib/registry.ts`) already exposes `claimBusiness()` /
+  `verifyBusiness()`; the card only has to add the 6-digit code step.
+- ✅ **Business registry** keyed by `googlePlaceId`: claim status, owner email, tier,
+  claim date — D1 `barcelona-compare-registry` + Pages Functions API
+  (`GET`/`PUT /api/registry`), audit trail, 42-assertion smoke test
+  (ec0e017, Sep 11; `docs/business-registry.md`).
+- ✅ **Rewrite `/for-businesses`** into a real landing page: value prop, tier comparison,
+  FAQ, claim CTA (466df13, Sep 11).
 
 ### Phase 1 — Free tier (2–3 weeks)
 - **Verified badge** on detail + listing + money pages (trust for them, conversion for us).
