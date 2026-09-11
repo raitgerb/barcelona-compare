@@ -36,9 +36,12 @@ what they're paying for.
   `RESEND_API_KEY` + `EMAIL_FROM` are set as Pages secrets; until a provider key exists the code
   waits in the operator outbox (`GET /api/claim/outbox`, admin token) and a human hands it over.
   The owner-facing UI covers that case ("if the code does not arrive, write to us").
-- **Claim CTA on the listing itself (open).** Detail pages still have no "¿Gestionas este
-  negocio? Reclámalo" link — the flow is reachable from `/for-businesses` only. The deep link
-  `/reclamar/?place=<placeId>` is already live for those pages.
+- ✅ **Claim CTA on the listing itself** — all four detail templates (nails + massage, ES + EN)
+  carry `ClaimCta.astro`: inline under the business name (the same block as the verified badge,
+  so a verified listing shows the badge and no claim link) and as the banner at the end of the
+  page. It deep-links `/reclamar/?place=<placeId>` / `/en/claim-business/?place=<placeId>`, which
+  `ClaimFlow` resolves against the build catalog and hides the search step for
+  (c0802c0, Sep 12; `docs/claim-flow.md`).
 - ✅ **Business registry** keyed by `googlePlaceId`: claim status, owner email, tier,
   claim date — D1 `barcelona-compare-registry` + Pages Functions API
   (`GET`/`PUT /api/registry`), audit trail, 42-assertion smoke test

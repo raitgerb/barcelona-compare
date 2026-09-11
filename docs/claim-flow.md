@@ -142,12 +142,33 @@ verifications leave no trace in `businesses`, and that a correct code writes
 production and deletes its own rows. If an email transport is configured the test
 sends real mail — pass `SMOKE_EMAIL=you@example.com`.
 
+## Entry points on the listing pages
+
+`src/components/ClaimCta.astro` is where an owner enters the flow from the listing
+they are looking at (c0802c0, Sep 12). It renders on all four detail templates
+(`nails` + `massage`, ES + EN) and deep-links with the business already selected:
+
+| locale | href |
+| --- | --- |
+| ES | `/reclamar/?place=<googlePlaceId>` |
+| EN | `/en/claim-business/?place=<placeId>` |
+
+Two placements per template, and they read as one block with the verified badge:
+
+- **inline**, under the business name where the badge lives — `VerifiedBadge` when the
+  business is verified, "¿Gestionas este negocio? Reclámalo gratis →" when it is not
+- **banner**, at the end of the page: "¿Eres el dueño de <name>?" + the free/no-commitment note
+
+A **verified listing never shows a claim CTA** — that slot holds the "gestionado por el
+negocio" note instead, so a claim link can never invite a second owner onto a taken
+listing (the flow would answer `already_claimed` / the "already" screen anyway). A
+missing `placeId` falls back to `/for-businesses`; in practice every listing carries one
+(1,182 of 1,182 markdown files), which is also exactly the set in `/data/claim-index.json`,
+so **catalog membership and "has a placeId" are the same condition** — the deep link
+resolves for every business the CTA is rendered on.
+
 ## Not in this card
 
-- A "Claim this business" deep link (`?place=`) on the listing pages: the links
-  there currently point at `/for-businesses`. The claim page works without it
-  (search by name/street); wiring the deep link is follow-up work on the listing
-  templates, which the badge card is editing.
 - Self-service editing of services/prices/photos (Phase 1), the verified badge
   (Phase 1) and paid tiers (Phase 2).
 - Cloudflare rate limiting in front of `/api/claim/start`: the per-email and
