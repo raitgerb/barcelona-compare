@@ -15,13 +15,25 @@ export function errorJson(code: string, message: string, status: number): Respon
   return json({ ok: false, error: code, message }, status, { 'cache-control': 'no-store' });
 }
 
-/** Turn any thrown value into a JSON response, without leaking internals. */
+/**
+ * Turn any thrown value into a JSON response, without leaking internals.
+ * Both `RegistryError` (registry) and `EventError` (analytics) carry a machine-readable
+ * `code` and an HTTP `status`; anything else is an unexpected failure.
+ */
 export function errorResponse(error: unknown): Response {
   if (error instanceof RegistryError) {
     return errorJson(error.code, error.message, error.status);
   }
-  console.error('registry: unhandled error', error);
-  return errorJson('internal_error', 'registry write failed', 500);
+  if (error instanceof Error && error.name === 'EventError') {
+    const coded = error as Error & { code?: unknown; status?: unknown };
+    return errorJson(
+      typeof coded.code === 'string' ? coded.code : 'invalid_query',
+      error.message,
+      typeof coded.status === 'number' ? coded.status : 400,
+    );
+  }
+  console.error('api: unhandled error', error);
+  return errorJson('internal_error', 'request failed', 500);
 }
 
 export function methodNotAllowed(allow: string): Response {

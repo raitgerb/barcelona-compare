@@ -12,7 +12,8 @@
     "astro": "astro",
     "db:migrate:local": "npx --yes wrangler d1 migrations apply barcelona-compare-registry --local",
     "db:migrate:remote": "npx --yes wrangler d1 migrations apply barcelona-compare-registry --remote",
-    "registry:smoke": "bash scripts/registry-smoke.sh"
+    "registry:smoke": "bash scripts/registry-smoke.sh",
+    "analytics:smoke": "bash scripts/analytics-smoke.sh"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

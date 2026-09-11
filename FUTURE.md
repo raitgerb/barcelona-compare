@@ -14,6 +14,7 @@ Living backlog. Update in place; mark shipped items with the commit hash.
 - ✅ **EN barrio guides** — `/en/barrio/` hub + 10 district guides, EN nav + homepage + money-page cross-links (337c7b8)
 - ✅ **EN compare page + lang-aware tray** — `/en/compare/` mirrors `/compare/`; tray CTA, comparison detail links and browse buttons follow the page language; cross-linked from EN homepage + money pages (204d0ae, Sep 11)
 - ✅ **Business registry (B2B Phase 0)** — D1 `barcelona-compare-registry` keyed by `placeId`: claimed/verified flags, owner email, tier, claim dates + append-only audit trail; read/write path proven end to end through the deployed Pages Functions (ec0e017, Sep 11; `docs/business-registry.md`)
+- ✅ **Per-business event tracking** — first-party, cookie-less counters for detail-page views + outbound clicks (phone, WhatsApp, website, directions), D1 `business_events` keyed by `placeId` and aggregated at write time; machine-readable read path `GET /api/analytics[/:placeId]` behind the registry admin token, plus a "Cómo llegar" / "Get directions" CTA on all four detail-page templates (`docs/business-analytics.md`)
 - ✅ R2/CDN migration for images (July 2026)
 
 ---
@@ -48,7 +49,9 @@ what they're paying for.
 - **Pro (~€15–25/mo)**: disclosed priority placement in the Bayesian ranking, expanded
   photo gallery, service-page featuring, verified slots on money pages.
 - **Partner analytics by email** — monthly profile views + clicks. No login; owners are
-  non-technical.
+  non-technical. **Unblocked**: the data source is live (first-party counters per business,
+  `docs/business-analytics.md`) and the job reads it with `GET /api/analytics?month=YYYY-MM`
+  (admin token), joining `GET /api/registry?status=claimed` for owner emails.
 - **Billing**: Stripe Payment Links (no dashboard build).
 
 ### Phase 3 — Ecosystem (later)
@@ -57,7 +60,9 @@ what they're paying for.
 - "What clients say about you" — expose the review-keyword engine as a partner-facing asset.
 
 ### Open questions
-- Traffic numbers from Cloudflare Web Analytics before setting price points.
+- Traffic numbers before setting price points: both sources are readable from the CLI now —
+  `GET /api/analytics` (exact first-party counters per business) and the Cloudflare RUM API
+  per path (sample-weighted, multiples of 10 — see `docs/business-analytics.md`).
 - Does the verified badge need to be visible enough to sell the paid tier? (Probably yes.)
 
 ---

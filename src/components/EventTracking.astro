@@ -1,0 +1,75 @@
+---
+/**
+ * First-party, cookie-less event tracking for one business detail page (B2B analytics).
+ *
+ * Renders an inline script that:
+ *   1. sends one `view` event for the business, and
+ *   2. delegates clicks on any `[data-track-event]` element (the phone / WhatsApp /
+ *      website / directions CTAs) as `click_*` events.
+ *
+ * Events go to POST /api/track with navigator.sendBeacon() (fetch keepalive fallback)
+ * and land as counters in D1 — no cookies, no localStorage, no fingerprinting, no PII.
+ * Nothing runs when the visitor has Do Not Track / Global Privacy Control set, when the
+ * browser is automated, or when the user agent looks like a bot/preview crawler.
+ *
+ * The script is inline on purpose: it is ~1 KB, it must not depend on another request
+ * before the first navigation away, and only detail pages include it.
+ *
+ * Docs: docs/business-analytics.md
+ */
+interface Props {
+  /** Google Places ID of the business this page is about (`data.googlePlaceId`). */
+  placeId: string;
+}
+
+const { placeId } = Astro.props;
+---
+
+{placeId && (
+  <script define:vars={{ placeId }}>
+    (function () {
+      var ENDPOINT = '/api/track';
+      var nav = window.navigator || {};
+
+      if (!placeId) return;
+      // Respect explicit privacy signals and never count automated traffic.
+      if (nav.doNotTrack === '1' || nav.globalPrivacyControl === true || nav.webdriver) return;
+      if (/(bot|crawler|spider|headless|preview|lighthouse|pingdom|uptime|monitor)/i.test(nav.userAgent || '')) return;
+
+      function send(type) {
+        var payload = JSON.stringify({ placeId: placeId, type: type });
+        if (nav.sendBeacon) {
+          try {
+            if (nav.sendBeacon(ENDPOINT, new Blob([payload], { type: 'application/json' }))) return;
+          } catch (err) {
+            /* fall through to fetch */
+          }
+        }
+        if (window.fetch) {
+          window.fetch(ENDPOINT, {
+            method: 'POST',
+            body: payload,
+            headers: { 'content-type': 'application/json' },
+            keepalive: true,
+            credentials: 'omit',
+          }).catch(function () {});
+        }
+      }
+
+      send('view');
+
+      // Capture phase: the handler still runs when the click navigates away (tel:, wa.me).
+      document.addEventListener(
+        'click',
+        function (event) {
+          var target = event.target;
+          var el = target && target.closest ? target.closest('[data-track-event]') : null;
+          if (!el) return;
+          var type = el.getAttribute('data-track-event');
+          if (type) send(type);
+        },
+        true,
+      );
+    })();
+  </script>
+)}

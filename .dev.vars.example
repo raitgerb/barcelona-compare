@@ -1,4 +1,8 @@
 # Copy to .dev.vars (gitignored) for local `wrangler pages dev`.
 # In production this lives in the Pages project as an encrypted secret:
 # Settings → Variables and secrets → REGISTRY_ADMIN_TOKEN (type: Secret).
+#
+# Guards registry writes (PUT /api/registry/:placeId) and analytics reads
+# (GET /api/analytics, GET /api/analytics/:placeId). The public write path
+# POST /api/track needs no token.
 REGISTRY_ADMIN_TOKEN=local-dev-token
