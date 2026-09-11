@@ -54,8 +54,13 @@ what they're paying for.
   operator takedown/restore, audit trail; the claim confirmation screen now links
   straight into the panel (4c8b978, Sep 11; `docs/owner-profile-edits.md`;
   63-assertion smoke test, green against production).
-- **WhatsApp / booking CTA upgrade** — only 9 of 1,182 businesses currently have a
-  WhatsApp link. This market books on WhatsApp; this is the highest-impact free perk.
+- ✅ **WhatsApp / booking CTA** — detail pages lead with a full-width "Reservar por
+  WhatsApp" button above the phone/website row, and the number is normalised to
+  `wa.me` digits (the old code emitted `wa.me/640793674`, a dead link for all 9
+  listings that had the field). Owners add theirs in `/gestion/` (new *Contacto*
+  card; `profile_overrides.whatsapp`, migration 0005) and the edge injector puts the
+  button on their listing within a minute; clicks land in `click_whatsapp` counters
+  (56c4e83, Sep 11; `docs/whatsapp-cta.md`; 75-assertion owner smoke).
 
 ### Phase 2 — Paid tier (after ~20 claimed partners)
 - **Pro (~€15–25/mo)**: disclosed priority placement in the Bayesian ranking, expanded
