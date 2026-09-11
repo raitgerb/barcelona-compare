@@ -1,29 +1,338 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// --- Claim CTA ---------------------------------------------------------------
+// Today the claim flow is email-based (works with zero backend). When the
+// Phase 0 claim flow (verification code + business registry) ships, swap
+// `claimHref` below for the in-site claim route and keep the mailto as the
+// fallback link. Nothing else on this page depends on the CTA target.
+const CLAIM_EMAIL = 'hola@barcelonacompare.com';
+const claimSubject = 'I want to claim my business on Barcelona Compare';
+const claimBody = [
+  'Hi,',
+  '',
+  'I want to claim my business on Barcelona Compare.',
+  '',
+  'Business name:',
+  'Category (nails / massage):',
+  'Address:',
+  'Phone:',
+  'Website:',
+  '',
+  'Thanks.',
+].join('\n');
+const claimHref = `mailto:${CLAIM_EMAIL}?subject=${encodeURIComponent(claimSubject)}&body=${encodeURIComponent(claimBody)}`;
+
+// Real numbers, computed from the content collections at content-editing time
+// (646 nails + 536 massage = 1,182 listings, 154,793 Google reviews).
+const STATS = { businesses: '1,182', reviews: '154,793', districts: 10, avg: '4.7' };
+
+const exampleHref = '/en/massage/abby-masaje-spa/';
+
+const valuePoints = [
+  {
+    title: 'You show up where people already search',
+    body: 'Your listing appears in the nail and massage lists, in all 10 district guides and in the “best of” pages, ordered by what your customers actually rated you on Google.',
+  },
+  {
+    title: 'Correct details, not whatever Google still has',
+    body: 'Many listings show the opening hours, phone or website Google Maps has kept for years. If something has changed, tell us and we fix it.',
+  },
+  {
+    title: 'Direct contact, no commissions',
+    body: 'Phone, website and WhatsApp. We do not handle bookings and we take no cut per customer: whoever writes to you, writes to you.',
+  },
+  {
+    title: 'Local customers and visitors',
+    body: 'The whole site is in Spanish and English, with services and reviews in both languages. You reach the neighbour in Gràcia and the visitor searching in Poblenou.',
+  },
+];
+
+const tiers = [
+  {
+    key: 'free',
+    name: 'Free listing',
+    price: '€0',
+    status: 'Live now',
+    tone: 'live',
+    blurb: 'The listing you already have, built from public Google Maps data and with your direct contact links.',
+  },
+  {
+    key: 'claimed',
+    name: 'Claimed',
+    price: '€0',
+    status: 'Coming soon',
+    tone: 'soon',
+    blurb: 'We confirm you own the business and hand you control of your listing, plus the verified badge.',
+  },
+  {
+    key: 'pro',
+    name: 'Pro',
+    price: 'Price to be confirmed',
+    status: 'In development',
+    tone: 'later',
+    blurb: 'Extra visibility for the most competitive searches. Not on sale yet: claimed businesses get access first.',
+  },
+];
+
+// y = included, n = not included
+const features: Array<{ label: string; v: Array<'y' | 'n'> }> = [
+  { label: 'Appear in the nail and massage lists, district guides and “best of” pages', v: ['y', 'y', 'y'] },
+  { label: 'Opening hours, address, phone, website and photos', v: ['y', 'y', 'y'] },
+  { label: 'Aggregated Google rating and reviews', v: ['y', 'y', 'y'] },
+  { label: 'Direct contact (phone, website) with no per-customer commission', v: ['y', 'y', 'y'] },
+  { label: 'Verified business badge', v: ['n', 'y', 'y'] },
+  { label: 'Edit your own services, prices, photos and hours', v: ['n', 'y', 'y'] },
+  { label: 'WhatsApp button so clients message you directly', v: ['n', 'y', 'y'] },
+  { label: 'Expanded photo gallery', v: ['n', 'n', 'y'] },
+  { label: 'Featured position in the rankings, always marked as sponsored', v: ['n', 'n', 'y'] },
+  { label: 'Monthly stats by email (views and clicks)', v: ['n', 'n', 'y'] },
+];
+
+const faqs = [
+  {
+    q: 'How much does it cost to be listed on Barcelona Compare?',
+    a: 'Nothing. The basic listing is free and will stay free: we charge neither for being listed nor for the contacts you receive. The Pro plan is in development and cannot be bought yet.',
+  },
+  {
+    q: 'How do I claim my business?',
+    a: `Email us at ${CLAIM_EMAIL} with the business name and address. We confirm you are the owner or the person responsible and activate the profile, usually within 2-3 business days. We are building a claim flow with an email verification code so you can do it all from here.`,
+  },
+  {
+    q: 'Can I change my prices, services or opening hours?',
+    a: 'Yes. Send us the list and we publish it. Today most listings show no prices at all: if you send yours, they will appear on your listing. Once your profile is claimed you will be able to edit them yourself.',
+  },
+  {
+    q: 'Do you take a commission on bookings from the site?',
+    a: 'There are no bookings to take a commission on: we do not manage appointments and charge nothing per customer. Clients call you, message you on WhatsApp or go straight to your website.',
+  },
+  {
+    q: 'My business is not in the directory. What now?',
+    a: 'Email us the name and address. We cover 1,182 Barcelona businesses: if yours is a nail salon or a massage centre and is missing, we add it for free.',
+  },
+  {
+    q: 'Can I ask you to remove my business?',
+    a: 'Yes. Email us and we take it out of the directory within 2-3 business days. You do not have to give a reason.',
+  },
+  {
+    q: 'Where do the ratings and reviews come from?',
+    a: 'From Google Maps, and they always appear attributed to Google. We do not publish our own reviews and we cannot edit or delete the ones you already have on Google.',
+  },
+  {
+    q: 'Can I pay to rank higher?',
+    a: 'No position is for sale today. When we launch the Pro plan, featured placements will always be marked as sponsored and will never change the real customer rating, which stays the thing that decides the order.',
+  },
+  {
+    q: 'Something on my listing is wrong.',
+    a: 'We build listings from public Google Maps data. If you spot a mistake, tell us and we fix it; once the profile is claimed you will be able to edit it yourself.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(f => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const mark = (v: 'y' | 'n') => (v === 'y' ? '✓' : '—');
 ---
 
 <BaseLayout
   title="For businesses"
-  description="List your nail salon or massage center for free on Barcelona Compare. Reach more clients."
+  description={`Claim your free listing on Barcelona Compare: fix your details, add services and prices, and reach the people searching for nail salons and massage centres in Barcelona. ${STATS.businesses} businesses listed.`}
   lang="en"
 >
-  <div class="max-w-2xl mx-auto px-4 py-16">
-    <h1 class="text-3xl font-bold text-stone-900 mb-6">List your business for free</h1>
-    <div class="bg-brand-50 rounded-xl border border-brand-100 p-6 mb-8">
-      <p class="text-stone-700 leading-relaxed">Own a nail salon or massage center in Barcelona? Add your business for free and reach more clients looking for exactly what you offer.</p>
-    </div>
-    <div class="space-y-6 text-stone-600">
-      <h2 class="text-xl font-semibold text-stone-900">What's included?</h2>
-      <ul class="space-y-3">
-        <li class="flex gap-3"><span class="text-brand-500 font-bold shrink-0">✓</span><span>Name, address, and contact info</span></li>
-        <li class="flex gap-3"><span class="text-brand-500 font-bold shrink-0">✓</span><span>Services and price list</span></li>
-        <li class="flex gap-3"><span class="text-brand-500 font-bold shrink-0">✓</span><span>Aggregated Google Maps rating</span></li>
-        <li class="flex gap-3"><span class="text-brand-500 font-bold shrink-0">✓</span><span>Hours, languages, and photos</span></li>
-        <li class="flex gap-3"><span class="text-brand-500 font-bold shrink-0">✓</span><span>Link to your website, WhatsApp, and phone</span></li>
-      </ul>
-      <h2 class="text-xl font-semibold text-stone-900 mt-8">How to get listed</h2>
-      <p>Email us at <strong>hola@barcelonacompare.com</strong> with your business details and we'll add you. Takes 2-3 business days.</p>
-      <p class="text-sm text-stone-400 mt-8">For now, profiles are managed manually. Self-service dashboard coming soon.</p>
-    </div>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <nav class="text-sm text-stone-500 mb-6" aria-label="breadcrumb">
+      <a href="/en" class="hover:text-stone-700">Home</a>
+      <span class="mx-1.5 text-stone-300">/</span>
+      <span class="text-stone-700 font-medium">For businesses</span>
+    </nav>
+
+    <header>
+      <h1 class="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">
+        Put your salon or centre in front of the people looking for it
+      </h1>
+      <p class="mt-4 text-lg text-stone-600 leading-relaxed">
+        Barcelona Compare brings together <strong>{STATS.businesses} nail salons and massage centres</strong> in the city.
+        Claim your listing for free, fix what Google has wrong and appear the way you want customers to see you.
+      </p>
+
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <a
+          href={claimHref}
+          class="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors"
+        >
+          Claim my business for free
+        </a>
+        <a
+          href={exampleHref}
+          class="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-stone-300 text-stone-700 font-medium hover:border-stone-400 hover:text-stone-900 transition-colors"
+        >
+          See an example listing →
+        </a>
+      </div>
+      <p class="mt-3 text-sm text-stone-500">
+        Or email us directly at <strong class="text-stone-700">{CLAIM_EMAIL}</strong> · reply within 2-3 business days
+      </p>
+
+      <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 p-5 rounded-xl bg-white border border-stone-200">
+        <div>
+          <dt class="text-xs text-stone-500">Businesses listed</dt>
+          <dd class="text-2xl font-bold text-stone-900">{STATS.businesses}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-stone-500">Google reviews</dt>
+          <dd class="text-2xl font-bold text-stone-900">{STATS.reviews}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-stone-500">Districts covered</dt>
+          <dd class="text-2xl font-bold text-stone-900">{STATS.districts}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-stone-500">Average rating</dt>
+          <dd class="text-2xl font-bold text-stone-900">{STATS.avg}★</dd>
+        </div>
+      </dl>
+    </header>
+
+    <section class="mt-14">
+      <h2 class="text-2xl font-bold text-stone-900">What claiming your listing gets you</h2>
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {valuePoints.map(p => (
+          <div class="p-5 rounded-xl bg-white border border-stone-200">
+            <h3 class="font-semibold text-stone-900">{p.title}</h3>
+            <p class="mt-2 text-sm text-stone-600 leading-relaxed">{p.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="text-2xl font-bold text-stone-900">How it works</h2>
+      <ol class="mt-6 space-y-4">
+        <li class="flex gap-4 p-5 rounded-xl bg-white border border-stone-200">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">1</span>
+          <div>
+            <h3 class="font-semibold text-stone-900">Find your business in the directory</h3>
+            <p class="mt-1 text-sm text-stone-600">Search your name or street in the <a href="/en/nails" class="text-brand-600 hover:underline">nail</a> and <a href="/en/massage" class="text-brand-600 hover:underline">massage</a> lists. If you are not there, tell us and we add you for free.</p>
+          </div>
+        </li>
+        <li class="flex gap-4 p-5 rounded-xl bg-white border border-stone-200">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">2</span>
+          <div>
+            <h3 class="font-semibold text-stone-900">Email us to claim it</h3>
+            <p class="mt-1 text-sm text-stone-600">One email with the business name and address. We confirm you are the owner or the person responsible before we touch anything.</p>
+          </div>
+        </li>
+        <li class="flex gap-4 p-5 rounded-xl bg-white border border-stone-200">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">3</span>
+          <div>
+            <h3 class="font-semibold text-stone-900">Your listing goes live updated</h3>
+            <p class="mt-1 text-sm text-stone-600">We publish the changes within 2-3 business days. No fees, no contracts and no exclusivity: every business keeps being compared on the same terms.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="text-2xl font-bold text-stone-900">Compare the plans</h2>
+      <p class="mt-2 text-stone-600">
+        The listing is free and stays free. The Pro plan is in development and cannot be bought yet.
+      </p>
+
+      <div class="hidden md:block mt-6 overflow-hidden rounded-xl border border-stone-200 bg-white">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-stone-50 border-b border-stone-200">
+              <th class="text-left font-semibold text-stone-700 p-4 w-1/2">What's included</th>
+              {tiers.map(t => (
+                <th class="text-center p-4 align-top">
+                  <span class="block font-bold text-stone-900">{t.name}</span>
+                  <span class="block mt-1 text-xs font-normal text-stone-500">{t.price}</span>
+                  <span class={`inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full ${t.tone === 'live' ? 'bg-green-50 text-green-700 border border-green-200' : t.tone === 'soon' ? 'bg-brand-50 text-brand-700 border border-brand-200' : 'bg-stone-100 text-stone-500 border border-stone-200'}`}>
+                    {t.status}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {features.map(f => (
+              <tr class="border-b border-stone-100 last:border-0">
+                <td class="p-4 text-stone-600">{f.label}</td>
+                {f.v.map(m => (
+                  <td class={`p-4 text-center font-bold ${m === 'y' ? 'text-brand-600' : 'text-stone-300'}`}>{mark(m)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="md:hidden mt-6 space-y-4">
+        {tiers.map((t, i) => (
+          <div class="p-5 rounded-xl bg-white border border-stone-200">
+            <div class="flex items-baseline justify-between gap-3">
+              <h3 class="font-bold text-stone-900">{t.name}</h3>
+              <span class="text-sm text-stone-500">{t.price}</span>
+            </div>
+            <span class={`inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full ${t.tone === 'live' ? 'bg-green-50 text-green-700 border border-green-200' : t.tone === 'soon' ? 'bg-brand-50 text-brand-700 border border-brand-200' : 'bg-stone-100 text-stone-500 border border-stone-200'}`}>
+              {t.status}
+            </span>
+            <p class="mt-3 text-sm text-stone-600">{t.blurb}</p>
+            <ul class="mt-3 space-y-1.5 text-sm">
+              {features.map(f => (
+                <li class={`flex gap-2 ${f.v[i] === 'y' ? 'text-stone-700' : 'text-stone-400'}`}>
+                  <span class={`shrink-0 font-bold ${f.v[i] === 'y' ? 'text-brand-600' : 'text-stone-300'}`}>{mark(f.v[i])}</span>
+                  <span>{f.label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="text-2xl font-bold text-stone-900">Frequently asked questions</h2>
+      <div class="mt-6 divide-y divide-stone-200 rounded-xl border border-stone-200 bg-white">
+        {faqs.map(f => (
+          <details class="group p-5">
+            <summary class="flex items-start justify-between gap-4 cursor-pointer font-semibold text-stone-900 list-none">
+              <span>{f.q}</span>
+              <span class="shrink-0 text-stone-400 group-open:rotate-45 transition-transform">+</span>
+            </summary>
+            <p class="mt-3 text-sm text-stone-600 leading-relaxed">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-14 p-8 rounded-2xl bg-brand-50 border border-brand-100 text-center">
+      <h2 class="text-2xl font-bold text-stone-900">Claim your listing for free</h2>
+      <p class="mt-2 text-stone-600 max-w-xl mx-auto">
+        Send us your business name and address. We confirm you are the owner and publish the changes within 2-3 business days.
+      </p>
+      <a
+        href={claimHref}
+        class="inline-flex items-center gap-2 mt-5 px-6 py-3 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors"
+      >
+        Claim my business
+      </a>
+      <p class="mt-4 text-sm text-stone-600">
+        Or email us at <a href={claimHref} class="font-semibold text-brand-700 hover:underline">{CLAIM_EMAIL}</a>
+      </p>
+      <p class="mt-4 text-xs text-stone-500">
+        Barcelona Compare is an independent aggregator and is not affiliated with Google. Ratings come from Google Maps.
+        Want to know how we handle the data? <a href="/en/about" class="underline">How the site works</a>.
+      </p>
+    </section>
   </div>
 </BaseLayout>
