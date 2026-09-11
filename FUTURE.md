@@ -12,6 +12,7 @@ Living backlog. Update in place; mark shipped items with the commit hash.
 - ✅ **Review keywords** — bilingual keyword chips mined from Google reviews, 912 pages (337c7b8)
 - ✅ **EN money pages** — `/en/mejores/{cat}/`, district, service and combo routes (shipped with ea9bbe0)
 - ✅ **EN barrio guides** — `/en/barrio/` hub + 10 district guides, EN nav + homepage + money-page cross-links (337c7b8)
+- ✅ **EN compare page + lang-aware tray** — `/en/compare/` mirrors `/compare/`; tray CTA, comparison detail links and browse buttons follow the page language; cross-linked from EN homepage + money pages (204d0ae, Sep 11)
 - ✅ R2/CDN migration for images (July 2026)
 
 ---
@@ -56,13 +57,13 @@ what they're paying for.
 
 ---
 
-## 2. EN compare page + tray link bug — **priority 2, small**
+## 2. EN compare page + tray link bug — ✅ SHIPPED (204d0ae, Sep 11)
 
-- `/en/compare/` **does not exist** — request returns the homepage (soft-404, canonical `/`).
-  ES `/compare/` works. Build the EN mirror of `src/pages/compare.astro`.
-- **Bug**: the compare tray in `src/scripts/listing.ts` hardcodes `href="/compare"`, so on
-  EN pages it sends users to the Spanish page. Should respect `document.documentElement.lang`.
-- Cross-link the EN compare page from EN money pages and the EN homepage.
+- `/en/compare/` now exists (`src/pages/en/compare.astro`) — 200, `lang="en"`, canonical `/en/compare/`, hreflang both ways.
+- Tray CTA in `src/scripts/listing.ts` and the detail/browse paths in `public/js/compare.js` derive
+  from `document.documentElement.lang` (`/en/compare/` + `/en/{cat}/{slug}/` on EN pages).
+- Cross-linked from the EN homepage hero, EN money hubs (`/en/mejores/{cat}/`) and every
+  money-page leaf (ES surfaces got the same link for parity).
 
 ## 3. Catalan locale — priority 3
 
