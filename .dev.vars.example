@@ -1,0 +1,4 @@
+# Copy to .dev.vars (gitignored) for local `wrangler pages dev`.
+# In production this lives in the Pages project as an encrypted secret:
+# Settings → Variables and secrets → REGISTRY_ADMIN_TOKEN (type: Secret).
+REGISTRY_ADMIN_TOKEN=local-dev-token

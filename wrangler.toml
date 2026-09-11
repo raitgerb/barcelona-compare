@@ -1,0 +1,22 @@
+# Wrangler configuration for the Pages Functions in `functions/`.
+#
+# LOCAL DEVELOPMENT ONLY — this file deliberately does NOT set
+# `pages_build_output_dir`, so Wrangler uses it for `wrangler pages dev` while the
+# deployed Pages project keeps using the dashboard configuration (build command,
+# output dir, env vars/secrets). Adding `pages_build_output_dir` would make this
+# file the source of truth for the whole Pages project — including env vars — and
+# would drop the dashboard-managed GOOGLE_PLACES_API_KEY / R2_IMAGE_BASE_URL.
+#
+# The deployed Functions get the D1 binding from the Pages project settings
+# (Settings → Functions → D1 database bindings), not from here.
+#
+# See docs/business-registry.md.
+
+name = "barcelona-compare"
+compatibility_date = "2026-06-13"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "barcelona-compare-registry"
+database_id = "ca91d4f4-d44d-4163-9f5b-7db0464ef446"
+migrations_dir = "migrations"
