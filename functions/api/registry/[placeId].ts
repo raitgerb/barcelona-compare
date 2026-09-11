@@ -7,6 +7,10 @@
 //                  functions/_lib/registry.ts directly — this endpoint is the
 //                  operator path (manual claims, tier upgrades, revocations).
 //
+// A write that actually changes verification state queues a production rebuild
+// (functions/_lib/rebuild.ts) so the static badge HTML refreshes; send
+// `"rebuild": false` to suppress it (bulk ops, smoke runs against production).
+//
 // Docs: docs/business-registry.md
 
 import {
@@ -29,6 +33,7 @@ import {
   verifyBusiness,
   isTier,
 } from '../../_lib/registry';
+import { queueRebuild } from '../../_lib/rebuild';
 
 function placeIdFrom(params: Record<string, string | string[]>): string {
   const value = params.placeId;
@@ -62,7 +67,8 @@ export const onRequestGet: PagesFunction = async ({ request, params, env }) => {
   }
 };
 
-export const onRequestPut: PagesFunction = async ({ request, params, env }) => {
+export const onRequestPut: PagesFunction = async (context) => {
+  const { request, params, env } = context;
   try {
     if (!(await isAdminRequest(request, env.REGISTRY_ADMIN_TOKEN))) {
       return errorJson(
@@ -76,6 +82,10 @@ export const onRequestPut: PagesFunction = async ({ request, params, env }) => {
     const body = await readJsonObject(request);
     const op = typeof body.op === 'string' ? body.op : '';
     const actor = typeof body.actor === 'string' && body.actor.trim() ? body.actor.trim() : 'admin-api';
+    // Badge freshness: a real state transition queues a production rebuild; an
+    // operator (or the smoke test) can opt out with {"rebuild": false}.
+    const rebuild = body.rebuild !== false;
+    const before = await getBusiness(env.DB, placeId);
 
     switch (op) {
       case 'claim': {
@@ -88,10 +98,19 @@ export const onRequestPut: PagesFunction = async ({ request, params, env }) => {
           source: typeof body.source === 'string' ? body.source : 'admin',
           actor,
         });
+        // A claim alone never changes the badge (verification does).
         return json({ ok: true, op, business: record });
       }
       case 'verify': {
         const record = await verifyBusiness(env.DB, placeId, actor);
+        if (rebuild && before && !before.verified) {
+          queueRebuild(context, env, {
+            reason: 'verify',
+            placeId,
+            actor,
+            detail: { slug: record.slug, tier: record.tier },
+          });
+        }
         return json({ ok: true, op, business: record });
       }
       case 'setTier': {
@@ -99,6 +118,14 @@ export const onRequestPut: PagesFunction = async ({ request, params, env }) => {
           throw new RegistryError('invalid_tier', 'tier must be "free" or "pro"');
         }
         const record = await setTier(env.DB, placeId, body.tier, actor);
+        if (rebuild && before && before.tier !== record.tier) {
+          queueRebuild(context, env, {
+            reason: 'tier_change',
+            placeId,
+            actor,
+            detail: { tier: record.tier },
+          });
+        }
         return json({ ok: true, op, business: record });
       }
       case 'revoke': {
@@ -108,6 +135,18 @@ export const onRequestPut: PagesFunction = async ({ request, params, env }) => {
           actor,
           typeof body.reason === 'string' ? body.reason : undefined,
         );
+        // Only a row that actually carried something to revoke needs a rebuild.
+        const changed = Boolean(
+          before && (before.claimed || before.verified || before.tier !== 'free'),
+        );
+        if (rebuild && changed && before) {
+          queueRebuild(context, env, {
+            reason: 'revoke',
+            placeId,
+            actor,
+            detail: { previousTier: before.tier, reason: typeof body.reason === 'string' ? body.reason : null },
+          });
+        }
         return json({ ok: true, op, business: record });
       }
       default:

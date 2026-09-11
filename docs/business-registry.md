@@ -58,6 +58,8 @@ Everything in `businesses` minus `owner_email` and `notes`. Use this (or
 | GET | `/api/registry/:placeId` | none | one business, PII stripped |
 | GET | `/api/registry/:placeId?events=1` | token | one business + audit trail |
 | PUT | `/api/registry/:placeId` | token | operator write |
+| POST | `/api/rebuild` | token | force a production rebuild (badge freshness) |
+| GET | `/api/rebuild?limit=20` | token | rebuild trigger audit trail |
 
 Write ops (body `{ "op": ... }`, header `x-registry-admin-token: <token>`):
 
@@ -73,6 +75,10 @@ curl -X PUT https://barcelonacompare.com/api/registry/ChIJxxxx \
 | `verify` | – | sets `verified`; **409 not_claimed** if there is no owner, idempotent |
 | `setTier` | `tier`: `free` \| `pro` | partner tier |
 | `revoke` | `reason` (optional) | clears owner/verification/tier, keeps row + history |
+
+Any write that actually changes verification state also queues a production rebuild
+(see "Badge freshness" below). Add `"rebuild": false` to the body to suppress that —
+bulk imports and remote smoke runs use it so they do not start a build per change.
 
 `GET /api/registry?status=verified` is the read path for the verified-badge work:
 fetch it at build time (or from a cron) and match on `placeId`.
@@ -111,6 +117,7 @@ cp .dev.vars.example .dev.vars      # REGISTRY_ADMIN_TOKEN for local calls
 npm run build                        # `wrangler pages dev` serves dist/
 npx wrangler pages dev dist --port 8799
 npm run registry:smoke               # 42 assertions against the local server
+npm run rebuild:smoke                # badge-freshness triggers, stub deploy hook
 ```
 
 `wrangler.toml` holds the D1 binding **for local development only** — it
@@ -157,7 +164,80 @@ The badge marks a business whose owner claimed it **and** completed verification
 - **Where it renders**: listing cards (`ListingCard`, `PaginatedListing`), detail
   pages (ES + EN, nails + massage, where the claim CTA is replaced by an
   "owner-managed" note), money pages (`MoneyPage`) and the ES/EN homepages.
-- **Trade-off**: the pages are static, so a claim/verify (or a revocation) shows up
-  in the HTML on the **next deploy** — not instantly. Triggering a rebuild when a
-  business is verified is open work; until then a badge can lag by one build.
+- **Trade-off**: the pages are static, so the badge only reaches the HTML when Pages
+  builds again. That is handled automatically — see "Badge freshness" below.
+
+## Badge freshness — rebuilding production when a business is verified
+
+The badge is baked into the HTML at build time, so a verify (or a revocation) needs a
+new build before it is visible. Without one, an owner who just verified would see
+"verified" in the registry and no badge on the site until the next unrelated deploy.
+
+**How it works.** `functions/_lib/rebuild.ts` POSTs the project's Pages **deploy hook**
+for the `main` branch. It is called — fire-and-forget through `ctx.waitUntil()`, so it
+never delays or fails a request — from the three places that change what the badge
+should say:
+
+- `functions/api/claim/verify.ts` after a successful code (the owner-facing path)
+- `functions/api/registry/[placeId].ts` on `verify`, on `setTier` and on `revoke`
+- `POST /api/rebuild` (manual, admin token) for bulk work or when a badge looks stale
+
+**It cannot loop.** A trigger is sent only when state actually changed (an idempotent
+`verify` or `setTier`, a `claim`, or a revocation of an empty row all send nothing), and
+the rebuild path itself only *reads* the registry — a build never triggers another
+build. `scripts/rebuild-smoke.sh` asserts this: 32 checks, including "verify twice
+queues nothing" and "a read never triggers".
+
+**It cannot break anything.** No `DEPLOY_HOOK_URL`, a rotated hook, a Cloudflare API
+outage or a D1 hiccup all end up as a logged, recorded no-op; the badge then simply
+waits for the next deploy, exactly as before this feature. Every attempt lands in
+`rebuild_requests` (migrations/0005) and is readable through `GET /api/rebuild`:
+
+```bash
+curl -s https://barcelonacompare.com/api/rebuild -H "x-registry-admin-token: $TOKEN" | jq
+```
+
+`status` is `triggered` (a build started — `detail` carries its UUID), `skipped` (no
+hook configured: local dev, preview) or `failed` (hook unreachable).
+
+### Deploy hook setup (done once)
+
+Dashboard, in order:
+
+1. **Workers & Pages → barcelona-compare → Settings → Builds → Deploy Hooks.**
+2. **Add deploy hook** → name `badge-freshness`, branch **main** → **Create**.
+3. Copy the generated URL (it *is* the credential — no auth header is used).
+4. **Settings → Variables and secrets → Add** → name `DEPLOY_HOOK_URL`, value = that
+   URL, type **Secret**, then save.
+5. Confirm it under the **Production** environment only: a preview deployment must
+   never start a production build (preview Functions write to the same D1, but their
+   trigger stays a recorded `skipped`).
+
+The API does the same thing (what was actually used):
+
+```bash
+# create the hook (returns hook_id)
+curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$ACCT/pages/projects/barcelona-compare/deploy_hooks" \
+  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H 'content-type: application/json' \
+  -d '{"name":"badge-freshness","branch":"main"}'
+
+# the trigger URL is https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/<hook_id>
+
+# add it as a production-only secret (PATCH merges; never echo existing secrets back)
+curl -s -X PATCH "https://api.cloudflare.com/client/v4/accounts/$ACCT/pages/projects/barcelona-compare" \
+  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H 'content-type: application/json' \
+  -d '{"deployment_configs":{"production":{"env_vars":{"DEPLOY_HOOK_URL":{"type":"secret_text","value":"<hook url>"}}}}}'
+```
+
+The hook URL is kept locally at
+`~/.hermes/profiles/builder/secrets/barcelona-compare-deploy-hook-url.txt` (mode 0600).
+Rotate it by deleting the hook, creating a new one and PATCHing the new URL.
+
+### Cost and timing
+
+One build per real state change (~2-4 minutes on Pages, serialized with other builds).
+A remote `scripts/registry-smoke.sh` run makes ~3 state changes and therefore opts out
+with `"rebuild": false`; set `SMOKE_REBUILD=1` to exercise the real trigger instead.
+Verify the whole path locally — no Cloudflare API involved — with
+`npm run rebuild:smoke` (stub deploy hook + 32 assertions).
 

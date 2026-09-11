@@ -10,6 +10,11 @@
 #   bash scripts/registry-smoke.sh                       # local: migrate, serve, test, clean up
 #   bash scripts/registry-smoke.sh --url https://<deployment> --token <admin-token>
 #   KEEP=1 bash scripts/registry-smoke.sh                # leave the test rows behind
+#   SMOKE_REBUILD=1 bash scripts/registry-smoke.sh ...   # also fire the deploy hook
+#                                                        # (one production build per
+#                                                        #  state change — off by
+#                                                        #  default, see
+#                                                        #  docs/business-registry.md)
 #
 # Requires: curl, jq, npx (wrangler). Local mode serves `dist/` on PORT via
 # `wrangler pages dev`, so it exercises the same handlers Cloudflare runs.
@@ -102,6 +107,12 @@ BODY=""
 
 req() { # req <METHOD> <path> [json-body] [admin-token]
   local method="$1" path="$2" data="${3:-}" token="${4:-}"
+  # Smoke writes are state changes, and state changes queue a production rebuild
+  # (functions/_lib/rebuild.ts). One run would start ~3 builds, so the writes opt
+  # out unless SMOKE_REBUILD=1 is set to exercise the real trigger.
+  if [ -n "$data" ] && [ "$method" = PUT ] && [ "${SMOKE_REBUILD:-0}" != 1 ]; then
+    data="$(jq -c '. + {rebuild:false}' <<<"$data")"
+  fi
   local args=(-s -o "$BODY_FILE" -w '%{http_code}' -X "$method" "$BASE_URL$path")
   if [ -n "$data" ]; then args+=(-H 'content-type: application/json' -d "$data"); fi
   if [ -n "$token" ]; then args+=(-H "x-registry-admin-token: $token"); fi

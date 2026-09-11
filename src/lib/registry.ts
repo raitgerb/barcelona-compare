@@ -38,6 +38,11 @@ const SNAPSHOT_RELATIVE = 'src/data/registry-verified.json';
 const PAGE_SIZE = 500;   // registry API caps limit at 500
 const MAX_PAGES = 20;    // hard stop at 10k rows
 const FETCH_TIMEOUT_MS = 10_000;
+// A rebuild is triggered precisely because the registry just changed, so the build
+// must not be served a cached list (the public read API is `max-age=300` for
+// browsers/edge). One nonce per build: every page's fetch shares it, and it appears
+// only on the build's own requests.
+const BUILD_NONCE = String(Date.now());
 
 function log(message: string): void {
   console.log(`[registry-badge] ${message}`);
@@ -71,6 +76,7 @@ async function fetchFromApi(url: string): Promise<RegistryBusiness[] | null> {
       const target = new URL(url);
       target.searchParams.set('limit', String(PAGE_SIZE));
       target.searchParams.set('offset', String(collected.length));
+      target.searchParams.set('_', BUILD_NONCE);
 
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);

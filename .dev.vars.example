@@ -17,3 +17,10 @@ CLAIM_CODE_SECRET=local-dev-claim-code-secret-not-for-production
 # /api/owner/session response to hand it to the owner.
 # RESEND_API_KEY=re_xxxxxxxx
 # EMAIL_FROM="Barcelona Compare <hola@barcelonacompare.com>"
+
+# Optional (badge freshness). Pages deploy hook URL for the production branch; when
+# a verify/revoke changes registry state, the Functions POST it so the static badge
+# HTML is rebuilt within minutes. Left unset locally on purpose: triggers become
+# recorded no-ops (rebuild_requests.status = 'skipped') and no build is started from
+# a dev machine. Production-only Pages secret. See docs/business-registry.md.
+# DEPLOY_HOOK_URL=https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx

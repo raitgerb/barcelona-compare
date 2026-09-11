@@ -40,6 +40,12 @@ interface Env {
   DB: D1Database;
   /** Admin token guarding registry writes. Set as a Pages secret in production. */
   REGISTRY_ADMIN_TOKEN?: string;
+  /**
+   * Pages deploy hook URL for the production branch (badge freshness — see
+   * functions/_lib/rebuild.ts). Set as an encrypted variable in the production
+   * deployment config only; when unset, rebuild triggers are recorded no-ops.
+   */
+  DEPLOY_HOOK_URL?: string;
   [key: string]: unknown;
 }
 
