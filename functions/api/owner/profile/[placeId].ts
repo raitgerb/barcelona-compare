@@ -4,7 +4,7 @@
 // is bound to one place id, so an owner can only ever touch their own record.
 //
 //   GET     current content + audit trail (the dashboard's "what is live now")
-//   PUT     { services?, hours?, priceNote?, hiddenPhotos?, addedPhotos? } — only
+//   PUT     { services?, hours?, priceNote?, whatsapp?, hiddenPhotos?, addedPhotos? } — only
 //           the keys present are touched; an empty list deliberately blanks a section
 //   DELETE  back to the Google-derived defaults
 //
@@ -83,7 +83,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
   }
 };
 
-const PATCH_KEYS = ['services', 'hours', 'priceNote', 'hiddenPhotos', 'addedPhotos'] as const;
+const PATCH_KEYS = ['services', 'hours', 'priceNote', 'whatsapp', 'hiddenPhotos', 'addedPhotos'] as const;
 
 export const onRequestPut: PagesFunction = async (ctx) => {
   try {

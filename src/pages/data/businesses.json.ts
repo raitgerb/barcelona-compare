@@ -6,7 +6,8 @@ type Biz = CollectionEntry<'nails'> | CollectionEntry<'massage'>;
 /**
  * Static JSON endpoint: every business's compare-relevant fields.
  * Emitted at build time to /data/businesses.json (~500KB, gzip ~110KB).
- * Only fetched by /compare pages — never on listing pages.
+ * Only fetched by /compare pages and the owner dashboard (which uses `wa` to
+ * pre-fill the WhatsApp field with the number that is live right now).
  */
 export async function GET() {
   const nails = await getCollection('nails');
@@ -27,6 +28,7 @@ export async function GET() {
       services: (e.data.services || []).map((s: any) => (typeof s === 'string' ? s : s.name)),
       phone: e.data.phone || '',
       site: e.data.website || '',
+      wa: e.data.whatsapp || '',
     }));
 
   const all = [...pick(nails, 'nails'), ...pick(massage, 'massage')];

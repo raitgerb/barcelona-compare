@@ -14,6 +14,8 @@
 //
 // Docs: docs/owner-profile-edits.md
 
+import { normalizeWhatsapp } from './whatsapp';
+
 export type Category = 'nails' | 'massage';
 
 export interface ProfileService {
@@ -30,6 +32,8 @@ export interface ProfileOverride {
   services: ProfileService[] | null;
   hours: ProfileHours | null;
   priceNote: string | null;
+  /** Owner's WhatsApp number, digits only (E.164 without the `+`). NULL = no owner value. */
+  whatsapp: string | null;
   hiddenPhotos: number[];
   addedPhotos: string[];
   published: boolean;
@@ -46,6 +50,7 @@ export interface PublicProfileOverride {
   services: ProfileService[] | null;
   hours: ProfileHours | null;
   priceNote: string | null;
+  whatsapp: string | null;
   hiddenPhotos: number[];
   addedPhotos: string[];
   updatedAt: string;
@@ -57,6 +62,7 @@ export type ProfileErrorCode =
   | 'invalid_hours'
   | 'invalid_photos'
   | 'invalid_price_note'
+  | 'invalid_whatsapp'
   | 'invalid_code'
   | 'code_expired'
   | 'session_expired'
@@ -317,6 +323,24 @@ export function validatePriceNote(value: unknown): string | null {
   return note;
 }
 
+/**
+ * The owner's WhatsApp number, stored normalised (`34640793674`) so the injector
+ * can build a wa.me link without a second guess about the format. Empty / null
+ * means "no owner value" — the listing keeps whatever Google gave us. Owners
+ * write it however they like ("+34 640 79 36 74", "640793674").
+ */
+export function validateWhatsapp(value: unknown): string | null {
+  if (value === null || value === undefined) return null;
+  if (typeof value !== 'string') throw new ProfileError('invalid_whatsapp', 'whatsapp must be a string');
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  const number = normalizeWhatsapp(trimmed);
+  if (!number) {
+    throw new ProfileError('invalid_whatsapp', 'that is not a phone number we can use — try +34 600 000 000');
+  }
+  return number;
+}
+
 // ---------------------------------------------------------------------------
 // Sessions
 // ---------------------------------------------------------------------------
@@ -486,6 +510,7 @@ interface OverrideRow {
   services: string | null;
   hours: string | null;
   price_note: string | null;
+  whatsapp: string | null;
   hidden_photos: string;
   added_photos: string;
   published: number;
@@ -495,7 +520,7 @@ interface OverrideRow {
 }
 
 const OVERRIDE_COLUMNS =
-  'place_id, slug, category, services, hours, price_note, hidden_photos, added_photos, published, updated_by, created_at, updated_at';
+  'place_id, slug, category, services, hours, price_note, whatsapp, hidden_photos, added_photos, published, updated_by, created_at, updated_at';
 
 function parseJson<T>(value: string | null, fallback: T): T {
   if (!value) return fallback;
@@ -514,6 +539,7 @@ function toOverride(row: OverrideRow): ProfileOverride {
     services: row.services === null ? null : parseJson<ProfileService[]>(row.services, []),
     hours: row.hours === null ? null : parseJson<ProfileHours>(row.hours, {}),
     priceNote: row.price_note,
+    whatsapp: row.whatsapp,
     hiddenPhotos: parseJson<number[]>(row.hidden_photos, []),
     addedPhotos: parseJson<string[]>(row.added_photos, []),
     published: row.published === 1,
@@ -531,6 +557,7 @@ export function toPublicOverride(record: ProfileOverride): PublicProfileOverride
     services: record.services,
     hours: record.hours,
     priceNote: record.priceNote,
+    whatsapp: record.whatsapp,
     hiddenPhotos: record.hiddenPhotos,
     addedPhotos: record.addedPhotos,
     updatedAt: record.updatedAt,
@@ -666,6 +693,7 @@ export interface ProfilePatch {
   services?: unknown;
   hours?: unknown;
   priceNote?: unknown;
+  whatsapp?: unknown;
   hiddenPhotos?: unknown;
   addedPhotos?: unknown;
 }
@@ -699,6 +727,8 @@ export async function saveOverride(
     patch.hours === undefined ? before?.hours ?? null : validateHours(patch.hours);
   const priceNote =
     patch.priceNote === undefined ? before?.priceNote ?? null : validatePriceNote(patch.priceNote);
+  const whatsapp =
+    patch.whatsapp === undefined ? before?.whatsapp ?? null : validateWhatsapp(patch.whatsapp);
   const hiddenPhotos =
     patch.hiddenPhotos === undefined
       ? before?.hiddenPhotos ?? []
@@ -717,15 +747,16 @@ export async function saveOverride(
   await db
     .prepare(
       `INSERT INTO profile_overrides
-         (place_id, slug, category, services, hours, price_note, hidden_photos, added_photos,
-          published, updated_by, created_at, updated_at)
-       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, 1, 'owner', ?9, ?9)
+         (place_id, slug, category, services, hours, price_note, whatsapp, hidden_photos,
+          added_photos, published, updated_by, created_at, updated_at)
+       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, 1, 'owner', ?10, ?10)
        ON CONFLICT (place_id) DO UPDATE SET
          slug          = excluded.slug,
          category      = excluded.category,
          services      = excluded.services,
          hours         = excluded.hours,
          price_note    = excluded.price_note,
+         whatsapp      = excluded.whatsapp,
          hidden_photos = excluded.hidden_photos,
          added_photos  = excluded.added_photos,
          published     = 1,
@@ -739,6 +770,7 @@ export async function saveOverride(
       services === null ? null : JSON.stringify(services),
       hours === null ? null : JSON.stringify(hours),
       priceNote,
+      whatsapp,
       JSON.stringify(hiddenPhotos),
       JSON.stringify(addedPhotos),
       now,
@@ -750,6 +782,7 @@ export async function saveOverride(
     services: services?.length ?? null,
     hours: hours ? Object.values(hours).filter(Boolean).length : null,
     priceNote: priceNote ? true : null,
+    whatsapp: whatsapp ? true : null,
     hiddenPhotos,
     addedPhotos,
     published: true,

@@ -1,0 +1,52 @@
+---
+/**
+ * Prominent WhatsApp booking CTA (B2B Phase 1).
+ *
+ * This market books on WhatsApp, so when a listing has a number the CTA is the
+ * primary action on the page — full width, above the phone / website row — not a
+ * third small button next to "Web". Rendered by all four detail templates inside
+ * the `<!--owner:whatsapp-->` marker region, which the edge injector swaps when an
+ * owner publishes a number of their own (only 9 of 1,182 listings have one from
+ * Google, so the owner path is how the rest get there).
+ *
+ * The number is normalised to wa.me format by `functions/_lib/whatsapp.ts`
+ * (shared with the injector) and the link carries a prefilled message so the
+ * business sees the enquiry came from barcelonacompare.com.
+ *
+ * Docs: docs/whatsapp-cta.md
+ */
+import { WHATSAPP_ICON_PATH, whatsappLink } from '../../functions/_lib/whatsapp';
+
+interface Props {
+  /** Raw `whatsapp` frontmatter value — any local or international format. */
+  whatsapp?: string;
+  lang?: 'es' | 'en';
+}
+
+const { whatsapp, lang = 'es' } = Astro.props;
+
+const link = whatsappLink(whatsapp, lang);
+
+const copy =
+  lang === 'en'
+    ? { cta: 'Book on WhatsApp', hint: 'Book without calling — your message is ready to send' }
+    : { cta: 'Reservar por WhatsApp', hint: 'Pide cita sin llamar — el mensaje ya está escrito' };
+---
+
+{link && (
+  <div class="mb-6">
+    <a
+      href={link.href}
+      target="_blank"
+      rel="noopener"
+      data-track-event="click_whatsapp"
+      class="flex w-full items-center justify-center gap-2.5 rounded-xl bg-green-600 px-5 py-3.5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-green-700"
+    >
+      <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d={WHATSAPP_ICON_PATH} />
+      </svg>
+      {copy.cta}
+    </a>
+    <p class="mt-2 text-center text-xs text-stone-500">{copy.hint}</p>
+  </div>
+)}

@@ -79,6 +79,9 @@ SERVICE_NAME="Servicio de prueba $RANDOM"
 SERVICE_PRICE="23 €"
 HOURS_VALUE="09:30-21:15"
 PRICE_NOTE="Precios orientativos de prueba"
+# Owner-typed in local Spanish format on purpose: the API must store wa.me digits.
+WA_INPUT="+34 611 22 33 44"
+WA_STORED="34611223344"
 SITE="${BASE_URL:-https://barcelonacompare.com}"
 # Photo URLs must be public https, so the validation checks always talk to the real
 # site even when the API under test is the local dev server.
@@ -207,12 +210,13 @@ call PUT "/api/owner/profile/$PLACE_ID" "{\"services\":[{\"name\":\"x\"}]}" "012
 check "bogus token is 401" "401" "$STATUS"
 
 echo
-echo "6. saving services, prices, hours, photos"
-call PUT "/api/owner/profile/$PLACE_ID" "{\"services\":[{\"name\":\"$SERVICE_NAME\",\"price\":\"$SERVICE_PRICE\"},{\"name\":\"Manicura\"}],\"priceNote\":\"$PRICE_NOTE\",\"hours\":{\"monday\":\"$HOURS_VALUE\",\"tuesday\":\"\",\"sunday\":\"10:00-14:00\"},\"hiddenPhotos\":[4],\"addedPhotos\":[\"$OWNER_PHOTO\"]}" "$TOKEN"
+echo "6. saving services, prices, hours, photos and the WhatsApp number"
+call PUT "/api/owner/profile/$PLACE_ID" "{\"services\":[{\"name\":\"$SERVICE_NAME\",\"price\":\"$SERVICE_PRICE\"},{\"name\":\"Manicura\"}],\"priceNote\":\"$PRICE_NOTE\",\"whatsapp\":\"$WA_INPUT\",\"hours\":{\"monday\":\"$HOURS_VALUE\",\"tuesday\":\"\",\"sunday\":\"10:00-14:00\"},\"hiddenPhotos\":[4],\"addedPhotos\":[\"$OWNER_PHOTO\"]}" "$TOKEN"
 check "save accepted" "200" "$STATUS"
 check "services stored" "2" "$(jqr '.override.services | length')"
 check "price stored" "$SERVICE_PRICE" "$(jqr '.override.services[0].price')"
 check "monday hours stored" "$HOURS_VALUE" "$(jqr '.override.hours.monday')"
+check "whatsapp stored as wa.me digits" "$WA_STORED" "$(jqr '.override.whatsapp')"
 check "hidden photo stored" "4" "$(jqr '.override.hiddenPhotos[0]')"
 check "own photo stored" "$OWNER_PHOTO" "$(jqr '.override.addedPhotos[0]')"
 check "updatedAt is an ISO timestamp" "20" "$(jqr '.override.updatedAt' | cut -c1-2)"
@@ -231,6 +235,9 @@ check "non-image error" "photo_unreachable" "$(jqr '.error')"
 call PUT "/api/owner/profile/$PLACE_ID" '{"services":[{"name":""}]}' "$TOKEN"
 check "nameless service refused" "400" "$STATUS"
 check "nameless service error" "invalid_services" "$(jqr '.error')"
+call PUT "/api/owner/profile/$PLACE_ID" '{"whatsapp":"not-a-phone"}' "$TOKEN"
+check "unusable whatsapp refused" "400" "$STATUS"
+check "whatsapp error" "invalid_whatsapp" "$(jqr '.error')"
 
 echo
 echo "8. the owner sees their own live state"
@@ -263,11 +270,25 @@ contains "injected hours" "$HOURS_VALUE" "$PAGE"
 contains "hidden photo is display:none" "-4.jpg\" style=\"display:none\"" "$PAGE"
 contains "own photo block" "$OWNER_PHOTO" "$PAGE"
 contains "owner attribution in Spanish" "actualizado el" "$PAGE"
+contains "injected WhatsApp CTA uses wa.me digits" "wa.me/$WA_STORED" "$PAGE"
+contains "injected WhatsApp CTA label (ES)" "Reservar por WhatsApp" "$PAGE"
+contains "WhatsApp CTA is click-tracked" "data-track-event=\"click_whatsapp\"" "$PAGE"
+contains "WhatsApp link carries the attribution message" "text=Hola%2C%20os%20escribo%20desde%20barcelonacompare.com" "$PAGE"
 
 call GET "/en/$CATEGORY/$SLUG/"
 EN_PAGE="$BODY"
 contains "EN page carries the service" "$SERVICE_NAME" "$EN_PAGE"
 contains "EN page uses EN labels" "Opening Hours" "$EN_PAGE"
+contains "EN page carries the WhatsApp CTA" "Book on WhatsApp" "$EN_PAGE"
+
+echo
+echo "10b. a Google-sourced number renders as a working wa.me link"
+# The frontmatter stores local format ("640 79 36 74"), which used to produce the
+# dead link wa.me/640793674. Angel Nails is one of the 9 listings with a number.
+call GET "/nails/%C3%A0ngel-nails/"
+check "listing page responds" "200" "$STATUS"
+contains "local number is normalised to international" "wa.me/34640793674" "$BODY"
+missing "the dead national-only link is gone" "wa.me/640793674" "$BODY"
 
 echo
 echo "11. operator takedown and restore"
@@ -291,6 +312,7 @@ check "reset accepted" "200" "$STATUS"
 check "reset action" "reset" "$(jqr '.action')"
 call GET "$PAGE_PATH"
 missing "listing page back to defaults after reset" "$SERVICE_NAME" "$BODY"
+missing "injected WhatsApp CTA is gone after reset" "wa.me/$WA_STORED" "$BODY"
 call GET "/api/owner/profile/$PLACE_ID" "" "$TOKEN"
 check "override is gone" "null" "$(jqr '.override')"
 

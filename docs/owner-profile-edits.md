@@ -12,7 +12,7 @@ deploy, no dashboard for us to touch.
 - **Data layer:** `functions/_lib/profile.ts` — the only module that touches those tables
 - **Live render:** `functions/_middleware.ts` + `functions/_lib/owner-content.ts` —
   edge-injects the owner's content into the static listing HTML
-- **Test:** `scripts/owner-edit-smoke.sh` (`npm run owner:smoke`) — 63 assertions
+- **Test:** `scripts/owner-edit-smoke.sh` (`npm run owner:smoke`) — 75 assertions
   through the real Pages Functions runtime, including the served listing page
 
 Sits on top of the Phase 0 registry (`docs/business-registry.md`): only a business
@@ -53,6 +53,7 @@ which email to try.
 | `services` | up to 25 `{ name, price? }` rows, name ≤ 80 chars, price ≤ 30 chars, duplicates dropped |
 | `priceNote` | ≤ 120 chars, optional |
 | `hours` | per weekday `HH:MM-HH:MM` (24h) or `""` = closed |
+| `whatsapp` | the number customers book on, normalised to `wa.me` digits (`34611223344`); `null` = keep the Google-derived one (`docs/whatsapp-cta.md`) |
 | `hiddenPhotos` | indexes `0-4` of the Google photo strip to hide |
 | `addedPhotos` | up to 3 **https** image URLs, HEAD-checked (`image/*`) before saving |
 
@@ -63,11 +64,14 @@ back on its Google-derived data.
 ## How an edit becomes visible (edge-inject)
 
 The listing pages are static, so the same HTML ships to everyone. The four listing
-templates (`nails`, `massage` × `es`, `en`) carry three HTML-comment pairs:
+templates (`nails`, `massage` × `es`, `en`) carry four HTML-comment pairs:
 
 ```html
 <!--owner:services--> …Google-derived section… <!--/owner:services-->
 ```
+
+(`gallery`, `services`, `hours` and `whatsapp` — the last one being the single
+prominent WhatsApp booking CTA, see `docs/whatsapp-cta.md`.)
 
 `functions/_middleware.ts` runs for **every** request but only continues past its
 first line for `/nails/<slug>/`, `/massage/<slug>/` and their `/en/` twins. When a
@@ -120,7 +124,7 @@ actor and a JSON detail, so disputes have a trail.
 npm run build                    # wrangler pages dev serves dist/
 npm run db:migrate:local         # applies the pending migrations (0003 owner edits)
 npx wrangler pages dev dist --port 8799
-npm run owner:smoke              # 63 assertions, ends with the listing HTML check
+npm run owner:smoke              # 75 assertions, ends with the listing HTML check
 ```
 
 Against a deployment (preview and production share the D1 database — the writes are

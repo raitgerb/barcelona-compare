@@ -3,10 +3,13 @@
 // The site is statically built, so the Google-derived services / hours / photo
 // strip are baked into every listing page. When an owner publishes edits
 // (Phase 1 self-service), `functions/_middleware.ts` calls this module to swap
-// those three regions for the owner's version *in the served HTML* — no rebuild,
+// those regions for the owner's version *in the served HTML* — no rebuild,
 // no client-side fetch, and crawlers see the same content a visitor does.
 //
-// The regions are delimited by HTML comments that the listing templates carry:
+// Regions: gallery, services, hours, whatsapp. `whatsapp` is a single CTA slot
+// (the prominent "Reservar por WhatsApp" button), which is what lets an owner who
+// had no WhatsApp number on their listing publish one and see it live in seconds
+// instead of waiting for a rebuild — only 9 of 1,182 listings carry one from Google.
 //
 //     <!--owner:services--> …default markup… <!--/owner:services-->
 //
@@ -17,8 +20,9 @@
 // reached for pages that have one.
 
 import type { ProfileOverride } from './profile';
+import { WHATSAPP_ICON_PATH, whatsappHref } from './whatsapp';
 
-export const OWNER_MARKERS = ['gallery', 'services', 'hours'] as const;
+export const OWNER_MARKERS = ['gallery', 'services', 'hours', 'whatsapp'] as const;
 export type OwnerRegion = (typeof OWNER_MARKERS)[number];
 
 /** True when the payload carries our markers at all (cheap gate before parsing). */
@@ -49,6 +53,8 @@ interface Labels {
   closed: string;
   owned: string;
   ownerPhotos: string;
+  whatsappCta: string;
+  whatsappHint: string;
   updated: (date: string) => string;
 }
 
@@ -60,6 +66,8 @@ function labels(lang: string): Labels {
       closed: 'Closed',
       owned: 'Provided by the business',
       ownerPhotos: 'Photos from the business',
+      whatsappCta: 'Book on WhatsApp',
+      whatsappHint: 'Book without calling — your message is ready to send',
       updated: (date) => `Details provided by the business · updated ${date}`,
     };
   }
@@ -69,6 +77,8 @@ function labels(lang: string): Labels {
     closed: 'Cerrado',
     owned: 'Datos facilitados por el negocio',
     ownerPhotos: 'Fotos del negocio',
+    whatsappCta: 'Reservar por WhatsApp',
+    whatsappHint: 'Pide cita sin llamar — el mensaje ya está escrito',
     updated: (date) => `Datos facilitados por el negocio · actualizado el ${date}`,
   };
 }
@@ -151,6 +161,20 @@ function renderHours(override: ProfileOverride, lang: string, updated: string): 
   return `<section class="mb-8" data-owner-content="hours"><h2 class="text-lg font-semibold text-stone-900 mb-3">${l.hours}</h2><div class="divide-y divide-stone-100">${rows}</div>${attribution}</section>`;
 }
 
+function renderWhatsappCta(number: string, lang: string): string {
+  const l = labels(lang);
+  const href = whatsappHref(number, lang === 'en' ? 'en' : 'es');
+  return (
+    `<div class="mb-6" data-owner-content="whatsapp">` +
+    `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" data-track-event="click_whatsapp"` +
+    ` class="flex w-full items-center justify-center gap-2.5 rounded-xl bg-green-600 px-5 py-3.5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-green-700">` +
+    `<svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="${WHATSAPP_ICON_PATH}"/></svg>` +
+    `${escapeHtml(l.whatsappCta)}</a>` +
+    `<p class="mt-2 text-center text-xs text-stone-500">${escapeHtml(l.whatsappHint)}</p>` +
+    `</div>`
+  );
+}
+
 function renderGallery(
   inner: string,
   override: ProfileOverride,
@@ -221,6 +245,16 @@ export function injectOwnerContent(input: InjectInput): { html: string; changed:
     );
     html = hours.html;
     changed = changed || hours.changed;
+  }
+
+  if (override.whatsapp !== null) {
+    // A stored number wins over the Google-derived CTA; an empty value (never
+    // produced by the dashboard, which sends null instead) clears the slot.
+    const whatsapp = replaceRegion(html, 'whatsapp', () =>
+      override.whatsapp ? renderWhatsappCta(override.whatsapp, lang) : '',
+    );
+    html = whatsapp.html;
+    changed = changed || whatsapp.changed;
   }
 
   return { html, changed };

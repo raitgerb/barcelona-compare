@@ -57,7 +57,7 @@ and the storage is bounded by 1,182 businesses × 5 event types).
 | --- | --- |
 | `view` | the detail page loads (one per page load) |
 | `click_phone` | the `tel:` CTA is clicked |
-| `click_whatsapp` | the `wa.me` CTA is clicked |
+| `click_whatsapp` | the `wa.me` CTA is clicked — the primary "Reservar por WhatsApp" button on the detail page, whether the number came from Google or from the owner dashboard (`docs/whatsapp-cta.md`) |
 | `click_website` | the business website CTA is clicked |
 | `click_directions` | the "Cómo llegar" / "Get directions" link is clicked |
 
