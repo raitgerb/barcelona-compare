@@ -1,0 +1,65 @@
+---
+/**
+ * "Claim this listing" entry point (B2B Phase 0 follow-up).
+ *
+ * Deep-links into the claim flow with the business already selected:
+ * `/reclamar/?place=<googlePlaceId>` (ES) / `/en/claim-business/?place=<placeId>` (EN).
+ * ClaimFlow reads `?place=`, resolves it against `/data/claim-index.json` and hides
+ * the search step, so the owner lands on the email step of their own listing.
+ *
+ * Rendered only where the page does NOT report the business as verified — next to
+ * the VerifiedBadge it forms one block: badge when `verified`, claim link when not.
+ *
+ * No `placeId` → the deep link cannot resolve, so fall back to the /for-businesses
+ * pitch page (every entry of the claim catalog carries a googlePlaceId, see
+ * src/pages/data/claim-index.json.ts).
+ *
+ * Copy lives here so ES and EN stay in sync.
+ */
+interface Props {
+  lang?: 'es' | 'en';
+  placeId?: string | null;
+  name?: string | null;
+  variant?: 'inline' | 'banner';
+  class?: string;
+}
+
+const { lang = 'es', placeId = null, name = null, variant = 'inline', class: className = '' } = Astro.props;
+
+const copy = lang === 'en'
+  ? {
+      inlineQuestion: 'Manage this business?',
+      inlineLink: 'Claim it free →',
+      bannerQuestion: name ? `Own ${name}?` : 'Own this business?',
+      bannerLink: 'Claim this business for free →',
+      bannerNote: 'We confirm by email that you run the listing. Free, no commitment.',
+    }
+  : {
+      inlineQuestion: '¿Gestionas este negocio?',
+      inlineLink: 'Reclámalo gratis →',
+      bannerQuestion: name ? `¿Eres el dueño de ${name}?` : '¿Eres el dueño de este negocio?',
+      bannerLink: 'Reclama este negocio gratis →',
+      bannerNote: 'Verificamos por email que gestionas la ficha. Gratis y sin permanencia.',
+    };
+
+const href = placeId
+  ? lang === 'en'
+    ? `/en/claim-business/?place=${encodeURIComponent(placeId)}`
+    : `/reclamar/?place=${encodeURIComponent(placeId)}`
+  : lang === 'en'
+    ? '/en/for-businesses'
+    : '/for-businesses';
+---
+
+{variant === 'inline' ? (
+  <p class={`text-sm text-stone-500 ${className}`} data-claim-cta="inline">
+    {copy.inlineQuestion}{' '}
+    <a href={href} class="font-medium text-brand-600 hover:underline">{copy.inlineLink}</a>
+  </p>
+) : (
+  <div class={`p-4 bg-brand-50 rounded-lg border border-brand-100 text-center ${className}`} data-claim-cta="banner">
+    <p class="text-sm text-stone-600">{copy.bannerQuestion}</p>
+    <a href={href} class="text-sm font-medium text-brand-600 hover:underline mt-1 inline-block">{copy.bannerLink}</a>
+    <p class="text-xs text-stone-500 mt-1">{copy.bannerNote}</p>
+  </div>
+)}

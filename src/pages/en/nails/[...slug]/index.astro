@@ -6,6 +6,7 @@ import ReviewQuotes from '../../../../components/ReviewQuotes.astro';
 import ReviewInsights from '../../../../components/ReviewInsights.astro';
 import EventTracking from '../../../../components/EventTracking.astro';
 import VerifiedBadge from '../../../../components/VerifiedBadge.astro';
+import ClaimCta from '../../../../components/ClaimCta.astro';
 import WhatsappCta from '../../../../components/WhatsappCta.astro';
 import { getCollection } from 'astro:content';
 import { imagePath } from '../../../../lib/images';
@@ -54,7 +55,7 @@ const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
         <div><h1 class="text-2xl font-bold text-stone-900">{data.name}</h1>
         <p class="text-stone-500 mt-1">{data.address}, {data.neighborhood}</p>
         {data.priceIndicator && <span class="inline-block mt-2 text-sm font-medium px-3 py-1 rounded-full bg-stone-100 text-stone-600" title="Indicative price level from Google. Actual prices may vary — check the business menu.">{data.priceIndicator} · indicative</span>}
-        {verified && <div class="mt-2"><VerifiedBadge lang="en" variant="detail" tier={verified.tier} /></div>}</div>
+        {verified ? <div class="mt-2"><VerifiedBadge lang="en" variant="detail" tier={verified.tier} /></div> : <ClaimCta lang="en" placeId={data.googlePlaceId} variant="inline" class="mt-2" />}</div>
       </div>
       <!--owner:whatsapp-->
       <WhatsappCta whatsapp={data.whatsapp} lang="en" />
@@ -123,10 +124,7 @@ const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
           </p>
         </div>
       ) : (
-        <div class="mt-8 p-4 bg-brand-50 rounded-lg border border-brand-100 text-center">
-        <p class="text-sm text-stone-600">Own {data.name}?</p>
-        <a href="/en/for-businesses" class="text-sm font-medium text-brand-600 hover:underline mt-1 inline-block">Claim this business →</a>
-        </div>
+        <ClaimCta lang="en" placeId={data.googlePlaceId} name={data.name} variant="banner" class="mt-8" />
       )}
     </div>
     <ReviewQuotes name={data.name} googleRating={data.googleRating} googleReviewCount={data.googleReviewCount} reviews={data.googleReviews || []} />

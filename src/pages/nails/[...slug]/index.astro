@@ -6,6 +6,7 @@ import ReviewQuotes from '../../../components/ReviewQuotes.astro';
 import ReviewInsights from '../../../components/ReviewInsights.astro';
 import EventTracking from '../../../components/EventTracking.astro';
 import VerifiedBadge from '../../../components/VerifiedBadge.astro';
+import ClaimCta from '../../../components/ClaimCta.astro';
 import WhatsappCta from '../../../components/WhatsappCta.astro';
 import { getCollection } from 'astro:content';
 import { imagePath } from '../../../lib/images';
@@ -111,10 +112,12 @@ const schemaOrg = {
               {data.priceIndicator} · orientativo
             </span>
           )}
-          {verified && (
+          {verified ? (
             <div class="mt-2">
               <VerifiedBadge lang="es" variant="detail" tier={verified.tier} />
             </div>
+          ) : (
+            <ClaimCta lang="es" placeId={data.googlePlaceId} variant="inline" class="mt-2" />
           )}
         </div>
       </div>
@@ -236,12 +239,7 @@ const schemaOrg = {
           </p>
         </div>
       ) : (
-        <div class="mt-8 p-4 bg-brand-50 rounded-lg border border-brand-100 text-center">
-          <p class="text-sm text-stone-600">¿Eres el dueño de {data.name}?</p>
-          <a href="/for-businesses" class="text-sm font-medium text-brand-600 hover:underline mt-1 inline-block">
-            Reclama este negocio →
-          </a>
-        </div>
+        <ClaimCta lang="es" placeId={data.googlePlaceId} name={data.name} variant="banner" class="mt-8" />
       )}
     </div>
     <ReviewQuotes name={data.name} googleRating={data.googleRating} googleReviewCount={data.googleReviewCount} reviews={data.googleReviews || []} />
