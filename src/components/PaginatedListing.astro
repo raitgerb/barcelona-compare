@@ -1,5 +1,7 @@
 ---
 import FilterBar from './FilterBar.astro';
+import VerifiedBadge from './VerifiedBadge.astro';
+import { loadVerifiedRegistry } from '../lib/registry';
 import { imageUrl, hasPhoto } from '../lib/images';
 
 interface Props {
@@ -12,6 +14,7 @@ interface Props {
 }
 
 const { businesses, category, lang, total, currentPage, totalPages } = Astro.props;
+const registry = await loadVerifiedRegistry();
 
 const isSpanish = lang === 'es';
 const detailPath = (slug: string) => lang === 'es' ? `/${category}/${slug}` : `/en/${category}/${slug}`;
@@ -34,6 +37,7 @@ const labels = isSpanish ? {
 <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="listing-grid">
   {businesses.map(business => {
     const servicesList = (business.data.services || []).map((s: any) => (typeof s === 'string' ? s : s.name));
+    const verified = business.data.googlePlaceId ? registry.get(business.data.googlePlaceId) : undefined;
     return (
     <a href={detailPath(business.id)}
       class="listing-card group relative block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-md transition-all overflow-hidden"
@@ -76,6 +80,11 @@ const labels = isSpanish ? {
           )}
         </div>
         <p class="text-xs text-stone-500 mt-0.5">{business.data.neighborhood}</p>
+        {verified && (
+          <div class="mt-1.5">
+            <VerifiedBadge lang={lang} tier={verified.tier} />
+          </div>
+        )}
         {business.data.googleRating && (
           <div class="flex items-center gap-1.5 mt-2">
             <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>

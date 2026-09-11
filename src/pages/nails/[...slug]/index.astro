@@ -5,8 +5,10 @@ import DetailEnhancements from '../../../components/DetailEnhancements.astro';
 import ReviewQuotes from '../../../components/ReviewQuotes.astro';
 import ReviewInsights from '../../../components/ReviewInsights.astro';
 import EventTracking from '../../../components/EventTracking.astro';
+import VerifiedBadge from '../../../components/VerifiedBadge.astro';
 import { getCollection } from 'astro:content';
 import { imagePath } from '../../../lib/images';
+import { verifiedBusinessFor } from '../../../lib/registry';
 
 export async function getStaticPaths() {
   const businesses = await getCollection('nails');
@@ -22,6 +24,7 @@ if (!business) {
 }
 
 const { data } = business;
+const verified = await verifiedBusinessFor(data.googlePlaceId);
 const stars = data.googleRating ? Math.round(data.googleRating) : 0;
 
 const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -106,6 +109,11 @@ const schemaOrg = {
             <span class="inline-block mt-2 text-sm font-medium px-3 py-1 rounded-full bg-stone-100 text-stone-600" title="Nivel de precio orientativo según Google. El precio real puede variar — consulta la carta del negocio.">
               {data.priceIndicator} · orientativo
             </span>
+          )}
+          {verified && (
+            <div class="mt-2">
+              <VerifiedBadge lang="es" variant="detail" tier={verified.tier} />
+            </div>
           )}
         </div>
       </div>
@@ -220,12 +228,21 @@ const schemaOrg = {
         </section>
       )}
 
-      <div class="mt-8 p-4 bg-brand-50 rounded-lg border border-brand-100 text-center">
-        <p class="text-sm text-stone-600">¿Eres el dueño de {data.name}?</p>
-        <a href="/for-businesses" class="text-sm font-medium text-brand-600 hover:underline mt-1 inline-block">
-          Reclama este negocio →
-        </a>
-      </div>
+      {verified ? (
+        <div class="mt-8 p-4 bg-emerald-50 rounded-lg border border-emerald-100 text-center">
+          <p class="text-sm font-medium text-emerald-700">Negocio verificado por su propietario</p>
+          <p class="text-xs text-stone-500 mt-1">
+            Los datos de esta ficha están gestionados por el negocio. <a href="/for-businesses" class="font-medium text-brand-600 hover:underline">Cómo funciona</a>
+          </p>
+        </div>
+      ) : (
+        <div class="mt-8 p-4 bg-brand-50 rounded-lg border border-brand-100 text-center">
+          <p class="text-sm text-stone-600">¿Eres el dueño de {data.name}?</p>
+          <a href="/for-businesses" class="text-sm font-medium text-brand-600 hover:underline mt-1 inline-block">
+            Reclama este negocio →
+          </a>
+        </div>
+      )}
     </div>
     <ReviewQuotes name={data.name} googleRating={data.googleRating} googleReviewCount={data.googleReviewCount} reviews={data.googleReviews || []} />
     <DetailEnhancements category="nails" slug={slug} neighborhood={data.neighborhood} lang="es" />

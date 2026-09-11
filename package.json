@@ -14,7 +14,8 @@
     "db:migrate:remote": "npx --yes wrangler d1 migrations apply barcelona-compare-registry --remote",
     "registry:smoke": "bash scripts/registry-smoke.sh",
     "analytics:smoke": "bash scripts/analytics-smoke.sh",
-    "owner:smoke": "bash scripts/owner-edit-smoke.sh"
+    "owner:smoke": "bash scripts/owner-edit-smoke.sh",
+    "registry:snapshot": "node scripts/registry-snapshot.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
