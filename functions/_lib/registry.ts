@@ -54,7 +54,14 @@ export type RegistryErrorCode =
   | 'not_claimed'
   | 'invalid_email'
   | 'invalid_tier'
-  | 'invalid_body';
+  | 'invalid_body'
+  // Claim flow (migrations/0004, functions/_lib/claim.ts)
+  | 'invalid_code'
+  | 'code_expired'
+  | 'too_many_attempts'
+  | 'rate_limited'
+  | 'catalog_unavailable'
+  | 'server_misconfigured';
 
 export class RegistryError extends Error {
   constructor(

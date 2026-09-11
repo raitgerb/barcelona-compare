@@ -7,16 +7,20 @@ interface Props {
   description: string;
   image?: string;
   lang?: string;
+  /** Override the language-switch / hreflang target when the two locales do not
+   *  share a path (e.g. /reclamar <-> /en/claim-business). */
+  altPath?: string;
 }
 
-const { title, description, image, lang = "es" } = Astro.props;
+const { title, description, image, lang = "es", altPath } = Astro.props;
 const t = ui[lang as keyof typeof ui];
 
 const currentPath = Astro.url.pathname;
 const altLang = lang === 'es' ? 'en' : 'es';
-const altPath = lang === 'es'
+const defaultAltPath = lang === 'es'
   ? '/en' + (currentPath === '/' ? '' : currentPath)
   : currentPath.replace(/^\/en/, '') || '/';
+const resolvedAltPath = altPath ?? defaultAltPath;
 
 const navItems: Array<{ key: keyof typeof t; href: string }> = [
   { key: 'nav.home' as keyof typeof t, href: lang === 'es' ? '/' : '/en' },
@@ -44,7 +48,7 @@ const navItems: Array<{ key: keyof typeof t; href: string }> = [
     <meta name="twitter:title" content={`${title} — Barcelona Compare`} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image ? new URL(image, Astro.site).href : new URL('/og-default.png', Astro.site).href} />
-    <link rel="alternate" hreflang={altLang} href={new URL(altPath, Astro.site).href} />
+    <link rel="alternate" hreflang={altLang} href={new URL(resolvedAltPath, Astro.site).href} />
     <link rel="canonical" href={new URL(currentPath, Astro.site).href} />
     <link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/fraunces-var-latin.woff2" as="font" type="font/woff2" crossorigin />
@@ -66,7 +70,7 @@ const navItems: Array<{ key: keyof typeof t; href: string }> = [
             </a>
           ))}
           <a
-            href={altPath}
+            href={resolvedAltPath}
             class="text-xs px-3 py-1 rounded-full border border-stone-300 text-stone-500 hover:border-stone-400 hover:text-stone-700 transition-colors font-medium"
           >
             {altLang.toUpperCase()}

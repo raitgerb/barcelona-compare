@@ -2,11 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 // --- Claim CTA ---------------------------------------------------------------
-// Today the claim flow is email-based (works with zero backend). When the
-// Phase 0 claim flow (verification code + business registry) ships, swap
-// `claimHref` below for the in-site claim route and keep the mailto as the
-// fallback link. Nothing else on this page depends on the CTA target.
+// The Phase 0 claim flow is live: `/reclamar/` walks the owner through a 6-digit
+// email code and writes the claimed+verified flags to the registry
+// (docs/claim-flow.md). The mailto stays as the fallback for owners who would
+// rather do it over email.
 const CLAIM_EMAIL = 'hola@barcelonacompare.com';
+const CLAIM_HREF = '/reclamar';
 const claimSubject = 'Quiero reclamar mi negocio en Barcelona Compare';
 const claimBody = [
   'Hola,',
@@ -21,7 +22,7 @@ const claimBody = [
   '',
   'Gracias.',
 ].join('\n');
-const claimHref = `mailto:${CLAIM_EMAIL}?subject=${encodeURIComponent(claimSubject)}&body=${encodeURIComponent(claimBody)}`;
+const claimMailto = `mailto:${CLAIM_EMAIL}?subject=${encodeURIComponent(claimSubject)}&body=${encodeURIComponent(claimBody)}`;
 
 // Real numbers, computed from the content collections at content-editing time
 // (646 nails + 536 massage = 1.182 fichas, 154.793 reseñas de Google).
@@ -61,9 +62,9 @@ const tiers = [
     key: 'claimed',
     name: 'Reclamada',
     price: '0 €',
-    status: 'Próximamente',
-    tone: 'soon',
-    blurb: 'Verificamos que eres el titular y te damos control sobre tu ficha, además de la insignia de negocio verificado.',
+    status: 'Activa ahora',
+    tone: 'live',
+    blurb: 'Verificas por email que eres el titular y tu ficha queda marcada como reclamada y verificada. El control para editar servicios, precios y fotos llega a continuación.',
   },
   {
     key: 'pro',
@@ -96,7 +97,7 @@ const faqs = [
   },
   {
     q: '¿Cómo reclamo mi negocio?',
-    a: `Escríbenos a ${CLAIM_EMAIL} con el nombre y la dirección del negocio. Confirmamos que eres el titular o su responsable y activamos el perfil, normalmente en 2-3 días hábiles. Estamos preparando un proceso de reclamación con código de verificación por email para hacerlo todo desde aquí.`,
+    a: `Busca tu negocio en el directorio, pulsa «Reclama este negocio» y verifica tu email con un código de 6 dígitos: la ficha queda marcada como reclamada y verificada al momento. Si lo prefieres, escríbenos a ${CLAIM_EMAIL} y lo hacemos nosotros.`,
   },
   {
     q: '¿Puedo cambiar los precios, los servicios o el horario?',
@@ -166,7 +167,7 @@ const mark = (v: 'y' | 'n') => (v === 'y' ? '✓' : '—');
 
       <div class="mt-6 flex flex-wrap items-center gap-3">
         <a
-          href={claimHref}
+          href={CLAIM_HREF}
           class="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors"
         >
           Reclamar mi negocio gratis
@@ -227,15 +228,15 @@ const mark = (v: 'y' | 'n') => (v === 'y' ? '✓' : '—');
         <li class="flex gap-4 p-5 rounded-xl bg-white border border-stone-200">
           <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">2</span>
           <div>
-            <h3 class="font-semibold text-stone-900">Escríbenos para reclamarlo</h3>
-            <p class="mt-1 text-sm text-stone-600">Un email con el nombre del negocio y la dirección. Confirmamos que eres el titular o su responsable antes de tocar nada.</p>
+            <h3 class="font-semibold text-stone-900">Verifica tu email</h3>
+            <p class="mt-1 text-sm text-stone-600">Pulsa «Reclama este negocio» en tu ficha y te enviamos un código de 6 dígitos. Confirmamos así que eres el titular o su responsable antes de tocar nada.</p>
           </div>
         </li>
         <li class="flex gap-4 p-5 rounded-xl bg-white border border-stone-200">
           <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">3</span>
           <div>
-            <h3 class="font-semibold text-stone-900">Tu ficha se actualiza</h3>
-            <p class="mt-1 text-sm text-stone-600">Publicamos los cambios en 2-3 días hábiles. Sin cuotas, sin contratos y sin exclusividad: seguimos comparando todos los negocios por igual.</p>
+            <h3 class="font-semibold text-stone-900">Tu ficha queda verificada</h3>
+            <p class="mt-1 text-sm text-stone-600">Pasa a estar marcada como negocio verificado y publicamos los cambios de datos que nos pidas en 2-3 días hábiles. Sin cuotas, sin contratos y sin exclusividad: seguimos comparando todos los negocios por igual.</p>
           </div>
         </li>
       </ol>
@@ -318,16 +319,16 @@ const mark = (v: 'y' | 'n') => (v === 'y' ? '✓' : '—');
     <section class="mt-14 p-8 rounded-2xl bg-brand-50 border border-brand-100 text-center">
       <h2 class="text-2xl font-bold text-stone-900">Reclama tu ficha gratis</h2>
       <p class="mt-2 text-stone-600 max-w-xl mx-auto">
-        Mándanos el nombre y la dirección de tu negocio. Te confirmamos que eres el titular y publicamos los cambios en 2-3 días hábiles.
+        Busca tu negocio, verifica tu email con un código de 6 dígitos y la ficha queda reclamada y verificada al momento.
       </p>
       <a
-        href={claimHref}
+        href={CLAIM_HREF}
         class="inline-flex items-center gap-2 mt-5 px-6 py-3 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors"
       >
         Reclamar mi negocio
       </a>
       <p class="mt-4 text-sm text-stone-600">
-        O escríbenos a <a href={claimHref} class="font-semibold text-brand-700 hover:underline">{CLAIM_EMAIL}</a>
+        O escríbenos a <a href={claimMailto} class="font-semibold text-brand-700 hover:underline">{CLAIM_EMAIL}</a>
       </p>
       <p class="mt-4 text-xs text-stone-500">
         Barcelona Compare es un agregador independiente y no está afiliado a Google. Las valoraciones provienen de Google Maps.

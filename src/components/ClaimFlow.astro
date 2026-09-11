@@ -1,0 +1,684 @@
+---
+/**
+ * Claim flow UI (B2B Phase 0) — "claim this business" with an emailed 6-digit code.
+ *
+ * One component, both locales (`lang`). The business is picked either from a deep
+ * link (`?place=<googlePlaceId>`, e.g. from a listing page) or by searching the
+ * build catalog (/data/claim-index.json). Everything after that is two API calls:
+ * `POST /api/claim/start` -> `POST /api/claim/verify`.
+ *
+ * No-JS fallback: the mailto link at the bottom is always rendered, so an owner
+ * without JavaScript can still reach a human.
+ */
+interface Props {
+  lang?: 'es' | 'en';
+}
+
+const { lang = 'es' } = Astro.props;
+const isEs = lang === 'es';
+
+const copy = isEs
+  ? {
+      breadcrumb: 'Reclamar ficha',
+      title: 'Reclama tu ficha en Barcelona Compare',
+      intro:
+        'Te enviamos un código de 6 dígitos por email y confirmamos que gestionas el negocio. Sin registro y sin contraseñas.',
+      steps: ['Tu negocio', 'Tu email', 'El código'],
+      businessTitle: '¿Qué negocio quieres reclamar?',
+      businessHint: 'Busca por nombre o por calle. Si no lo encuentras, escríbenos.',
+      searchLabel: 'Nombre o dirección',
+      searchPlaceholder: 'Ej.: Nails Poblenou, Carrer de Gràcia…',
+      noResults: 'No encontramos ningún negocio con ese nombre o esa dirección.',
+      selected: 'Vas a reclamar',
+      change: 'Cambiar negocio',
+      emailTitle: 'Tu email de contacto',
+      emailHint: 'Te enviamos el código aquí. Solo lo usamos para verificar la ficha.',
+      emailLabel: 'Email',
+      sendCode: 'Enviar código',
+      sending: 'Enviando…',
+      codeTitle: 'Introduce el código',
+      codeHint: 'Revisa tu correo (y la carpeta de spam). El código es válido 15 minutos.',
+      codeLabel: 'Código de 6 dígitos',
+      verify: 'Verificar y reclamar',
+      verifying: 'Verificando…',
+      resendIn: (s: number) => `Puedes pedir otro código en ${s} s`,
+      resend: 'Enviar otro código',
+      otherEmail: 'Usar otro email',
+      successTitle: '¡Ficha reclamada y verificada!',
+      successBody:
+        'Ya constas como propietario verificado. En los próximos días te avisaremos por email cuando puedas editar servicios, precios y fotos desde aquí.',
+      successLink: 'Ver mi ficha',
+      alreadyTitle: 'Esta ficha ya está reclamada',
+      alreadyBody:
+        'Si crees que es un error, o si necesitas cambiar el email de contacto, escríbenos y lo revisamos.',
+      fallback: '¿Prefieres que lo hagamos nosotros? Escríbenos a',
+      privacy:
+        'Usamos tu email únicamente para verificar que gestionas el negocio. Sin boletines y sin cederlo a terceros.',
+    }
+  : {
+      breadcrumb: 'Claim your listing',
+      title: 'Claim your business on Barcelona Compare',
+      intro:
+        'We email you a 6-digit code and confirm that you run the business. No sign-up, no passwords.',
+      steps: ['Your business', 'Your email', 'The code'],
+      businessTitle: 'Which business do you want to claim?',
+      businessHint: 'Search by name or by street. If it is not listed, write to us.',
+      searchLabel: 'Name or address',
+      searchPlaceholder: 'e.g. Nails Poblenou, Carrer de Gràcia…',
+      noResults: 'We found no business with that name or address.',
+      selected: 'You are claiming',
+      change: 'Change business',
+      emailTitle: 'Your contact email',
+      emailHint: 'We send the code here. We only use it to verify the listing.',
+      emailLabel: 'Email',
+      sendCode: 'Send code',
+      sending: 'Sending…',
+      codeTitle: 'Enter the code',
+      codeHint: 'Check your inbox (and the spam folder). The code is valid for 15 minutes.',
+      codeLabel: '6-digit code',
+      verify: 'Verify and claim',
+      verifying: 'Verifying…',
+      resendIn: (s: number) => `You can ask for another code in ${s}s`,
+      resend: 'Send another code',
+      otherEmail: 'Use another email',
+      successTitle: 'Listing claimed and verified',
+      successBody:
+        'You are now recorded as the verified owner. We will email you when you can edit services, prices and photos from here.',
+      successLink: 'View my listing',
+      alreadyTitle: 'This listing has already been claimed',
+      alreadyBody:
+        'If you think that is a mistake, or you need to change the contact email, write to us and we will look into it.',
+      fallback: 'Rather have us do it? Write to',
+      privacy:
+        'We use your email only to verify that you run the business. No newsletters, and we never share it.',
+    };
+
+const CONTACT_EMAIL = 'hola@barcelonacompare.com';
+---
+
+<div
+  id="claim-flow"
+  data-lang={lang}
+  data-catalog="/data/claim-index.json"
+  data-start="/api/claim/start"
+  data-verify="/api/claim/verify"
+  data-registry="/api/registry/"
+  class="max-w-2xl mx-auto px-4 py-12"
+>
+  <nav class="text-sm text-stone-500 mb-6" aria-label="breadcrumb">
+    <a href="/" class="hover:text-stone-700">{isEs ? 'Inicio' : 'Home'}</a>
+    <span class="mx-1.5 text-stone-300">/</span>
+    <a href={isEs ? '/for-businesses' : '/en/for-businesses'} class="hover:text-stone-700">{isEs ? 'Para negocios' : 'For businesses'}</a>
+    <span class="mx-1.5 text-stone-300">/</span>
+    <span class="text-stone-700 font-medium">{copy.breadcrumb}</span>
+  </nav>
+
+  <header>
+    <h1 class="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">{copy.title}</h1>
+    <p class="mt-4 text-lg text-stone-600 leading-relaxed">{copy.intro}</p>
+  </header>
+
+  <ol class="mt-8 flex flex-wrap gap-2 text-sm" aria-label={isEs ? 'Pasos' : 'Steps'}>
+    {copy.steps.map((step, i) => (
+      <li
+        class="claim-step flex items-center gap-2 px-3 py-1.5 rounded-full border border-stone-200 bg-white text-stone-500"
+        data-step-marker={['business', 'email', 'code'][i]}
+      >
+        <span class="font-semibold">{i + 1}</span>
+        <span>{step}</span>
+      </li>
+    ))}
+  </ol>
+
+  <div
+    id="claim-notice"
+    class="hidden mt-8 p-5 rounded-xl border border-amber-200 bg-amber-50 text-sm text-amber-900"
+    role="status"
+    aria-live="polite"
+  >
+    <p class="font-semibold" id="claim-notice-title"></p>
+    <p class="mt-1" id="claim-notice-body"></p>
+  </div>
+
+  <div
+    id="claim-error"
+    class="hidden mt-8 p-4 rounded-xl border border-red-200 bg-red-50 text-sm text-red-800"
+    role="alert"
+    aria-live="assertive"
+  >
+    <p id="claim-error-message" class="font-medium"></p>
+    <p id="claim-error-detail" class="mt-1 text-xs text-red-700/80"></p>
+  </div>
+
+  <!-- Step 1: which business ------------------------------------------------->
+  <section id="claim-step-business" class="mt-8" aria-labelledby="claim-business-heading">
+    <div class="p-6 rounded-xl bg-white border border-stone-200">
+      <h2 id="claim-business-heading" class="text-lg font-bold text-stone-900">{copy.businessTitle}</h2>
+      <p class="mt-1 text-sm text-stone-500">{copy.businessHint}</p>
+
+      <div id="claim-selected" class="hidden mt-5 p-4 rounded-lg border border-brand-200 bg-brand-50">
+        <p class="text-xs uppercase tracking-wide text-brand-700 font-semibold">{copy.selected}</p>
+        <p id="claim-selected-name" class="mt-1 font-semibold text-stone-900"></p>
+        <p id="claim-selected-address" class="text-sm text-stone-600"></p>
+        <button type="button" id="claim-change" class="mt-3 text-sm font-medium text-brand-700 hover:underline">
+          {copy.change}
+        </button>
+      </div>
+
+      <div id="claim-search-wrap" class="mt-5">
+        <label for="claim-search" class="block text-sm font-medium text-stone-700">{copy.searchLabel}</label>
+        <input
+          id="claim-search"
+          type="search"
+          autocomplete="off"
+          placeholder={copy.searchPlaceholder}
+          class="mt-1.5 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:border-brand-400 focus:ring-2 focus:ring-brand-100 outline-none"
+        />
+        <ul id="claim-results" class="mt-3 divide-y divide-stone-100 rounded-lg border border-stone-200 bg-white hidden"></ul>
+        <p id="claim-no-results" class="hidden mt-3 text-sm text-stone-500">{copy.noResults}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 2: email ---------------------------------------------------------->
+  <section id="claim-step-email" class="hidden mt-6" aria-labelledby="claim-email-heading">
+    <form id="claim-email-form" class="p-6 rounded-xl bg-white border border-stone-200" novalidate>
+      <h2 id="claim-email-heading" class="text-lg font-bold text-stone-900">{copy.emailTitle}</h2>
+      <p class="mt-1 text-sm text-stone-500">{copy.emailHint}</p>
+      <label for="claim-email" class="mt-5 block text-sm font-medium text-stone-700">{copy.emailLabel}</label>
+      <input
+        id="claim-email"
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        inputmode="email"
+        class="mt-1.5 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:border-brand-400 focus:ring-2 focus:ring-brand-100 outline-none"
+      />
+      <button
+        type="submit"
+        id="claim-email-submit"
+        class="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors disabled:opacity-60"
+      >
+        {copy.sendCode}
+      </button>
+      <p class="mt-4 text-xs text-stone-500">{copy.privacy}</p>
+    </form>
+  </section>
+
+  <!-- Step 3: code ---------------------------------------------------------->
+  <section id="claim-step-code" class="hidden mt-6" aria-labelledby="claim-code-heading">
+    <form id="claim-code-form" class="p-6 rounded-xl bg-white border border-stone-200" novalidate>
+      <h2 id="claim-code-heading" class="text-lg font-bold text-stone-900">{copy.codeTitle}</h2>
+      <p class="mt-1 text-sm text-stone-500">
+        <span id="claim-code-sent-to" class="font-medium text-stone-700"></span>
+        <span class="block mt-1">{copy.codeHint}</span>
+      </p>
+      <label for="claim-code" class="mt-5 block text-sm font-medium text-stone-700">{copy.codeLabel}</label>
+      <input
+        id="claim-code"
+        name="code"
+        type="text"
+        required
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        pattern="\d{6}"
+        maxlength="6"
+        class="mt-1.5 w-40 rounded-lg border border-stone-300 px-3 py-2 text-lg tracking-[0.3em] font-semibold focus:border-brand-400 focus:ring-2 focus:ring-brand-100 outline-none"
+      />
+      <div class="mt-5 flex flex-wrap items-center gap-4">
+        <button
+          type="submit"
+          id="claim-code-submit"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors disabled:opacity-60"
+        >
+          {copy.verify}
+        </button>
+        <button type="button" id="claim-resend" disabled class="text-sm font-medium text-stone-400 disabled:cursor-not-allowed">
+          {copy.resend}
+        </button>
+        <button type="button" id="claim-back-email" class="text-sm font-medium text-brand-700 hover:underline">
+          {copy.otherEmail}
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Done ------------------------------------------------------------------>
+  <section id="claim-step-done" class="hidden mt-6">
+    <div class="p-6 rounded-xl border border-emerald-200 bg-emerald-50">
+      <h2 class="text-lg font-bold text-emerald-900">{copy.successTitle}</h2>
+      <p class="mt-2 text-sm text-emerald-900/90">
+        <strong id="claim-done-name" class="font-semibold"></strong>
+        <span class="block mt-2">{copy.successBody}</span>
+      </p>
+      <a
+        id="claim-done-link"
+        href="/"
+        class="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors"
+      >
+        {copy.successLink}
+      </a>
+    </div>
+  </section>
+
+  <section id="claim-step-already" class="hidden mt-6">
+    <div class="p-6 rounded-xl border border-amber-200 bg-amber-50">
+      <h2 class="text-lg font-bold text-amber-900">{copy.alreadyTitle}</h2>
+      <p class="mt-2 text-sm text-amber-900/90">{copy.alreadyBody}</p>
+    </div>
+  </section>
+
+  <p class="mt-8 text-sm text-stone-500">
+    {copy.fallback}
+    <a href={`mailto:${CONTACT_EMAIL}`} class="font-semibold text-brand-700 hover:underline">{CONTACT_EMAIL}</a>
+  </p>
+</div>
+
+<script>
+  type CatalogEntry = {
+    placeId: string;
+    slug: string;
+    name: string;
+    category: string;
+    address?: string;
+    neighborhood?: string;
+    rating?: number;
+    reviews?: number;
+  };
+
+  const root = document.getElementById('claim-flow') as HTMLElement | null;
+
+  if (root) {
+    const lang = (root.dataset.lang === 'en' ? 'en' : 'es') as 'es' | 'en';
+    const isEs = lang === 'es';
+
+    const messages = {
+      invalid_email: isEs
+        ? 'Ese email no parece válido. Revisa que no falte nada.'
+        : 'That email does not look valid. Please check it.',
+      already_claimed: isEs
+        ? 'Esa ficha ya está reclamada por otra persona. Si crees que es un error, escríbenos.'
+        : 'That listing has already been claimed by somebody else. If you think it is a mistake, write to us.',
+      not_found: isEs
+        ? 'No encontramos ese negocio en el directorio.'
+        : 'We could not find that business in the directory.',
+      rate_limited: isEs
+        ? 'Has pedido demasiados códigos. Espera unos minutos e inténtalo de nuevo.'
+        : 'You have asked for too many codes. Wait a few minutes and try again.',
+      invalid_code: isEs
+        ? 'El código no es correcto. Revisa el email o pide uno nuevo.'
+        : 'That code is not correct. Check the email or ask for a new one.',
+      code_expired: isEs
+        ? 'El código ha caducado. Pide uno nuevo.'
+        : 'The code has expired. Ask for a new one.',
+      too_many_attempts: isEs
+        ? 'Demasiados intentos con este código. Pide uno nuevo.'
+        : 'Too many attempts with this code. Ask for a new one.',
+      catalog_unavailable: isEs
+        ? 'El listado de negocios no está disponible ahora mismo. Inténtalo en un minuto.'
+        : 'The business list is unavailable right now. Try again in a minute.',
+      network: isEs
+        ? 'No hemos podido contactar con el servidor. Comprueba tu conexión e inténtalo de nuevo.'
+        : 'We could not reach the server. Check your connection and try again.',
+      generic: isEs
+        ? 'Algo ha fallado. Inténtalo de nuevo en un minuto o escríbenos.'
+        : 'Something went wrong. Try again in a minute, or write to us.',
+    };
+
+    const el = <T extends HTMLElement>(id: string): T => {
+      const node = document.getElementById(id);
+      if (!node) throw new Error(`claim-flow: missing #${id}`);
+      return node as T;
+    };
+    const steps = {
+      business: el('claim-step-business'),
+      email: el('claim-step-email'),
+      code: el('claim-step-code'),
+      done: el('claim-step-done'),
+      already: el('claim-step-already'),
+    };
+    const markers = Array.from(root.querySelectorAll<HTMLElement>('[data-step-marker]'));
+    const searchWrap = el('claim-search-wrap');
+    const searchInput = el<HTMLInputElement>('claim-search');
+    const results = el<HTMLUListElement>('claim-results');
+    const noResults = el('claim-no-results');
+    const selectedBox = el('claim-selected');
+    const selectedName = el('claim-selected-name');
+    const selectedAddress = el('claim-selected-address');
+    const emailForm = el<HTMLFormElement>('claim-email-form');
+    const emailInput = el<HTMLInputElement>('claim-email');
+    const emailSubmit = el<HTMLButtonElement>('claim-email-submit');
+    const codeForm = el<HTMLFormElement>('claim-code-form');
+    const codeInput = el<HTMLInputElement>('claim-code');
+    const codeSubmit = el<HTMLButtonElement>('claim-code-submit');
+    const codeSentTo = el('claim-code-sent-to');
+    const resend = el<HTMLButtonElement>('claim-resend');
+    const backEmail = el('claim-back-email');
+    const notice = el('claim-notice');
+    const noticeTitle = el('claim-notice-title');
+    const noticeBody = el('claim-notice-body');
+    const errorBox = el('claim-error');
+    const errorMessage = el('claim-error-message');
+    const errorDetail = el('claim-error-detail');
+    const doneName = el('claim-done-name');
+    const doneLink = el<HTMLAnchorElement>('claim-done-link');
+
+    let catalog: CatalogEntry[] | null = null;
+    let catalogPromise: Promise<CatalogEntry[]> | null = null;
+    let business: CatalogEntry | null = null;
+    let email = '';
+    let cooldownTimer: number | undefined;
+
+    const strip = (value: string) =>
+      value
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+
+    function showStep(step: 'business' | 'email' | 'code' | 'done' | 'already') {
+      for (const [name, node] of Object.entries(steps)) node.classList.toggle('hidden', name !== step);
+      markers.forEach(marker => {
+        const active = marker.dataset.stepMarker === step;
+        marker.classList.toggle('bg-brand-50', active);
+        marker.classList.toggle('border-brand-200', active);
+        marker.classList.toggle('text-brand-700', active);
+        marker.classList.toggle('text-stone-500', !active);
+      });
+    }
+
+    function clearError() {
+      errorBox.classList.add('hidden');
+      errorMessage.textContent = '';
+      errorDetail.textContent = '';
+    }
+
+    function showError(code: string | undefined, detail?: string) {
+      const message = (code && messages[code as keyof typeof messages]) || messages.generic;
+      errorMessage.textContent = message;
+      errorDetail.textContent = detail && detail !== message ? detail : '';
+      errorDetail.classList.toggle('hidden', !errorDetail.textContent);
+      errorBox.classList.remove('hidden');
+      errorBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function showNotice(title: string, body: string) {
+      noticeTitle.textContent = title;
+      noticeBody.textContent = body;
+      notice.classList.remove('hidden');
+    }
+
+    function loadCatalog(): Promise<CatalogEntry[]> {
+      if (catalog) return Promise.resolve(catalog);
+      if (!catalogPromise) {
+        catalogPromise = fetch(root!.dataset.catalog as string)
+          .then(response => (response.ok ? response.json() : Promise.reject(new Error(`catalog ${response.status}`))))
+          .then((payload: { businesses?: CatalogEntry[] }) => {
+            catalog = Array.isArray(payload.businesses) ? payload.businesses : [];
+            return catalog;
+          })
+          .catch(error => {
+            catalogPromise = null;
+            throw error;
+          });
+      }
+      return catalogPromise;
+    }
+
+    function addressLine(entry: CatalogEntry) {
+      const parts = [entry.address, entry.neighborhood].filter(Boolean);
+      return parts.join(' · ');
+    }
+
+    function selectBusiness(entry: CatalogEntry) {
+      business = entry;
+      selectedName.textContent = entry.name;
+      const rating = entry.rating ? `★${entry.rating}` : '';
+      const reviews = entry.reviews ? `${entry.reviews} ${isEs ? 'reseñas' : 'reviews'}` : '';
+      selectedAddress.textContent = [addressLine(entry), [rating, reviews].filter(Boolean).join(' · ')]
+        .filter(Boolean)
+        .join(' — ');
+      selectedBox.classList.remove('hidden');
+      searchWrap.classList.add('hidden');
+      results.classList.add('hidden');
+      noResults.classList.add('hidden');
+      clearError();
+      showStep('email');
+      emailInput.focus();
+    }
+
+    function resetBusiness() {
+      business = null;
+      selectedBox.classList.add('hidden');
+      searchWrap.classList.remove('hidden');
+      searchInput.focus();
+      showStep('business');
+    }
+
+    async function search(query: string) {
+      const needle = strip(query.trim());
+      if (needle.length < 2) {
+        results.classList.add('hidden');
+        noResults.classList.add('hidden');
+        return;
+      }
+      const entries = await loadCatalog();
+      const matches = entries
+        .filter(
+          entry =>
+            strip(entry.name).includes(needle) ||
+            strip(entry.address ?? '').includes(needle) ||
+            strip(entry.neighborhood ?? '').includes(needle),
+        )
+        .sort((a, b) => (b.reviews ?? 0) - (a.reviews ?? 0))
+        .slice(0, 8);
+
+      results.innerHTML = '';
+      if (!matches.length) {
+        results.classList.add('hidden');
+        noResults.classList.remove('hidden');
+        return;
+      }
+      noResults.classList.add('hidden');
+      for (const entry of matches) {
+        const li = document.createElement('li');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'w-full text-left px-4 py-3 hover:bg-stone-50 transition-colors';
+        const name = document.createElement('span');
+        name.className = 'block font-medium text-stone-900';
+        name.textContent = entry.name;
+        const detail = document.createElement('span');
+        detail.className = 'block text-xs text-stone-500';
+        detail.textContent = [addressLine(entry), entry.category === 'massage' ? (isEs ? 'masajes' : 'massage') : isEs ? 'uñas' : 'nails']
+          .filter(Boolean)
+          .join(' · ');
+        button.append(name, detail);
+        button.addEventListener('click', () => selectBusiness(entry));
+        li.append(button);
+        results.append(li);
+      }
+      results.classList.remove('hidden');
+    }
+
+    async function postJson(url: string, body: Record<string, unknown>) {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      let payload: Record<string, unknown> = {};
+      try {
+        payload = await response.json();
+      } catch {
+        payload = {};
+      }
+      return { ok: response.ok, status: response.status, payload };
+    }
+
+    function startCooldown(seconds: number) {
+      window.clearInterval(cooldownTimer);
+      let left = Math.max(seconds, 0);
+      const template = isEs ? (s: number) => `Puedes pedir otro código en ${s} s` : (s: number) => `You can ask for another code in ${s}s`;
+      const idle = isEs ? 'Enviar otro código' : 'Send another code';
+      const tick = () => {
+        if (left <= 0) {
+          window.clearInterval(cooldownTimer);
+          resend.disabled = false;
+          resend.textContent = idle;
+          return;
+        }
+        resend.disabled = true;
+        resend.textContent = template(left);
+        left -= 1;
+      };
+      tick();
+      cooldownTimer = window.setInterval(tick, 1000);
+    }
+
+    async function requestCode() {
+      if (!business) return;
+      clearError();
+      emailSubmit.disabled = true;
+      emailSubmit.textContent = isEs ? 'Enviando…' : 'Sending…';
+      try {
+        const { ok, payload } = await postJson(root!.dataset.start as string, {
+          placeId: business.placeId,
+          email,
+          locale: lang,
+        });
+        if (!ok) {
+          const error = String(payload.error ?? '');
+          if (error === 'already_claimed') {
+            showStep('already');
+            return;
+          }
+          showError(error, String(payload.message ?? ''));
+          return;
+        }
+        const state = String(payload.state ?? '');
+        if (state === 'already_verified') {
+          showStep('already');
+          return;
+        }
+        codeSentTo.textContent = isEs ? `Hemos enviado el código a ${email}.` : `We sent the code to ${email}.`;
+        codeInput.value = '';
+        showStep('code');
+        codeInput.focus();
+        startCooldown(Number(payload.resendInSeconds ?? 60));
+        if (String(payload.delivery ?? '') === 'none') {
+          showNotice(
+            isEs ? 'Revisa tu correo' : 'Check your inbox',
+            isEs
+              ? 'Si en unos minutos no llega el código, escríbenos y te verificamos manualmente.'
+              : 'If the code does not arrive in a few minutes, write to us and we will verify you by hand.',
+          );
+        }
+      } catch {
+        showError('network');
+      } finally {
+        emailSubmit.disabled = false;
+        emailSubmit.textContent = isEs ? 'Enviar código' : 'Send code';
+      }
+    }
+
+    emailForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const value = emailInput.value.trim();
+      if (!/^[^@\s]+@[^@\s.]+\.[^@\s.]+$/.test(value)) {
+        showError('invalid_email');
+        emailInput.focus();
+        return;
+      }
+      email = value;
+      void requestCode();
+    });
+
+    codeForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (!business) return;
+      clearError();
+      codeSubmit.disabled = true;
+      codeSubmit.textContent = isEs ? 'Verificando…' : 'Verifying…';
+      try {
+        const { ok, payload } = await postJson(root!.dataset.verify as string, {
+          placeId: business.placeId,
+          email,
+          code: codeInput.value.trim(),
+        });
+        if (!ok) {
+          showError(String(payload.error ?? ''), String(payload.message ?? ''));
+          return;
+        }
+        const record = (payload.business ?? {}) as { name?: string };
+        doneName.textContent = record.name ?? business.name;
+        doneLink.href = String(payload.listingUrl ?? `/${business.category}/${business.slug}/`);
+        showStep('done');
+      } catch {
+        showError('network');
+      } finally {
+        codeSubmit.disabled = false;
+        codeSubmit.textContent = isEs ? 'Verificar y reclamar' : 'Verify and claim';
+      }
+    });
+
+    resend.addEventListener('click', () => {
+      if (!business) return;
+      void requestCode();
+    });
+
+    backEmail.addEventListener('click', () => {
+      window.clearInterval(cooldownTimer);
+      showStep('email');
+      emailInput.focus();
+    });
+
+    el('claim-change').addEventListener('click', () => resetBusiness());
+
+    let searchTimer: number | undefined;
+    searchInput.addEventListener('input', () => {
+      window.clearTimeout(searchTimer);
+      searchTimer = window.setTimeout(() => {
+        void search(searchInput.value).catch(() => showError('catalog_unavailable'));
+      }, 120);
+    });
+
+    // Deep link: /reclamar/?place=<googlePlaceId>
+    const placeParam = new URLSearchParams(window.location.search).get('place');
+    if (placeParam) {
+      void loadCatalog()
+        .then(async entries => {
+          const entry = entries.find(item => item.placeId === placeParam);
+          if (!entry) {
+            showNotice(
+              isEs ? 'No encontramos esa ficha' : 'We could not find that listing',
+              isEs
+                ? 'Busca tu negocio por nombre o por calle, o escríbenos y lo miramos.'
+                : 'Search for your business by name or street, or write to us and we will check.',
+            );
+            showStep('business');
+            return;
+          }
+          // Public, PII-free registry read: if somebody already verified it, say so
+          // before making the owner go through the code step.
+          try {
+            const response = await fetch(`${root!.dataset.registry}${encodeURIComponent(entry.placeId)}`);
+            if (response.ok) {
+              const payload = (await response.json()) as { business?: { verified?: boolean } };
+              if (payload?.business?.verified) {
+                doneName.textContent = entry.name;
+                showStep('already');
+                return;
+              }
+            }
+          } catch {
+            // Non-fatal: fall through to the normal flow.
+          }
+          selectBusiness(entry);
+        })
+        .catch(() => showError('catalog_unavailable'));
+    } else {
+      showStep('business');
+    }
+  }
+</script>

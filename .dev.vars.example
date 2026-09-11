@@ -6,3 +6,14 @@
 # (GET /api/analytics, GET /api/analytics/:placeId). The public write path
 # POST /api/track needs no token.
 REGISTRY_ADMIN_TOKEN=local-dev-token
+
+# HMAC key for the claim-flow verification codes (any 16+ character string locally).
+# Required by POST /api/claim/start and /api/claim/verify; in production it is a
+# Pages secret of the same name. See docs/claim-flow.md.
+CLAIM_CODE_SECRET=local-dev-claim-code-secret-not-for-production
+
+# Optional (B2B Phase 1 owner login codes). Without these the 6-digit code is only
+# logged, and an operator holding REGISTRY_ADMIN_TOKEN gets it back in the
+# /api/owner/session response to hand it to the owner.
+# RESEND_API_KEY=re_xxxxxxxx
+# EMAIL_FROM="Barcelona Compare <hola@barcelonacompare.com>"
