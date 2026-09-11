@@ -15,6 +15,7 @@ Living backlog. Update in place; mark shipped items with the commit hash.
 - ✅ **EN compare page + lang-aware tray** — `/en/compare/` mirrors `/compare/`; tray CTA, comparison detail links and browse buttons follow the page language; cross-linked from EN homepage + money pages (204d0ae, Sep 11)
 - ✅ **Business registry (B2B Phase 0)** — D1 `barcelona-compare-registry` keyed by `placeId`: claimed/verified flags, owner email, tier, claim dates + append-only audit trail; read/write path proven end to end through the deployed Pages Functions (ec0e017, Sep 11; `docs/business-registry.md`)
 - ✅ **Per-business event tracking** — first-party, cookie-less counters for detail-page views + outbound clicks (phone, WhatsApp, website, directions), D1 `business_events` keyed by `placeId` and aggregated at write time; machine-readable read path `GET /api/analytics[/:placeId]` behind the registry admin token, plus a "Cómo llegar" / "Get directions" CTA on all four detail-page templates (`docs/business-analytics.md`)
+- ✅ **Claim flow with email verification (B2B Phase 0)** — `/reclamar/` (ES) + `/en/claim-business/` (EN): owner picks the business, a 6-digit code goes to their email, and only then does the record go `claimed` + `verified`. Pending codes live in `claim_requests` (HMAC-hashed, 15-min TTL, single use, throttled) so requesting a code never touches the registry (5daa40e, Sep 11; `docs/claim-flow.md`; 54-assertion `scripts/claim-smoke.sh`)
 - ✅ R2/CDN migration for images (July 2026)
 
 ---
@@ -26,11 +27,18 @@ free tiers get partners in the door, paid tiers only work once businesses can se
 what they're paying for.
 
 ### Phase 0 — Foundation (1 week, €0 to run)
-- **Claim flow with email verification.** "Claim this business" → owner enters email →
-  6-digit code → `claimed` + `verified` flags on the record. Requires a small backend
-  (Cloudflare Pages Function + D1); site stays static. **Unblocked** — the registry
-  data layer (`functions/_lib/registry.ts`) already exposes `claimBusiness()` /
-  `verifyBusiness()`; the card only has to add the 6-digit code step.
+- ✅ **Claim flow with email verification** — `/reclamar/` (ES) + `/en/claim-business/` (EN):
+  "Claim this business" → owner enters email → 6-digit code → `claimed` + `verified` flags on
+  the record (5daa40e, Sep 11; `docs/claim-flow.md`). Proven live end to end: a real business
+  claimed through the UI, the code round-tripped through a real inbox, and the audit trail
+  recorded `claim` → `verify` by `claim-flow`.
+- **Claim flow — transactional email transport (open).** The edge mails the code only when
+  `RESEND_API_KEY` + `EMAIL_FROM` are set as Pages secrets; until a provider key exists the code
+  waits in the operator outbox (`GET /api/claim/outbox`, admin token) and a human hands it over.
+  The owner-facing UI covers that case ("if the code does not arrive, write to us").
+- **Claim CTA on the listing itself (open).** Detail pages still have no "¿Gestionas este
+  negocio? Reclámalo" link — the flow is reachable from `/for-businesses` only. The deep link
+  `/reclamar/?place=<placeId>` is already live for those pages.
 - ✅ **Business registry** keyed by `googlePlaceId`: claim status, owner email, tier,
   claim date — D1 `barcelona-compare-registry` + Pages Functions API
   (`GET`/`PUT /api/registry`), audit trail, 42-assertion smoke test
