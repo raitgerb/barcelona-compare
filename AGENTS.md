@@ -42,10 +42,12 @@ public/
 - Slugs are normalized (no special chars, lowercase, hyphens)
 - Photos served from R2 CDN: `pub-37760591f0394eafb9519ca1c4db5865.r2.dev`
 
-## Current state (August 2026)
-- 2,475 pages live (commit d6572e1, Aug 23): derived languages-served from review languageCodes, per-business og:image, barrio↔guide cross-links, ItemList schema on 10 guides, 19 money pages at /mejores/{category}/{barrio}/ (Bayesian ranking + FAQPage schema)
-- Fonts self-hosted (Inter/Fraunces woff2, preloaded)
-- Backlog: rating-distribution bars, review keywords, search over streets/services, /en/compare + EN guides + EN mejores pages, Catalan locale, un-pause weekly refresh cron a0357cbcaf3b
+## Current state (Sep 11 2026)
+- 2,643 pages built (commit 337c7b8): rating-distribution bars + bilingual review keywords on all detail pages, `/en/barrio/` hub + 10 EN district guides, EN money pages (`/en/mejores/`) live with district/service/combo routes, instant search + open-now badges + photo-less sorting + prev/next nav (b6afc42)
+- **Open work lives in FUTURE.md** — includes the active B2B/partner program (phases 0-3), the missing `/en/compare/` page, Catalan locale, and deferred data collection
+- **Known gap**: `/en/compare/` does not exist (returns homepage soft-404) and the compare tray in `src/scripts/listing.ts` hardcodes `/compare`, sending EN users to the Spanish page
+- Backlog: Catalan locale, R2 custom domain, smart photo selection
+- Weekly refresh cron `a0357cbcaf3b` is **intentionally paused** (Rutger, Sep 11 2026) — do not re-enable or re-propose without asking
 - Google Places editorialSummary coverage ~3% for this niche — do NOT re-propose the $37 fetch; script kept at scripts/fetch-editorial.py
 
 ## R2 images

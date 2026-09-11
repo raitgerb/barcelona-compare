@@ -1,70 +1,110 @@
-# Future Work
+# Barcelona Compare — Future Work
 
-## Build Plan (July 2026) — Active
+Living backlog. Update in place; mark shipped items with the commit hash.
 
-### Search
-**Why:** 480 businesses across 16 pages with only dropdown filters. Users can't search by name, street, or keyword.
-**Approach:** Client-side text input on listing pages that filters the visible cards by business name and neighborhood. No API calls needed — pure JS filtering of already-loaded data.
-**Priority:** High
+## Shipped (was backlog)
 
-### Sort no-photo listings to bottom
-**Why:** Many business cards show blank white space instead of photos, making the grid look broken. Lower-rated businesses tend to have no photos.
-**Approach:** Add a secondary sort: within any sort order (rating, reviews, price), push businesses with 0 photos to the bottom. Or add a "has photos" boolean to the frontmatter and use it in sort logic.
-**Priority:** High
+- ✅ **Instant search** on listing pages — name/street/service, accent-insensitive (b6afc42, Aug 23; verified live)
+- ✅ **Sort photo-less listings to bottom** (b6afc42)
+- ✅ **"Open now" badges** on listing cards (b6afc42)
+- ✅ **Prev/Next navigation** on detail pages (b6afc42)
+- ✅ **Rating-distribution bars** on all detail pages — build-time histogram, honest "estimated from recent reviews" labeling (337c7b8, Sep 11)
+- ✅ **Review keywords** — bilingual keyword chips mined from Google reviews, 912 pages (337c7b8)
+- ✅ **EN money pages** — `/en/mejores/{cat}/`, district, service and combo routes (shipped with ea9bbe0)
+- ✅ **EN barrio guides** — `/en/barrio/` hub + 10 district guides, EN nav + homepage + money-page cross-links (337c7b8)
+- ✅ R2/CDN migration for images (July 2026)
 
-### "Open now" indicator on listing cards
-**Why:** Opening hours data exists in every business markdown file. Showing open/closed status at a glance is table stakes for local directories.
-**Approach:** Client-side: compare current Barcelona time against each business's hours, show a green "Abierto ahora" / "Open now" or gray "Cerrado" / "Closed" badge on each card.
-**Priority:** Medium
+---
 
-### Prev/Next navigation on detail pages
-**Why:** Once on a business page, the only way to see another is "← Back to salons" → scroll → find next → click. Sequential browsing is how people explore directories.
-**Approach:** Add "← Prev | Next →" links at top and bottom of each detail page, cycling through businesses in the current sort order.
-**Priority:** Medium
+## 1. B2B / Partner program — **ACTIVE, priority 1**
 
-## ~~R2 / CDN migration for images~~ ✅ DONE (July 2026)
-Photos migrated to R2 bucket `barcelona-compare-images`, served via public R2.dev URL, removed from git tracking.
+Goal: convert the directory into a platform with engaged partners. Sequence matters —
+free tiers get partners in the door, paid tiers only work once businesses can see
+what they're paying for.
 
-## Custom domain for R2 images
-**Why:** Current URL (`pub-37760591f0394eafb9519ca1c4db5865.r2.dev`) is a Cloudflare hash. A custom subdomain (`images.barcelonacompare.com`) looks professional and shares domain authority.  
-**Steps:**
-1. In Cloudflare dashboard → R2 → `barcelona-compare-images` → Settings → Custom Domains
-2. Add `images.barcelonacompare.com` (Cloudflare will auto-configure DNS since the zone is already managed)
-3. Update `R2_IMAGE_BASE_URL` env var in Cloudflare Pages to `https://images.barcelonacompare.com`
-4. Redeploy
-**Priority:** Low — cosmetic only. The `pub-` URL works fine.
+### Phase 0 — Foundation (1 week, €0 to run)
+- **Claim flow with email verification.** "Claim this business" → owner enters email →
+  6-digit code → `claimed` + `verified` flags on the record. Requires a small backend
+  (Cloudflare Pages Function + D1); site stays static.
+- **Business registry** keyed by `googlePlaceId`: claim status, owner email, tier,
+  claim date. JSON in a private repo or D1.
+- **Rewrite `/for-businesses`** into a real landing page: value prop, tier comparison,
+  FAQ, claim CTA. (Current page is a placeholder with a mailto line and "coming soon".)
 
-## Smart photo selection
-**Why:** Google returns 10 photos per business, we pick the first 5 blindly. Some are blurry, dark, logos, or menus.  
-**Approach:** Build-time heuristic (no AI, no service) to score and pick the best 5.  
-**Scoring signals:**
-- File size (bigger → less compression, more detail)
-- Brightness (reject near-black photos)
-- Aspect ratio (reject extreme panoramas — usually menus or logos)
-- Resolution (reject tiny thumbnails)
-**When to upgrade to a service:** 10,000+ images, on-the-fly transforms needed, or user-uploaded content requiring moderation.
-**Priority:** Low — current photos are good enough. Adds polish.
+### Phase 1 — Free tier (2–3 weeks)
+- **Verified badge** on detail + listing + money pages (trust for them, conversion for us).
+- **Self-service profile edits**: services, prices, photos, hours via a form
+  (Pages Function + D1, rebuild or edge-inject).
+- **WhatsApp / booking CTA upgrade** — only 9 of 1,182 businesses currently have a
+  WhatsApp link. This market books on WhatsApp; this is the highest-impact free perk.
 
-## Complete remaining data collection
-**Why:** `scripts/broaden.py` found 2,107 candidates but only processed 1,232 (killed at user request). ~875 remain uncollected — mostly businesses in outer barrios (Sant Andreu, Nou Barris, Horta-Guinardó) and marginal keyword variants.
+### Phase 2 — Paid tier (after ~20 claimed partners)
+- **Pro (~€15–25/mo)**: disclosed priority placement in the Bayesian ranking, expanded
+  photo gallery, service-page featuring, verified slots on money pages.
+- **Partner analytics by email** — monthly profile views + clicks. No login; owners are
+  non-technical.
+- **Billing**: Stripe Payment Links (no dashboard build).
 
-**What's needed:**
-1. Modify `scripts/broaden.py` to **resume** rather than restart — skip already-collected place IDs
-2. Or: write a standalone script that reads the skipped candidates from a saved JSON file (the broaden script doesn't currently save a candidate list — it discovers + enriches in one pass)
-3. **Better approach for next time:** Split into two phases:
-   - **Phase 1 (discovery):** Run all three strategies, save candidate place IDs + names to `data/candidates.json` — fast, no enrichment
-   - **Phase 2 (enrichment):** Read `data/candidates.json`, filter out already-collected, enrich remaining in batches (e.g., 100 at a time with `--batch` flag)
+### Phase 3 — Ecosystem (later)
+- Booking integration or referral deal with existing tools (Fresha, Booksy) — partner, don't compete.
+- Catalan locale for partner-facing surfaces.
+- "What clients say about you" — expose the review-keyword engine as a partner-facing asset.
 
-**To run a second pass now:**
-```bash
-# The script deduplicates against existing content files, so re-running
-# will skip what we already have. But it will re-run all 550+ discovery
-# queries. Add --skip-discovery to jump straight to enrichment from a
-# saved candidate list (need to implement this first).
-python scripts/broaden.py
-```
+### Open questions
+- Traffic numbers from Cloudflare Web Analytics before setting price points.
+- Does the verified badge need to be visible enough to sell the paid tier? (Probably yes.)
 
-**Estimated remaining:** 200-400 legitimate nail/massage businesses in the unprocessed ~875 candidates (rest are false positives from loose grid search types).
+---
 
-**Priority:** Medium — current 848 businesses is already solid coverage. This is marginal gain.
-**Status:** Deferred (July 2026) — not worth the $25–50 in Google API costs right now. Revisit when the site has more traffic and marginal coverage matters more. This is a "later," not a "never."
+## 2. EN compare page + tray link bug — **priority 2, small**
+
+- `/en/compare/` **does not exist** — request returns the homepage (soft-404, canonical `/`).
+  ES `/compare/` works. Build the EN mirror of `src/pages/compare.astro`.
+- **Bug**: the compare tray in `src/scripts/listing.ts` hardcodes `href="/compare"`, so on
+  EN pages it sends users to the Spanish page. Should respect `document.documentElement.lang`.
+- Cross-link the EN compare page from EN money pages and the EN homepage.
+
+## 3. Catalan locale — priority 3
+
+- `astro.config.mjs` i18n has `locales: ['es', 'en']`. Adding `ca` means a third copy of
+  `src/i18n/ui.ts` plus route trees for all page families.
+- Cost/benefit: real local-market credibility, but ~2,600 more pages to build and it
+  triples the translation surface for every future feature. Revisit after the B2B work —
+  partner-facing Catalan is a smaller, cheaper subset (see Phase 3).
+
+## 4. Custom domain for R2 images — priority 4, cosmetic
+
+- `images.barcelonacompare.com` instead of the `pub-37760591...r2.dev` hash.
+- Steps: CF dashboard → R2 → `barcelona-compare-images` → Settings → Custom Domains → add
+  subdomain → update `R2_IMAGE_BASE_URL` in Pages → redeploy.
+- Zero functional gain; only worth it when sharing URLs publicly.
+
+## 5. Smart photo selection — priority 4
+
+- Google returns 10 photos/business; we take the first 5 blindly. Some are blurry, dark,
+  logos or menus.
+- Build-time heuristic, no AI, no paid service: file size (compression/detail), brightness
+  (reject near-black), aspect ratio (reject extreme panoramas), resolution (reject thumbnails).
+- Trigger to upgrade to a service: 10k+ images, on-the-fly transforms, or user uploads.
+
+## 6. Remaining data collection (~875 candidates) — **deferred**
+
+- `scripts/broaden.py` found 2,107 candidates, processed 1,232. ~875 remain — mostly outer
+  barrios (Sant Andreu, Nou Barris, Horta-Guinardó) and marginal keyword variants.
+- Estimated 200–400 legitimate businesses in that set; the rest are false positives.
+- Requires refactor first: split into **Phase 1 discovery** (save `data/candidates.json`)
+  and **Phase 2 enrichment** (read list, skip existing place IDs, batch 100 at a time).
+- Cost: **$25–50** in Google Places API. Deferred until traffic justifies marginal coverage.
+- **Decision (Sep 11 2026): stays deferred.**
+
+## 7. Weekly refresh cron — **intentionally paused**
+
+- Cron `a0357cbcaf3b`. Rutger's decision (Sep 11 2026): leave paused. Do not re-enable
+  or re-propose without asking.
+
+---
+
+## Explicitly declined / do not re-propose
+
+- **Google Places `editorialSummary` fetch ($37)** — ~3% coverage in this niche. Script kept
+  at `scripts/fetch-editorial.py` for reference only.
