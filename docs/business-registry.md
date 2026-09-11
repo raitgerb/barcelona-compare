@@ -138,3 +138,26 @@ and updating that file.
 Preview deployments share the **production** database — a preview write lands in
 the real registry. Keep that in mind before running `registry-smoke.sh --url`
 against a preview URL.
+
+## Verified badge (B2B Phase 1)
+
+The badge marks a business whose owner claimed it **and** completed verification.
+
+- **Component**: `src/components/VerifiedBadge.astro` — ES + EN copy in one place,
+  `variant="card"` for grids and `variant="detail"` for detail pages, plus a
+  separate, clearly labelled `Socio Pro` / `Pro partner` chip when `tier = pro`
+  (paid placement never masquerades as organic trust).
+- **Read path**: `src/lib/registry.ts` fetches `GET /api/registry?status=verified`
+  **at build time**, keyed on `googlePlaceId` (the value every business markdown
+  file carries). Order of sources: `REGISTRY_BADGE_URL` (default: the production
+  API; the literal value `snapshot` skips the network) → committed snapshot
+  `src/data/registry-verified.json` → no badges. A 2.6k-page build never hinges on
+  one network call.
+- **Refresh the snapshot**: `npm run registry:snapshot [-- <registry-api-url>]`.
+- **Where it renders**: listing cards (`ListingCard`, `PaginatedListing`), detail
+  pages (ES + EN, nails + massage, where the claim CTA is replaced by an
+  "owner-managed" note), money pages (`MoneyPage`) and the ES/EN homepages.
+- **Trade-off**: the pages are static, so a claim/verify (or a revocation) shows up
+  in the HTML on the **next deploy** — not instantly. Triggering a rebuild when a
+  business is verified is open work; until then a badge can lag by one build.
+

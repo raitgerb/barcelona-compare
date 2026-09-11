@@ -1,0 +1,58 @@
+---
+/**
+ * "Verified business" badge (B2B Phase 1).
+ *
+ * Rendered server-side from a registry record (see ../lib/registry.ts) — it only
+ * ever appears for a business whose owner claimed it AND completed verification.
+ * ES + EN copy lives here so both languages stay in sync.
+ *
+ * `tier: 'pro'` adds a second, clearly separate chip: paid placement stays
+ * labelled as such and never masquerades as organic trust.
+ */
+interface Props {
+  lang?: 'es' | 'en';
+  tier?: 'free' | 'pro' | null;
+  variant?: 'card' | 'detail';
+  class?: string;
+}
+
+const { lang = 'es', tier = 'free', variant = 'card', class: className = '' } = Astro.props;
+
+const copy = lang === 'en'
+  ? {
+      label: 'Verified business',
+      title: 'This business has been claimed and verified by its owner.',
+      proLabel: 'Pro partner',
+      proTitle: 'Partner on the Barcelona Compare Pro plan.',
+    }
+  : {
+      label: 'Negocio verificado',
+      title: 'Este negocio ha sido reclamado y verificado por su propietario.',
+      proLabel: 'Socio Pro',
+      proTitle: 'Negocio con el plan Pro de Barcelona Compare.',
+    };
+
+const chip = variant === 'detail' ? 'text-sm px-3 py-1 gap-1.5' : 'text-xs px-2 py-0.5 gap-1';
+const icon = variant === 'detail' ? 'w-4 h-4' : 'w-3 h-3';
+---
+
+<span
+  class={`inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 font-medium text-emerald-700 ${chip} ${className}`}
+  data-badge="verified"
+  data-tier={tier ?? 'free'}
+  title={copy.title}
+>
+  <svg class={icon} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+  </svg>
+  <span>{copy.label}</span>
+</span>
+{tier === 'pro' && (
+  <span
+    class={`inline-flex items-center rounded-full border border-brand-200 bg-brand-50 font-medium text-brand-600 ${chip} ${className}`}
+    data-badge="pro"
+    title={copy.proTitle}
+  >
+    {copy.proLabel}
+  </span>
+)}

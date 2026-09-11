@@ -1,5 +1,7 @@
 ---
 import { Image } from 'astro:assets';
+import VerifiedBadge from './VerifiedBadge.astro';
+import { verifiedBusinessFor } from '../lib/registry';
 
 interface Props {
   name: string;
@@ -9,10 +11,12 @@ interface Props {
   priceIndicator?: string;
   slug: string;
   category: 'nails' | 'massage';
+  googlePlaceId?: string;
   lang?: string;
 }
 
-const { name, neighborhood, googleRating, googleReviewCount, priceIndicator, slug, category, lang = 'es' } = Astro.props;
+const { name, neighborhood, googleRating, googleReviewCount, priceIndicator, slug, category, googlePlaceId, lang = 'es' } = Astro.props;
+const verified = await verifiedBusinessFor(googlePlaceId);
 const categoryPath = lang === 'es' ? category : `en/${category}`;
 const stars = googleRating ? Math.round(googleRating) : 0;
 const ratingLabel = lang === 'es' ? 'valoración' : 'rating';
@@ -27,6 +31,11 @@ const accentColor = category === 'nails' ? 'var(--color-accent-nails)' : 'var(--
         {name}
       </h3>
       <p class="text-sm text-stone-500 mt-0.5">{neighborhood}</p>
+      {verified && (
+        <div class="mt-1.5">
+          <VerifiedBadge lang={lang === 'en' ? 'en' : 'es'} tier={verified.tier} />
+        </div>
+      )}
     </div>
     {priceIndicator && (
       <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 shrink-0">
