@@ -128,7 +128,7 @@ export async function triggerRebuild(env: Env, input: RebuildInput): Promise<Reb
     }
 
     const body = (await response.json().catch(() => null)) as
-      | { success?: boolean; result?: { build_uuid?: string }; errors?: unknown }
+      | { success?: boolean; result?: { id?: string; build_uuid?: string }; errors?: unknown }
       | null;
     if (!response.ok || body?.success === false) {
       throw new Error(`deploy hook replied HTTP ${response.status}`);
@@ -138,7 +138,8 @@ export async function triggerRebuild(env: Env, input: RebuildInput): Promise<Reb
       status: 'triggered',
       reason: input.reason,
       detail: detailText(input.detail) ?? `${input.reason} rebuild requested`,
-      buildUuid: body?.result?.build_uuid,
+      // The deploy hook answers `{ result: { id } }` (older docs show build_uuid).
+      buildUuid: body?.result?.id ?? body?.result?.build_uuid,
       requestedAt,
     };
     console.log(`[rebuild] triggered (${input.reason}) build ${result.buildUuid ?? 'unknown'}`);

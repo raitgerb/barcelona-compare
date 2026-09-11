@@ -68,7 +68,7 @@ class Handler(BaseHTTPRequestHandler):
         with open(log_path, "a") as fh:
             fh.write(f"POST {self.path} #{count['n']}\n")
         body = json.dumps(
-            {"success": True, "result": {"build_uuid": f"stub-build-{count['n']}"}}
+            {"success": True, "result": {"id": f"stub-build-{count['n']}"}}
         ).encode()
         self.send_response(200)
         self.send_header("content-type", "application/json")

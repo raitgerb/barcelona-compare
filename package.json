@@ -14,6 +14,7 @@
     "db:migrate:remote": "npx --yes wrangler d1 migrations apply barcelona-compare-registry --remote",
     "registry:smoke": "bash scripts/registry-smoke.sh",
     "rebuild:smoke": "bash scripts/rebuild-smoke.sh",
+    "badge:e2e": "node scripts/badge-freshness-e2e.mjs",
     "analytics:smoke": "bash scripts/analytics-smoke.sh",
     "owner:smoke": "bash scripts/owner-edit-smoke.sh",
     "registry:snapshot": "node scripts/registry-snapshot.mjs"

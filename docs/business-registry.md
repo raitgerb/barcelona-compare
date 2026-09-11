@@ -241,3 +241,13 @@ with `"rebuild": false`; set `SMOKE_REBUILD=1` to exercise the real trigger inst
 Verify the whole path locally — no Cloudflare API involved — with
 `npm run rebuild:smoke` (stub deploy hook + 32 assertions).
 
+The live acceptance test is `npm run badge:e2e` (env: `REGISTRY_ADMIN_TOKEN`,
+`CLOUDFLARE_API_TOKEN`): it claims + verifies a real listed business, waits for the
+deploy-hook build, asserts the badge is in the served HTML, revokes, waits again,
+asserts the badge is gone, and deletes the test rows. It starts two real production
+builds, so run it by hand when this path changes — not on every commit.
+
+A change made *while* a build is already in its final minutes can land after that
+build's registry fetch: Pages may skip a queued build for the same commit, so the
+badge then waits for the next state change. `POST /api/rebuild` forces one.
+
