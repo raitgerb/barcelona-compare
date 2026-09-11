@@ -46,11 +46,13 @@ const copy = isEs
       otherEmail: 'Usar otro email',
       successTitle: '¡Ficha reclamada y verificada!',
       successBody:
-        'Ya constas como propietario verificado. En los próximos días te avisaremos por email cuando puedas editar servicios, precios y fotos desde aquí.',
-      successLink: 'Ver mi ficha',
+        'Ya constas como propietario verificado. Puedes editar tus servicios, precios, horarios y fotos cuando quieras, y los cambios se ven en tu ficha al momento.',
+      successLink: 'Editar mi ficha',
+      successSecondary: 'Ver mi ficha',
       alreadyTitle: 'Esta ficha ya está reclamada',
       alreadyBody:
         'Si crees que es un error, o si necesitas cambiar el email de contacto, escríbenos y lo revisamos.',
+      alreadyManage: 'Entrar en el panel de gestión',
       fallback: '¿Prefieres que lo hagamos nosotros? Escríbenos a',
       privacy:
         'Usamos tu email únicamente para verificar que gestionas el negocio. Sin boletines y sin cederlo a terceros.',
@@ -83,11 +85,13 @@ const copy = isEs
       otherEmail: 'Use another email',
       successTitle: 'Listing claimed and verified',
       successBody:
-        'You are now recorded as the verified owner. We will email you when you can edit services, prices and photos from here.',
-      successLink: 'View my listing',
+        'You are now recorded as the verified owner. You can edit your services, prices, opening hours and photos whenever you like — the changes show on your listing immediately.',
+      successLink: 'Edit my listing',
+      successSecondary: 'View my listing',
       alreadyTitle: 'This listing has already been claimed',
       alreadyBody:
         'If you think that is a mistake, or you need to change the contact email, write to us and we will look into it.',
+      alreadyManage: 'Open the management dashboard',
       fallback: 'Rather have us do it? Write to',
       privacy:
         'We use your email only to verify that you run the business. No newsletters, and we never share it.',
@@ -252,13 +256,22 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
         <strong id="claim-done-name" class="font-semibold"></strong>
         <span class="block mt-2">{copy.successBody}</span>
       </p>
-      <a
-        id="claim-done-link"
-        href="/"
-        class="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors"
-      >
-        {copy.successLink}
-      </a>
+      <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+        <a
+          id="claim-done-link"
+          href={isEs ? '/gestion/' : '/en/manage/'}
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors"
+        >
+          {copy.successLink}
+        </a>
+        <a
+          id="claim-done-listing"
+          href="/"
+          class="text-sm font-semibold text-emerald-900 underline hover:no-underline"
+        >
+          {copy.successSecondary}
+        </a>
+      </div>
     </div>
   </section>
 
@@ -266,6 +279,13 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
     <div class="p-6 rounded-xl border border-amber-200 bg-amber-50">
       <h2 class="text-lg font-bold text-amber-900">{copy.alreadyTitle}</h2>
       <p class="mt-2 text-sm text-amber-900/90">{copy.alreadyBody}</p>
+      <a
+        id="claim-already-manage"
+        href={isEs ? '/gestion/' : '/en/manage/'}
+        class="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors"
+      >
+        {copy.alreadyManage}
+      </a>
     </div>
   </section>
 
@@ -363,6 +383,13 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
     const errorDetail = el('claim-error-detail');
     const doneName = el('claim-done-name');
     const doneLink = el<HTMLAnchorElement>('claim-done-link');
+    const doneListing = el<HTMLAnchorElement>('claim-done-listing');
+    const alreadyManage = el<HTMLAnchorElement>('claim-already-manage');
+
+    // The owner dashboard (B2B Phase 1): the slug in ?b= pre-fills the login form so
+    // the owner never has to type or find it. See docs/owner-profile-edits.md.
+    const manageHref = (slug?: string) =>
+      `${isEs ? '/gestion/' : '/en/manage/'}${slug ? `?b=${encodeURIComponent(slug)}` : ''}`;
 
     let catalog: CatalogEntry[] | null = null;
     let catalogPromise: Promise<CatalogEntry[]> | null = null;
@@ -550,6 +577,7 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
         if (!ok) {
           const error = String(payload.error ?? '');
           if (error === 'already_claimed') {
+            alreadyManage.href = manageHref(business.slug);
             showStep('already');
             return;
           }
@@ -558,6 +586,7 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
         }
         const state = String(payload.state ?? '');
         if (state === 'already_verified') {
+          alreadyManage.href = manageHref(business.slug);
           showStep('already');
           return;
         }
@@ -610,9 +639,10 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
           showError(String(payload.error ?? ''), String(payload.message ?? ''));
           return;
         }
-        const record = (payload.business ?? {}) as { name?: string };
+        const record = (payload.business ?? {}) as { name?: string; slug?: string };
         doneName.textContent = record.name ?? business.name;
-        doneLink.href = String(payload.listingUrl ?? `/${business.category}/${business.slug}/`);
+        doneLink.href = manageHref(record.slug ?? business.slug);
+        doneListing.href = String(payload.listingUrl ?? `/${business.category}/${business.slug}/`);
         showStep('done');
       } catch {
         showError('network');
@@ -667,6 +697,7 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
               const payload = (await response.json()) as { business?: { verified?: boolean } };
               if (payload?.business?.verified) {
                 doneName.textContent = entry.name;
+                alreadyManage.href = manageHref(entry.slug);
                 showStep('already');
                 return;
               }

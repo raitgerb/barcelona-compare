@@ -12,7 +12,7 @@ deploy, no dashboard for us to touch.
 - **Data layer:** `functions/_lib/profile.ts` — the only module that touches those tables
 - **Live render:** `functions/_middleware.ts` + `functions/_lib/owner-content.ts` —
   edge-injects the owner's content into the static listing HTML
-- **Test:** `scripts/owner-edit-smoke.sh` (`npm run owner:smoke`) — 45 assertions
+- **Test:** `scripts/owner-edit-smoke.sh` (`npm run owner:smoke`) — 63 assertions
   through the real Pages Functions runtime, including the served listing page
 
 Sits on top of the Phase 0 registry (`docs/business-registry.md`): only a business
@@ -23,8 +23,12 @@ the registry has as **claimed by that email** can log in.
 Owners are not technical, so there are no passwords — a short code and a device
 that stays signed in:
 
-1. `/gestion/?b=<slug>` (the profile page's manage link carries the slug; typing the
-   slug by hand works too) → enter the email used to claim the listing.
+1. `/gestion/?b=<slug>` → enter the email used to claim the listing. The claim
+   confirmation screen links straight here with `?b=` filled in (the slug pre-fills
+   the form), and an owner who has claimed before gets the same link from the
+   "already claimed" state. Typing the slug by hand works too. There is deliberately
+   **no** manage link on the public listing pages: it would mean nothing to a visitor
+   and would advertise the panel to 1,182 unclaimed businesses.
 2. `POST /api/owner/session` looks the business up in the registry. It only issues a
    **6-digit code** (15 minutes, 5 codes per business per hour) when that email is the
    one on `businesses.owner_email`.
@@ -114,9 +118,9 @@ actor and a JSON detail, so disputes have a trail.
 
 ```bash
 npm run build                    # wrangler pages dev serves dist/
-npm run db:migrate:local         # applies 0003 on top of 0001/0002
+npm run db:migrate:local         # applies the pending migrations (0003 owner edits)
 npx wrangler pages dev dist --port 8799
-npm run owner:smoke              # 45 assertions, ends with the listing HTML check
+npm run owner:smoke              # 63 assertions, ends with the listing HTML check
 ```
 
 Against a deployment (preview and production share the D1 database — the writes are

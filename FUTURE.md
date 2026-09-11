@@ -48,8 +48,12 @@ what they're paying for.
 
 ### Phase 1 — Free tier (2–3 weeks)
 - **Verified badge** on detail + listing + money pages (trust for them, conversion for us).
-- **Self-service profile edits**: services, prices, photos, hours via a form
-  (Pages Function + D1, rebuild or edge-inject).
+- ✅ **Self-service profile edits**: services, prices, photos, hours via a form
+  (Pages Function + D1, edge-injected into the static listing) — owner dashboard
+  `/gestion/` + `/en/manage/`, owner login by emailed 6-digit code (no passwords),
+  operator takedown/restore, audit trail; the claim confirmation screen now links
+  straight into the panel (4c8b978, Sep 11; `docs/owner-profile-edits.md`;
+  63-assertion smoke test, green against production).
 - **WhatsApp / booking CTA upgrade** — only 9 of 1,182 businesses currently have a
   WhatsApp link. This market books on WhatsApp; this is the highest-impact free perk.
 
