@@ -247,6 +247,22 @@ deploy-hook build, asserts the badge is in the served HTML, revokes, waits again
 asserts the badge is gone, and deletes the test rows. It starts two real production
 builds, so run it by hand when this path changes — not on every commit.
 
+**Verified end-to-end 2026-09-13** on `lin-hua-korean-nails`: no badge → operator
+`verify` → a `deploy_hook` production build appeared in the Pages API → badge present
+in the served HTML → `revoke` → a second `deploy_hook` build → badge gone. Test rows
+were deleted afterwards.
+
+Two timings worth knowing when you run it:
+
+- **`deploy: success` ≠ the edge is serving it.** For a couple of minutes after a
+  build reports success the previous deployment still answers, so the badge check
+  polls for 6 minutes, not 2. A short window reports a false negative on a healthy
+  deploy (that is exactly what happened on the first run).
+- **The badge also needs the Pages edge, not just the API.** If the machine running
+  the test cannot reach the site's Cloudflare anycast IPs, every `fetch` to
+  `barcelonacompare.com` fails while the Pages API keeps working; pin the hostname to
+  a reachable Cloudflare edge IP with `curl --resolve` if that happens.
+
 A change made *while* a build is already in its final minutes can land after that
 build's registry fetch: Pages may skip a queued build for the same commit, so the
 badge then waits for the next state change. `POST /api/rebuild` forces one.

@@ -128,8 +128,15 @@ async function waitForHookBuild(sinceIso, label) {
   return null;
 }
 
-/** Poll the live pages until they show (or stop showing) the badge. */
-async function waitForBadge(label, expected, attempts = 12) {
+/**
+ * Poll the live pages until they show (or stop showing) the badge.
+ *
+ * The window is generous on purpose. `deploy: success` in the Pages API means the
+ * build finished, not that the edge already serves it: right after a deploy the
+ * previous deployment keeps answering for a couple of minutes, so a short window
+ * reports a false negative on a healthy deploy. 36 x 10s = 6 minutes.
+ */
+async function waitForBadge(label, expected, attempts = 36) {
   let last = '';
   for (let i = 0; i < attempts; i += 1) {
     const found = [];
