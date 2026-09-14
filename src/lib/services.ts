@@ -8,22 +8,23 @@ export interface ServiceDef {
   slug: string;
   es: { plural: string; keyword: string };
   en: { plural: string; keyword: string };
+  ca: { plural: string; keyword: string };
 }
 
 // Order = prominence (largest tagged pools first per category).
 export const SERVICES: Record<CatKey, ServiceDef[]> = {
   nails: [
-    { slug: 'pedicura',      es: { plural: 'pedicuras',                 keyword: 'pedicura' },                    en: { plural: 'pedicures',               keyword: 'pedicure' } },
-    { slug: 'gel-acrilicas', es: { plural: 'salones de uñas de gel y acrílicas', keyword: 'uñas de gel y acrílicas' }, en: { plural: 'gel & acrylic nail salons', keyword: 'gel & acrylic nails' } },
-    { slug: 'nail-art',      es: { plural: 'estudios de nail art',       keyword: 'nail art' },                    en: { plural: 'nail art studios',        keyword: 'nail art' } },
+    { slug: 'pedicura',      es: { plural: 'pedicuras',                 keyword: 'pedicura' },                    en: { plural: 'pedicures',               keyword: 'pedicure' },                    ca: { plural: 'pedicures',                  keyword: 'pedicura' } },
+    { slug: 'gel-acrilicas', es: { plural: 'salones de uñas de gel y acrílicas', keyword: 'uñas de gel y acrílicas' }, en: { plural: 'gel & acrylic nail salons', keyword: 'gel & acrylic nails' },        ca: { plural: "salons d'ungles de gel i acríliques", keyword: 'ungles de gel i acríliques' } },
+    { slug: 'nail-art',      es: { plural: 'estudios de nail art',       keyword: 'nail art' },                    en: { plural: 'nail art studios',        keyword: 'nail art' },                    ca: { plural: 'estudis de nail art',        keyword: 'nail art' } },
   ],
   massage: [
-    { slug: 'tailandes',     es: { plural: 'masajes tailandeses',        keyword: 'masaje tailandés' },            en: { plural: 'thai massages',           keyword: 'thai massage' } },
-    { slug: 'spa-bienestar', es: { plural: 'spas y centros de bienestar', keyword: 'spa' },                        en: { plural: 'spas & wellness centers', keyword: 'spa & wellness' } },
-    { slug: 'deportivo',     es: { plural: 'masajes deportivos',         keyword: 'masaje deportivo' },            en: { plural: 'sports massages',         keyword: 'sports massage' } },
-    { slug: 'quiromasaje',   es: { plural: 'centros de quiromasaje',     keyword: 'quiromasaje' },                 en: { plural: 'deep tissue massages',    keyword: 'deep tissue massage' } },
-    { slug: 'pareja',        es: { plural: 'masajes en pareja',          keyword: 'masaje en pareja' },            en: { plural: 'couples massages',        keyword: 'couples massage' } },
-    { slug: 'reflexologia',  es: { plural: 'reflexologías podales',      keyword: 'reflexología podal' },          en: { plural: 'foot reflexology sessions', keyword: 'foot reflexology' } },
+    { slug: 'tailandes',     es: { plural: 'masajes tailandeses',        keyword: 'masaje tailandés' },            en: { plural: 'thai massages',           keyword: 'thai massage' },                ca: { plural: 'massatges tailandesos',      keyword: 'massatge tailandès' } },
+    { slug: 'spa-bienestar', es: { plural: 'spas y centros de bienestar', keyword: 'spa' },                        en: { plural: 'spas & wellness centers', keyword: 'spa & wellness' },              ca: { plural: 'spas i centres de benestar', keyword: 'spa' } },
+    { slug: 'deportivo',     es: { plural: 'masajes deportivos',         keyword: 'masaje deportivo' },            en: { plural: 'sports massages',         keyword: 'sports massage' },              ca: { plural: 'massatges esportius',        keyword: 'massatge esportiu' } },
+    { slug: 'quiromasaje',   es: { plural: 'centros de quiromasaje',     keyword: 'quiromasaje' },                 en: { plural: 'deep tissue massages',    keyword: 'deep tissue massage' },         ca: { plural: 'centres de quiromassatge',   keyword: 'quiromassatge' } },
+    { slug: 'pareja',        es: { plural: 'masajes en pareja',          keyword: 'masaje en pareja' },            en: { plural: 'couples massages',        keyword: 'couples massage' },             ca: { plural: 'massatges en parella',       keyword: 'massatge en parella' } },
+    { slug: 'reflexologia',  es: { plural: 'reflexologías podales',      keyword: 'reflexología podal' },          en: { plural: 'foot reflexology sessions', keyword: 'foot reflexology' },          ca: { plural: 'reflexologies podals',       keyword: 'reflexologia podal' } },
   ],
 };
 

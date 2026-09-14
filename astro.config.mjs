@@ -12,7 +12,9 @@ export default defineConfig({
   },
   i18n: {
     defaultLocale: 'es',
-    locales: ['es', 'en'],
+    // ES (default, unprefixed) + EN + CA (Catalan — the local-credibility
+    // locale; every public page family is mirrored under /ca/).
+    locales: ['es', 'en', 'ca'],
     routing: {
       prefixDefaultLocale: false,
     },

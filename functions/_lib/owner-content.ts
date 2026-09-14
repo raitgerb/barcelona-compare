@@ -71,6 +71,18 @@ function labels(lang: string): Labels {
       updated: (date) => `Details provided by the business · updated ${date}`,
     };
   }
+  if (lang === 'ca') {
+    return {
+      services: 'Serveis i preus',
+      hours: 'Horari',
+      closed: 'Tancat',
+      owned: 'Dades facilitades pel negoci',
+      ownerPhotos: 'Fotos del negoci',
+      whatsappCta: 'Reserva per WhatsApp',
+      whatsappHint: 'Demanar cita sense trucar — el missatge ja està escrit',
+      updated: (date) => `Dades facilitades pel negoci · actualitzat el ${date}`,
+    };
+  }
   return {
     services: 'Servicios y precios',
     hours: 'Horario',
@@ -101,6 +113,15 @@ const DAY_LABELS: Record<string, Record<string, string>> = {
     friday: 'Friday',
     saturday: 'Saturday',
     sunday: 'Sunday',
+  },
+  ca: {
+    monday: 'Dilluns',
+    tuesday: 'Dimarts',
+    wednesday: 'Dimecres',
+    thursday: 'Dijous',
+    friday: 'Divendres',
+    saturday: 'Dissabte',
+    sunday: 'Diumenge',
   },
 };
 
@@ -163,7 +184,7 @@ function renderHours(override: ProfileOverride, lang: string, updated: string): 
 
 function renderWhatsappCta(number: string, lang: string): string {
   const l = labels(lang);
-  const href = whatsappHref(number, lang === 'en' ? 'en' : 'es');
+  const href = whatsappHref(number, lang === 'en' ? 'en' : lang === 'ca' ? 'ca' : 'es');
   return (
     `<div class="mb-6" data-owner-content="whatsapp">` +
     `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" data-track-event="click_whatsapp"` +
@@ -210,7 +231,7 @@ function renderGallery(
 export interface InjectInput {
   html: string;
   override: ProfileOverride;
-  lang: 'es' | 'en';
+  lang: 'es' | 'en' | 'ca';
   /** Image base path for the Google strip, e.g. `https://pub-x.r2.dev/images/nails/salon`. */
   galleryBase: string;
 }
@@ -260,12 +281,12 @@ export function injectOwnerContent(input: InjectInput): { html: string; changed:
   return { html, changed };
 }
 
-/** Path shapes that carry the markers: `/nails/<slug>/` and `/en/massage/<slug>/`. */
-export const DETAIL_PATH_RE = /^\/(?:en\/)?(nails|massage)\/([^/]+)\/?$/;
+/** Path shapes that carry the markers: `/nails/<slug>/` and `/en|ca/massage/<slug>/`. */
+export const DETAIL_PATH_RE = /^\/(?:(en|ca)\/)?(nails|massage)\/([^/]+)\/?$/;
 
 export interface DetailPathMatch {
   category: 'nails' | 'massage';
-  lang: 'es' | 'en';
+  lang: 'es' | 'en' | 'ca';
   /** URL-decoded slug (site slugs may contain non-ASCII letters). */
   slug: string;
 }
@@ -275,13 +296,13 @@ export function matchDetailPath(pathname: string): DetailPathMatch | null {
   if (!match) return null;
   let slug: string;
   try {
-    slug = decodeURIComponent(match[2]!);
+    slug = decodeURIComponent(match[3]!);
   } catch {
     return null;
   }
   return {
-    category: match[1] as 'nails' | 'massage',
-    lang: pathname.startsWith('/en/') ? 'en' : 'es',
+    category: match[2] as 'nails' | 'massage',
+    lang: (match[1] as 'en' | 'ca' | undefined) ?? 'es',
     slug,
   };
 }

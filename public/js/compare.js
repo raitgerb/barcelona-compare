@@ -8,8 +8,9 @@
   var root = document.getElementById('compare-root');
   if (!root) return;
 
-  var lang = document.documentElement.lang === 'en' ? 'en' : 'es';
-  var base = lang === 'en' ? '/en' : '';
+  var DOC_LANG = document.documentElement.lang;
+  var lang = (DOC_LANG === 'en' || DOC_LANG === 'ca') ? DOC_LANG : 'es';
+  var base = lang === 'es' ? '' : '/' + lang;
   var T = lang === 'en'
     ? { rating: 'Rating', reviews: 'Reviews', price: 'Price', hours: 'Hours', langs: 'Languages',
         services: 'Services', contact: 'Contact', empty: 'Nothing selected yet.',
@@ -17,6 +18,13 @@
         closed: 'Closed', today: 'Today', view: 'View', browseNails: 'Browse nail salons',
         browseMassage: 'Browse massage centers', noData: 'Could not load business data.',
         remove: 'Remove' }
+    : lang === 'ca'
+    ? { rating: 'Valoració', reviews: 'Ressenyes', price: 'Preu', hours: 'Horari', langs: 'Idiomes',
+        services: 'Serveis', contact: 'Contacte', empty: 'Encara no has seleccionat res.',
+        emptyHint: 'Explora salons de manicura o massatges i marca «Comparar» als que t\'interessin.',
+        closed: 'Tancat', today: 'Avui', view: 'Veure', browseNails: 'Veure salons de manicura',
+        browseMassage: 'Veure centres de massatge', noData: 'No s\'han pogut carregar les dades.',
+        remove: 'Treure' }
     : { rating: 'Valoración', reviews: 'Reseñas', price: 'Precio', hours: 'Horario', langs: 'Idiomas',
         services: 'Servicios', contact: 'Contacto', empty: 'Todavía no has seleccionado nada.',
         emptyHint: 'Explora salones de uñas o masajes y marca «Comparar» en los que te interesen.',
@@ -27,6 +35,8 @@
   var DAY_KEYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
   var DAYS = lang === 'en'
     ? ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+    : lang === 'ca'
+    ? ['Dl','Dt','Dc','Dj','Dv','Ds','Dg']
     : ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 
   function esc(s) {

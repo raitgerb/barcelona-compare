@@ -1,0 +1,199 @@
+---
+// /ca/ — Catalan homepage (mirror of / and /en/).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VerifiedBadge from '../../components/VerifiedBadge.astro';
+import { getCollection } from 'astro:content';
+import { imageUrl } from '../../lib/images';
+import { loadVerifiedRegistry } from '../../lib/registry';
+
+const nails = await getCollection('nails');
+const massage = await getCollection('massage');
+const registry = await loadVerifiedRegistry();
+
+const featuredNails = nails.filter(b => b.data.googleRating && b.data.googleRating >= 4.6).sort((a, b) => (b.data.googleReviewCount || 0) - (a.data.googleReviewCount || 0)).slice(0, 4);
+const featuredMassage = massage.filter(b => b.data.googleRating && b.data.googleRating >= 4.6).sort((a, b) => (b.data.googleReviewCount || 0) - (a.data.googleReviewCount || 0)).slice(0, 4);
+
+const claimFor = (placeId?: string) => (placeId ? registry.get(placeId) : undefined);
+---
+
+<BaseLayout
+  title="Troba el millor de Barcelona"
+  description="Compara salons de manicura i centres de massatge a Barcelona. Preus, serveis i valoracions en un sol lloc."
+  lang="ca"
+>
+  <section class="relative overflow-hidden">
+    <img
+      src="/img-hero.jpg"
+      alt=""
+      class="absolute inset-0 w-full h-full object-cover"
+      width="1600"
+      height="1066"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 bg-gradient-to-r from-stone-900/85 via-stone-900/60 to-stone-900/30"></div>
+    <div class="relative max-w-6xl mx-auto px-4 py-20 md:py-28 text-left">
+      <p class="text-brand-300 font-medium tracking-wide uppercase text-xs md:text-sm mb-3">Barcelona Compare</p>
+      <h1 class="text-4xl md:text-6xl font-bold text-white tracking-tight leading-tight display-serif">
+        Troba el millor<br class="hidden sm:block" /> de Barcelona
+      </h1>
+      <p class="mt-4 text-lg text-stone-200 max-w-xl">
+        Compara preus, serveis i valoracions en un sol lloc
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-4">
+        <a href="/ca/nails" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-nails text-white font-medium hover:opacity-90 transition-opacity text-sm shadow-lg">
+          Salons de manicura
+        </a>
+        <a href="/ca/massage" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-massage text-white font-medium hover:opacity-90 transition-opacity text-sm shadow-lg">
+          Centres de massatge
+        </a>
+        <a href="/ca/barrio/" class="inline-flex items-center px-6 py-3 rounded-xl bg-white/10 backdrop-blur border border-white/30 text-white font-medium hover:bg-white/20 transition-colors text-sm">
+          Guies per barri
+        </a>
+        <a href="/ca/compare/" class="inline-flex items-center px-6 py-3 rounded-xl bg-white/10 backdrop-blur border border-white/30 text-white font-medium hover:bg-white/20 transition-colors text-sm">
+          Compara'ls costat a costat
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-16">
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <h2 class="text-2xl font-bold text-stone-900">Els millors salons de manicura</h2>
+        <p class="text-stone-500 mt-1">Compara preus, tècniques i valoracions per barri</p>
+      </div>
+      <a href="/ca/nails" class="text-sm font-medium text-accent-nails hover:underline shrink-0">Veure'ls tots →</a>
+    </div>
+    {featuredNails.length > 0 ? (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {featuredNails.map(business => (
+          <a href={`/ca/nails/${business.id}`} class="group block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all overflow-hidden">
+            <img
+              src={imageUrl('nails', business.id, 0)}
+              alt={business.data.name}
+              class="w-full h-40 object-cover"
+              loading="lazy"
+              onerror="this.style.display='none'"
+            />
+            <div class="p-5">
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="font-semibold text-stone-900 group-hover:text-stone-700 text-sm truncate">{business.data.name}</h3>
+              {business.data.priceIndicator && (
+                <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 shrink-0">{business.data.priceIndicator}</span>
+              )}
+            </div>
+            <p class="text-xs text-stone-500 mt-0.5">{business.data.neighborhood}</p>
+            {claimFor(business.data.googlePlaceId) && (
+              <div class="mt-1.5">
+                <VerifiedBadge lang="ca" tier={claimFor(business.data.googlePlaceId)?.tier} />
+              </div>
+            )}
+            {business.data.googleRating && (
+              <div class="flex items-center gap-1.5 mt-2">
+                <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                <span class="text-xs font-medium text-stone-700">{business.data.googleRating}</span>
+                <span class="text-xs text-stone-400">({business.data.googleReviewCount})</span>
+              </div>
+            )}
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="bg-stone-50 rounded-xl border border-stone-200 p-8 text-center">
+        <p class="text-stone-400">Properament: els millors salons de manicura de Barcelona.</p>
+      </div>
+    )}
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-16 bg-stone-50/50">
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <h2 class="text-2xl font-bold text-stone-900">Els millors massatges de Barcelona</h2>
+        <p class="text-stone-500 mt-1">Compara tipus de massatge, preus i centres</p>
+      </div>
+      <a href="/ca/massage" class="text-sm font-medium text-accent-massage hover:underline shrink-0">Veure'ls tots →</a>
+    </div>
+    {featuredMassage.length > 0 ? (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {featuredMassage.map(business => (
+          <a href={`/ca/massage/${business.id}`} class="group block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all overflow-hidden">
+            <img
+              src={imageUrl('massage', business.id, 0)}
+              alt={business.data.name}
+              class="w-full h-40 object-cover"
+              loading="lazy"
+              onerror="this.style.display='none'"
+            />
+            <div class="p-5">
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="font-semibold text-stone-900 group-hover:text-stone-700 text-sm truncate">{business.data.name}</h3>
+              {business.data.priceIndicator && (
+                <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 shrink-0">{business.data.priceIndicator}</span>
+              )}
+            </div>
+            <p class="text-xs text-stone-500 mt-0.5">{business.data.neighborhood}</p>
+            {claimFor(business.data.googlePlaceId) && (
+              <div class="mt-1.5">
+                <VerifiedBadge lang="ca" tier={claimFor(business.data.googlePlaceId)?.tier} />
+              </div>
+            )}
+            {business.data.googleRating && (
+              <div class="flex items-center gap-1.5 mt-2">
+                <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                <span class="text-xs font-medium text-stone-700">{business.data.googleRating}</span>
+                <span class="text-xs text-stone-400">({business.data.googleReviewCount})</span>
+              </div>
+            )}
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="bg-white rounded-xl border border-stone-200 p-8 text-center">
+        <p class="text-stone-400">Properament: els millors centres de massatge de Barcelona.</p>
+      </div>
+    )}
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-16">
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <h2 class="text-2xl font-bold text-stone-900">Comparatives: el millor de cada barri i servei</h2>
+        <p class="text-stone-500 mt-1">Rànquings per valoració real de Google, districte a districte</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <a href="/ca/mejores/nails/" class="block bg-white rounded-xl border border-stone-200 p-5 hover:border-stone-300 hover:shadow-sm transition-all">
+        <h3 class="font-semibold text-stone-900">Els millors salons de manicura</h3>
+        <p class="text-sm text-stone-500 mt-1">Per districte: Eixample, Gràcia, Sarrià… · Per servei: pedicura, ungles de gel, nail art</p>
+      </a>
+      <a href="/ca/mejores/massage/" class="block bg-white rounded-xl border border-stone-200 p-5 hover:border-stone-300 hover:shadow-sm transition-all">
+        <h3 class="font-semibold text-stone-900">Els millors centres de massatge</h3>
+        <p class="text-sm text-stone-500 mt-1">Tailandès, esportiu, quiromassatge, parelles, spas — filtrats per barri</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-16">
+    <h2 class="text-2xl font-bold text-stone-900 text-center mb-12">Com funciona</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
+      <div class="text-center">
+        <div class="w-12 h-12 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center mx-auto mb-4 font-bold text-lg">1</div>
+        <h3 class="font-semibold text-stone-900 mb-2">Cerca</h3>
+        <p class="text-sm text-stone-500">Troba negocis per categoria, barri o preu</p>
+      </div>
+      <div class="text-center">
+        <div class="w-12 h-12 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center mx-auto mb-4 font-bold text-lg">2</div>
+        <h3 class="font-semibold text-stone-900 mb-2">Compara</h3>
+        <p class="text-sm text-stone-500">Valoracions de Google, preus, serveis i idiomes en un sol lloc</p>
+      </div>
+      <div class="text-center">
+        <div class="w-12 h-12 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center mx-auto mb-4 font-bold text-lg">3</div>
+        <h3 class="font-semibold text-stone-900 mb-2">Tria</h3>
+        <p class="text-sm text-stone-500">Contacta directament per WhatsApp, telèfon o web</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

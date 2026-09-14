@@ -1,0 +1,50 @@
+---
+// /ca/mejores/{category}/{x}/{y}/ — Catalan mirrors of combo pages.
+import MoneyPage from '../../../../../../components/MoneyPage.astro';
+import { getCollection } from 'astro:content';
+import { SERVICES, slugify, MIN_COMBO } from '../../../../../../lib/services';
+
+export async function getStaticPaths() {
+  const paths: Array<{ params: { category: string; x: string; y: string }; props: Record<string, unknown> }> = [];
+  for (const cat of ['nails', 'massage'] as const) {
+    const all = await getCollection(cat);
+    const nbBySlug = new Map<string, string>();
+    const tagCounts = new Map<string, Map<string, number>>();
+    for (const b of all) {
+      const nb = b.data.neighborhood;
+      if (!nb || nb === 'Barcelona') continue;
+      nbBySlug.set(slugify(nb), nb);
+      let m = tagCounts.get(nb);
+      if (!m) { m = new Map(); tagCounts.set(nb, m); }
+      for (const t of ((b.data.serviceTags ?? []) as string[])) {
+        m.set(t, (m.get(t) ?? 0) + 1);
+      }
+    }
+    const taggedTotal = (tag: string) =>
+      [...tagCounts.values()].reduce((s, m) => s + (m.get(tag) ?? 0), 0);
+
+    for (const [slugA, nbName] of nbBySlug) {
+      for (const svc of SERVICES[cat]) {
+        const comboN = tagCounts.get(nbName)?.get(svc.slug) ?? 0;
+        if (comboN < MIN_COMBO) continue;
+        paths.push({
+          params: { category: cat, x: slugA, y: svc.slug },
+          props: { neighborhood: nbName, serviceSlug: svc.slug },
+        });
+        if (taggedTotal(svc.slug) >= MIN_COMBO) {
+          paths.push({
+            params: { category: cat, x: svc.slug, y: slugA },
+            props: { neighborhood: nbName, serviceSlug: svc.slug },
+          });
+        }
+      }
+    }
+  }
+  return paths;
+}
+
+const { category } = Astro.params;
+const props = Astro.props as { neighborhood?: string; serviceSlug?: string };
+---
+
+<MoneyPage lang="ca" category={category as 'nails' | 'massage'} mode="combo" neighborhood={props.neighborhood} serviceSlug={props.serviceSlug} />

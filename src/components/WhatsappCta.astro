@@ -20,7 +20,7 @@ import { WHATSAPP_ICON_PATH, whatsappLink } from '../../functions/_lib/whatsapp'
 interface Props {
   /** Raw `whatsapp` frontmatter value — any local or international format. */
   whatsapp?: string;
-  lang?: 'es' | 'en';
+  lang?: 'es' | 'en' | 'ca';
 }
 
 const { whatsapp, lang = 'es' } = Astro.props;
@@ -30,6 +30,8 @@ const link = whatsappLink(whatsapp, lang);
 const copy =
   lang === 'en'
     ? { cta: 'Book on WhatsApp', hint: 'Book without calling — your message is ready to send' }
+    : lang === 'ca'
+    ? { cta: 'Reserva per WhatsApp', hint: 'Demanar cita sense trucar — el missatge ja està escrit' }
     : { cta: 'Reservar por WhatsApp', hint: 'Pide cita sin llamar — el mensaje ya está escrito' };
 ---
 

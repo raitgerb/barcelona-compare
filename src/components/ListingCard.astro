@@ -17,11 +17,12 @@ interface Props {
 
 const { name, neighborhood, googleRating, googleReviewCount, priceIndicator, slug, category, googlePlaceId, lang = 'es' } = Astro.props;
 const verified = await verifiedBusinessFor(googlePlaceId);
-const categoryPath = lang === 'es' ? category : `en/${category}`;
+const categoryPath = lang === 'es' ? category : `${lang}/${category}`;
 const stars = googleRating ? Math.round(googleRating) : 0;
-const ratingLabel = lang === 'es' ? 'valoración' : 'rating';
-const reviewsLabel = lang === 'es' ? 'reseñas' : 'reviews';
+const ratingLabel = lang === 'es' ? 'valoración' : lang === 'ca' ? 'valoració' : 'rating';
+const reviewsLabel = lang === 'es' ? 'reseñas' : lang === 'ca' ? 'ressenyes' : 'reviews';
 const accentColor = category === 'nails' ? 'var(--color-accent-nails)' : 'var(--color-accent-massage)';
+const badgeLang = lang === 'en' ? 'en' : lang === 'ca' ? 'ca' : 'es';
 ---
 
 <a href={`/${categoryPath}/${slug}`} class="group block bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all p-5">
@@ -33,7 +34,7 @@ const accentColor = category === 'nails' ? 'var(--color-accent-nails)' : 'var(--
       <p class="text-sm text-stone-500 mt-0.5">{neighborhood}</p>
       {verified && (
         <div class="mt-1.5">
-          <VerifiedBadge lang={lang === 'en' ? 'en' : 'es'} tier={verified.tier} />
+          <VerifiedBadge lang={badgeLang} tier={verified.tier} />
         </div>
       )}
     </div>

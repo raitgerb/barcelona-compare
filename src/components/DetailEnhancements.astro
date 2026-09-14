@@ -13,7 +13,7 @@ interface Props {
   category: 'nails' | 'massage';
   slug: string;
   neighborhood: string;
-  lang?: string;
+  lang?: 'es' | 'en' | 'ca';
 }
 
 const { category, slug, neighborhood, lang = 'es' } = Astro.props;
@@ -39,17 +39,46 @@ const similar = sorted
   })
   .slice(0, 3);
 
-const isEn = lang === 'en';
-const catLabel = category === 'nails'
-  ? (isEn ? 'Nail Salons' : 'Uñas')
-  : (isEn ? 'Massages' : 'Masajes');
-const basePath = isEn ? `/en/${category}` : `/${category}`;
-const similarTitle = isEn ? 'Similar nearby' : 'También te puede gustar';
+const copy = {
+  es: {
+    home: 'Inicio',
+    homeHref: '/',
+    barrios: 'Barrios',
+    barriosHref: '/barrio/',
+    catLabel: category === 'nails' ? 'Uñas' : 'Masajes',
+    similar: 'También te puede gustar',
+    previous: 'Anterior',
+    next: 'Siguiente',
+  },
+  en: {
+    home: 'Home',
+    homeHref: '/en',
+    barrios: 'Neighborhoods',
+    barriosHref: '/barrio/',
+    catLabel: category === 'nails' ? 'Nail Salons' : 'Massages',
+    similar: 'Similar nearby',
+    previous: 'Previous',
+    next: 'Next',
+  },
+  ca: {
+    home: 'Inici',
+    homeHref: '/ca',
+    barrios: 'Barris',
+    barriosHref: '/ca/barrio/',
+    catLabel: category === 'nails' ? 'Manicura' : 'Massatges',
+    similar: 'També et pot agradar',
+    previous: 'Anterior',
+    next: 'Següent',
+  },
+}[lang];
+const catLabel = copy.catLabel;
+const basePath = lang === 'es' ? `/${category}` : `/${lang}/${category}`;
+const similarTitle = copy.similar;
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Inicio', item: isEn ? '/en' : '/' },
+    { '@type': 'ListItem', position: 1, name: copy.home, item: copy.homeHref },
     { '@type': 'ListItem', position: 2, name: catLabel, item: `${basePath}/` },
     { '@type': 'ListItem', position: 3, name: neighborhood, item: `${basePath}/?nb=${encodeURIComponent(neighborhood)}` },
   ],
@@ -59,24 +88,24 @@ const breadcrumbSchema = {
 <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 
 <nav class="text-sm text-stone-500 mb-6" aria-label="breadcrumb">
-  <a href={isEn ? '/en' : '/'} class="hover:text-stone-700">{isEn ? 'Home' : 'Inicio'}</a>
+  <a href={copy.homeHref} class="hover:text-stone-700">{copy.home}</a>
   <span class="mx-1.5 text-stone-300">/</span>
-  <a href="/barrio/" class="hover:text-stone-700">{isEn ? 'Neighborhoods' : 'Barrios'}</a>
+  <a href={copy.barriosHref} class="hover:text-stone-700">{copy.barrios}</a>
   <span class="mx-1.5 text-stone-300">/</span>
-  <a href={`/barrio/${neighborhood.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')}/`} class="hover:text-stone-700">{neighborhood}</a>
+  <a href={`${copy.barriosHref}${neighborhood.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')}/`} class="hover:text-stone-700">{neighborhood}</a>
 </nav>
 
 {(prev || next) && (
   <div class="flex justify-between gap-3 mb-8">
     {prev ? (
       <a href={`${basePath}/${prev.id}/`} class="group flex-1 min-w-0 bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all px-4 py-3">
-        <span class="block text-xs text-stone-400">← {isEn ? 'Previous' : 'Anterior'}</span>
+        <span class="block text-xs text-stone-400">← {copy.previous}</span>
         <span class="block text-sm font-medium text-stone-800 truncate group-hover:text-stone-600">{prev.data.name}</span>
       </a>
     ) : <span class="flex-1"></span>}
     {next ? (
       <a href={`${basePath}/${next.id}/`} class="group flex-1 min-w-0 bg-white rounded-xl border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all px-4 py-3 text-right">
-        <span class="block text-xs text-stone-400">{isEn ? 'Next' : 'Siguiente'} →</span>
+        <span class="block text-xs text-stone-400">{copy.next} →</span>
         <span class="block text-sm font-medium text-stone-800 truncate group-hover:text-stone-600">{next.data.name}</span>
       </a>
     ) : <span class="flex-1"></span>}

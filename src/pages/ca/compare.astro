@@ -1,0 +1,18 @@
+---
+// /ca/compare/ — Catalan side-by-side comparison.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Compara negocis costat a costat"
+  description="Compara salons de manicura i centres de massatge de Barcelona: valoracions de Google, ressenyes, horaris, idiomes i serveis, costat a costat."
+  lang="ca"
+>
+  <main class="max-w-6xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold text-stone-900">Comparar</h1>
+    <p class="text-stone-500 mt-2">Tria de 2 a 4 negocis de les llistes i apareixeran aquí, costat a costat.</p>
+
+    <!-- populated by /js/compare.js -->
+    <div id="compare-root" class="mt-8"></div>
+  </main>
+  <script src="/js/compare.js" defer></script>
+</BaseLayout>

@@ -40,40 +40,41 @@ interface KeywordDef {
   key: string;
   es: string;
   en: string;
+  ca: string;
   patterns: RegExp[];
   positive?: boolean;
 }
 
 // Patterns match accent-stripped lowercase review text (ES + EN).
 const KEYWORDS: KeywordDef[] = [
-  { key: 'trato',       es: 'trato amable',       en: 'friendly staff',       positive: true,
+  { key: 'trato',       es: 'trato amable',       en: 'friendly staff',       ca: 'tracte amable',        positive: true,
     patterns: [/\b(amable|simpatic|agradable|atent[oa]s?|friendly|kind|welcoming|hospitalar|hospitality|hospitable)\b/, /\bbuen trato\b/, /\bgreat service\b/] },
-  { key: 'calidad',     es: 'buen resultado',     en: 'great result',         positive: true,
+  { key: 'calidad',     es: 'buen resultado',     en: 'great result',         ca: 'bon resultat',         positive: true,
     patterns: [/\b(perfect|perfecto|precios[ao]|increible|incrível|enamorad|encantad|hermos|beautiful|gorgeous|stunning|love[d]? (my|mis|the)|me encant)\b/, /\bbuen (trabajo|resultado|acabado)\b/, /\b(very )?good (job|work|result)\b/] },
-  { key: 'profesional', es: 'profesionalidad',    en: 'professional',         positive: true,
+  { key: 'profesional', es: 'profesionalidad',    en: 'professional',         ca: 'professionalitat',     positive: true,
     patterns: [/\b(profesional|meticulos[oa]?|detallista|cuidados[oa]|precis[oa]|meticulous|detail(ed|ed)?|skilled|clean work)\b/, /\b(al minimo detalle|minimo detalle|attention to detail)\b/] },
-  { key: 'precio',      es: 'buena relación calidad-precio', en: 'good value', positive: true,
+  { key: 'precio',      es: 'buena relación calidad-precio', en: 'good value', ca: 'bona relació qualitat-preu', positive: true,
     patterns: [/\b(barat|bien de precio|buena relación|calidad precio|calidad-precio|affordable|reasonable (price|prices)|good (value|price)|cheap)\b/, /\bprecio[s]? (bajos|razonable|razonables)\b/] },
-  { key: 'limpieza',    es: 'limpieza',           en: 'cleanliness',          positive: true,
+  { key: 'limpieza',    es: 'limpieza',           en: 'cleanliness',          ca: 'neteja',               positive: true,
     patterns: [/\b(limpio|limpieza|higien|esteril|clean(ty|liness)?|hygien|sterile)\b/] },
-  { key: 'ambiente',    es: 'buen ambiente',      en: 'nice atmosphere',      positive: true,
+  { key: 'ambiente',    es: 'buen ambiente',      en: 'nice atmosphere',      ca: 'bon ambient',          positive: true,
     patterns: [/\b(ambiente|acogedor|decoraci|ambience|ambiance|atmosphere|cozy|vibe|relaxing place|lugar agradable)\b/] },
-  { key: 'rapidez',     es: 'rapidez',            en: 'quick service',        positive: true,
+  { key: 'rapidez',     es: 'rapidez',            en: 'quick service',        ca: 'rapidesa',             positive: true,
     patterns: [/\b(rapido|rapid[oa]s|puntual|sin cita|quick(ly)?|fast|efficient|on time|no wait|walk.?in)\b/, /\b(en poco tiempo\b)/] },
-  { key: 'reserva',     es: 'fácil de reservar',  en: 'easy booking',         positive: true,
+  { key: 'reserva',     es: 'fácil de reservar',  en: 'easy booking',         ca: 'fàcil de reservar',    positive: true,
     patterns: [/\b(reserv|cita|booking|booked|appointment|whatsapp)\b/] },
-  { key: 'idiomas',     es: 'atención en inglés', en: 'english-speaking',     positive: true,
+  { key: 'idiomas',     es: 'atención en inglés', en: 'english-speaking',     ca: 'atenció en anglès',    positive: true,
     patterns: [/\b(english|ingl[ée]s|hablan ingles|speaks? english)\b/] },
-  { key: 'recomendado', es: 'muy recomendado',    en: 'highly recommended',   positive: true,
+  { key: 'recomendado', es: 'muy recomendado',    en: 'highly recommended',   ca: 'molt recomanat',       positive: true,
     patterns: [/\b(recomiend[oa]|recomendable|recommen[d]?d|will (be )?(back|return)|volver[ée]|vengo|regular place|my new place|fijo)\b/] },
   // Negative signals — only surfaced when they clearly dominate
-  { key: 'trato-malo',  es: 'mal trato',          en: 'poor service',         positive: false,
+  { key: 'trato-malo',  es: 'mal trato',          en: 'poor service',         ca: 'mal tracte',           positive: false,
     patterns: [/\b(maleducad|gro[s]?[s]?|rude|unfriendly|mal trato|malcarad|desagradable|unprofessional)\b/] },
-  { key: 'espera',      es: 'esperas largas',     en: 'long waits',           positive: false,
+  { key: 'espera',      es: 'esperas largas',     en: 'long waits',           ca: 'esperes llargues',     positive: false,
     patterns: [/\b(esper[ae]|tarda[r]?(ron|ndo)?|delay|wait(ed|ing)?|slow|lento)\b/] },
-  { key: 'caro',        es: 'caro',               en: 'pricey',               positive: false,
+  { key: 'caro',        es: 'caro',               en: 'pricey',               ca: 'car',                  positive: false,
     patterns: [/\b(caro|cara|expensive|overpriced|rip.?off|steep)\b/] },
-  { key: 'resultado-malo', es: 'resultado decepcionante', en: 'disappointing result', positive: false,
+  { key: 'resultado-malo', es: 'resultado decepcionante', en: 'disappointing result', ca: 'resultat decebedor', positive: false,
     patterns: [/\b(mal(in|o|a)? (masaje|trabajo|acabado|resultado)|desastre|horrible|terrible|awful|worst|never again|nunca (mas|volver)|no (vuelvo|recomiendo))\b/, /\b(bad|poor|disappointing) (service|result|experience)\b/] },
 ];
 
@@ -81,6 +82,7 @@ export interface KeywordHit {
   key: string;
   es: string;
   en: string;
+  ca: string;
   positive: boolean;
   count: number;   // matching reviews in sample
   share: number;   // fraction of sampled reviews mentioning it
@@ -99,7 +101,7 @@ export function reviewKeywords(reviews: RawReview[] | undefined, minShare = 0.15
     }
     const share = count / sampled.length;
     if (count >= minCount && share >= minShare) {
-      hits.push({ key: kw.key, es: kw.es, en: kw.en, positive: kw.positive !== false, count, share });
+      hits.push({ key: kw.key, es: kw.es, en: kw.en, ca: kw.ca, positive: kw.positive !== false, count, share });
     }
   }
   // Positives first, by share desc; cap negatives at 1 so one gripe can't dominate

@@ -17,7 +17,7 @@
  * Copy lives here so ES and EN stay in sync.
  */
 interface Props {
-  lang?: 'es' | 'en';
+  lang?: 'es' | 'en' | 'ca';
   placeId?: string | null;
   name?: string | null;
   variant?: 'inline' | 'banner';
@@ -34,6 +34,14 @@ const copy = lang === 'en'
       bannerLink: 'Claim this business for free →',
       bannerNote: 'We confirm by email that you run the listing. Free, no commitment.',
     }
+  : lang === 'ca'
+  ? {
+      inlineQuestion: 'Gestiones aquest negoci?',
+      inlineLink: "Reclama'l gratis →",
+      bannerQuestion: name ? `Ets l'amo de ${name}?` : "Ets l'amo d'aquest negoci?",
+      bannerLink: 'Reclama aquest negoci gratis →',
+      bannerNote: "Verifiquem per correu electrònic que gestiones la fitxa. Gratuït i sense permanència.",
+    }
   : {
       inlineQuestion: '¿Gestionas este negocio?',
       inlineLink: 'Reclámalo gratis →',
@@ -42,13 +50,17 @@ const copy = lang === 'en'
       bannerNote: 'Verificamos por email que gestionas la ficha. Gratis y sin permanencia.',
     };
 
+// The claim flow itself is ES+EN only in this phase: a Catalan visitor claims
+// through the Spanish flow, so the deep link stays `/reclamar/`.
 const href = placeId
   ? lang === 'en'
     ? `/en/claim-business/?place=${encodeURIComponent(placeId)}`
     : `/reclamar/?place=${encodeURIComponent(placeId)}`
   : lang === 'en'
     ? '/en/for-businesses'
-    : '/for-businesses';
+    : lang === 'ca'
+      ? '/ca/for-businesses'
+      : '/for-businesses';
 ---
 
 {variant === 'inline' ? (

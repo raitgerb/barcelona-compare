@@ -15,21 +15,34 @@ interface CompareItem { slug: string; name: string; cat: string; img: string }
   'use strict';
 
   // ---------- i18n ----------
-  var LANG = (document.documentElement.lang === 'en') ? 'en' : 'es';
-  var COMPARE_PATH = LANG === 'en' ? '/en/compare/' : '/compare/';
+  // `lang` on <html> is set by BaseLayout (es | en | ca).
+  var DOC_LANG = document.documentElement.lang;
+  var LANG = (DOC_LANG === 'en' || DOC_LANG === 'ca') ? DOC_LANG : 'es';
+  var COMPARE_PATH = LANG === 'es' ? '/compare/' : '/' + LANG + '/compare/';
   var L = (LANG === 'en')
     ? {
         open: 'Open now', closed: 'Closed', compare: 'Compare', addCmp: 'Add to compare',
         trayEmpty: 'Pick 2–4 salons to compare', clear: 'Clear', view: 'Compare →',
         removed: 'Removed', noRes: 'No matches', searchPh: 'Search name, street, service…',
         min2: 'Select at least 2', max4: 'Maximum 4', today: 'Today',
+        matches: 'matches', sameCategory: 'Compare salons of the same category',
         days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      }
+    : LANG === 'ca'
+    ? {
+        open: 'Obert ara', closed: 'Tancat', compare: 'Comparar', addCmp: 'Afegir a la comparació',
+        trayEmpty: 'Tria 2–4 salons per comparar', clear: 'Buida', view: 'Comparar →',
+        removed: 'Eliminat', noRes: 'Sense resultats', searchPh: 'Cerca nom, carrer, servei…',
+        min2: 'Selecciona almenys 2', max4: 'Màxim 4', today: 'Avui',
+        matches: 'coincidències', sameCategory: 'Compara negocis de la mateixa categoria',
+        days: ['Dl', 'Dt', 'Dc', 'Dj', 'Dv', 'Ds', 'Dg']
       }
     : {
         open: 'Abierto ahora', closed: 'Cerrado', compare: 'Comparar', addCmp: 'Añadir a comparación',
         trayEmpty: 'Elige 2–4 salones para comparar', clear: 'Vaciar', view: 'Comparar →',
         removed: 'Eliminado', noRes: 'Sin resultados', searchPh: 'Busca nombre, calle, servicio…',
         min2: 'Selecciona al menos 2', max4: 'Máximo 4', today: 'Hoy',
+        matches: 'coincidencias', sameCategory: 'Compara negocios de la misma categoría',
         days: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
       };
   var DAY_KEYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -137,7 +150,7 @@ interface CompareItem { slug: string; name: string; cat: string; img: string }
     var tray = trayEl();
     var note = document.createElement('div');
     note.className = 'absolute -top-9 left-1/2 -translate-x-1/2 bg-stone-800 text-white text-xs px-3 py-1.5 rounded-lg shadow';
-    note.textContent = LANG === 'en' ? 'Compare salons of the same category' : 'Compara negocios de la misma categoría';
+    note.textContent = L.sameCategory;
     tray.querySelector('div')!.appendChild(note);
     setTimeout(function () { note.remove(); }, 2200);
   }
@@ -260,7 +273,7 @@ interface CompareItem { slug: string; name: string; cat: string; img: string }
           card.classList.toggle('hidden', !match);
           if (match) shown++;
         });
-        if (resultCount) resultCount.textContent = q ? shown + ' ' + (L.compare === 'Compare' ? 'matches' : 'coincidencias') : baseCount;
+        if (resultCount) resultCount.textContent = q ? shown + ' ' + L.matches : baseCount;
         if (noRes) noRes.classList.toggle('hidden', shown > 0);
       };
       searchInput.addEventListener('input', applySearch);

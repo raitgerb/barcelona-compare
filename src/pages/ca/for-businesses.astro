@@ -1,0 +1,340 @@
+---
+// /ca/for-businesses/ — Catalan partner-facing pitch (mirror of /for-businesses,
+// /en/for-businesses). The claim flow itself is ES+EN only in phase 1, so the
+// primary CTA points at /reclamar (noted inline) and email stays the fallback.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const CLAIM_EMAIL = 'hola@barcelonacompare.com';
+const CLAIM_HREF = '/reclamar';
+const claimSubject = 'Vull reclamar el meu negoci a Barcelona Compare';
+const claimBody = [
+  'Hola,',
+  '',
+  'Vull reclamar el meu negoci a Barcelona Compare.',
+  '',
+  'Nom del negoci:',
+  'Categoria (manicura / massatge):',
+  'Adreça:',
+  'Telèfon:',
+  'Web:',
+  '',
+  'Gràcies.',
+].join('\n');
+const claimMailto = `mailto:${CLAIM_EMAIL}?subject=${encodeURIComponent(claimSubject)}&body=${encodeURIComponent(claimBody)}`;
+
+// Real numbers, computed from the content collections at content-editing time
+// (646 nails + 536 massage = 1,182 listings, 154,793 Google reviews).
+const STATS = { businesses: '1.182', reviews: '154.793', districts: 10, avg: '4,7' };
+
+const exampleHref = '/ca/massage/abby-masaje-spa/';
+
+const valuePoints = [
+  {
+    title: 'Apareixes on la gent ja busca',
+    body: 'La teva fitxa surt a les llistes de manicura i massatge, a les 10 guies de districte i a les pàgines de «millors», ordenada pel que els teus clients han valorat realment a Google.',
+  },
+  {
+    title: 'Dades correctes, no el que Google encara té',
+    body: "Moltes fitxes mostren l'horari, el telèfon o la web que Google Maps arrossega des de fa anys. Si alguna cosa ha canviat, ens ho dius i ho arreglem.",
+  },
+  {
+    title: 'Contacte directe, sense comissions',
+    body: 'Telèfon, web i WhatsApp. No gestionem reserves ni ens quedem cap part per client: qui t\'escriu, t\'escriu a tu.',
+  },
+  {
+    title: 'Clients del barri i visitants',
+    body: "Tot el lloc és en castellà, anglès i català, amb serveis i ressenyes en els tres idiomes. Arribes al veí de Gràcia i al visitant que busca a Poblenou.",
+  },
+];
+
+const tiers = [
+  {
+    key: 'free',
+    name: 'Fitxa gratuïta',
+    price: '0 €',
+    status: 'Ja disponible',
+    tone: 'live',
+    blurb: 'La fitxa que ja tens, construïda amb dades públiques de Google Maps i amb els teus enllaços de contacte directe.',
+  },
+  {
+    key: 'claimed',
+    name: 'Reclamada',
+    price: '0 €',
+    status: 'Ja disponible',
+    tone: 'live',
+    blurb: "Verifiques per correu electrònic que el negoci és teu i la fitxa queda marcada com a reclamada i verificada a l'instant. Les eines per editar serveis, preus i fotos arriben després.",
+  },
+  {
+    key: 'pro',
+    name: 'Pro',
+    price: 'Preu per confirmar',
+    status: 'En desenvolupament',
+    tone: 'later',
+    blurb: "Visibilitat extra per a les cerques més competides. Encara no està a la venda: els negocis reclamats hi tindran accés primer.",
+  },
+];
+
+// y = included, n = not included
+const features: Array<{ label: string; v: Array<'y' | 'n'> }> = [
+  { label: 'Sortir a les llistes de manicura i massatge, a les guies de districte i a les pàgines de «millors»', v: ['y', 'y', 'y'] },
+  { label: 'Horari, adreça, telèfon, web i fotos', v: ['y', 'y', 'y'] },
+  { label: 'Valoració de Google agregada i ressenyes', v: ['y', 'y', 'y'] },
+  { label: 'Contacte directe (telèfon, web) sense comissió per client', v: ['y', 'y', 'y'] },
+  { label: 'Insígnia de negoci verificat', v: ['n', 'y', 'y'] },
+  { label: 'Editar els teus serveis, preus, fotos i horari', v: ['n', 'y', 'y'] },
+  { label: 'Botó de WhatsApp perquè els clients t\'escriguin directament', v: ['n', 'y', 'y'] },
+  { label: 'Galeria de fotos ampliada', v: ['n', 'n', 'y'] },
+  { label: 'Posició destacada als rànquings, sempre marcada com a patrocinada', v: ['n', 'n', 'y'] },
+  { label: 'Estadístiques mensuals per correu (visites i clics)', v: ['n', 'n', 'y'] },
+];
+
+const faqs = [
+  {
+    q: 'Quant costa sortir a Barcelona Compare?',
+    a: 'Res. La fitxa bàsica és gratuïta i ho seguirà sent: no cobrem ni per sortir-hi ni pels contactes que rebis. El pla Pro està en desenvolupament i encara no es pot comprar.',
+  },
+  {
+    q: 'Com reclamo el meu negoci?',
+    a: `Troba el teu negoci al directori, clica «Reclama aquest negoci» i verifica el correu amb un codi de 6 xifres: la fitxa queda marcada com a reclamada i verificada a l'instant. Si ho prefereixes, escriu-nos a ${CLAIM_EMAIL} i ho fem nosaltres.`,
+  },
+  {
+    q: 'Puc canviar els meus preus, serveis o horari?',
+    a: "Sí. Envia'ns la llista i la publiquem. Avui la majoria de fitxes no mostra cap preu: si envies els teus, apareixeran a la teva fitxa. Quan el teu perfil estigui reclamat, els podràs editar tu mateix.",
+  },
+  {
+    q: 'Cobreu comissió per les reserves que arriben del lloc?',
+    a: "No hi ha reserves sobre les quals cobrar comissió: no gestionem cites i no cobrem res per client. Els clients et truquen, t'escriuen per WhatsApp o van directament a la teva web.",
+  },
+  {
+    q: 'El meu negoci no surt al directori. I ara?',
+    a: 'Envia\'ns el nom i l\'adreça per correu. Cobrim 1.182 negocis de Barcelona: si el teu és un saló de manicura o un centre de massatge i falta, l\'afegim gratis.',
+  },
+  {
+    q: 'Puc demanar que retireu el meu negoci?',
+    a: "Sí. Escriu-nos i el traiem del directori en 2-3 dies laborables. No cal que ens diguis el motiu.",
+  },
+  {
+    q: 'D\'on surten les valoracions i les ressenyes?',
+    a: 'De Google Maps, i sempre apareixen atribuïdes a Google. No publiquem ressenyes pròpies i no podem editar ni esborrar les que ja tens a Google.',
+  },
+  {
+    q: 'Puc pagar per sortir més amunt?',
+    a: 'Avui no hi ha cap posició a la venda. Quan llancem el pla Pro, els llocs destacats aniran sempre marcats com a patrocinats i mai no canviaran la valoració real dels clients, que continua sent el que decideix l\'ordre.',
+  },
+  {
+    q: 'Hi ha alguna cosa incorrecta a la meva fitxa.',
+    a: 'Construïm les fitxes amb dades públiques de Google Maps. Si veus un error, digues-nos-ho i ho arreglem; quan el perfil estigui reclamat el podràs editar tu mateix.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(f => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const mark = (v: 'y' | 'n') => (v === 'y' ? '✓' : '—');
+---
+
+<BaseLayout
+  title="Per a negocis"
+  description={`Reclama la teva fitxa gratuïta a Barcelona Compare: corregeix les teves dades, afegeix serveis i preus i arriba a qui busca salons de manicura i centres de massatge a Barcelona. ${STATS.businesses} negocis llistats.`}
+  lang="ca"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <nav class="text-sm text-stone-500 mb-6" aria-label="breadcrumb">
+      <a href="/ca" class="hover:text-stone-700">Inici</a>
+      <span class="mx-1.5 text-stone-300">/</span>
+      <span class="text-stone-700 font-medium">Per a negocis</span>
+    </nav>
+
+    <header>
+      <h1 class="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">
+        Posa el teu saló o centre davant de qui el busca
+      </h1>
+      <p class="mt-4 text-lg text-stone-600 leading-relaxed">
+        Barcelona Compare reuneix <strong>{STATS.businesses} salons de manicura i centres de massatge</strong> de la ciutat.
+        Reclama la teva fitxa gratis, corregeix el que Google té malament i apareix com vols que et vegin els clients.
+      </p>
+
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <a
+          href={CLAIM_HREF}
+          class="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors"
+        >
+          Reclama el meu negoci gratis
+        </a>
+        <a
+          href={exampleHref}
+          class="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-stone-300 text-stone-700 font-medium hover:border-stone-400 hover:text-stone-900 transition-colors"
+        >
+          Veure una fitxa d'exemple →
+        </a>
+      </div>
+      <p class="mt-3 text-sm text-stone-500">
+        O escriu-nos directament a <strong class="text-stone-700">{CLAIM_EMAIL}</strong> · responem en 2-3 dies laborables
+      </p>
+      <p class="mt-1 text-xs text-stone-400">
+        El formulari de reclamació amb codi de verificació està disponible en castellà i anglès.
+      </p>
+
+      <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 p-5 rounded-xl bg-white border border-stone-200">
+        <div>
+          <dt class="text-xs text-stone-500">Negocis llistats</dt>
+          <dd class="text-2xl font-bold text-stone-900">{STATS.businesses}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-stone-500">Ressenyes de Google</dt>
+          <dd class="text-2xl font-bold text-stone-900">{STATS.reviews}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-stone-500">Districtes coberts</dt>
+          <dd class="text-2xl font-bold text-stone-900">{STATS.districts}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-stone-500">Valoració mitjana</dt>
+          <dd class="text-2xl font-bold text-stone-900">{STATS.avg}★</dd>
+        </div>
+      </dl>
+    </header>
+
+    <section class="mt-14">
+      <h2 class="text-2xl font-bold text-stone-900">Què guanyes reclamant la teva fitxa</h2>
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {valuePoints.map(p => (
+          <div class="p-5 rounded-xl bg-white border border-stone-200">
+            <h3 class="font-semibold text-stone-900">{p.title}</h3>
+            <p class="mt-2 text-sm text-stone-600 leading-relaxed">{p.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="text-2xl font-bold text-stone-900">Com funciona</h2>
+      <ol class="mt-6 space-y-4">
+        <li class="flex gap-4 p-5 rounded-xl bg-white border border-stone-200">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">1</span>
+          <div>
+            <h3 class="font-semibold text-stone-900">Troba el teu negoci al directori</h3>
+            <p class="mt-1 text-sm text-stone-600">Busca el teu nom o el teu carrer a les llistes de <a href="/ca/nails" class="text-brand-600 hover:underline">manicura</a> i <a href="/ca/massage" class="text-brand-600 hover:underline">massatge</a>. Si no hi ets, digues-nos-ho i t'afegim gratis.</p>
+          </div>
+        </li>
+        <li class="flex gap-4 p-5 rounded-xl bg-white border border-stone-200">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">2</span>
+          <div>
+            <h3 class="font-semibold text-stone-900">Verifica el teu correu electrònic</h3>
+            <p class="mt-1 text-sm text-stone-600">Clica «Reclama aquest negoci» a la teva fitxa i t'enviem un codi de 6 xifres per correu. Així confirmem que ets el propietari o la persona responsable abans de tocar res.</p>
+          </div>
+        </li>
+        <li class="flex gap-4 p-5 rounded-xl bg-white border border-stone-200">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">3</span>
+          <div>
+            <h3 class="font-semibold text-stone-900">La teva fitxa queda marcada com a verificada</h3>
+            <p class="mt-1 text-sm text-stone-600">Mostra la insígnia de negoci verificat i publiquem els canvis de dades que ens enviïs en 2-3 dies laborables. Sense quotes, sense contractes i sense exclusivitat: tots els negocis es continuen comparant amb les mateixes regles.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="text-2xl font-bold text-stone-900">Compara els plans</h2>
+      <p class="mt-2 text-stone-600">
+        La fitxa és gratuïta i ho seguirà sent. El pla Pro està en desenvolupament i encara no es pot comprar.
+      </p>
+
+      <div class="hidden md:block mt-6 overflow-hidden rounded-xl border border-stone-200 bg-white">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-stone-50 border-b border-stone-200">
+              <th class="text-left font-semibold text-stone-700 p-4 w-1/2">Què inclou</th>
+              {tiers.map(t => (
+                <th class="text-center p-4 align-top">
+                  <span class="block font-bold text-stone-900">{t.name}</span>
+                  <span class="block mt-1 text-xs font-normal text-stone-500">{t.price}</span>
+                  <span class={`inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full ${t.tone === 'live' ? 'bg-green-50 text-green-700 border border-green-200' : t.tone === 'soon' ? 'bg-brand-50 text-brand-700 border border-brand-200' : 'bg-stone-100 text-stone-500 border border-stone-200'}`}>
+                    {t.status}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {features.map(f => (
+              <tr class="border-b border-stone-100 last:border-0">
+                <td class="p-4 text-stone-600">{f.label}</td>
+                {f.v.map(m => (
+                  <td class={`p-4 text-center font-bold ${m === 'y' ? 'text-brand-600' : 'text-stone-300'}`}>{mark(m)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="md:hidden mt-6 space-y-4">
+        {tiers.map((t, i) => (
+          <div class="p-5 rounded-xl bg-white border border-stone-200">
+            <div class="flex items-baseline justify-between gap-3">
+              <h3 class="font-bold text-stone-900">{t.name}</h3>
+              <span class="text-sm text-stone-500">{t.price}</span>
+            </div>
+            <span class={`inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full ${t.tone === 'live' ? 'bg-green-50 text-green-700 border border-green-200' : t.tone === 'soon' ? 'bg-brand-50 text-brand-700 border border-brand-200' : 'bg-stone-100 text-stone-500 border border-stone-200'}`}>
+              {t.status}
+            </span>
+            <p class="mt-3 text-sm text-stone-600">{t.blurb}</p>
+            <ul class="mt-3 space-y-1.5 text-sm">
+              {features.map(f => (
+                <li class={`flex gap-2 ${f.v[i] === 'y' ? 'text-stone-700' : 'text-stone-400'}`}>
+                  <span class={`shrink-0 font-bold ${f.v[i] === 'y' ? 'text-brand-600' : 'text-stone-300'}`}>{mark(f.v[i])}</span>
+                  <span>{f.label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="text-2xl font-bold text-stone-900">Preguntes freqüents</h2>
+      <div class="mt-6 divide-y divide-stone-200 rounded-xl border border-stone-200 bg-white">
+        {faqs.map(f => (
+          <details class="group p-5">
+            <summary class="flex items-start justify-between gap-4 cursor-pointer font-semibold text-stone-900 list-none">
+              <span>{f.q}</span>
+              <span class="shrink-0 text-stone-400 group-open:rotate-45 transition-transform">+</span>
+            </summary>
+            <p class="mt-3 text-sm text-stone-600 leading-relaxed">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-14 p-8 rounded-2xl bg-brand-50 border border-brand-100 text-center">
+      <h2 class="text-2xl font-bold text-stone-900">Reclama la teva fitxa gratis</h2>
+      <p class="mt-2 text-stone-600 max-w-xl mx-auto">
+        Troba el teu negoci, verifica el correu amb un codi de 6 xifres i la fitxa queda reclamada i verificada a l'instant.
+      </p>
+      <a
+        href={CLAIM_HREF}
+        class="inline-flex items-center gap-2 mt-5 px-6 py-3 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors"
+      >
+        Reclama el meu negoci
+      </a>
+      <p class="mt-4 text-sm text-stone-600">
+        O escriu-nos a <a href={claimMailto} class="font-semibold text-brand-700 hover:underline">{CLAIM_EMAIL}</a>
+      </p>
+      <p class="mt-4 text-xs text-stone-500">
+        Barcelona Compare és un agregador independent i no té cap vinculació amb Google. Les valoracions venen de Google Maps.
+        Vols saber com tractem les dades? <a href="/ca/about" class="underline">Com funciona el lloc</a>.
+      </p>
+    </section>
+  </div>
+</BaseLayout>

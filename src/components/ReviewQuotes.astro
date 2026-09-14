@@ -3,6 +3,10 @@
  * Review quotes section for detail pages.
  * Renders top Google review excerpts + rating summary when googleReviews
  * data exists; renders nothing otherwise (no empty sections on 94% of pages).
+ *
+ * `lang` defaults to 'es' — the ES and EN detail templates were written before
+ * this prop existed (and EN never passed one), so the default keeps their output
+ * byte-identical. The /ca/ templates pass lang="ca".
  */
 import type { CollectionEntry } from 'astro:content';
 
@@ -19,9 +23,10 @@ interface Props {
   googleRating?: number;
   googleReviewCount?: number;
   reviews: Review[];
+  lang?: 'es' | 'en' | 'ca';
 }
 
-const { name, googleRating, googleReviewCount, reviews } = Astro.props;
+const { name, googleRating, googleReviewCount, reviews, lang = 'es' } = Astro.props;
 
 // Keep reviews with substance, prefer longer texts, cap at 3.
 const shown = [...reviews]
@@ -35,35 +40,45 @@ const t = {
     based: 'basado en',
     reviewsWord: 'reseñas en Google',
     readAll: 'Leer todas las reseñas',
-    noReviews: '',
+    of5: 'de 5 estrellas',
+    numberLocale: 'es-ES',
   },
   en: {
     title: 'What clients say',
     based: 'based on',
     reviewsWord: 'Google reviews',
     readAll: 'Read all reviews',
-    noReviews: '',
+    of5: 'out of 5 stars',
+    numberLocale: 'en-US',
+  },
+  ca: {
+    title: 'Què diuen els clients',
+    based: 'basat en',
+    reviewsWord: 'ressenyes a Google',
+    readAll: 'Llegeix totes les ressenyes',
+    of5: 'de 5 estrelles',
+    numberLocale: 'ca-ES',
   },
 };
-const lang = Astro.props && true ? 'es' : 'es';
+const copy = t[lang];
 ---
 
 {shown.length > 0 && (
   <section class="mt-10">
     <div class="flex items-baseline justify-between gap-4 flex-wrap">
-      <h2 class="text-xl font-bold text-stone-900">{t.es.title}</h2>
+      <h2 class="text-xl font-bold text-stone-900">{copy.title}</h2>
       {(googleRating && googleReviewCount) ? (
         <p class="text-sm text-stone-500">
           <span class="font-bold text-stone-800">{googleRating.toFixed(1)}</span>
           <span class="text-amber-500"> ★</span>
-          {' · '}{t.es.based} {googleReviewCount.toLocaleString('es-ES')} {t.es.reviewsWord}
+          {' · '}{copy.based} {googleReviewCount.toLocaleString(copy.numberLocale)} {copy.reviewsWord}
         </p>
       ) : null}
     </div>
     <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
       {shown.map((r) => (
         <figure class="bg-white rounded-xl border border-stone-200 p-5 flex flex-col">
-          <div class="text-amber-400 text-sm" aria-label={`${r.rating} de 5 estrellas`}>
+          <div class="text-amber-400 text-sm" aria-label={`${r.rating} ${copy.of5}`}>
             {'★'.repeat(Math.round(r.rating))}<span class="text-stone-300">{'★'.repeat(5 - Math.round(r.rating))}</span>
           </div>
           <blockquote class="mt-2 text-sm text-stone-700 leading-relaxed flex-1">

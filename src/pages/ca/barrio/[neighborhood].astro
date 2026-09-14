@@ -1,0 +1,164 @@
+---
+// /ca/barrio/{neighborhood}/ — Catalan mirror of the barrio guide.
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PaginatedListing from '../../../components/PaginatedListing.astro';
+import { getCollection } from 'astro:content';
+import { neighborhoodGuides } from '../../../data/neighborhoods';
+import { SERVICES, MIN_CITY, MIN_COMBO } from '../../../lib/services';
+
+export async function getStaticPaths() {
+  return Object.keys(neighborhoodGuides).map(nb => ({
+    params: { neighborhood: nb.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-') }
+  }));
+}
+
+const { neighborhood } = Astro.params;
+const guide = Object.entries(neighborhoodGuides).find(([nb]) =>
+  nb.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-') === neighborhood
+);
+if (!guide) return Astro.redirect('/ca/barrio/');
+const [nbName, meta] = guide;
+
+const nails = (await getCollection('nails'))
+  .filter(b => b.data.neighborhood === nbName)
+  .sort((a, b) => ((b.data.googleRating || 0) - (a.data.googleRating || 0)) || ((b.data.googleReviewCount || 0) - (a.data.googleReviewCount || 0)));
+const massage = (await getCollection('massage'))
+  .filter(b => b.data.neighborhood === nbName)
+  .sort((a, b) => ((b.data.googleRating || 0) - (a.data.googleRating || 0)) || ((b.data.googleReviewCount || 0) - (a.data.googleReviewCount || 0)));
+
+const avgRating = (list: any[]) => {
+  const rated = list.filter(b => b.data.googleRating);
+  if (!rated.length) return null;
+  return (rated.reduce((s, b) => s + b.data.googleRating, 0) / rated.length).toFixed(1);
+};
+const nAvg = avgRating(nails);
+
+// OSM embed: hand-tuned center per barrio (same as ES/EN guides).
+const centers: Record<string, [number, number]> = {
+  'Eixample': [41.3925, 2.1650], 'Gràcia': [41.4022, 2.1568],
+  'Ciutat Vella': [41.3833, 2.1769], 'Sarrià-Sant Gervasi': [41.4009, 2.1282],
+  'Sants-Montjuïc': [41.3767, 2.1495], 'Sant Martí': [41.4100, 2.1990],
+  'Les Corts': [41.3881, 2.1274], 'Horta-Guinardó': [41.4194, 2.1622],
+  'Nou Barris': [41.4292, 2.1775], 'Sant Andreu': [41.4403, 2.1873],
+};
+const c = centers[nbName] || [41.39, 2.17];
+const d = 0.008;
+const bbox = `${(c[1] - d).toFixed(4)}%2C${(c[0] - d * 0.6).toFixed(4)}%2C${(c[1] + d).toFixed(4)}%2C${(c[0] + d * 0.6).toFixed(4)}`;
+const osmSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${c[0]}%2C${c[1]}`;
+
+const nbSlug = neighborhood;
+
+const t = {
+  nailsTitle: `Salons de manicura a ${nbName}`,
+  massageTitle: `Centres de massatge a ${nbName}`,
+  statBusinesses: 'negocis',
+  statReviews: 'ressenyes de Google',
+  statAvg: 'valoració mitjana',
+  mapTitle: `Mapa de ${nbName}`,
+};
+
+// Money-page cross-links: district (≥MIN_CITY) + combo (≥MIN_COMBO), CA side.
+const moneyLinks: Array<{ href: string; label: string }> = [];
+{
+  const allBiz = [...(await getCollection('nails')), ...(await getCollection('massage'))]
+    .filter(b => b.data.neighborhood === nbName);
+  for (const cat of ['nails', 'massage'] as const) {
+    const catN = allBiz.filter(b => b.collection === cat).length;
+    if (catN >= MIN_CITY) {
+      moneyLinks.push({ href: `/ca/mejores/${cat}/${nbSlug}/`, label: `Els millors ${cat === 'nails' ? 'salons de manicura' : 'centres de massatge'} de ${nbName}` });
+    }
+    const tagCounts = new Map<string, number>();
+    for (const b of allBiz) {
+      if (b.collection !== cat) continue;
+      for (const t of ((b.data.serviceTags ?? []) as string[])) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+    }
+    for (const svc of SERVICES[cat]) {
+      const n = tagCounts.get(svc.slug) ?? 0;
+      if (n >= MIN_COMBO) {
+        moneyLinks.push({ href: `/ca/mejores/${cat}/${nbSlug}/${svc.slug}/`, label: `${svc.ca.keyword.charAt(0).toUpperCase()}${svc.ca.keyword.slice(1)} a ${nbName} (${n})` });
+      }
+    }
+  }
+}
+
+// ItemList schema: top businesses in this barrio
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `Els millors negocis a ${nbName}`,
+  numberOfItems: nails.length + massage.length,
+  itemListElement: [...nails.slice(0, 10), ...massage.slice(0, 10)].map((b, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: b.data.name,
+    url: new URL(`/ca/${b.collection}/${b.id}/`, Astro.site).href,
+  })),
+};
+---
+
+<BaseLayout
+  title={`Salons de manicura i centres de massatge a ${nbName} — Guies`}
+  description={`${nails.length + massage.length} negocis a ${nbName}: ${nails.length} salons de manicura i ${massage.length} centres de massatge. Valoracions, horaris i idiomes de cadascun.`}
+  lang="ca"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
+  <main class="max-w-6xl mx-auto px-4 py-12">
+    <nav class="text-sm text-stone-500 mb-6" aria-label="breadcrumb">
+      <a href="/ca" class="hover:text-stone-700">Inici</a>
+      <span class="mx-1.5 text-stone-300">/</span>
+      <a href="/ca/barrio/" class="hover:text-stone-700">Barris</a>
+      <span class="mx-1.5 text-stone-300">/</span>
+      <span class="text-stone-700 font-medium">{nbName}</span>
+    </nav>
+
+    <header class="max-w-3xl">
+      <h1 class="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">{nbName}</h1>
+      <p class="mt-4 text-stone-600 leading-relaxed">{meta.ca}</p>
+      <div class="flex flex-wrap gap-6 mt-6 text-sm">
+        <div><span class="block text-2xl font-bold text-stone-900">{nails.length + massage.length}</span><span class="text-stone-500">{t.statBusinesses}</span></div>
+        <div><span class="block text-2xl font-bold text-stone-900">{(nails.reduce((s,b)=>s+(b.data.googleReviewCount||0),0)+massage.reduce((s,b)=>s+(b.data.googleReviewCount||0),0)).toLocaleString('ca-ES')}</span><span class="text-stone-500">{t.statReviews}</span></div>
+        {nAvg && <div><span class="block text-2xl font-bold text-stone-900">{nAvg}★</span><span class="text-stone-500">{t.statAvg}</span></div>}
+      </div>
+    </header>
+
+    <section class="mt-10 rounded-xl border border-stone-200 overflow-hidden bg-white">
+      <iframe
+        title={t.mapTitle}
+        width="100%"
+        height="280"
+        style="border:0"
+        loading="lazy"
+        src={osmSrc}
+      ></iframe>
+    </section>
+
+    {nails.length > 0 && (
+      <section class="mt-14">
+        <h2 class="text-2xl font-bold text-stone-900">{t.nailsTitle}</h2>
+        <p class="text-stone-500 mt-1 text-sm">{nails.length} salons</p>
+        <PaginatedListing businesses={nails.slice(0, 12)} category="nails" lang="ca" total={nails.length} currentPage={1} totalPages={1} />
+        <a href="/ca/nails" class="inline-block mt-6 text-sm font-medium text-accent-nails hover:underline">Veure tots els salons →</a>
+      </section>
+    )}
+
+    {massage.length > 0 && (
+      <section class="mt-14">
+        <h2 class="text-2xl font-bold text-stone-900">{t.massageTitle}</h2>
+        <p class="text-stone-500 mt-1 text-sm">{massage.length} centres</p>
+        <PaginatedListing businesses={massage.slice(0, 12)} category="massage" lang="ca" total={massage.length} currentPage={1} totalPages={1} />
+        <a href="/ca/massage" class="inline-block mt-6 text-sm font-medium text-accent-massage hover:underline">Veure tots els centres →</a>
+      </section>
+    )}
+
+    {moneyLinks.length > 0 && (
+      <section class="mt-14">
+        <h2 class="text-xl font-bold text-stone-900">Comparatives de {nbName}</h2>
+        <div class="mt-4 flex flex-wrap gap-2">
+          {moneyLinks.map(l => (
+            <a href={l.href} class="text-sm px-4 py-2 rounded-full border border-stone-200 hover:border-brand-400 hover:text-brand-600 transition-colors text-stone-700">{l.label}</a>
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
+</BaseLayout>

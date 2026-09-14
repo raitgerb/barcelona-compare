@@ -7,7 +7,7 @@
 import { ratingHistogram, reviewKeywords, type RawReview } from '../lib/reviewInsights';
 
 interface Props {
-  lang: 'es' | 'en';
+  lang: 'es' | 'en' | 'ca';
   reviews: RawReview[];
   reviewCount?: number;
 }
@@ -30,6 +30,13 @@ const t = {
     kwTitle: 'What clients mention most',
     kwHint: 'automatically extracted from Google reviews',
     reviews: 'reviews',
+  },
+  ca: {
+    distTitle: 'Distribució de les valoracions',
+    distHint: `estimada a partir de les ressenyes recents publicades${reviewCount ? ` de ${reviewCount.toLocaleString('ca-ES')} en total` : ''}`,
+    kwTitle: 'El que més mencionen els clients',
+    kwHint: 'extret automàticament de les ressenyes de Google',
+    reviews: 'ressenyes',
   },
 }[lang];
 
@@ -67,7 +74,7 @@ const maxShare = hist ? Math.max(...hist.share, 0.0001) : 1;
             ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
             : 'bg-red-50 text-red-700 border-red-200'}`}
         >
-          {k.positive ? '✓' : '⚠'} {lang === 'es' ? k.es : k.en} · {Math.round(k.share * 100)}%
+          {k.positive ? '✓' : '⚠'} {lang === 'es' ? k.es : lang === 'ca' ? k.ca : k.en} · {Math.round(k.share * 100)}%
         </span>
       ))}
     </div>

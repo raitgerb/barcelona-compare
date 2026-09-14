@@ -7,7 +7,7 @@ import { imageUrl, hasPhoto } from '../lib/images';
 interface Props {
   businesses: any[];
   category: string;
-  lang: 'es' | 'en';
+  lang: 'es' | 'en' | 'ca';
   total: number;
   currentPage: number;
   totalPages: number;
@@ -17,15 +17,21 @@ const { businesses, category, lang, total, currentPage, totalPages } = Astro.pro
 const registry = await loadVerifiedRegistry();
 
 const isSpanish = lang === 'es';
-const detailPath = (slug: string) => lang === 'es' ? `/${category}/${slug}` : `/en/${category}/${slug}`;
-const indexUrl = lang === 'es' ? `/${category}/` : `/en/${category}/`;
-const pageUrl = (n: number) => lang === 'es' ? `/${category}/page/${n}/` : `/en/${category}/page/${n}/`;
+const localize = (path: string) => (lang === 'es' ? path : `/${lang}${path}`);
+const detailPath = (slug: string) => localize(`/${category}/${slug}`);
+const indexUrl = localize(`/${category}/`);
+const pageUrl = (n: number) => localize(`/${category}/page/${n}/`);
 
 const labels = isSpanish ? {
   previous: '← Anterior',
   next: 'Siguiente →',
   noResults: 'No hay resultados que coincidan con estos filtros',
   noResultsHint: 'Prueba con otros criterios o navega a otra página',
+} : lang === 'ca' ? {
+  previous: '← Anterior',
+  next: 'Següent →',
+  noResults: 'No hi ha resultats que coincideixin amb aquests filtres',
+  noResultsHint: 'Prova amb altres criteris o navega a una altra pàgina',
 } : {
   previous: '← Previous',
   next: 'Next →',
@@ -114,7 +120,7 @@ const labels = isSpanish ? {
   import '../scripts/listing';
 </script>
 {totalPages > 1 && (
-  <nav class="mt-10 flex items-center justify-center gap-1" aria-label={isSpanish ? 'Paginación' : 'Pagination'}>
+  <nav class="mt-10 flex items-center justify-center gap-1" aria-label={lang === 'es' ? 'Paginación' : lang === 'ca' ? 'Paginació' : 'Pagination'}>
     {currentPage > 1 ? (
       <a href={currentPage === 2 ? indexUrl : pageUrl(currentPage - 1)} class="px-3 py-2 text-sm text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-colors">{labels.previous}</a>
     ) : (

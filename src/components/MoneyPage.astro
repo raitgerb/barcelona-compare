@@ -1,12 +1,12 @@
 ---
 // Reusable "best of" money page: district, city-service, and barrio×service
-// modes, in ES and EN. Used by /mejores and /en/mejores routes.
+// modes, in ES, EN and CA. Used by /mejores, /en/mejores and /ca/mejores routes.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ListingCard from './ListingCard.astro';
 import { SERVICES, findService, loadRanked, bundleStats, slugify, type CatKey } from '../lib/services';
 
 interface Props {
-  lang: 'es' | 'en';
+  lang: 'es' | 'en' | 'ca';
   category: CatKey;
   mode: 'district' | 'service' | 'combo';
   neighborhood?: string;   // display name, e.g. "Gràcia"
@@ -16,9 +16,9 @@ interface Props {
 const { lang, category, mode, neighborhood, serviceSlug } = Astro.props;
 const svc = serviceSlug ? findService(category, serviceSlug) : undefined;
 
-const CAT_META: Record<CatKey, { es: string; en: string }> = {
-  nails: { es: 'salones de uñas', en: 'nail salons' },
-  massage: { es: 'centros de masaje', en: 'massage centers' },
+const CAT_META: Record<CatKey, { es: string; en: string; ca: string }> = {
+  nails: { es: 'salones de uñas', en: 'nail salons', ca: 'salons de manicura' },
+  massage: { es: 'centros de masaje', en: 'massage centers', ca: 'centres de massatge' },
 };
 const catLabel = CAT_META[category][lang];
 
@@ -56,31 +56,50 @@ const t = {
     otherServices: 'Related services', districtsFor: 'By neighborhood',
     seeGuide: 'full guide to', compare: 'compare all',
   },
+  ca: {
+    home: 'Inici', barrios: 'Barris', servicios: 'Serveis',
+    best: 'Els millors', in: 'a',
+    introService: (kw: string) => `Hem identificat els <strong>${stats.total}</strong> centres que ofereixen <strong>${kw}</strong> a Barcelona a partir dels seus serveis anunciats i de les mencions a les seves ressenyes de Google.`,
+    introDistrict: (nb: string) => `Hem comparat els <strong>${stats.total} ${catLabel}</strong> de ${nb} segons les seves valoracions reals de Google`,
+    introCombo: (kw: string, nb: string) => `Els <strong>${stats.total}</strong> centres de ${nb} on pots reservar <strong>${kw}</strong>, ordenats per la valoració real dels seus clients a Google.`,
+    reviewed: 'ressenyes analitzades', avgRating: 'valoració mitjana', businesses: 'centres',
+    howRank: 'Com fem el rànquing?',
+    howRankBody: "Fem servir la valoració de Google ponderada pel nombre de ressenyes (mitjana bayesiana): un local amb 4.9★ i 800 opinions puntua més que un amb 5★ i 5 opinions. Les dades s'actualitzen periòdicament des de Google Maps.",
+    exploreIn: 'Explora', exploreBody: (x: string) => "Prefereixes veure-ho al mapa o filtrar per obert ara? Consulta la guia completa o compara'ls costat a costat des de qualsevol llista.",
+    otherServices: 'Altres serveis relacionats', districtsFor: 'També per districte',
+    seeGuide: 'guia completa de', compare: "compara'ls tots",
+  },
 }[lang];
 
 // Cross-links
 const allServices = SERVICES[category];
 const siblingServices = allServices.filter(s => s.slug !== serviceSlug);
+// Path prefix for a locale: '' (es), 'en/', 'ca/'.
+const prefix = lang === 'es' ? '' : `${lang}/`;
 const districtPageHref = neighborhood && mode !== 'district'
-  ? `/${lang === 'en' ? 'en/' : ''}${category}/${slugify(neighborhood)}` : null;
+  ? `/${prefix}${category}/${slugify(neighborhood)}` : null;
 
 const title = (() => {
   const nb = neighborhood ?? 'Barcelona';
   const yearSuffix = '(2026)';
   if (mode === 'district') return `${t.best} ${catLabel} ${t.in} ${nb} ${yearSuffix}`;
-  return `${t.best} ${svc!.en.plural && lang === 'en' ? svc!.en.plural : svc!.es.plural} ${t.in} ${nb} ${yearSuffix}`;
+  return `${t.best} ${svc![lang].plural} ${t.in} ${nb} ${yearSuffix}`;
 })();
 
 const kwDisplay = mode === 'district'
   ? catLabel
-  : (lang === 'en' ? svc!.en.keyword : svc!.es.keyword);
+  : svc![lang].keyword;
 
-const description = mode === 'district'
+// ES and EN share the Spanish sentence here (historic); CA gets its own.
+const caDescription = mode === 'district'
+  ? `${stats.total} ${catLabel} ${t.in} ${neighborhood} comparats per valoració, ressenyes i idiomes. Mitjana de ${stats.avg ?? '—'}★ sobre ${stats.totalReviews.toLocaleString('ca-ES')} ressenyes de Google.`
+  : `${stats.total} opcions de ${kwDisplay} ${t.in} ${neighborhood ?? 'Barcelona'}, ordenades per valoració real (${stats.avg ?? '—'}★ sobre ${stats.totalReviews.toLocaleString('ca-ES')} ressenyes). Rànquing actualitzat.`;
+const description = lang === 'ca' ? caDescription : mode === 'district'
   ? `${stats.total} ${catLabel} ${t.in} ${neighborhood} comparados por valoración, reseñas e idiomas. Media de ${stats.avg ?? '—'}★ sobre ${stats.totalReviews.toLocaleString('es-ES')} reseñas de Google.`
   : `${stats.total} opciones de ${kwDisplay} ${t.in} ${neighborhood ?? 'Barcelona'}, ordenadas por valoración real (${stats.avg ?? '—'}★ sobre ${stats.totalReviews.toLocaleString('es-ES')} reseñas). Ranking actualizado.`;
 
 const nbSlug = neighborhood ? slugify(neighborhood) : null;
-const basePath = lang === 'en' ? '/en/mejores' : '/mejores';
+const basePath = lang === 'es' ? '/mejores' : `/${lang}/mejores`;
 
 const listSchema = {
   '@context': 'https://schema.org',
@@ -91,33 +110,54 @@ const listSchema = {
     '@type': 'ListItem',
     position: i + 1,
     name: r.entry.data.name,
-    url: new URL(`/${lang === 'en' ? 'en/' : ''}${category}/${r.entry.id}/`, Astro.site).href,
+    url: new URL(`/${prefix}${category}/${r.entry.id}/`, Astro.site).href,
   })),
 };
+const bestForQ = lang === 'ca'
+  ? `On són els millors llocs per a ${kwDisplay} ${t.in} ${neighborhood ?? 'Barcelona'}?`
+  : lang === 'es'
+    ? `¿Cuáles son los mejores sitios para ${kwDisplay} ${t.in} ${neighborhood ?? 'Barcelona'}?`
+    : `Where are the best places for ${kwDisplay} in ${neighborhood ?? 'Barcelona'}?`;
+const bestForA = lang === 'ca'
+  ? `Segons les valoracions de Google, els millors inclouen ${top.slice(0, 3).map(r => r.entry.data.name).join(', ')}. Compara preus, horaris i idiomes en aquesta guia.`
+  : lang === 'es'
+    ? `Según las valoraciones de Google, los mejores incluyen ${top.slice(0, 3).map(r => r.entry.data.name).join(', ')}. Compara precios, horarios e idiomas en esta guía.`
+    : `Based on Google ratings, the top options include ${top.slice(0, 3).map(r => r.entry.data.name).join(', ')}. Compare prices, hours and languages in this guide.`;
+const howManyQ = lang === 'ca'
+  ? `Quants centres ofereixen ${kwDisplay} ${t.in} ${neighborhood ?? 'Barcelona'}?`
+  : lang === 'es'
+    ? `¿Cuántos centros ofrecen ${kwDisplay} ${t.in} ${neighborhood ?? 'Barcelona'}?`
+    : `How many venues offer ${kwDisplay} in ${neighborhood ?? 'Barcelona'}?`;
+const howManyA = lang === 'ca'
+  ? `Hem identificat ${stats.total} centres${neighborhood ? ` a ${neighborhood}` : ''}, amb una valoració mitjana de ${stats.avg} sobre 5 basada en més de ${Math.round(stats.totalReviews / 100) * 100} ressenyes de Google.`
+  : lang === 'es'
+    ? `Hemos identificado ${stats.total} centros${neighborhood ? ` en ${neighborhood}` : ''}, con una valoración media de ${stats.avg} sobre 5 basada en más de ${Math.round(stats.totalReviews / 100) * 100} reseñas de Google.`
+    : `We identified ${stats.total} venues${neighborhood ? ` in ${neighborhood}` : ''}, with an average rating of ${stats.avg} out of 5 based on over ${Math.round(stats.totalReviews / 100) * 100} Google reviews.`;
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: [
     {
       '@type': 'Question',
-      name: lang === 'es'
-        ? `¿Cuáles son los mejores sitios para ${kwDisplay} ${t.in} ${neighborhood ?? 'Barcelona'}?`
-        : `Where are the best places for ${kwDisplay} in ${neighborhood ?? 'Barcelona'}?`,
-      acceptedAnswer: { '@type': 'Answer', text: lang === 'es'
-        ? `Según las valoraciones de Google, los mejores incluyen ${top.slice(0, 3).map(r => r.entry.data.name).join(', ')}. Compara precios, horarios e idiomas en esta guía.`
-        : `Based on Google ratings, the top options include ${top.slice(0, 3).map(r => r.entry.data.name).join(', ')}. Compare prices, hours and languages in this guide.` },
+      name: bestForQ,
+      acceptedAnswer: { '@type': 'Answer', text: bestForA },
     },
     {
       '@type': 'Question',
-      name: lang === 'es'
-        ? `¿Cuántos centros ofrecen ${kwDisplay} ${t.in} ${neighborhood ?? 'Barcelona'}?`
-        : `How many venues offer ${kwDisplay} in ${neighborhood ?? 'Barcelona'}?`,
-      acceptedAnswer: { '@type': 'Answer', text: lang === 'es'
-        ? `Hemos identificado ${stats.total} centros${neighborhood ? ` en ${neighborhood}` : ''}, con una valoración media de ${stats.avg} sobre 5 basada en más de ${Math.round(stats.totalReviews / 100) * 100} reseñas de Google.`
-        : `We identified ${stats.total} venues${neighborhood ? ` in ${neighborhood}` : ''}, with an average rating of ${stats.avg} out of 5 based on over ${Math.round(stats.totalReviews / 100) * 100} Google reviews.` },
+      name: howManyQ,
+      acceptedAnswer: { '@type': 'Answer', text: howManyA },
     },
   ],
 };
+const catCrumb = lang === 'es'
+  ? (category === 'nails' ? 'Uñas' : 'Masajes')
+  : lang === 'ca'
+    ? (category === 'nails' ? 'Manicura' : 'Massatges')
+    : (category === 'nails' ? 'Nails' : 'Massage');
+const guideHref = nbSlug ? `/${prefix}barrio/${nbSlug}/` : null;
+const compareHref = `/${prefix}compare/`;
+const everythingIn = lang === 'es' ? 'Todo en' : lang === 'ca' ? 'Tot a' : 'Everything in';
+const compareLabel = lang === 'en' ? 'Compare them side by side' : lang === 'ca' ? "Compara'ls costat a costat" : 'Compáralos lado a lado';
 ---
 
 <BaseLayout {title} {description} {lang}>
@@ -126,9 +166,9 @@ const faqSchema = {
 
   <main class="max-w-4xl mx-auto px-4 py-12">
     <nav class="text-sm text-stone-500 mb-6" aria-label="breadcrumb">
-      <a href={lang === 'es' ? '/' : '/en'} class="hover:text-stone-700">{t.home}</a>
+      <a href={lang === 'es' ? '/' : `/${lang}`} class="hover:text-stone-700">{t.home}</a>
       <span class="mx-1.5 text-stone-300">/</span>
-      <a href={`${basePath}/${category}/`} class="hover:text-stone-700">{lang === 'es' ? (category === 'nails' ? 'Uñas' : 'Masajes') : (category === 'nails' ? 'Nails' : 'Massage')}</a>
+      <a href={`${basePath}/${category}/`} class="hover:text-stone-700">{catCrumb}</a>
       <span class="mx-1.5 text-stone-300">/</span>
       <span class="text-stone-700 font-medium">{title.replace(/ \(2026\)$/, '')}</span>
     </nav>
@@ -143,7 +183,7 @@ const faqSchema = {
       <div class="flex flex-wrap gap-6 mt-6 text-sm">
         <div><span class="block text-2xl font-bold text-stone-900">{stats.total}</span><span class="text-stone-500">{t.businesses}</span></div>
         {stats.avg && <div><span class="block text-2xl font-bold text-stone-900">{stats.avg}★</span><span class="text-stone-500">{t.avgRating}</span></div>}
-        <div><span class="block text-2xl font-bold text-stone-900">{stats.totalReviews.toLocaleString('es-ES')}</span><span class="text-stone-500">{t.reviewed}</span></div>
+        <div><span class="block text-2xl font-bold text-stone-900">{stats.totalReviews.toLocaleString(lang === 'ca' ? 'ca-ES' : 'es-ES')}</span><span class="text-stone-500">{t.reviewed}</span></div>
       </div>
     </header>
 
@@ -172,12 +212,12 @@ const faqSchema = {
       <section class="mt-12 flex flex-wrap gap-2">
         {mode !== 'service' && allServices.map(s => (
           <a href={`${basePath}/${category}/${s.slug}/`} class="text-xs px-3 py-1.5 rounded-full border border-stone-200 hover:border-brand-400 hover:text-brand-600 transition-colors text-stone-600">
-            {lang === 'en' ? s.en.keyword : s.es.keyword}
+            {s[lang].keyword}
           </a>
         ))}
         {nbSlug && (
           <a href={`${basePath}/${category}/${nbSlug}/`} class="text-xs px-3 py-1.5 rounded-full border border-stone-200 hover:border-brand-400 hover:text-brand-600 transition-colors text-stone-600">
-            {lang === 'es' ? 'Todo en' : 'Everything in'} {neighborhood}
+            {everythingIn} {neighborhood}
           </a>
         )}
       </section>
@@ -189,25 +229,18 @@ const faqSchema = {
         <p>{t.howRankBody}</p>
       </div>
       <div>
-        <h2 class="font-bold text-stone-900 mb-2">{t.exploreIn} {neighborhood ?? (lang === 'es' ? 'Barcelona' : 'Barcelona')}</h2>
+        <h2 class="font-bold text-stone-900 mb-2">{t.exploreIn} {neighborhood ?? 'Barcelona'}</h2>
         <p>{t.exploreBody(kwDisplay)}</p>
-        {nbSlug && mode !== 'district' && lang === 'es' && (
+        {nbSlug && mode !== 'district' && (
           <p class="mt-2">
-            <a href={`/barrio/${nbSlug}/`} class="text-brand-600 hover:underline font-medium">{t.seeGuide} {neighborhood}</a>
-            {' · '}
-            <a href={`${basePath}/${category}/`} class="text-brand-600 hover:underline font-medium">{t.compare} {catLabel}</a>
-          </p>
-        )}
-        {nbSlug && mode !== 'district' && lang === 'en' && (
-          <p class="mt-2">
-            <a href={`/en/barrio/${nbSlug}/`} class="text-brand-600 hover:underline font-medium">{t.seeGuide} {neighborhood}</a>
+            <a href={guideHref} class="text-brand-600 hover:underline font-medium">{t.seeGuide} {neighborhood}</a>
             {' · '}
             <a href={`${basePath}/${category}/`} class="text-brand-600 hover:underline font-medium">{t.compare} {catLabel}</a>
           </p>
         )}
         <p class="mt-2">
-          <a href={lang === 'en' ? '/en/compare/' : '/compare/'} class="text-brand-600 hover:underline font-medium">
-            {lang === 'en' ? 'Compare them side by side' : 'Compáralos lado a lado'}
+          <a href={compareHref} class="text-brand-600 hover:underline font-medium">
+            {compareLabel}
           </a>
         </p>
       </div>

@@ -1,33 +1,50 @@
 ---
 import '../styles/global.css';
 import { ui } from '../i18n/ui';
+import { DEFAULT_LOCALE, LOCALES, LOCALE_LABELS, localeHref, localePath, stripLocale, type Locale } from '../i18n/locales';
 
 interface Props {
   title: string;
   description: string;
   image?: string;
-  lang?: string;
-  /** Override the language-switch / hreflang target when the two locales do not
-   *  share a path (e.g. /reclamar <-> /en/claim-business). */
+  lang?: Locale;
+  /** Locales this page is actually built in. Defaults to all three; the
+   *  owner-facing app surfaces (claim flow, dashboard) are ES+EN only. */
+  langs?: Locale[];
+  /** Override the alternate path when the two locales do not share a path
+   *  (e.g. /reclamar <-> /en/claim-business). Only used with a two-locale `langs`. */
   altPath?: string;
 }
 
-const { title, description, image, lang = "es", altPath } = Astro.props;
-const t = ui[lang as keyof typeof ui];
+const { title, description, image, lang = DEFAULT_LOCALE, langs = [...LOCALES], altPath } = Astro.props;
+const t = ui[lang];
 
 const currentPath = Astro.url.pathname;
-const altLang = lang === 'es' ? 'en' : 'es';
-const defaultAltPath = lang === 'es'
-  ? '/en' + (currentPath === '/' ? '' : currentPath)
-  : currentPath.replace(/^\/en/, '') || '/';
-const resolvedAltPath = altPath ?? defaultAltPath;
+const bare = stripLocale(currentPath);
+
+// --- hreflang -----------------------------------------------------------------
+// One <link rel="alternate"> per locale the page is built in — including a
+// self-referencing one for the current locale, which is what Google expects —
+// plus x-default pointing at the ES version (the default locale). App surfaces
+// keep the single altPath-based alternate they had before and declare no x-default.
+const alternates = langs.map(l => ({
+  lang: l,
+  href: langs.length === 2 && altPath ? (l === lang ? currentPath : altPath) : localeHref(l, currentPath),
+}));
+const xDefault = langs.length === LOCALES.length ? localeHref(DEFAULT_LOCALE, currentPath) : null;
 
 const navItems: Array<{ key: keyof typeof t; href: string }> = [
-  { key: 'nav.home' as keyof typeof t, href: lang === 'es' ? '/' : '/en' },
-  { key: 'nav.nails' as keyof typeof t, href: lang === 'es' ? '/nails' : '/en/nails' },
-  { key: 'nav.massage' as keyof typeof t, href: lang === 'es' ? '/massage' : '/en/massage' },
-  { key: 'nav.barrios' as keyof typeof t, href: lang === 'es' ? '/barrio/' : '/en/barrio/' },
+  { key: 'nav.home' as keyof typeof t, href: localePath(lang, '/') },
+  { key: 'nav.nails' as keyof typeof t, href: localePath(lang, '/nails') },
+  { key: 'nav.massage' as keyof typeof t, href: localePath(lang, '/massage') },
+  { key: 'nav.barrios' as keyof typeof t, href: localePath(lang, '/barrio/') },
 ];
+
+const tagline: Record<Locale, string> = {
+  es: 'Encuentra · Compara · Elige',
+  en: 'Find · Compare · Choose',
+  ca: 'Troba · Compara · Tria',
+};
 ---
 
 <!doctype html>
@@ -48,7 +65,10 @@ const navItems: Array<{ key: keyof typeof t; href: string }> = [
     <meta name="twitter:title" content={`${title} — Barcelona Compare`} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image ? new URL(image, Astro.site).href : new URL('/og-default.png', Astro.site).href} />
-    <link rel="alternate" hreflang={altLang} href={new URL(resolvedAltPath, Astro.site).href} />
+    {alternates.map(alt => (
+      <link rel="alternate" hreflang={alt.lang} href={new URL(alt.href, Astro.site).href} />
+    ))}
+    {xDefault && <link rel="alternate" hreflang="x-default" href={new URL(xDefault, Astro.site).href} />}
     <link rel="canonical" href={new URL(currentPath, Astro.site).href} />
     <link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/fraunces-var-latin.woff2" as="font" type="font/woff2" crossorigin />
@@ -57,7 +77,7 @@ const navItems: Array<{ key: keyof typeof t; href: string }> = [
   <body class="min-h-screen flex flex-col">
     <header class="border-b border-stone-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
       <nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <a href={lang === 'es' ? '/' : '/en'} class="text-xl font-bold text-stone-900 tracking-tight">
+        <a href={localePath(lang, '/')} class="text-xl font-bold text-stone-900 tracking-tight">
           Barcelona <span class="text-brand-500">Compare</span>
         </a>
         <div class="flex items-center gap-6 text-sm font-medium">
@@ -69,12 +89,26 @@ const navItems: Array<{ key: keyof typeof t; href: string }> = [
               {t[item.key]}
             </a>
           ))}
-          <a
-            href={resolvedAltPath}
-            class="text-xs px-3 py-1 rounded-full border border-stone-300 text-stone-500 hover:border-stone-400 hover:text-stone-700 transition-colors font-medium"
-          >
-            {altLang.toUpperCase()}
-          </a>
+          <span class="flex items-center gap-1" aria-label="Language">
+            {langs.map(l => (
+              l === lang ? (
+                <span
+                  class="text-xs px-3 py-1 rounded-full border border-stone-400 bg-stone-100 text-stone-700 font-semibold"
+                  aria-current="true"
+                >
+                  {LOCALE_LABELS[l]}
+                </span>
+              ) : (
+                <a
+                  href={langs.length === 2 && altPath ? altPath : localePath(l, bare)}
+                  hreflang={l}
+                  class="text-xs px-3 py-1 rounded-full border border-stone-300 text-stone-500 hover:border-stone-400 hover:text-stone-700 transition-colors font-medium"
+                >
+                  {LOCALE_LABELS[l]}
+                </a>
+              )
+            ))}
+          </span>
         </div>
       </nav>
     </header>
@@ -88,11 +122,11 @@ const navItems: Array<{ key: keyof typeof t; href: string }> = [
         <div class="flex flex-col sm:flex-row justify-between gap-4">
           <div>
             <p class="font-medium text-stone-700 mb-1">Barcelona Compare</p>
-            <p class="text-xs text-stone-400">Encuentra · Compara · Elige</p>
+            <p class="text-xs text-stone-400">{tagline[lang]}</p>
           </div>
           <div class="flex gap-6">
-            <a href={lang === 'es' ? '/about' : '/en/about'} class="hover:text-stone-700 transition-colors">{lang === 'es' ? 'Cómo funciona' : 'How it works'}</a>
-            <a href={lang === 'es' ? '/for-businesses' : '/en/for-businesses'} class="hover:text-stone-700 transition-colors">{lang === 'es' ? 'Para negocios' : 'For businesses'}</a>
+            <a href={localePath(lang, '/about')} class="hover:text-stone-700 transition-colors">{t['nav.about']}</a>
+            <a href={localePath(lang, '/for-businesses')} class="hover:text-stone-700 transition-colors">{t['nav.businesses']}</a>
           </div>
         </div>
         <div class="mt-6 pt-4 border-t border-stone-100 flex flex-col sm:flex-row justify-between gap-2 text-xs text-stone-400">

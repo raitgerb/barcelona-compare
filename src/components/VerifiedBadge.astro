@@ -10,7 +10,7 @@
  * labelled as such and never masquerades as organic trust.
  */
 interface Props {
-  lang?: 'es' | 'en';
+  lang?: 'es' | 'en' | 'ca';
   tier?: 'free' | 'pro' | null;
   variant?: 'card' | 'detail';
   class?: string;
@@ -24,6 +24,13 @@ const copy = lang === 'en'
       title: 'This business has been claimed and verified by its owner.',
       proLabel: 'Pro partner',
       proTitle: 'Partner on the Barcelona Compare Pro plan.',
+    }
+  : lang === 'ca'
+  ? {
+      label: 'Negoci verificat',
+      title: "Aquest negoci ha estat reclamat i verificat pel seu propietari.",
+      proLabel: 'Soci Pro',
+      proTitle: 'Negoci amb el pla Pro de Barcelona Compare.',
     }
   : {
       label: 'Negocio verificado',

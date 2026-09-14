@@ -19,7 +19,7 @@
 //
 // Docs: docs/whatsapp-cta.md
 
-export type Lang = 'es' | 'en';
+export type Lang = 'es' | 'en' | 'ca';
 
 export interface WhatsappLink {
   /** Digits only, country code first — e.g. `34640793674`. */
@@ -37,6 +37,7 @@ export const WHATSAPP_FORMAT_HINT = 'Escribe el número con prefijo, por ejemplo
 const PREFILL: Record<Lang, string> = {
   es: 'Hola, os escribo desde barcelonacompare.com para pedir cita.',
   en: "Hi, I'm writing from barcelonacompare.com to book an appointment.",
+  ca: 'Hola, us escric des de barcelonacompare.com per demanar cita.',
 };
 
 /**
