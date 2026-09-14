@@ -9,7 +9,7 @@ import VerifiedBadge from '../../../components/VerifiedBadge.astro';
 import ClaimCta from '../../../components/ClaimCta.astro';
 import WhatsappCta from '../../../components/WhatsappCta.astro';
 import { getCollection } from 'astro:content';
-import { imagePath } from '../../../lib/images';
+import { imagePath, photoOrder } from '../../../lib/images';
 import { verifiedBusinessFor } from '../../../lib/registry';
 
 export async function getStaticPaths() {
@@ -36,6 +36,8 @@ const dayLabels: Record<string, string> = {
 };
 
 const galleryPath = imagePath('nails', slug);
+// display order of the files (best photo first) — see scripts/score-photos.py
+const galleryOrder = photoOrder('nails', slug);
 const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
 const schemaOrg = {
   "@context": "https://schema.org",
@@ -73,7 +75,7 @@ const schemaOrg = {
 <BaseLayout
   title={`${data.name} — Salón de manicura en ${data.neighborhood}`}
   description={`${data.name} en ${data.neighborhood}, Barcelona. ${data.googleRating ? `Valoración: ${data.googleRating}/5 (${data.googleReviewCount} reseñas).` : ''} Servicios: ${data.services.map(s => s.name).join(', ')}.`}
-  image={`${galleryPath}-0.jpg`}
+  image={`${galleryPath}-${galleryOrder[0] ?? 0}.jpg`}
   lang="es"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)}></script>
@@ -85,7 +87,7 @@ const schemaOrg = {
         <!--owner:gallery-->
         <div class="photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin">
           {[0, 1, 2, 3, 4].map(i => {
-            const src = `${galleryPath}-${i}.jpg`;
+            const src = `${galleryPath}-${galleryOrder[i] ?? i}.jpg`;
             return (
               <img
                 src={src}

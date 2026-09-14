@@ -1,5 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import manifest from '../data/photo-manifest.json';
+
+// The tray builds image URLs client-side, so hand it the lead photo index for
+// every business (manifest order puts the best-scoring photo first — see
+// scripts/score-photos.py). Without this the tray would fall back to file 0,
+// which is not necessarily the photo the rest of the site leads with.
+const leads: Record<string, string> = {};
+for (const [key, files] of Object.entries(manifest as Record<string, string[]>)) {
+  if (Array.isArray(files) && files.length) leads[key] = String(files[0]);
+}
 ---
 <BaseLayout
   title="Compara negocios lado a lado"
@@ -13,5 +23,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <!-- populated by /js/compare.js -->
     <div id="compare-root" class="mt-8"></div>
   </main>
+  <script is:inline set:html={`window.BC_PHOTO_LEAD=${JSON.stringify(leads)};`}></script>
   <script src="/js/compare.js" defer></script>
 </BaseLayout>

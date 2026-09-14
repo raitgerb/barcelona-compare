@@ -65,7 +65,9 @@
     return base + (b.cat === 'nails' ? '/nails/' + b.slug + '/' : '/massage/' + b.slug + '/');
   }
   function imgPath(b) {
-    return '/images/' + b.cat + '/' + b.slug + '-0.jpg';
+    var leads = window.BC_PHOTO_LEAD || {};
+    var lead = leads[b.cat + '/' + b.slug];
+    return '/images/' + b.cat + '/' + b.slug + '-' + (lead != null ? lead : '0') + '.jpg';
   }
 
   function starsHtml(rating) {

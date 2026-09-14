@@ -8,3 +8,5 @@ dist/
 /data/
 public/images/
 .wrangler/
+# photos pulled from R2 by scripts/score-photos.py (184MB, regenerable)
+/.photo-cache/

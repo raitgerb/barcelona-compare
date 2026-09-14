@@ -1,5 +1,14 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import manifest from '../../data/photo-manifest.json';
+
+// Mirror of the ES compare page — hand the tray the lead photo index so its
+// thumbnails match the photo the site leads with elsewhere (see
+// scripts/score-photos.py).
+const leads: Record<string, string> = {};
+for (const [key, files] of Object.entries(manifest as Record<string, string[]>)) {
+  if (Array.isArray(files) && files.length) leads[key] = String(files[0]);
+}
 ---
 <BaseLayout
   title="Compare businesses side by side"
@@ -13,5 +22,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     <!-- populated by /js/compare.js -->
     <div id="compare-root" class="mt-8"></div>
   </main>
+  <script is:inline set:html={`window.BC_PHOTO_LEAD=${JSON.stringify(leads)};`}></script>
   <script src="/js/compare.js" defer></script>
 </BaseLayout>

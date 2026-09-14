@@ -1,4 +1,6 @@
 ---
+import manifest from '../data/photo-manifest.json';
+
 interface Props {
   imagePath: string;
   photoCount?: number;
@@ -6,6 +8,15 @@ interface Props {
 }
 
 const { imagePath, photoCount = 5, altText = "Photo" } = Astro.props;
+
+// The gallery renders photos in display order (see photoOrder in lib/images.ts),
+// while this viewer indexes the DOM. Resolve the same order here so clicking a
+// thumbnail always opens the photo you clicked. imagePath ends with
+// `/{category}/{slug}`, which is exactly the manifest key.
+const keyMatch = /\/images\/([^/]+)\/([^/]+)$/.exec(imagePath) || /^\/images\/([^/]+)\/([^/]+)$/.exec(imagePath);
+const order: string[] =
+  (keyMatch && (manifest as Record<string, string[]>)[`${keyMatch[1]}/${keyMatch[2]}`]) ||
+  Array.from({ length: photoCount }, (_, i) => String(i));
 ---
 
 <div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/90 flex items-center justify-center" role="dialog" aria-label="Photo viewer">
@@ -22,7 +33,7 @@ const { imagePath, photoCount = 5, altText = "Photo" } = Astro.props;
   <div id="lightbox-counter" class="absolute bottom-4 text-white/60 text-sm"></div>
 </div>
 
-<script define:vars={{ imagePath, photoCount, altText }}>
+<script define:vars={{ imagePath, photoCount, altText, order }}>
   const lb = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
   const counter = document.getElementById('lightbox-counter');
@@ -47,8 +58,9 @@ const { imagePath, photoCount = 5, altText = "Photo" } = Astro.props;
 
   function show(idx) {
     const real = visible[idx];
-    img.src = imagePath + '-' + real + '.jpg';
-    img.alt = altText + ' - photo ' + (real + 1);
+    const file = order[real] ?? String(real);
+    img.src = imagePath + '-' + file + '.jpg';
+    img.alt = altText + ' - photo ' + (idx + 1);
     counter.textContent = (idx + 1) + ' / ' + visible.length;
     lb.classList.remove('hidden');
     prevBtn.style.visibility = idx === 0 ? 'hidden' : 'visible';

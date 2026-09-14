@@ -125,13 +125,34 @@ three detail trees emit the `BeautySalon` JSON-LD block (was ES-only). No ES pag
   subdomain → update `R2_IMAGE_BASE_URL` in Pages → redeploy.
 - Zero functional gain; only worth it when sharing URLs publicly.
 
-## 5. Smart photo selection — priority 4
+## 5. Smart photo selection — tier 1 ✅ SHIPPED
 
-- Google returns 10 photos/business; we take the first 5 blindly. Some are blurry, dark,
-  logos or menus.
-- Build-time heuristic, no AI, no paid service: file size (compression/detail), brightness
-  (reject near-black), aspect ratio (reject extreme panoramas), resolution (reject thumbnails).
-- Trigger to upgrade to a service: 10k+ images, on-the-fly transforms, or user uploads.
+- **The problem:** Google returns up to 10 photos/business; we took the first 5 blindly, so
+  blurry, dark, tiny and duplicate shots became listing cards and hero images. A bad hero is
+  the most expensive image on the site.
+- **Tier 1 (shipped, 2026-09-14):** `scripts/score-photos.py` scores the photos we already
+  hold — local `public/images/` plus the public R2 bucket — and rewrites
+  `src/data/photo-manifest.json` so the best image leads. Metrics: Laplacian-variance
+  sharpness, luminance + clipped highlights/shadows, resolution, aspect ratio,
+  Hasler-Süsstrunk colourfulness, and dHash duplicate detection. **Zero cost**: no Google API
+  calls, no new dependencies (PIL + numpy), no renaming or re-uploading — the manifest holds
+  the file index at each display position and the site renders in that order.
+  - `src/lib/images.ts` → `photoOrder()` resolves display position → file index; `imageUrl()`
+    follows it (so cards, homepage and money pages improved with no template edits).
+  - All four detail templates render the gallery from `galleryOrder`; `Lightbox.astro`
+    resolves the same order so clicking a thumbnail opens that photo.
+  - The compare tray gets the lead index via `window.BC_PHOTO_LEAD` on both compare pages.
+  - Hysteresis: the lead only changes when a challenger beats it by ≥8 points — unforced
+    churn risks promoting a sharp photo of a flyer into the hero slot.
+  - Audit trail: `data/photo-scores.json` (per-photo metrics, flags, old and new order).
+- **Tier 1's known limit:** it can measure quality but not *subject*. A sharp, bright,
+  colourful photo of a printed flyer/price list scores highly and can win the hero slot.
+- **Tier 2 (not started — deliberately):** CLIP zero-shot ("salon interior" vs "printed menu
+  / logo / flyer") to close the subject gap, plus the LAION aesthetic predictor for a real
+  aesthetic score. All MIT/Apache — see the licence note in AGENTS.md.
+  Revisit only if tier 1's mispicks are visible in practice.
+- Also noted: 5 manifest entries reference photo files that exist neither locally nor in R2 —
+  a pre-existing data gap worth a cleanup pass.
 
 ## 6. Remaining data collection (~875 candidates) — **deferred**
 
