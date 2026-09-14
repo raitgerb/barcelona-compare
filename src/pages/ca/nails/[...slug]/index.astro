@@ -10,7 +10,7 @@ import VerifiedBadge from '../../../../components/VerifiedBadge.astro';
 import ClaimCta from '../../../../components/ClaimCta.astro';
 import WhatsappCta from '../../../../components/WhatsappCta.astro';
 import { getCollection } from 'astro:content';
-import { imagePath } from '../../../../lib/images';
+import { imagePath, photoOrder } from '../../../../lib/images';
 import { verifiedBusinessFor } from '../../../../lib/registry';
 
 export async function getStaticPaths() {
@@ -32,6 +32,8 @@ const dayLabelsCa: Record<string, string> = {
   friday: 'Divendres', saturday: 'Dissabte', sunday: 'Diumenge',
 };
 const galleryPath = imagePath('nails', slug);
+// display order of the files (best photo first) — see scripts/score-photos.py
+const galleryOrder = photoOrder('nails', slug);
 const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
 const schemaOrg = {
   "@context": "https://schema.org",
@@ -69,7 +71,7 @@ const schemaOrg = {
 <BaseLayout
   title={`${data.name} — Saló de manicura a ${data.neighborhood}`}
   description={`${data.name} a ${data.neighborhood}, Barcelona. ${data.googleRating ? `Valoració: ${data.googleRating}/5 (${data.googleReviewCount} ressenyes).` : ''}`}
-  image={`${galleryPath}-0.jpg`}
+  image={`${galleryPath}-${galleryOrder[0] ?? 0}.jpg`}
   lang="ca"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)}></script>
@@ -80,7 +82,7 @@ const schemaOrg = {
       <!--owner:gallery-->
         <div class="photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory">
         {[0, 1, 2, 3, 4].map(i => (
-          <img src={`${galleryPath}-${i}.jpg`} alt={`${data.name} - foto ${i + 1}`}
+          <img src={`${galleryPath}-${galleryOrder[i] ?? i}.jpg`} alt={`${data.name} - foto ${i + 1}`}
             class="snap-start min-w-[280px] h-48 object-cover rounded-xl border border-stone-100 bg-stone-100" width="280" height="192" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'" />
         ))}
       </div>
