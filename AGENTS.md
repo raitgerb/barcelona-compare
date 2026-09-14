@@ -71,6 +71,22 @@ public/
 - The `scripts/broaden.py` pipeline discovers + enriches businesses via Google Places API — it's the core data pipeline
 - Deployment: Cloudflare Pages auto-deploys on push to main
 
+## Authority — board `barcelona-compare` (2026-09-13)
+
+- **Board:** always pin it — `hermes kanban --board barcelona-compare …`. Never `hermes kanban boards switch` (it repoints the machine-global board for every project on the host).
+- **Standing authorization to ship:** pushing `main` is authorized without asking. Cloudflare Pages auto-deploys this repo, so a push *is* a production deploy — verify it landed (`latest_stage` + `commit_hash`, or curl the changed page on prod) and report the commit hash.
+- **Still ask first:** spending money (Google Places fetches, paid APIs) and touching another project's board or workspace.
+- **R2:** use `CLOUDFLARE_R2_TOKEN` from the repo `.env` with `--remote`. The ambient `CLOUDFLARE_API_TOKEN` lacks R2.
+- **Never commit** `.env*` backups — `.gitignore` covers `.env.*`; keep it that way.
+
 ## Non-technical context
 - The site owner (Rutger) is non-technical. All deployment/config changes must be explained step-by-step with exact Cloudflare dashboard UI labels.
 - Cloudflare Pages env vars: Text for public values, Secret for API keys. The UI tab is "Variables and secrets."
+
+## Standing constraints (Rutger, 2026-09-14)
+
+- **Hobby project, not a business.** His words: "This is a hobby project not intended to make money." Consequences: no paid services, no human translators, no paid APIs without an explicit per-case decision. Prefer free tiers and permissively-licensed open source over paid or restricted alternatives.
+- **$0 is a hard ceiling for data collection.** Enrichment may continue freely *while it stays entirely inside the Google Maps free tier*; it must never exceed it. Free caps are per SKU, per month, no rollover: Text Search Pro 5,000 | Nearby Search Pro 5,000 | Place Details Pro 5,000 | **Place Photos 1,000** (the binding constraint). Enforce in code (call counter that stops before the cap and resumes next month) *and* at the source (per-SKU quota limits on the key in the Google console). Filter candidates before fetching photos — photos are the only SKU that costs money at our scale.
+- **Paid tier is on hold, not cancelled.** The B2B Phase 2 gate (~20 claimed partners) stands and must not be waived. Do not re-propose it until the registry shows real claimed partners.
+- **Catalan is LLM-translated.** Do not gate locale work on a human reviewer.
+- **Licence hygiene:** check the licence of any library or model before adopting it. PyIQA (the obvious pick for image scoring) is PolyForm Noncommercial — fine today because the site earns nothing, but it would flip the moment the site monetises. Prefer MIT/Apache-2.0/BSD equivalents so the choice never becomes a liability.
