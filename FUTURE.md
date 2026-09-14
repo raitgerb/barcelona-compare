@@ -98,13 +98,21 @@ what they're paying for.
 - Cross-linked from the EN homepage hero, EN money hubs (`/en/mejores/{cat}/`) and every
   money-page leaf (ES surfaces got the same link for parity).
 
-## 3. Catalan locale — priority 3
+## 3. Catalan locale — priority 3 — ✅ SHIPPED (phase 1)
 
-- `astro.config.mjs` i18n has `locales: ['es', 'en']`. Adding `ca` means a third copy of
-  `src/i18n/ui.ts` plus route trees for all page families.
-- Cost/benefit: real local-market credibility, but ~2,600 more pages to build and it
-  triples the translation surface for every future feature. Revisit after the B2B work —
-  partner-facing Catalan is a smaller, cheaper subset (see Phase 3).
+Shipped Sep 14 2026 (commit `5e93bc1`, `docs/i18n-locales.md`): `ca` is the third locale in
+`astro.config.mjs`; every public page family is mirrored under `/ca/` (homepage, listings,
+business detail pages, money pages, barrio guides, about / compare / for-businesses);
+`hreflang` declares es + en + ca + x-default on every public page and the header switcher
+offers all three; the client runtimes (search/sort/compare tray, compare table) and the edge
+owner-content injector are locale-aware. 3,970 pages built (was 2,648).
+
+Out of scope for phase 1 (unchanged from the original plan): the owner claim/login flows are
+still ES+EN, and business data (names, addresses, review free text) is not translated — only
+UI chrome and page copy.
+
+Translation source: LLM Catalan, unreviewed (Rutger, Sep 14 2026: "a hobby project not
+intended to make money", so no paid translator and no native review pass planned).
 
 ## 4. Custom domain for R2 images — priority 4, cosmetic
 
