@@ -89,10 +89,15 @@ edits show up on `/ca/…` pages too (not just ES/EN).
 
 ## Known limits / follow-ups
 
-- The ES and EN detail templates carry a `BeautySalon` JSON-LD block that EN and CA do not.
-  Mirrored EN for CA rather than diverging further; worth adding to all three at once.
-- `ReviewQuotes.astro` rendered Spanish copy on EN pages before this work (it ignored `lang`);
-  the `lang` prop now exists and CA passes it, but the EN detail templates still do not pass
-  `lang="en"` — so those pages keep the Spanish heading.
+- ✅ Fixed (`28ddb57`, card t_3cbe59e4): `ReviewQuotes.astro` rendered Spanish copy on EN detail
+  pages — the `lang` prop existed and CA passed it, but the EN templates did not pass `lang="en"`.
+  Both EN templates do now (the ES ones rely on the component default). Built HTML check: 1,135
+  `/en/…` pages render "What clients say" — the same count as ES ("Lo que dicen los clientes") and
+  CA ("Què diuen els clients") — and no `/en/…` page contains the Spanish heading.
+- ✅ Fixed (`28ddb57`, card t_3cbe59e4): the `BeautySalon` JSON-LD block lived on the two ES detail
+  templates only. EN and CA now emit the same block, so every one of the 1,182 detail pages per
+  locale (646 nails + 536 massage) carries it and the block is byte-identical across the three
+  trees. It has no `url`/`inLanguage` field because the ES block it mirrors has none — adding them
+  to EN/CA alone would have broken that symmetry, and this change had to leave ES output untouched.
 - The EN detail breadcrumb's "Neighborhoods" crumb pointed at the ES `/barrio/` index; for CA
   it is `/ca/barrio/`. The EN one was left as it was to keep this change reviewable.

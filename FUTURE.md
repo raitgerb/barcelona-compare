@@ -114,6 +114,10 @@ UI chrome and page copy.
 Translation source: LLM Catalan, unreviewed (Rutger, Sep 14 2026: "a hobby project not
 intended to make money", so no paid translator and no native review pass planned).
 
+Follow-up shipped Sep 14 2026 (`28ddb57`): the EN detail templates now pass `lang="en"` to
+`ReviewQuotes` (they had been rendering the Spanish heading "Lo que dicen los clientes"), and all
+three detail trees emit the `BeautySalon` JSON-LD block (was ES-only). No ES page changed.
+
 ## 4. Custom domain for R2 images — priority 4, cosmetic
 
 - `images.barcelonacompare.com` instead of the `pub-37760591...r2.dev` hash.
