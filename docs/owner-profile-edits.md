@@ -38,10 +38,14 @@ that stays signed in:
    keeps it in `localStorage`, so an owner reopens the dashboard straight into step 3.
    Five wrong codes and the code dies — the 6-digit space cannot be brute-forced.
 
-**Code delivery.** With `RESEND_API_KEY` + `EMAIL_FROM` set in the Pages project the
-code is emailed. Without them (today's state) the code is logged, and a caller holding
+**Code delivery.** Live: `RESEND_API_KEY` + `EMAIL_FROM` are set in the Pages project
+(production) and the code is emailed from `no-reply@send.barcelonacompare.com`. If
+either is missing, or the send fails, the code is logged instead and a caller holding
 `X-Registry-Admin-Token` also gets it in the response, so the operator can hand it to
 the owner by phone or WhatsApp — which is how this audience already gets onboarded.
+That fallback is deliberate: a mail outage must never block a claim. `GET
+/api/claim/outbox` lists codes still awaiting manual delivery, so an empty outbox is
+the signal that email is genuinely working.
 An anonymous caller never sees a code; the response is deliberately explicit about
 `not_claimed` (404) and `email_mismatch` (403) because a locked-out owner needs to know
 which email to try.
@@ -143,12 +147,34 @@ read).
 1. Apply the migration: `npm run db:migrate:remote` (0003 only adds tables).
 2. Nothing else is required — the D1 binding `DB` and the operator token already exist
    in production and preview from Phase 0.
-3. Optional, for emailed codes: add Pages → Settings → **Variables and secrets**
-   → `RESEND_API_KEY` (type **Secret**) and `EMAIL_FROM` (type **Text**, e.g.
-   `Barcelona Compare <hola@barcelonacompare.com>`), then redeploy. Without them the
-   dashboard works, codes are logged, and the operator hands them over.
+3. Email is already configured in production — `RESEND_API_KEY` (type **Secret**) and
+   `EMAIL_FROM` (type **Text**, `Barcelona Compare <no-reply@send.barcelonacompare.com>`).
+   The sender domain `send.barcelonacompare.com` is verified in Resend (eu-west-1) and its
+   MX/SPF/DKIM records live in Cloudflare DNS. The address in `EMAIL_FROM` must always
+   match a verified domain, or every send is rejected with a 403 and silently falls back
+   to the outbox.
 4. Optional: `PUBLIC_SITE_URL` (Text) if emails should link to a canonical origin
    instead of the request origin.
+
+### If email stops working
+
+Check Resend's view of the domain before touching the code — the dashboard can lie:
+
+```
+curl -s https://api.resend.com/domains/{id} -H "Authorization: Bearer $RESEND_FULL_ACCESS_KEY"
+```
+
+`status: not_started` means the verification check has **never run** (a click on the
+dashboard's Verify button that did not register looks exactly like this). Fix it by
+triggering the check over the API rather than clicking again:
+
+```
+curl -s -X POST https://api.resend.com/domains/{id}/verify -H "Authorization: Bearer $RESEND_FULL_ACCESS_KEY"
+```
+
+Then confirm the DNS values match Resend's expected values *exactly* — DKIM keys are
+base64 and case-sensitive, so a single flipped character fails verification. A
+sending-only key cannot read any of this; reading domain state needs full access.
 
 ## Known limits / next steps
 

@@ -32,10 +32,13 @@ what they're paying for.
   the record (5daa40e, Sep 11; `docs/claim-flow.md`). Proven live end to end: a real business
   claimed through the UI, the code round-tripped through a real inbox, and the audit trail
   recorded `claim` → `verify` by `claim-flow`.
-- **Claim flow — transactional email transport (open).** The edge mails the code only when
-  `RESEND_API_KEY` + `EMAIL_FROM` are set as Pages secrets; until a provider key exists the code
-  waits in the operator outbox (`GET /api/claim/outbox`, admin token) and a human hands it over.
-  The owner-facing UI covers that case ("if the code does not arrive, write to us").
+- ✅ **Claim flow — transactional email transport** — live since Sep 13 (2026-09-13). The edge
+  mails the code from `no-reply@send.barcelonacompare.com` (`RESEND_API_KEY` + `EMAIL_FROM` as
+  Pages vars on `barcelona-compare`, sender domain verified in Resend eu-west-1). The outbox is
+  the *fallback*, not the default: if a send fails the code stays in `claim_requests` for
+  `GET /api/claim/outbox` (admin token) so a mail outage can never block a claim, and an empty
+  outbox is the signal that email is genuinely working. Proven live: `POST /api/claim/start`
+  returned `delivery: "resend"` and the code landed in a real inbox with the outbox at `count: 0`.
 - ✅ **Claim CTA on the listing itself** — all four detail templates (nails + massage, ES + EN)
   carry `ClaimCta.astro`: inline under the business name (the same block as the verified badge,
   so a verified listing shows the badge and no claim link) and as the banner at the end of the

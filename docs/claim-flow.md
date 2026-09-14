@@ -95,11 +95,15 @@ one optional transport:
 - **`RESEND_API_KEY` + `EMAIL_FROM` set** → the code is mailed from the edge
   (`POST https://api.resend.com/emails`) and `code_pending` is cleared on success.
   One secret configures this and the Phase 1 owner-login codes: the same names are
-  used in `functions/_lib/mailer.ts`.
-- **Not set** → the code stays in `claim_requests` and the endpoint answers
-  `delivery: "none"`. Anyone with `REGISTRY_ADMIN_TOKEN` can read it from
+  used in `functions/_lib/mailer.ts`. **This is the live configuration in production**
+  (sender `no-reply@send.barcelonacompare.com`, domain verified in Resend eu-west-1).
+- **Not set, or the send fails** → the code stays in `claim_requests` and the endpoint
+  answers `delivery: "none"`. Anyone with `REGISTRY_ADMIN_TOKEN` can read it from
   `GET /api/claim/outbox` and hand it to the owner (phone, WhatsApp, a mailbox),
-  then `POST /api/claim/outbox/:id`.
+  then `POST /api/claim/outbox/:id`. A failing transport degrades to this on purpose —
+  mail trouble must never block a claim — so `delivery: "none"` on a live site means
+  "the send failed", not "email was never configured". Check Resend's view of the
+  domain (`docs/owner-profile-edits.md` → *If email stops working*) before the code.
 
 That outbox is also what a phone-first onboarding uses: this market books on
 WhatsApp, and an owner who calls is verified by reading the code back to them.
