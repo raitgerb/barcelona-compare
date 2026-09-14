@@ -33,6 +33,37 @@ const dayLabelsCa: Record<string, string> = {
 };
 const galleryPath = imagePath('nails', slug);
 const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
+const schemaOrg = {
+  "@context": "https://schema.org",
+  "@type": "BeautySalon",
+  "name": data.name,
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": data.address,
+    "addressLocality": "Barcelona",
+    "addressCountry": "ES"
+  },
+  "telephone": data.phone || undefined,
+  "priceRange": data.priceIndicator || undefined,
+  ...(data.googleRating && {
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": data.googleRating,
+      "reviewCount": data.googleReviewCount
+    }
+  }),
+  ...(data.hours && {
+    "openingHoursSpecification": Object.entries(data.hours as Record<string, string>).map(([day, time]) => {
+      const [open, close] = time.split("-");
+      return {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": `https://schema.org/${day.charAt(0).toUpperCase() + day.slice(1)}`,
+        "opens": open,
+        "closes": close
+      };
+    })
+  })
+};
 ---
 
 <BaseLayout
@@ -41,6 +72,8 @@ const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
   image={`${galleryPath}-0.jpg`}
   lang="ca"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)}></script>
+
   <article class="max-w-3xl mx-auto px-4 py-12">
     <div class="bg-white rounded-xl border border-stone-200 p-6 md:p-8">
       <!-- Photo Gallery -->

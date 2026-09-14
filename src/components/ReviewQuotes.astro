@@ -4,9 +4,9 @@
  * Renders top Google review excerpts + rating summary when googleReviews
  * data exists; renders nothing otherwise (no empty sections on 94% of pages).
  *
- * `lang` defaults to 'es' — the ES and EN detail templates were written before
- * this prop existed (and EN never passed one), so the default keeps their output
- * byte-identical. The /ca/ templates pass lang="ca".
+ * `lang` selects the copy record. The ES detail templates rely on the default
+ * ('es'); the EN and CA templates pass their own locale explicitly, so no
+ * template renders Spanish copy by accident.
  */
 import type { CollectionEntry } from 'astro:content';
 
