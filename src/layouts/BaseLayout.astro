@@ -73,6 +73,20 @@ const tagline: Record<Locale, string> = {
     <link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/fraunces-var-latin.woff2" as="font" type="font/woff2" crossorigin />
     <script is:inline defer type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ce7b3abd9d7f489ab3433b50cf598784"}'></script>
+
+    <!-- Portfolio analytics: PostHog EU, consent-gated. Owner docs: docs/analytics.md
+         The SDK is loaded un-gated (PostHog's own guidance) but capture is OFF until
+         the visitor accepts; no event and no identity is stored before that. -->
+    <script is:inline>
+      window.PORTFOLIO_ANALYTICS = {
+        projectToken: 'phc_sSGPRZfJzSLdSrsk8G6cTVptxdFbJi3WQ6td3zMUE55z',
+        site: { key: 'barcelonacompare', label: 'barcelonacompare.com' },
+        allowedHosts: ['barcelonacompare.com', 'www.barcelonacompare.com']
+      };
+    </script>
+    <script is:inline defer src="/js/portfolio-analytics.js"></script>
+    <script is:inline defer src="/js/portfolio-analytics-outbound.js"></script>
+
   </head>
   <body class="min-h-screen flex flex-col">
     <header class="border-b border-stone-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
@@ -138,5 +152,113 @@ const tagline: Record<Locale, string> = {
         </div>
       </div>
     </footer>
+  
+
+  
+    <!-- Consent banner + persistent withdrawal control (docs/analytics.md). -->
+    <!--
+      Reference consent banner (no analytics vendor, no framework, ~1.8 KB).
+      Drop into each site once, after portfolio-analytics.js. It only talks to the loader:
+      it never loads a third-party script itself.
+
+      Accessibility commitments: real buttons, keyboard reachable, focus visible, role=dialog
+      with an accessible name, and it does not trap focus (it sits at the end of the DOM).
+      Reject is exactly as prominent and as easy as Accept — a one-click accept with a
+      hidden reject fails the "freely given" test in the GDPR guidance PostHog links to.
+
+      ORDERING HAZARD (cost a real test iteration): the loader is a DEFERRED script, so this
+      inline block usually executes BEFORE the loader has booted. Deciding immediately would
+      read `undefined` and wrongly show a banner. So every decision is made lazily - on the
+      loader's own `portfolioanalytics:ready` announcement - and the markup starts `hidden`.
+    -->
+    <div id="pa-banner" hidden role="dialog" aria-modal="false" aria-labelledby="pa-banner-title"
+         style="position:fixed;left:0;right:0;bottom:0;z-index:2147483000;background:#1c1917;color:#fafaf9;
+                font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;padding:14px 16px;
+                display:flex;gap:12px;align-items:center;flex-wrap:wrap;box-shadow:0 -2px 12px rgba(0,0,0,.25)">
+      <p id="pa-banner-title" style="margin:0;flex:1 1 320px">
+        We use one first-party analytics tool (PostHog, hosted in the EU) to understand which pages
+        and tools are useful. It never sees your files, form contents or search terms, and session
+        recording is off. You can change your mind at any time.
+      </p>
+      <button type="button" data-pa-consent="denied"
+              style="padding:9px 16px;border:1px solid #78716c;background:transparent;color:inherit;
+                     border-radius:6px;cursor:pointer;font:inherit">Reject analytics</button>
+      <button type="button" data-pa-consent="granted"
+              style="padding:9px 16px;border:0;background:#fafaf9;color:#1c1917;
+                     border-radius:6px;cursor:pointer;font:inherit;font-weight:600">Accept analytics</button>
+    </div>
+
+    <!-- Persistent withdrawal control: put this (or an equivalent link) in the site footer. -->
+    <button type="button" id="pa-withdraw" hidden
+            style="background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit">
+      Change analytics choice
+    </button>
+
+    <script is:inline>
+    (function () {
+      'use strict';
+      var banner = document.getElementById('pa-banner');
+      var withdraw = document.getElementById('pa-withdraw');
+      if (!banner) return;
+      var decided = false;
+
+      function api() { return window.portfolioAnalytics; }
+
+      function decide() {
+        decided = true;
+        var a = api();
+        // No loader at all, or a host that is not on the site's allowlist (a preview
+        // deployment, a dev server, an accidental embed): nothing can be collected,
+        // so do not ask permission for something that will not happen.
+        if (!a || a.enabled === false) {
+          banner.hidden = true;
+          withdraw.hidden = true;
+          return;
+        }
+        if (a.getConsent() === null) {
+          banner.hidden = false;              // no decision yet -> ask
+        } else {
+          banner.hidden = true;
+          withdraw.hidden = false;            // already decided -> offer withdrawal only
+        }
+      }
+
+      function apply(state) {
+        var a = api();
+        if (!a || typeof a.setConsent !== 'function') return;
+        a.setConsent(state);
+        banner.hidden = true;
+        withdraw.hidden = false;
+      }
+
+      banner.addEventListener('click', function (e) {
+        var btn = e.target && e.target.closest ? e.target.closest('[data-pa-consent]') : null;
+        if (!btn) return;
+        apply(btn.getAttribute('data-pa-consent'));
+      });
+
+      withdraw.addEventListener('click', function () {
+        var a = api();
+        if (!a) return;
+        if (a.getConsent() === 'granted') {
+          a.setConsent('denied');       // immediate: opt out, reset identity, clear storage
+          withdraw.textContent = 'Analytics is off — turn back on';
+        } else {
+          a.setConsent('granted');
+          withdraw.textContent = 'Change analytics choice';
+        }
+      });
+
+      // The loader announces readiness on `document`; that is the reliable trigger
+      // regardless of script order.
+      document.addEventListener('portfolioanalytics:ready', decide);
+      document.addEventListener('portfolioanalytics:consent', decide);
+
+      // If the loader already finished before this ran, decide now.
+      if (api()) { decide(); }
+      // ...and if it never arrives (blocked or failed), still decide honestly.
+      setTimeout(function () { if (!decided) decide(); }, 1500);
+    })();
+    </script>
   </body>
 </html>
