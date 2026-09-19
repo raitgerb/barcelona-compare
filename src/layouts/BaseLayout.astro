@@ -90,6 +90,7 @@ const tagline: Record<Locale, string> = {
 
 
 
+
   </head>
   <body class="min-h-screen flex flex-col">
     <header class="border-b border-stone-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
@@ -164,26 +165,32 @@ const tagline: Record<Locale, string> = {
   
 
   
+
+  
     <!-- Consent banner + persistent withdrawal control (docs/analytics.md). -->
     <!--
-      Reference consent banner (no analytics vendor, no framework, ~1.8 KB).
+      Reference consent banner (no analytics vendor, no framework).
       Drop into each site once, after portfolio-analytics.js. It only talks to the loader:
       it never loads a third-party script itself.
 
-      Accessibility commitments: real buttons, keyboard reachable, focus visible, role=dialog
-      with an accessible name, and it does not trap focus (it sits at the end of the DOM).
-      Reject is exactly as prominent and as easy as Accept — a one-click accept with a
-      hidden reject fails the "freely given" test in the GDPR guidance PostHog links to.
+      Accessibility: real buttons, keyboard reachable, focus visible, role=dialog with an
+      accessible name, and it does not trap focus (it sits at the end of the DOM). Reject is
+      exactly as prominent and as easy as Accept.
 
-      ORDERING HAZARD (cost a real test iteration): the loader is a DEFERRED script, so this
-      inline block usually executes BEFORE the loader has booted. Deciding immediately would
-      read `undefined` and wrongly show a banner. So every decision is made lazily - on the
-      loader's own `portfolioanalytics:ready` announcement - and the markup starts `hidden`.
+      TWO HAZARDS, both of which produced a live defect and must not be reintroduced:
+      1. ORDERING. The loader is deferred, so this inline block usually runs BEFORE the loader
+         boots. Every decision is made lazily - on the loader's `portfolioanalytics:ready`
+         announcement - and the markup starts hidden.
+      2. `hidden` IS NOT ENOUGH with an inline `display`. An inline `display:flex` outranks the
+         UA stylesheet's `[hidden]{display:none}`, so the banner stayed painted and clickable
+         while `element.hidden === true` - and a test that read the `hidden` PROPERTY passed.
+         Visibility is therefore driven by inline `display` here, and asserted with a real
+         visibility check (element.isVisible()), never by reading the attribute.
     -->
     <div id="pa-banner" hidden role="dialog" aria-modal="false" aria-labelledby="pa-banner-title"
          style="position:fixed;left:0;right:0;bottom:0;z-index:2147483000;background:#1c1917;color:#fafaf9;
                 font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;padding:14px 16px;
-                display:flex;gap:12px;align-items:center;flex-wrap:wrap;box-shadow:0 -2px 12px rgba(0,0,0,.25)">
+                display:none;gap:12px;align-items:center;flex-wrap:wrap;box-shadow:0 -2px 12px rgba(0,0,0,.25)">
       <p id="pa-banner-title" style="margin:0;flex:1 1 320px">
         We use one first-party analytics tool (PostHog, hosted in the EU) to understand which pages
         and tools are useful. It never sees your files, form contents or search terms, and session
@@ -199,7 +206,7 @@ const tagline: Record<Locale, string> = {
 
     <!-- Persistent withdrawal control: put this (or an equivalent link) in the site footer. -->
     <button type="button" id="pa-withdraw" hidden
-            style="background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit">
+            style="display:none;background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer;font:inherit">
       Change analytics choice
     </button>
 
@@ -213,22 +220,23 @@ const tagline: Record<Locale, string> = {
 
       function api() { return window.portfolioAnalytics; }
 
+      // Show/hide through inline `display` as well as the attribute: see hazard 2 above.
+      function show(el, display) { el.hidden = false; el.style.display = display; }
+      function hide(el) { el.hidden = true; el.style.display = 'none'; }
+
       function decide() {
         decided = true;
         var a = api();
         // No loader at all, or a host that is not on the site's allowlist (a preview
         // deployment, a dev server, an accidental embed): nothing can be collected,
         // so do not ask permission for something that will not happen.
-        if (!a || a.enabled === false) {
-          banner.hidden = true;
-          withdraw.hidden = true;
-          return;
-        }
+        if (!a || a.enabled === false) { hide(banner); hide(withdraw); return; }
         if (a.getConsent() === null) {
-          banner.hidden = false;              // no decision yet -> ask
+          show(banner, 'flex');            // no decision yet -> ask
+          hide(withdraw);
         } else {
-          banner.hidden = true;
-          withdraw.hidden = false;            // already decided -> offer withdrawal only
+          hide(banner);
+          show(withdraw, 'inline-block');  // already decided -> offer withdrawal only
         }
       }
 
@@ -236,8 +244,8 @@ const tagline: Record<Locale, string> = {
         var a = api();
         if (!a || typeof a.setConsent !== 'function') return;
         a.setConsent(state);
-        banner.hidden = true;
-        withdraw.hidden = false;
+        hide(banner);
+        show(withdraw, 'inline-block');
       }
 
       banner.addEventListener('click', function (e) {
@@ -258,14 +266,9 @@ const tagline: Record<Locale, string> = {
         }
       });
 
-      // The loader announces readiness on `document`; that is the reliable trigger
-      // regardless of script order.
       document.addEventListener('portfolioanalytics:ready', decide);
       document.addEventListener('portfolioanalytics:consent', decide);
-
-      // If the loader already finished before this ran, decide now.
       if (api()) { decide(); }
-      // ...and if it never arrives (blocked or failed), still decide honestly.
       setTimeout(function () { if (!decided) decide(); }, 1500);
     })();
     </script>

@@ -63,6 +63,13 @@
                     'latitude', 'longitude', 'lat', 'lng', 'dob', 'birth'],
     maxValueLength: 120,
     maxPathLength: 160,
+    // --- active engagement -------------------------------------------------
+    // "Active time" = the page is VISIBLE, the window has FOCUS, and there was
+    // real interaction within idleTimeoutMs. Hidden, unfocused or idle time is
+    // excluded rather than counted. No input value is ever read.
+    engagementTickMs: 1000,
+    idleTimeoutMs: 30000,
+    minEngagementMs: 1000,
   };
 
   // '$pageview' is the standard PostHog page view event: it is what built-in Web
@@ -70,7 +77,12 @@
   // so that our own property allowlist still applies to it.
   var EVENT_SCHEMA = {
     $pageview: ['path', 'referrer_host', 'utm_source', 'utm_medium', 'utm_campaign', 'ref',
-                '$current_url', '$pathname', '$session_id'],
+                '$current_url', '$pathname', '$session_id',
+                'session_index', 'is_returning_browser'],
+    // Active engagement for one page view. engaged_ms counts only visible +
+    // focused + non-idle time; visible_ms counts visible time regardless of idle.
+    // Never carries input, text or element content.
+    engagement_time: ['path', 'engaged_ms', 'visible_ms', 'idle_timeout_ms', 'end_reason'],
     tool_opened: ['tool', 'path'],
     tool_started: ['tool', 'path'],
     tool_completed: ['tool', 'path', 'duration_ms', 'duration_kind'],
@@ -96,6 +108,7 @@
   var sdkReady = false;      // real init has run; capture is safe
   var pending = [];          // events captured between consent and init
   var noopMode = false;
+  var engaged = null;        // active-engagement accumulator (null until consented)
 
   // ---------------------------------------------------------------- utilities
 
@@ -330,6 +343,107 @@
     };
   }
 
+  // ------------------------------------------------------- active engagement
+  //
+  // Time is counted only while ALL of these hold: the document is visible, the
+  // window has focus, and the visitor interacted within idleTimeoutMs. A tab left
+  // open in the background, a minimised window or an untouched page contributes
+  // ZERO. Nothing typed, clicked-on or scrolled-past is recorded - the listeners
+  // only stamp a timestamp, so no form value, file name or element content can be
+  // captured by construction.
+  var ENGAGEMENT_INTERACTION = ['pointerdown', 'keydown', 'scroll', 'touchstart', 'wheel'];
+  var engagementSent = false;
+
+  function isFocused() {
+    try { return document.hasFocus(); } catch (e) { return true; }
+  }
+
+  function startEngagement() {
+    if (engaged) return;
+    engaged = { engagedMs: 0, visibleMs: 0, lastInteraction: Date.now(), lastTick: Date.now() };
+
+    function markInteraction() { if (engaged) engaged.lastInteraction = Date.now(); }
+    for (var i = 0; i < ENGAGEMENT_INTERACTION.length; i++) {
+      document.addEventListener(ENGAGEMENT_INTERACTION[i], markInteraction, { passive: true, capture: true });
+    }
+
+    engaged.timer = window.setInterval(function () {
+      if (!engaged) return;
+      var now = Date.now();
+      var delta = now - engaged.lastTick;
+      engaged.lastTick = now;
+      if (delta < 0) return;
+      if (!document.hidden) {
+        engaged.visibleMs += delta;
+        if (isFocused() && (now - engaged.lastInteraction) < CFG.idleTimeoutMs) {
+          engaged.engagedMs += delta;
+        }
+      }
+    }, CFG.engagementTickMs);
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) flushEngagement('hidden');
+    });
+    window.addEventListener('pagehide', function () { flushEngagement('unload'); });
+  }
+
+  function stopEngagement() {
+    if (!engaged) return;
+    if (engaged.timer) window.clearInterval(engaged.timer);
+    engaged = null;
+    engagementSent = true;   // withdrawal: nothing further is reported
+  }
+
+  function flushEngagement(reason) {
+    if (!engaged || engagementSent) return;
+    var path = safePath();
+    if (path === null) { stopEngagement(); return; }
+    // A tick may not have run since the last interaction; settle the accumulator.
+    var now = Date.now();
+    var delta = now - engaged.lastTick;
+    if (delta > 0 && !document.hidden) {
+      engaged.visibleMs += delta;
+      if (isFocused() && (now - engaged.lastInteraction) < CFG.idleTimeoutMs) engaged.engagedMs += delta;
+    }
+    engaged.lastTick = now;
+
+    if (engaged.engagedMs < CFG.minEngagementMs) return;   // no noise for a bounce
+
+    emit('engagement_time', {
+      path: path,
+      engaged_ms: Math.round(engaged.engagedMs),
+      visible_ms: Math.round(engaged.visibleMs),
+      idle_timeout_ms: CFG.idleTimeoutMs,
+      end_reason: reason,
+    });
+    // One engagement event per page load: a later hide/show must not re-report the
+    // same, cumulative time as if it were new time.
+    engagementSent = true;
+  }
+
+  // ---------------------------------------------------------- repeat visitors
+  //
+  // A "returning measured browser" means a PRIOR, SEPARATE session on this site -
+  // not a reload and not a second tab in the same session. The SDK's own session id
+  // is the session boundary, and only a small counter plus the last session id are
+  // persisted, namespaced per site, written only after consent.
+  function sessionIndex() {
+    var idxKey = storageName() + '_sessions';
+    var curKey = storageName() + '_session_cur';
+    var sid = null;
+    try { sid = window.posthog.get_session_id(); } catch (e) {}
+    if (!sid) return { index: 1, returning: false };
+    var count = parseInt(lsGet(idxKey) || '0', 10);
+    if (!isFinite(count) || count < 0) count = 0;
+    var last = lsGet(curKey);
+    if (last !== sid) {
+      count += 1;
+      lsSet(idxKey, String(count));
+      lsSet(curKey, sid);
+    }
+    return { index: count, returning: count > 1 };
+  }
+
   // ------------------------------------------------------------------ behaviour
 
   function applyConsentGranted() {
@@ -342,6 +456,11 @@
   function clearIdentityStorage() {
     lsDel(storageName());
     lsDel(storageName() + '_id');
+    // Repeat-visitor bookkeeping is site-scoped identity too, so withdrawal must
+    // clear it: leaving the session counter behind would keep recognising a visitor
+    // who asked to be forgotten.
+    lsDel(storageName() + '_sessions');
+    lsDel(storageName() + '_session_cur');
     lsDel('ph_' + storageName());
   }
 
@@ -388,8 +507,14 @@
     props.$current_url = window.location.origin + sp;
     var rh = referrerHost();
     if (rh) props.referrer_host = rh;
+    // Repeat-visitor measurement: a prior SEPARATE session on this site, not a
+    // reload (the SDK's session id is the boundary, so a reload stays session 1).
+    var si = sessionIndex();
+    props.session_index = si.index;
+    props.is_returning_browser = si.returning;
     var ok = emit('$pageview', props);
     if (ok) pageviewSent = true;
+    startEngagement();          // also when the pageview was suppressed as a duplicate
     return ok;
   }
 
@@ -451,6 +576,8 @@
       return true;
     }
     lsSet(CFG.consentKey, 'denied');
+    // Withdrawal stops collection immediately: no final engagement event is sent.
+    stopEngagement();
     if (window.posthog) applyConsentDenied();
     announce('consent', { consent: value, was: was });
     return true;
@@ -462,7 +589,10 @@
     lsDel(CFG.consentKey);
     lsDel(storageName());
     lsDel(storageName() + '_id');
+    lsDel(storageName() + '_sessions');
+    lsDel(storageName() + '_session_cur');
     pageviewSent = false;
+    stopEngagement();
     if (window.posthog) {
       try { window.posthog.opt_out_capturing(); } catch (e) {}
       try { window.posthog.reset(); } catch (e) {}
