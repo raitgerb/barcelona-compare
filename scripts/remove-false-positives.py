@@ -14,8 +14,13 @@ Usage:
     python scripts/remove-false-positives.py [--dry-run]
 """
 import argparse
+import sys
 import unicodedata
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from photo_paths import photo_paths  # noqa: E402
 
 CONTENT_DIR = Path(__file__).parent.parent / "src" / "content"
 DATA_DIR = Path(__file__).parent.parent / "data"
@@ -121,7 +126,7 @@ def main():
                 else:
                     base = md_file.stem
                     md_file.unlink()
-                    for photo in (DATA_DIR / cat).glob(f"{base}-*"):
+                    for photo in photo_paths(DATA_DIR / cat, base):
                         photo.unlink()
                     jf = DATA_DIR / cat / f"{base}.json"
                     if jf.exists():

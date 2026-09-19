@@ -15,6 +15,10 @@ import shutil
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from photo_paths import photo_paths  # noqa: E402
+
 ROOT = Path(__file__).parent.parent
 CONTENT_DIR = ROOT / "src" / "content"
 DATA_DIR = ROOT / "data"
@@ -39,14 +43,15 @@ def main():
         slugs = {f.stem for f in content_dir.glob("*.md")}
 
         for slug in sorted(slugs):
-            # Check if already has photos in public/images/
-            existing_public = list(public_dir.glob(f"{slug}-*"))
+            # Check if already has photos in public/images/ (exact slug match, not a
+            # prefix glob — "gt-nails" must not match "gt-nails-vietnamita")
+            existing_public = photo_paths(public_dir, slug)
             if existing_public:
                 already_had += 1
                 continue
 
             # Find photos in data/
-            data_photos = sorted(data_dir.glob(f"{slug}-*.jpg"))
+            data_photos = [p for p in photo_paths(data_dir, slug) if p.suffix == ".jpg"]
             if not data_photos:
                 missing += 1
                 continue

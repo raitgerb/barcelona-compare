@@ -19,6 +19,10 @@ from typing import Optional
 
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from photo_paths import photo_paths  # noqa: E402
+
 CONTENT_DIR = Path(__file__).parent.parent / "src" / "content"
 DATA_DIR = Path(__file__).parent.parent / "data"
 
@@ -97,7 +101,7 @@ def main():
             base = md_file.stem
             if only and unicodedata.normalize("NFC", base) not in only:
                 continue
-            existing_photos = list(data_dir.glob(f"{base}-*"))
+            existing_photos = photo_paths(data_dir, base)
             if existing_photos:
                 continue  # Already has photos
 

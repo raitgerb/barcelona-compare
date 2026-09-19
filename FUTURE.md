@@ -154,15 +154,23 @@ three detail trees emit the `BeautySalon` JSON-LD block (was ES-only). No ES pag
 - Also noted: 5 manifest entries reference photo files that exist neither locally nor in R2 —
   a pre-existing data gap worth a cleanup pass.
 
-## 6. Remaining data collection (~875 candidates) — **deferred**
+## 6. Remaining data collection — **authorized inside the free tier (Sep 14 2026)**
 
-- `scripts/broaden.py` found 2,107 candidates, processed 1,232. ~875 remain — mostly outer
-  barrios (Sant Andreu, Nou Barris, Horta-Guinardó) and marginal keyword variants.
-- Estimated 200–400 legitimate businesses in that set; the rest are false positives.
-- Requires refactor first: split into **Phase 1 discovery** (save `data/candidates.json`)
-  and **Phase 2 enrichment** (read list, skip existing place IDs, batch 100 at a time).
-- Cost: **$25–50** in Google Places API. Deferred until traffic justifies marginal coverage.
-- **Decision (Sep 11 2026): stays deferred.**
+- `scripts/broaden.py` found 2,107 candidates and processed 1,232 before the pipeline was
+  refactored into three phases; the remainder is mostly outer barrios (Sant Andreu, Nou
+  Barris, Horta-Guinardó) and marginal keyword variants. Estimated 200–400 legitimate
+  businesses in that set; the rest are false positives.
+- **Refactored** into `discover` (persist `data/candidates.json`) → `enrich` (Place Details
+  for every candidate, filter false positives, write content) → `photos` (kept businesses
+  only). Every API call is counted against the per-SKU free monthly allowance by
+  `scripts/places_budget.py`; a run stops *before* the allowance is used up and resumes on the
+  1st of the next calendar month. Console quota limits + $0 budget alert (belt and braces):
+  `docs/places-api-free-tier-guardrails.md`. How to run it: `docs/places-data-pipeline.md`.
+- **Decision (Sep 14 2026, Rutger): enrichment may continue as long as it stays entirely
+  inside the free tier — the free tier is a hard ceiling, not a target.** This supersedes the
+  Sep 11 deferral. The old **$25–50** estimate came from photographing every candidate before
+  filtering; filter-first plus the free allowances brings it to **$0** unless a photo run
+  crosses the 1,000 free photo calls (the guard stops it instead).
 
 ## 7. Weekly refresh cron — **intentionally paused**
 

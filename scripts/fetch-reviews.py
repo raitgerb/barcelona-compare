@@ -9,6 +9,12 @@ Usage:
 
 Writes googleReviews + googleEditorialSummary into each content file's frontmatter.
 Skips files that already have googleReviews. Checkpointed: safe to re-run.
+
+Every call is a Place Details (Pro) request, so it runs through the same free-tier
+guard as the rest of the pipeline (scripts/places_budget.py): the call is counted in
+data/usage-ledger.json *before* it is made, and the run stops at the free allowance
+instead of paying. `--caps details=20` lowers the ceiling for a cautious run; it can
+never raise it above Google's free allowance.
 """
 import json
 import os
@@ -21,11 +27,18 @@ import urllib.request
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+sys.path.insert(0, SCRIPT_DIR)
+
+from places_budget import (  # noqa: E402
+    BudgetExhausted,
+    PlacesBudget,
+    QuotaBlocked,
+    parse_caps,
+)
+
 FIELDMASK = "reviews,editorialSummary"
 MAX_REVIEWS_STORED = 5
-# Places API (New) Pro SKU: $0.032/call after 5k free/month (Essentials fields incl. reviews)
-COST_PER_CALL_USD = 0.032
-FREE_TIER_MONTHLY = 5000
+EXIT_BUDGET = 2
 
 
 def load_key():
@@ -42,7 +55,9 @@ def get_place_id(fm_text):
     return m.group(1).strip() if m else None
 
 
-def fetch_reviews(api_key, place_id):
+def fetch_reviews(api_key, place_id, budget):
+    """One Place Details call. Counted (and, at the cap, refused) before it is sent."""
+    budget.spend("details")
     url = f"https://places.googleapis.com/v1/places/{place_id}"
     req = urllib.request.Request(url, method="GET")
     req.add_header("X-Goog-Api-Key", api_key)
@@ -53,6 +68,12 @@ def fetch_reviews(api_key, place_id):
             return json.loads(resp.read().decode())
     except urllib.error.HTTPError as e:
         body = e.read().decode()[:300]
+        if e.code in (429, 403) and any(
+            m in body.lower() for m in ("quota", "resource_exhausted", "billing", "permission_denied")
+        ):
+            raise QuotaBlocked(
+                f"Google blocked the Place Details call for {place_id}: HTTP {e.code} {body}"
+            )
         print(f"    HTTP {e.code} for {place_id}: {body}")
         return None
     except Exception as e:
@@ -115,8 +136,15 @@ def main():
     if "--batch" in args:
         batch = int(args[args.index("--batch") + 1])
     run_all = "--all" in args
+    caps = {}
+    if "--caps" in args:
+        caps = parse_caps(args[args.index("--caps") + 1])
+    headroom = 0
+    if "--headroom" in args:
+        headroom = int(args[args.index("--headroom") + 1])
 
     api_key = load_key()
+    budget = PlacesBudget(caps=caps, headroom=headroom)
 
     # Collect candidate files (both categories), skip ones already enriched
     files = sorted(glob.glob(os.path.join(ROOT, "src/content/nails/*.md"))) + \
@@ -136,20 +164,28 @@ def main():
 
     if test_mode:
         todo = todo[:5]
-        est_full = total_todo * COST_PER_CALL_USD
-        print(f"TEST MODE: fetching {len(todo)}. Full run would be {total_todo} calls "
-              f"≈ ${est_full:.2f} (first {FREE_TIER_MONTHLY:,}/month free per SKU).")
 
     if batch:
         todo = todo[:batch]
 
+    planned = {"details": len(todo)}
+    print(f"planned Place Details calls: {len(todo)} "
+          f"(free tier has {budget.remaining('details'):,} left this month, "
+          f"projected spend ${budget.paid_projection(planned):.2f})")
+
+    before = budget.month_totals()
     ok = empty = fail = 0
+    capped = False
     for i, path in enumerate(todo):
         name = os.path.basename(path)
         place_id = get_place_id(open(path, encoding="utf-8").read())
         if not place_id:
             continue
-        data = fetch_reviews(api_key, place_id)
+        try:
+            data = fetch_reviews(api_key, place_id, budget)
+        except BudgetExhausted:
+            capped = True
+            break
         if data is None:
             fail += 1
         elif data.get("reviews"):
@@ -169,8 +205,27 @@ def main():
         if (i + 1) % 50 == 0:
             print(f"  ... {i+1}/{len(todo)} done (ok={ok} empty={empty} fail={fail})")
 
+    deltas = {sku: budget.used(sku) - before.get(sku, 0) for sku in budget.month_totals()}
+    note = f"{ok} enriched, {empty} without reviews, {fail} failed"
+    if capped:
+        note += " (stopped at the free tier)"
+    budget.record_run("reviews", deltas, note=note)
+
     print(f"Done. enriched={ok} no-reviews={empty} failed={fail}")
+    print("   calls this run: " + (", ".join(f"{k}: {v}" for k, v in deltas.items() if v) or "no calls"))
+    print("\n".join(budget.summary_lines()))
+    if capped:
+        print(f"\n⛔ Place Details free tier reached — {total_todo - ok - empty - fail} file(s) left. "
+              f"Rerun on/after the first of next month; already-enriched files are skipped.")
+        return EXIT_BUDGET
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        raise SystemExit(main())
+    except QuotaBlocked as exc:
+        print(f"\n⛔ {exc}")
+        print("   Google blocked the call at the project level. See "
+              "docs/places-api-free-tier-guardrails.md (Part A) or wait for the quota window.")
+        raise SystemExit(3)

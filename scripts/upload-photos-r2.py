@@ -12,6 +12,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from photo_paths import photo_paths  # noqa: E402
+
 ROOT = Path(__file__).parent.parent
 CONTENT_DIR = ROOT / "src" / "content"
 DATA_DIR = ROOT / "data"
@@ -101,7 +105,7 @@ def main():
     missing = []
     for cat, slug in sorted(slugs):
         data_cat = DATA_DIR / cat
-        photos = sorted(data_cat.glob(f"{slug}-*.jpg"))
+        photos = [p for p in photo_paths(data_cat, slug) if p.suffix == ".jpg"]
         if not photos:
             missing.append(f"{cat}/{slug}")
             continue

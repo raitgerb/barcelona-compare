@@ -6,7 +6,12 @@
 
 import re
 import shutil
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from photo_paths import photo_paths  # noqa: E402
 
 CONTENT_DIR = Path(__file__).parent.parent / "src" / "content"
 DATA_DIR = Path(__file__).parent.parent / "data"
@@ -87,8 +92,9 @@ def main():
             new_path = content_cat / f"{new_slug}.md"
             old_path.rename(new_path)
 
-            # Rename photos
-            for photo in data_cat.glob(f"{old_slug}-*"):
+            # Rename photos (exact slug match — a prefix glob would also rename a
+            # sibling business's photos, e.g. "gt-nails" vs "gt-nails-vietnamita")
+            for photo in photo_paths(data_cat, old_slug):
                 new_photo_name = photo.name.replace(old_slug, new_slug, 1)
                 photo.rename(data_cat / new_photo_name)
 

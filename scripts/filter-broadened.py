@@ -4,95 +4,32 @@
 After the broaden.py run caught 1,338 businesses (many false positives from
 loose grid search types), this script removes non-relevant listings.
 
+The keep/discard heuristics live in `scripts/place_filter.py` (shared with the
+enrichment phase of `scripts/broaden.py`, so both agree on what a listing is).
+
 Usage:
     python scripts/filter-broadened.py [--dry-run]
 """
 
 import argparse
 import shutil
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from place_filter import should_keep  # noqa: E402
+from photo_paths import photo_paths, photo_slug  # noqa: E402
 
 CONTENT_DIR = Path(__file__).parent.parent / "src" / "content"
 DATA_DIR = Path(__file__).parent.parent / "data"
 
+
 # ─── Keep/discard heuristics ──────────────────────────────────────────────
 
-# If a business name contains these keywords AND doesn't contain any exclusion
-# keywords, keep it.
-
-NAIL_KEEP_KEYWORDS = [
-    "nail", "uñas", "ungles", "manicur", "uña", "esmalt",
-    "pedicur", "nail", "nails",
-]
-
-NAIL_EXCLUDE_KEYWORDS = [
-    # Hair salons / barbers (primary business is hair, nails are secondary)
-    "perruquer", "peluquer", "barber", "cabello", "pelos",
-    "hair", "stylist", "coiff", "coiffure", "barbería",
-    "perruqueria", "peluqueria",
-    # Gyms / fitness
-    "gym", "fitness", "crossfit", "gimnàs", "gimnasio",
-    # Supplement / retail stores
-    "suplementos", "supplement", "herbolari", "herborister",
-    # Warehouses / storage
-    "almacen", "deposito", "depósito", "warehouse",
-    # Tattoo / piercing
-    "tattoo", "tatuaje", "piercing",
-    # Laser clinics
-    "laser", "láser",
-]
-
-MASSAGE_KEEP_KEYWORDS = [
-    "massage", "masaj", "massatg", "masatg", "quiromas", "fisioterap",
-    "osteopat", "osteo", "reflexolog", "shiatsu", "bienestar", "wellness",
-    "terap", "relax", "spa", "hammam", "sauna",
-    "drenaje", "linfatic", "linfàtic", "lymph", "bodywork",
-    "tantr", "acupuntur",
-]
-
-MASSAGE_EXCLUDE_KEYWORDS = [
-    # Supplement / retail stores
-    "suplementos", "supplement", "herbolari", "herborister",
-    # Warehouses / storage
-    "almacen", "deposito", "depósito", "warehouse",
-    # Tattoo / piercing
-    "tattoo", "tatuaje", "piercing",
-    # Laser clinics (generally aesthetic, not massage)
-    "laser", "láser",
-    # Dentists / vets
-    "dental", "dentista", "veterinar", "veterinari",
-    # Gyms (sometimes offer massage but are gyms first)
-    "gym", "fitness", "crossfit", "gimnàs", "gimnasio",
-    # Hair (misclassified)
-    "perruquer", "peluquer", "barber", "cabello",
-    # Car wash / auto
-    "auto", "car wash", "lavado", "rent a car",
-    # Hotels (spa in hotel)
-    "hotel",
-    # Opticians / glasses
-    "optic", "òptic", "ulleres", "gafas",
-]
-
-
-def name_contains_any(name: str, keywords: list[str]) -> bool:
-    name_lower = name.lower()
-    return any(kw in name_lower for kw in keywords)
-
-
-def should_keep(name: str, category: str) -> bool:
-    """Decide whether this business should be kept."""
-    if category == "nails":
-        if not name_contains_any(name, NAIL_KEEP_KEYWORDS):
-            return False
-        if name_contains_any(name, NAIL_EXCLUDE_KEYWORDS):
-            return False
-        return True
-    else:
-        if not name_contains_any(name, MASSAGE_KEEP_KEYWORDS):
-            return False
-        if name_contains_any(name, MASSAGE_EXCLUDE_KEYWORDS):
-            return False
-        return True
+# The keyword lists and the decision logic live in scripts/place_filter.py, shared with
+# the enrichment phase of scripts/broaden.py. `should_keep(name, category)` is imported
+# at the top of this file.
 
 
 def filter_category(category: str, dry_run: bool = False) -> tuple[int, int]:
@@ -137,9 +74,11 @@ def filter_category(category: str, dry_run: bool = False) -> tuple[int, int]:
                     if line.startswith("googlePlaceId:"):
                         # We can try to find photos by slug from filename
                         pass
-                # Remove photos matching this file's slug
+                # Remove photos matching this file's slug (exact match — a prefix glob
+                # would also delete a sibling business's photos, e.g. "gt-nails" vs
+                # "gt-nails-vietnamita").
                 base = md_file.stem
-                for photo in data_cat.glob(f"{base}-*"):
+                for photo in photo_paths(data_cat, base):
                     photo.unlink()
                 # Remove JSON
                 json_file = data_cat / f"{base}.json"
@@ -174,13 +113,16 @@ def main():
                 continue
             valid_slugs = {f.stem for f in content_cat.glob("*.md")} if content_cat.exists() else set()
             orphan_count = 0
-            for photo in data_cat.glob("*"):
-                # Extract base slug from photo filename (e.g., "some-name-0.jpg" -> "some-name")
-                photo_stem = photo.stem
-                # Remove trailing -N number
-                base = "-".join(photo_stem.split("-")[:-1]) if "-" in photo_stem else photo_stem
-                if base not in valid_slugs:
-                    photo.unlink()
+            for entry in data_cat.iterdir():
+                if not entry.is_file():
+                    continue
+                # Only photo files count as orphans here. This used to iterate every file
+                # and derive the slug by stripping the last "-part", which deleted raw
+                # Place Details JSONs (e.g. "gt-nails.json" -> slug "gt" -> "not a listing"
+                # -> unlink). Never let this loop touch anything but <slug>-<n>.jpg/png.
+                base = photo_slug(entry.name)
+                if base is not None and base not in valid_slugs:
+                    entry.unlink()
                     orphan_count += 1
             if orphan_count:
                 print(f"  {cat}: cleaned {orphan_count} orphaned photos")
