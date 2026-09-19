@@ -232,32 +232,16 @@
 
   // ------------------------------------------------------------------- SDK glue
 
-  var SDK_STUB_METHODS = ('init capture register register_once register_for_session unregister '
-    + 'unregister_for_session getFeatureFlag getFeatureFlagResult isFeatureEnabled reloadFeatureFlags '
-    + 'on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys canRenderSurvey '
-    + 'identify setPersonProperties group resetGroups reset get_distinct_id getGroups get_session_id '
-    + 'set_config startSessionRecording stopSessionRecording sessionRecordingStarted '
-    + 'captureException get_property getSessionProperty createPersonProfile opt_in_capturing '
-    + 'opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing '
-    + 'debug').split(' ');
-
-  function installStub() {
-    if (window.posthog && window.posthog.__SV) return;
-    var ph = window.posthog = window.posthog || [];
-    ph._i = ph._i || [];
-    // Mirrors the canonical posthog snippet exactly, and the distinction matters:
-    // `init` args go into `_i`, while ordinary method calls are pushed onto the
-    // posthog array itself. Queueing both into `_i` corrupts the SDK's replay when
-    // the SDK loads later (it tries to dispatch a token string as a method name:
-    // "Cannot create property 'debug' on string 'phc_...'").
-    ph.init = function (token, config, name) { ph._i.push([token, config, name]); };
-    for (var i = 0; i < SDK_STUB_METHODS.length; i++) {
-      (function (m) {
-        ph[m] = function () { ph.push([m].concat(Array.prototype.slice.call(arguments))); };
-      })(SDK_STUB_METHODS[i]);
-    }
-    ph.__SV = 1;
-  }
+  // NOTE - deliberately NO hand-rolled stub here.
+  // An earlier version pre-installed the classic posthog snippet stub (the one
+  // that sets __SV=1) and then called posthog.init() after the bundle loaded.
+  // That combination silently LOSES THE TOKEN: the bundle adopts the pre-existing
+  // stub, replays `_i` itself, and the resulting instance ends up with our config
+  // (api_host, autocapture off) but no api_key - so every ingest POST is rejected
+  // with HTTP 400 "non-engage request missing event name attribute" and the
+  // project stays empty while the browser looks perfectly healthy.
+  // The bundle bootstraps window.posthog on its own; events captured before init
+  // are buffered by `pending` and flushed by flushPending().
 
   function loadSdk(cb) {
     if (sdkLoaded) return cb();
@@ -423,7 +407,6 @@
   // autocapture on). Events captured in the gap are buffered by us and flushed
   // after the real init.
   function startSdk(then) {
-    installStub();
     loadSdk(function () {
       try {
         if (!window.posthog || window.posthog.__loaded !== true) {
@@ -542,7 +525,6 @@
       return;
     }
     if (consentState === 'denied') { booted = true; announce('ready', { site: CFG.site.key, consent: consentState }); return; }
-    installStub();                       // local stub only: queues nothing, fetches nothing
     booted = true;                       // loader booted (the SDK is deliberately absent)
     announce('consent-required', { site: CFG.site.key, consentKey: CFG.consentKey });
     announce('ready', { site: CFG.site.key, consent: consentState });
