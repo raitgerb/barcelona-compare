@@ -236,7 +236,10 @@ const tagline: Record<Locale, string> = {
           hide(withdraw);
         } else {
           hide(banner);
-          show(withdraw, 'inline-block');  // already decided -> offer withdrawal only
+          show(withdraw, 'inline-block');  // already decided -> offer the truthful control
+          withdraw.textContent = a.getConsent() === 'granted'
+            ? 'Turn analytics off'
+            : 'Change analytics choice';
         }
       }
 
@@ -258,11 +261,15 @@ const tagline: Record<Locale, string> = {
         var a = api();
         if (!a) return;
         if (a.getConsent() === 'granted') {
-          a.setConsent('denied');       // immediate: opt out, reset identity, clear storage
-          withdraw.textContent = 'Analytics is off — turn back on';
+          // Withdrawal is immediate and one-click: opt out, reset identity, clear storage.
+          a.setConsent('denied');
         } else {
-          a.setConsent('granted');
-          withdraw.textContent = 'Change analytics choice';
+          // NEVER grant from here. A visitor who declined and then asks to change their
+          // choice must be shown the choice again: only the explicitly labelled
+          // "Accept analytics" button grants consent.
+          show(banner, 'flex');
+          var acceptBtn = banner.querySelector('[data-pa-consent="granted"]');
+          if (acceptBtn && acceptBtn.focus) acceptBtn.focus();
         }
       });
 
