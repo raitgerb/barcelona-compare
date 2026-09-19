@@ -288,7 +288,13 @@
       person_profiles: 'identified_only',
       mask_all_text: true,
       mask_all_element_attributes: true,
-      property_denylist: CFG.forbiddenKeys,
+      // NO property_denylist here on purpose. posthog-js applies it while building
+      // the request, and an entry like 'key' matches the transport's own `api_key`
+      // field - so the envelope reaches the ingest endpoint with no routing token
+      // and every POST is rejected with HTTP 400 ("non-engage request missing event
+      // name attribute") while the browser looks perfectly healthy. Our own
+      // allowlist in cleanProps() plus before_send() below are the enforced path;
+      // see probe_apikey_ablation.mjs for the ablation that proved it.
       sanitize_properties: function (props, event) {
         if (event === '$pageview' || event === '$pageleave') {
           props.$current_url = window.location.origin + (safePath() || '/');
@@ -305,6 +311,10 @@
         var props = payload.properties || {};
         for (var k in props) {
           if (!Object.prototype.hasOwnProperty.call(props, k)) continue;
+          // A reserved routing field must survive verbatim: the exact configured
+          // PUBLIC ingestion token is not an application secret, and deleting it
+          // is what makes an otherwise valid request unstorable.
+          if (k === 'token' && props[k] === CFG.projectToken) continue;
           if (isForbiddenKey(k)) { delete props[k]; continue; }
           var cv = cleanValue(props[k]);
           if (cv === null && props[k] !== null) delete props[k];
