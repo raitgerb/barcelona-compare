@@ -1,25 +1,27 @@
 /*!
- * portfolio-analytics.js — consent-gated, site-scoped PostHog loader
+ * portfolio-analytics.js — consent-gated, site-scoped PostHog loader  (v2)
  * ---------------------------------------------------------------------------
- * STATUS: prepared for deployment. NOT deployed. Requires a real PostHog EU
- * project token (see ../ONBOARDING.md step 1). Nothing here contains a token.
+ * v2 changes, each driven by a review finding:
+ *   - The SDK is NOT requested before consent. v1 loaded it un-gated and only
+ *     gated capture, which still leaks network metadata (IP, UA, Referer) to a
+ *     third party. Now a visitor who has not accepted causes ZERO requests to
+ *     any posthog host. Verified by test (asserts every request, not just POSTs).
+ *   - The page view is the STANDARD `$pageview` event (was a custom `page_view`),
+ *     so PostHog's built-in Web Analytics - sessions, paths, retention - works
+ *     on the same data our own dashboards read. One event, not two.
+ *   - Private routes are never reported at all (config: privatePathPrefixes).
+ *   - Path PII: identifier-shaped path segments are collapsed to ':id', path is
+ *     length-capped, and campaign values must match a strict token shape.
+ *   - Sessions are the SDK's own session id, so session counts and retention are
+ *     real session semantics rather than a proxy built from users.
  *
- * Design rules (each one is exercised by ../tests/run_consent_tests.mjs):
- *   - No data leaves the browser before consent. The SDK is loaded (PostHog's
- *     own guidance: do not gate the snippet behind consent — gate capture),
- *     initialised opted-out by default with memory-only persistence, and no
- *     event is captured until setConsent('granted').
- *   - Autocapture, pageleave, dead clicks, heatmaps, performance/Web Vitals,
- *     feature flags and session replay are all explicitly OFF. Replay is OFF
- *     by policy, not by masking.
- *   - Events are an explicit allowlist with an explicit property allowlist.
- *     Anything else is refused, and a final before_send guard re-checks.
- *   - Private form contents, files, filenames, notes, message bodies, contact
- *     lists, travel details and URLs with query payloads are never sent: the
- *     page path is stripped to pathname + an allowlist of campaign params.
- *   - One browser identity per SITE, not per portfolio: identity storage is
- *     namespaced per site key and cross-subdomain cookies are off, so the
- *     single free-tier PostHog project cannot link a visitor across sites.
+ * Design rules still in force:
+ *   - No event, no cookie and no localStorage identity before consent.
+ *   - Autocapture, pageleave, dead clicks, heatmaps, performance/web vitals,
+ *     feature flags, surveys and session replay are all explicitly OFF, and the
+ *     project settings disable them again server-side.
+ *   - Events and properties are an explicit allowlist; before_send re-checks.
+ *   - One browser identity per SITE, not per portfolio.
  *   - Consent is withdrawable and honoured immediately.
  *
  * Usage (per site, before this script):
@@ -27,13 +29,14 @@
  *     window.PORTFOLIO_ANALYTICS = {
  *       projectToken: 'phc_...',            // public ingestion key, EU project
  *       site: { key: 'voyageary', label: 'voyageary.com' },
- *       allowedHosts: ['voyageary.com', 'www.voyageary.com']
+ *       allowedHosts: ['voyageary.com', 'www.voyageary.com'],
+ *       privatePathPrefixes: ['/account/', '/library/']   // never reported
  *     };
  *   </script>
  *   <script defer src="/js/portfolio-analytics.js"></script>
  *
- * Public API: window.portfolioAnalytics.{ready(function), pageview(), track(event, props),
- *             setConsent('granted'|'denied'), getConsent(), reset()}
+ * Public API: window.portfolioAnalytics.{ready(fn), pageview(), track(event, props),
+ *             setConsent('granted'|'denied'), getConsent(), reset(), enabled}
  */
 (function (window, document) {
   'use strict';
@@ -43,29 +46,34 @@
     assetsUrl: 'https://eu-assets.i.posthog.com/static/array.js',
     uiHost: 'https://eu.posthog.com',
     consentKey: 'pa_consent_v1',
-    schemaVersion: 1,
+    storagePrefix: 'pa_id_',
+    schemaVersion: 2,
     debug: false,
-    // Global Privacy Control / Do-Not-Track style signals are honoured as a refusal.
+    // A visitor who has not accepted must cause NO third-party request at all.
+    loadSdkOnlyOnConsent: true,
     respectGlobalPrivacyControl: true,
-    // Query parameters that may survive into the page path property. Everything
-    // else (?q=…, ?file=…, ?address=…, search terms, tokens) is dropped.
     campaignParams: ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content',
                      'utm_term', 'ref', 'gclid', 'fbclid'],
-    // Property keys that must never reach the analytics backend, matched
-    // case-insensitively as substrings.
+    // Route prefixes that are never reported, on any event. Owner/private
+    // surfaces, account and library pages, anything with a token in the path.
+    privatePathPrefixes: [],
     forbiddenKeys: ['email', 'phone', 'tel', 'name', 'address', 'file', 'filename',
                     'document', 'note', 'message', 'content', 'text', 'body', 'query',
                     'search', 'password', 'token', 'key', 'iban', 'card', 'passport',
                     'latitude', 'longitude', 'lat', 'lng', 'dob', 'birth'],
-    // Value-shape guards applied to every property value.
     maxValueLength: 120,
+    maxPathLength: 160,
   };
 
+  // '$pageview' is the standard PostHog page view event: it is what built-in Web
+  // Analytics and native sessions/retention are computed from. It is listed here
+  // so that our own property allowlist still applies to it.
   var EVENT_SCHEMA = {
-    page_view: ['path', 'referrer_host', 'utm_source', 'utm_medium', 'utm_campaign', 'ref'],
+    $pageview: ['path', 'referrer_host', 'utm_source', 'utm_medium', 'utm_campaign', 'ref',
+                '$current_url', '$pathname', '$session_id'],
     tool_opened: ['tool', 'path'],
     tool_started: ['tool', 'path'],
-    tool_completed: ['tool', 'path', 'duration_ms'],
+    tool_completed: ['tool', 'path', 'duration_ms', 'duration_kind'],
     tool_export: ['tool', 'format'],
     tool_error: ['tool', 'error_code'],
     outbound_referral: ['target_host', 'path', 'placement'],
@@ -77,13 +85,16 @@
     claim_started: ['category'],
     claim_submitted: ['category'],
   };
-  var GLOBAL_PROPS = ['site', 'site_label', 'schema_version', 'page_path', 'is_consented'];
 
   var CFG = null;
-  var consentState = null;      // 'granted' | 'denied' | null
+  var consentState = null;
   var pageviewSent = false;
+  var sdkRequested = false;
   var sdkLoaded = false;
-  var initApplied = false;
+  var initApplied = false;   // SDK initialised
+  var booted = false;        // loader finished its boot sequence
+  var sdkReady = false;      // real init has run; capture is safe
+  var pending = [];          // events captured between consent and init
   var noopMode = false;
 
   // ---------------------------------------------------------------- utilities
@@ -95,7 +106,6 @@
       window.console.log.apply(window.console, a);
     }
   }
-
   function warn() {
     if (window.console && window.console.warn) {
       var a = Array.prototype.slice.call(arguments);
@@ -103,45 +113,53 @@
       window.console.warn.apply(window.console, a);
     }
   }
+  function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { window.localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+  function lsDel(k) { try { window.localStorage.removeItem(k); return true; } catch (e) { return false; } }
+  function storageName() { return CFG.storagePrefix + CFG.site.key; }
 
-  function lsGet(k) {
-    try { return window.localStorage.getItem(k); } catch (e) { return null; }
-  }
-  function lsSet(k, v) {
-    try { window.localStorage.setItem(k, v); return true; } catch (e) { return false; }
-  }
-  function lsDel(k) {
-    try { window.localStorage.removeItem(k); return true; } catch (e) { return false; }
+  // Identifier-shaped segments (a uuid, a long hex digest, a long number) are
+  // collapsed, because a path segment can identify a person or a private record
+  // even though it is "only a path".
+  var ID_SEGMENT = /^(?:[0-9a-f]{16,}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|\d{6,})$/i;
+
+  function isPrivatePath(path) {
+    var p = String(path || '/');
+    for (var i = 0; i < CFG.privatePathPrefixes.length; i++) {
+      var pre = CFG.privatePathPrefixes[i];
+      if (pre && p.indexOf(pre) === 0) return true;
+    }
+    return false;
   }
 
-  function storageName() {
-    return CFG.storagePrefix + CFG.site.key;
-  }
-
-  // Path without query string, fragment, or anything identifying.
+  // Path only: no query, no fragment, no identifier-shaped segment.
   function safePath() {
     var path = String(window.location.pathname || '/');
-    return path.slice(0, 200);
+    if (isPrivatePath(path)) return null;
+    var segs = path.split('/');
+    for (var i = 0; i < segs.length; i++) {
+      if (segs[i] && ID_SEGMENT.test(segs[i])) segs[i] = ':id';
+    }
+    var out = segs.join('/');
+    if (!out || out.charAt(0) !== '/') out = '/' + out;
+    return out.slice(0, CFG.maxPathLength);
   }
 
-  // Campaign params only; never the raw query string.
+  // Campaign params only, and only token-shaped values. A `ref=` that carries a
+  // customer id or an email would otherwise sail straight through.
   function campaignProps() {
     var out = {};
     var qs;
     try { qs = new window.URLSearchParams(window.location.search); } catch (e) { return out; }
     for (var i = 0; i < CFG.campaignParams.length; i++) {
       var p = CFG.campaignParams[i];
-      if (qs.has(p)) {
-        var v = qs.get(p);
-        // loose sanitisation: these are campaign tokens, not free text
-        if (v && /^[\w.\-]{1,64}$/.test(v)) out[p] = v;
-      }
+      if (!qs.has(p)) continue;
+      var v = qs.get(p);
+      if (v && v.length <= 64 && /^[\w.\-]+$/.test(v)) out[p] = v;
     }
     return out;
   }
 
-  // External referrer host only — never the full referrer URL (it can carry
-  // search terms and identifiers).
   function referrerHost() {
     try {
       if (!document.referrer) return null;
@@ -153,6 +171,7 @@
 
   function isForbiddenKey(k) {
     var lk = String(k).toLowerCase();
+    if (lk.charAt(0) === '$') return false;
     for (var i = 0; i < CFG.forbiddenKeys.length; i++) {
       if (lk.indexOf(CFG.forbiddenKeys[i]) !== -1) return true;
     }
@@ -160,13 +179,9 @@
   }
 
   var EMAILISH = /[^\s@]+@[^\s@]+\.[^\s@]{2,}/;
-  var LONGISH = /\s/;   // any whitespace suggests free text, not a token
+  var LONGISH = /\s/;
   var URLISH = /^https?:\/\//i;
 
-  // The SDK attaches its own automatic properties ($current_url, $initial_current_url,
-  // $referrer, ...). Those carry the RAW query string, so every URL-shaped value is
-  // rewritten here regardless of which event it belongs to: same-host URLs keep
-  // origin + path, external URLs are reduced to their origin.
   function scrubUrls(props) {
     for (var k in props) {
       if (!Object.prototype.hasOwnProperty.call(props, k)) continue;
@@ -179,7 +194,7 @@
         path = u.pathname;
       } catch (e) { props[k] = null; continue; }
       props[k] = (host === window.location.hostname)
-        ? window.location.origin + path
+        ? window.location.origin + safePath()
         : 'https://' + host + '/';
     }
   }
@@ -189,10 +204,10 @@
     if (v === null || v === undefined) return null;
     if (t === 'number') return isFinite(v) ? v : null;
     if (t === 'boolean') return v;
-    if (t !== 'string') return null;                 // no objects, arrays, DOM nodes
+    if (t !== 'string') return null;
     if (v.length === 0 || v.length > CFG.maxValueLength) return null;
-    if (EMAILISH.test(v)) return null;               // never ship an address
-    if (LONGISH.test(v) && v.length > 32) return null; // free-text-looking value
+    if (EMAILISH.test(v)) return null;
+    if (LONGISH.test(v) && v.length > 32) return null;
     return v;
   }
 
@@ -203,14 +218,8 @@
     props = props || {};
     for (var k in props) {
       if (!Object.prototype.hasOwnProperty.call(props, k)) continue;
-      if (allowed.indexOf(k) === -1) {
-        warn('dropped property not in allowlist for "' + event + '":', k);
-        continue;
-      }
-      if (isForbiddenKey(k)) {
-        warn('dropped forbidden property for "' + event + '":', k);
-        continue;
-      }
+      if (allowed.indexOf(k) === -1) { warn('dropped property not in allowlist for "' + event + '":', k); continue; }
+      if (isForbiddenKey(k)) { warn('dropped forbidden property for "' + event + '":', k); continue; }
       var cv = cleanValue(props[k]);
       if (cv !== null) out[k] = cv;
     }
@@ -236,14 +245,15 @@
     if (window.posthog && window.posthog.__SV) return;
     var ph = window.posthog = window.posthog || [];
     ph._i = ph._i || [];
-    ph.init = function (token, config, name) {
-      ph._i.push([token, config, name]);
-    };
+    // Mirrors the canonical posthog snippet exactly, and the distinction matters:
+    // `init` args go into `_i`, while ordinary method calls are pushed onto the
+    // posthog array itself. Queueing both into `_i` corrupts the SDK's replay when
+    // the SDK loads later (it tries to dispatch a token string as a method name:
+    // "Cannot create property 'debug' on string 'phc_...'").
+    ph.init = function (token, config, name) { ph._i.push([token, config, name]); };
     for (var i = 0; i < SDK_STUB_METHODS.length; i++) {
       (function (m) {
-        ph[m] = function () {
-          ph._i.push([m].concat(Array.prototype.slice.call(arguments)));
-        };
+        ph[m] = function () { ph.push([m].concat(Array.prototype.slice.call(arguments))); };
       })(SDK_STUB_METHODS[i]);
     }
     ph.__SV = 1;
@@ -251,6 +261,8 @@
 
   function loadSdk(cb) {
     if (sdkLoaded) return cb();
+    if (sdkRequested) return;              // never request the SDK twice
+    sdkRequested = true;
     var s = document.createElement('script');
     s.type = 'text/javascript';
     s.async = true;
@@ -264,20 +276,18 @@
   }
 
   function sdkInitConfig() {
+    var granted = consentState === 'granted';
     return {
       api_host: CFG.apiHost,
       ui_host: CFG.uiHost,
-      // ---- collection is OFF until consent ----
-      opt_out_capturing_by_default: true,
+      // The SDK is only ever requested once consent exists, so it starts opted in
+      // in that case. The opt-out default remains as belt-and-braces for any path
+      // that reaches init without consent.
+      opt_out_capturing_by_default: !granted,
       opt_out_capturing_persistence_type: 'local_storage',
-      // no cookies/localStorage identity until consent
-      persistence: 'memory',
-      // Honoured at INIT time only (the SDK computes its storage key once), so the
-      // site-scoped identity key must be set here and not via set_config later.
+      persistence: granted ? 'localStorage' : 'memory',
       persistence_name: storageName(),
       cross_subdomain_cookie: false,
-      // Send on capture instead of on a batch flush: deterministic short path,
-      // no events sitting in a queue when consent is withdrawn.
       request_batching: false,
       disable_session_recording: true,
       capture_pageview: false,          // captured explicitly, exactly once
@@ -287,18 +297,17 @@
       capture_performance: false,
       capture_exceptions: false,
       autocapture: false,
-      advanced_disable_flags: true,     // no /flags round-trip; no flags/surveys/replay
+      advanced_disable_flags: true,
       disable_surveys: true,
       disable_toolbar: true,
       disable_external_dependency_loading: true,
       person_profiles: 'identified_only',
-      mask_all_text: true,              // belt-and-braces if anything auto-captures
+      mask_all_text: true,
       mask_all_element_attributes: true,
       property_denylist: CFG.forbiddenKeys,
       sanitize_properties: function (props, event) {
         if (event === '$pageview' || event === '$pageleave') {
-          // The SDK's own pageview is disabled; if it ever fires, make it safe.
-          props.$current_url = window.location.origin + safePath();
+          props.$current_url = window.location.origin + (safePath() || '/');
         }
         return props;
       },
@@ -306,10 +315,9 @@
         if (!payload || !payload.event) return payload;
         if (consentState !== 'granted') { log('before_send blocked (no consent)'); return null; }
         var name = payload.event;
-        if (name.charAt(0) !== '$' && !EVENT_SCHEMA[name]) {
-          warn('before_send dropped non-allowlisted event:', name);
-          return null;
-        }
+        if (!EVENT_SCHEMA[name]) { warn('before_send dropped non-allowlisted event:', name); return null; }
+        var sp = safePath();
+        if (sp === null) { warn('before_send dropped a private-route event:', name); return null; }
         var props = payload.properties || {};
         for (var k in props) {
           if (!Object.prototype.hasOwnProperty.call(props, k)) continue;
@@ -317,7 +325,9 @@
           var cv = cleanValue(props[k]);
           if (cv === null && props[k] !== null) delete props[k];
         }
-        if (props.$current_url) props.$current_url = window.location.origin + safePath();
+        if (props.$current_url) props.$current_url = window.location.origin + sp;
+        if (props.$pathname) props.$pathname = sp;
+        if (props.path) props.path = sp;
         if (props.$referrer) props.$referrer = referrerHost() ? ('https://' + referrerHost() + '/') : null;
         scrubUrls(props);
         payload.properties = props;
@@ -333,68 +343,123 @@
     try { window.posthog.set_config({ persistence: 'localStorage', persistence_name: storageName() }); }
     catch (e) { warn('set_config failed', e); }
     try { window.posthog.opt_in_capturing(); } catch (e) { warn('opt_in failed', e); }
-    log('consent granted; persistence ->', storageName());
   }
 
   function clearIdentityStorage() {
     lsDel(storageName());
     lsDel(storageName() + '_id');
-    // the SDK prefixes persistence_name with "ph_" when it creates its key
     lsDel('ph_' + storageName());
   }
 
   function applyConsentDenied() {
     if (!window.posthog) return;
-    try { window.posthog.opt_out_capturing(); } catch (e) { /* noop */ }
-    try { window.posthog.reset(); } catch (e) { /* noop */ }
+    try { window.posthog.opt_out_capturing(); } catch (e) {}
+    try { window.posthog.reset(); } catch (e) {}
     clearIdentityStorage();
     log('consent denied/withdrawn; identity cleared');
   }
 
+  function flushPending() {
+    var q = pending;
+    pending = [];
+    for (var i = 0; i < q.length; i++) {
+      try { window.posthog.capture(q[i][0], q[i][1]); } catch (e) { warn('flush failed', e); }
+    }
+  }
+
   function emit(name, props) {
     if (consentState !== 'granted') { log('emit suppressed (consent=' + consentState + ')'); return false; }
-    if (name.charAt(0) !== '$' && !EVENT_SCHEMA[name]) {
-      warn('event not in allowlist, refused:', name);
-      return false;
-    }
+    if (!EVENT_SCHEMA[name]) { warn('event not in allowlist, refused:', name); return false; }
+    if (safePath() === null) { warn('event refused on a private route:', name); return false; }
     var clean = cleanProps(name, props);
     log('capture', name, clean);
+    // Consent is granted but the bundle may still be in flight; buffering keeps
+    // the event instead of dropping it or throwing on a bare stub.
+    if (!sdkReady) {
+      if (pending.length < 50) pending.push([name, clean]);
+      return true;
+    }
     try { window.posthog.capture(name, clean); } catch (e) { warn('capture failed', e); return false; }
     return true;
   }
 
   function pageview() {
-    if (pageviewSent) { log('duplicate page_view suppressed'); return false; }
+    if (pageviewSent) { log('duplicate pageview suppressed'); return false; }
     if (consentState !== 'granted') return false;
+    var sp = safePath();
+    if (sp === null) { warn('private route: no pageview reported'); return false; }
     var props = campaignProps();
-    props.path = safePath();
+    props.path = sp;
+    props.$pathname = sp;
+    props.$current_url = window.location.origin + sp;
     var rh = referrerHost();
     if (rh) props.referrer_host = rh;
-    var ok = emit('page_view', props);
+    var ok = emit('$pageview', props);
     if (ok) pageviewSent = true;
     return ok;
   }
 
-  // Announcements bubble from `document`, so listeners on either document or
-  // window receive them (an event dispatched on `window` never reaches document).
+  // Announcements are BUFFERED as well as dispatched. The loader boots at parse
+  // time, before the page's own listeners exist, so a dispatch-only design loses
+  // events for anything that attaches later. The buffer is the catch-up path;
+  // listeners that are already attached (the real sites' they-run-after case)
+  // still get the synchronous dispatch.
+  var ANNOUNCE_LOG = [];
   function announce(name, detail) {
+    var rec = { name: name, detail: detail || {} };
+    ANNOUNCE_LOG.push(rec);
     try {
-      document.dispatchEvent(new window.CustomEvent('portfolioanalytics:' + name, { detail: detail || {}, bubbles: true }));
-    } catch (e) { /* older browsers */ }
+      document.dispatchEvent(new window.CustomEvent('portfolioanalytics:' + name, { detail: rec.detail, bubbles: true }));
+    } catch (e) {}
+  }
+
+  // Loads (once) and initialises the SDK, then applies whatever consent state is
+  // current. Only ever called when consent has been granted at least once.
+  //
+  // ORDER MATTERS (cost a debugging cycle): `posthog.init` must be called AFTER
+  // bundle load. Calling it earlier only queues into the stub's `_i`, and the
+  // loaded bundle replaces `window.posthog` wholesale, so the queued config is
+  // discarded and the SDK ends up on its own defaults (api_host us.i.posthog.com,
+  // autocapture on). Events captured in the gap are buffered by us and flushed
+  // after the real init.
+  function startSdk(then) {
+    installStub();
+    loadSdk(function () {
+      try {
+        if (!window.posthog || window.posthog.__loaded !== true) {
+          window.posthog.init(CFG.projectToken, sdkInitConfig());
+        }
+      } catch (e) { warn('init failed', e); }
+      initApplied = true;
+      booted = true;
+      if (consentState === 'granted') applyConsentGranted();
+      sdkReady = true;
+      flushPending();
+      if (then) then();
+    });
   }
 
   function setConsent(value, opts) {
     if (value !== 'granted' && value !== 'denied') throw new Error('consent must be granted|denied');
+    var was = consentState;
     consentState = value;
     if (value === 'granted') {
       lsSet(CFG.consentKey, 'granted');
-      applyConsentGranted();
-      pageview();
-    } else {
-      lsSet(CFG.consentKey, 'denied');
-      applyConsentDenied();
+      var finish = function () {
+        applyConsentGranted();
+        pageview();
+        announce('consent', { consent: value });
+      };
+      if (sdkLoaded || initApplied) finish();
+      else if (CFG.loadSdkOnlyOnConsent) {
+        // First request to a third party happens HERE, after the click, never before.
+        startSdk(finish);
+      } else finish();
+      return true;
     }
-    announce('consent', { consent: value });
+    lsSet(CFG.consentKey, 'denied');
+    if (window.posthog) applyConsentDenied();
+    announce('consent', { consent: value, was: was });
     return true;
   }
   function getConsent() { return consentState; }
@@ -415,9 +480,10 @@
 
   var API = {
     ready: function (fn) {
-      if (sdkLoaded && initApplied) { fn(API); return; }
+      if (booted) { fn(API); return; }
+      var tries = 0;
       var t = window.setInterval(function () {
-        if (sdkLoaded && initApplied) { window.clearInterval(t); fn(API); }
+        if (booted || ++tries > 250) { window.clearInterval(t); fn(API); }
       }, 20);
     },
     pageview: pageview,
@@ -426,7 +492,9 @@
     getConsent: getConsent,
     reset: reset,
     schemaVersion: DEFAULTS.schemaVersion,
-    events: EVENT_SCHEMA
+    events: EVENT_SCHEMA,
+    // Catch-up for code that attaches after boot: see announce().
+    announcements: ANNOUNCE_LOG,
   };
 
   // ------------------------------------------------------------------- bootstrap
@@ -438,6 +506,7 @@
     if (user) for (var u in user) if (Object.prototype.hasOwnProperty.call(user, u)) CFG[u] = user[u];
     CFG.storagePrefix = CFG.storagePrefix || 'pa_id_';
     CFG.allowedHosts = CFG.allowedHosts || [];
+    CFG.privatePathPrefixes = CFG.privatePathPrefixes || [];
 
     window.portfolioAnalytics = API;
 
@@ -466,31 +535,17 @@
       consentState = null;
     }
 
-    // 3) Load and initialise the SDK. Per PostHog's guidance the snippet is NOT
-    //    gated behind consent; capture is. Initial state is opted out.
-    installStub();
-    loadSdk(function () {
-      try {
-        // The stub queued init and the SDK replays it on load; only init here if
-        // it has not already been initialised (avoids a double-init warning).
-        // NOTE: no instance name is passed on purpose. posthog.init(token, cfg, 'name')
-        // creates a NAMED instance (posthog.name.capture), leaving window.posthog
-        // itself uninitialised - every call would queue forever and never send.
-        if (!window.posthog || window.posthog.__loaded !== true) {
-          window.posthog.init(CFG.projectToken, sdkInitConfig());
-        }
-        initApplied = true;
-      } catch (e) { warn('init failed', e); initApplied = true; }
-      if (consentState === 'granted') {
-        applyConsentGranted();
-        pageview();
-      } else if (consentState === 'denied') {
-        applyConsentDenied();
-      } else {
-        announce('consent-required', { site: CFG.site.key, consentKey: CFG.consentKey });
-      }
-      announce('ready', { site: CFG.site.key, consent: consentState });
-    });
+    // 3) A visitor who has not accepted causes no third-party request: the SDK
+    //    script is not inserted until consent exists.
+    if (consentState === 'granted') {
+      startSdk(function () { pageview(); announce('ready', { site: CFG.site.key, consent: consentState }); });
+      return;
+    }
+    if (consentState === 'denied') { booted = true; announce('ready', { site: CFG.site.key, consent: consentState }); return; }
+    installStub();                       // local stub only: queues nothing, fetches nothing
+    booted = true;                       // loader booted (the SDK is deliberately absent)
+    announce('consent-required', { site: CFG.site.key, consentKey: CFG.consentKey });
+    announce('ready', { site: CFG.site.key, consent: consentState });
   }
 
   boot();
