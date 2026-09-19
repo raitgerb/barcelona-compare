@@ -8,20 +8,23 @@ depend on an operator remembering a threshold — every API call in the data pip
 through :meth:`PlacesBudget.spend`, which refuses the call that would cross the line.
 
     SKU             SKU name (Google)              Free / month    After the free allowance
-    text_search     Text Search (Enterprise)       1,000           $35 / 1,000
-    nearby_search   Nearby Search (Enterprise)     1,000           $35 / 1,000
-    details         Place Details (Enterprise)     1,000           $20 / 1,000
+    text_search     Text Search (Pro)              5,000           $32 / 1,000
+    nearby_search   Nearby Search (Pro)            5,000           $32 / 1,000
+    details         Place Details (Enterprise)     1,000           $20 / 1,000   <-- binding
     photo           Place Details Photos           1,000           $7  / 1,000
 
 The SKU tier is set by the **highest-tier field in the field mask**, not by the endpoint
-name. Our search and details masks ask for ``rating``, ``userRatingCount``,
-``regularOpeningHours``, ``websiteUri`` and ``nationalPhoneNumber`` — every one of those
-is an *Enterprise* field, so all four SKUs sit at the 1,000/month allowance, not the
-5,000 that a Pro-tier mask would get. Assuming Pro here is how this project spent ~$6 in
-September 2026: the guard was built against a 5,000 details cap while the real cap was
-1,000. Before trusting any number in this table, re-derive it from the actual masks
-(https://developers.google.com/maps/documentation/places/web-service/data-fields) — if a
-mask drops its Enterprise fields, raise the matching cap here to 5,000 in the same commit.
+name. TEXT_SEARCH_MASK asks only for identity, name, address, type and location, so the
+highest field it contains is `displayName` — Pro — and searches get the 5,000 allowance.
+DETAILS_MASK asks for `rating`, `userRatingCount`, `regularOpeningHours`, `websiteUri` and
+`nationalPhoneNumber`, all Enterprise, so details gets 1,000. That asymmetry is deliberate:
+discovery is just looking, and the listing content comes from details.
+
+Getting this table wrong in either direction has a cost. In September 2026 it said 5,000
+for details while the mask was Enterprise, so the guard saw nothing wrong as 1,306 details
+calls went past the real 1,000 allowance and cost ~$6. Re-derive these numbers from the
+masks and https://developers.google.com/maps/documentation/places/web-service/data-fields
+before changing either one — and change the mask and the cap in the same commit.
 
 The ledger lives at ``data/usage-ledger.json`` (git-ignored, machine-local, like the rest
 of ``data/``) and is rewritten after *every* counted call, so a killed or timed-out run
@@ -54,28 +57,34 @@ LEDGER_PATH = PROJECT_DIR / "data" / "usage-ledger.json"
 # Free monthly allowance per SKU (Google Maps Platform, per-SKU free tier since Mar 2025).
 #
 # These values are a function of the FIELD MASKS in broaden.py, not of the endpoints:
-# a request bills at the highest tier any one of its fields belongs to, and our masks
-# ask for rating / userRatingCount / regularOpeningHours / websiteUri /
-# nationalPhoneNumber — all Enterprise. So every SKU here gets 1,000/month, not 5,000.
-# If you narrow a mask, raise the matching cap in the same change.
+# a request bills at the highest tier any one of its fields belongs to.
+#   * text_search / nearby_search use TEXT_SEARCH_MASK, whose highest field is
+#     displayName (Pro)  -> Pro allowance, 5,000/month.
+#   * details uses DETAILS_MASK, which asks for rating / userRatingCount /
+#     regularOpeningHours / websiteUri / nationalPhoneNumber (all Enterprise)
+#     -> Enterprise allowance, 1,000/month. This is the pipeline's binding constraint.
+#   * photo is its own SKU, 1,000/month.
+# If you change a mask, change the matching cap here in the same commit. Getting this
+# wrong in the other direction is how this project spent ~$6 in September 2026: the
+# caps said 5,000 where the masks said Enterprise.
 FREE_MONTHLY_CAPS: Dict[str, int] = {
-    "text_search": 1000,
-    "nearby_search": 1000,
+    "text_search": 5000,
+    "nearby_search": 5000,
     "details": 1000,
     "photo": 1000,
 }
 
 SKU_LABELS: Dict[str, str] = {
-    "text_search": "Text Search (Enterprise)",
-    "nearby_search": "Nearby Search (Enterprise)",
+    "text_search": "Text Search (Pro)",
+    "nearby_search": "Nearby Search (Pro)",
     "details": "Place Details (Enterprise)",
     "photo": "Place Details Photos",
 }
 
 # Cost per 1,000 calls once the free allowance is used up.
 PAID_RATES_PER_1000: Dict[str, float] = {
-    "text_search": 35.0,
-    "nearby_search": 35.0,
+    "text_search": 32.0,
+    "nearby_search": 32.0,
     "details": 20.0,
     "photo": 7.0,
 }

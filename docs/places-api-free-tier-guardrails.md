@@ -6,19 +6,26 @@ to the next month). Past the allowance the calls are charged:
 
 | Pipeline SKU | Google SKU | Free each calendar month | Price after the free allowance |
 | --- | --- | --- | --- |
-| `text_search` | Text Search (Enterprise) | 1,000 | $35 per 1,000 |
-| `nearby_search` | Nearby Search (Enterprise) | 1,000 | $35 per 1,000 |
+| `text_search` | Text Search (Pro) | 5,000 | $32 per 1,000 |
+| `nearby_search` | Nearby Search (Pro) | 5,000 | $32 per 1,000 |
 | `details` | Place Details (Enterprise) | 1,000 | $20 per 1,000 |
 | `photo` | Place Details Photos | 1,000 | $7 per 1,000 |
 
-**Why 1,000 and not 5,000.** The SKU a request bills under is decided by the *highest-tier
-field in its field mask*, not by the endpoint. Our masks ask for `rating`,
-`userRatingCount`, `regularOpeningHours`, `websiteUri` and `nationalPhoneNumber`, all of
-which are Enterprise fields — so every SKU here gets the Enterprise allowance of 1,000, not
-the Pro allowance of 5,000. Getting this wrong is not hypothetical: in September 2026 the
-guard was written against a 5,000 details cap while the real cap was 1,000, so a run made
-1,306 details calls and cost about $6. **If you narrow a mask, raise its cap in
-`scripts/places_budget.py` in the same commit; if you widen one, lower it.**
+**Why the tiers differ.** The SKU a request bills under is decided by the *highest-tier
+field in its field mask*, not by the endpoint. Discovery uses `TEXT_SEARCH_MASK`, which asks
+only for identity, name, address, type and location — the highest of those is `displayName`,
+which is Pro, so searches get the 5,000 allowance. Details uses `DETAILS_MASK`, which asks
+for `rating`, `userRatingCount`, `regularOpeningHours`, `websiteUri` and
+`nationalPhoneNumber` — all Enterprise — so details gets 1,000. That is deliberate:
+discovery is only looking, and the listing content comes from details.
+
+**Details is therefore the pipeline's binding constraint: 1,000 candidates a month.**
+
+This is not hypothetical. In September 2026 the details mask was Enterprise but the guard
+believed the cap was 5,000 (the Pro number), so a run made 1,306 details calls, crossed the
+real 1,000 allowance and cost about $6. **If you change a mask, change its cap in
+`scripts/places_budget.py` in the same commit — and re-derive both from
+<https://developers.google.com/maps/documentation/places/web-service/data-fields>.**
 
 Two independent guards keep us at $0. Neither replaces the other:
 
@@ -69,30 +76,30 @@ services**, and the key is under **APIs & Services → Credentials**).
 
    | Quota metric (row name) | Value to set |
    | --- | --- |
-   | `SearchTextRequest per day` | 33 |
-   | `SearchNearbyRequest per day` | 33 |
+   | `SearchTextRequest per day` | 166 |
+   | `SearchNearbyRequest per day` | 166 |
    | `GetPlaceRequest per day` | 33 |
    | `GetPhotoMediaRequest per day` | 33 |
 
 5. Confirm the four new limits appear in the table (the *Limit* column changes to your
    value). Lowering a limit applies immediately; Google never needs a redeploy.
 
-**Why 33.** Every SKU's free allowance is 1,000 per *month* (see the table at the top —
-Enterprise tier, because of our field masks), and Maps quotas are set per *day*. 1,000 / 30
-= 33. The cap therefore lands slightly under one month of free calls, which is the point: a
-runaway loop is stopped by Google, and the worst a bad day can do is use up a month of free
-calls — never more. What a daily cap cannot do by itself is stop a *second* big day in the
-same month from being charged: that is the monthly ledger's job (guard 1). Both together
-mean a bill requires Google's quota and our ledger to be wrong at the same time.
+**Why these numbers.** Maps quotas are set per *day* while the free allowances are per
+*month*, so each daily cap is the monthly allowance divided by 30: 5,000 / 30 = **166** for
+the two search SKUs (Pro) and 1,000 / 30 = **33** for details and photos (Enterprise and
+Photos). Each cap therefore lands slightly under a month of free calls, which is the point:
+a runaway loop is stopped by Google, and the worst a bad day can do is use up a month of
+free calls — never more. What a daily cap cannot do by itself is stop a *second* big day in
+the same month from being charged: that is the monthly ledger's job (guard 1). Both
+together mean a bill requires Google's quota and our ledger to be wrong at the same time.
 
-**The trade-off to be aware of.** At 33/day a full discovery pass is no longer a one-day
-job: last month's pass used 313 Text Searches and 286 Nearby Searches, so at 33/day each
-SKU would spread over ~10 days. That is a consequence of our masks sitting in the
-Enterprise tier — narrowing them to Pro fields (dropping `rating`, `userRatingCount`,
-`regularOpeningHours`, `websiteUri`, `nationalPhoneNumber` from the *search* calls, which
-do not need them) would raise Text/Nearby Search to a 5,000 allowance and 166/day. The
-details mask genuinely needs those fields for the listing content, so its 1,000/month is
-the pipeline's real ceiling either way.
+**What that costs in time.** At 166/day a full discovery pass (313 Text + 286 Nearby last
+month) fits inside two days. Details is the slow one: 1,000 candidates a month, 33 a day.
+
+**The real ceiling is details, not discovery.** Discovery has room to spare (5,000 each,
+166/day). The constraint is that every candidate costs one Enterprise details call against
+an allowance of 1,000 — so filter candidates before enriching, and expect a large pass to
+run across two months rather than one.
 
 ## Part B — budget alert (an email, not a stop)
 
@@ -115,6 +122,20 @@ You will now get an email the first time the project costs even half a euro, whi
 signal to run `python3 scripts/broaden.py status`, compare the ledger with the console usage
 graph (**Google Maps Platform → Metrics**, or **Quotas** for usage-vs-limit), and stop the
 pipeline.
+
+## Known hole — legacy scripts bypass the guard
+
+The guard is only as good as what goes through it. These still call the Places API
+*directly*, uncounted and uncapped:
+
+`collect.py` · `enrich.py` · `fix-missing-photos.py` · `fetch-editorial.py` ·
+`weekly-refresh.py`
+
+`collect.py` in particular still carries the old wide Enterprise search mask, so its calls
+would bill at Enterprise (1,000) rather than the Pro allowance this document assumes. The
+weekly refresh cron is paused, and the new pipeline (`broaden.py`) supersedes all of them.
+**Do not run these scripts.** The fix is to delete them rather than keep patching them — if
+one of them is ever needed again, route it through `places_budget.py` first.
 
 ## What the code guard does when the free tier is reached
 

@@ -6,22 +6,23 @@ Google Places API call against the free monthly allowance (``scripts/places_budg
 
     discover   Phase 1 — search the city (Text Search + Nearby Search) and persist the
                raw candidates to ``data/candidates.json``. No enrichment, no money.
-               Free SKUs: Text Search (1,000/mo), Nearby Search (1,000/mo).
+               Free SKUs: Text Search (5,000/mo), Nearby Search (5,000/mo) — Pro tier,
+               because TEXT_SEARCH_MASK asks only for identity/name/address/type/location.
     enrich     Phase 2 — Place Details for each candidate, then FILTER false positives
                (name heuristics + permanently closed) and write content for the survivors.
-               Free SKU: Place Details (1,000/mo) — the binding constraint on the whole
-               pipeline: 1,000 candidates a month, no more.
+               Free SKU: Place Details (1,000/mo) — Enterprise tier, and the binding
+               constraint on the whole pipeline: 1,000 candidates a month, no more.
     photos     Phase 3 — photo media for *kept* businesses only.
                Free SKU: Place Details Photos (1,000/mo), then $7 per 1,000. The other
                phase that can cost money after the free allowance, which is why it runs
                last and only for businesses that survived the filter.
     status     Report: candidates by state, usage ledger, projected cost of the next run.
 
-All four SKUs are at 1,000/month, not 5,000, because a request bills at the highest tier
-any of its fields belongs to and our masks ask for rating / userRatingCount /
-regularOpeningHours / websiteUri / nationalPhoneNumber — all Enterprise fields. Narrowing
-a mask to Pro fields raises that SKU's allowance to 5,000; do it in the same change as the
-cap in ``scripts/places_budget.py``.
+The allowances differ because a request bills at the highest tier any of its fields
+belongs to, and the two masks ask for different things: discovery is only looking, so it
+stays Pro (5,000), while the details that build a listing need rating / hours / phone /
+website and are therefore Enterprise (1,000). ``scripts/places_budget.py`` holds the same
+table — change a mask and its cap together, never one alone.
 
 Order matters for cost: enriching everything and then photographing everything means up to
 5 photo calls per candidate, including the ~60% that are false positives. Filter first.
@@ -184,10 +185,21 @@ RATE_LIMIT_NEARBY = 0.3
 RATE_LIMIT_DETAILS = 0.3
 RATE_LIMIT_PHOTO = 1.0
 
+# Discovery only needs to *find* a place and recognise it again: identity, name,
+# address, what it is, and where it is. Everything else (rating, review count, the
+# Google URL, phone, website, opening hours) arrives with Place Details at enrich
+# time, so asking for it here costs money for nothing.
+#
+# This is a billing decision, not a tidiness one. A request bills at the highest tier
+# any field in its mask belongs to: with rating / userRatingCount /
+# regularOpeningHours / websiteUri / nationalPhoneNumber on the list, every search
+# billed at Enterprise (1,000 free/month). Without them the highest field is
+# displayName, which is Pro — 5,000 free/month, and 166/day under the console quota
+# instead of 33. Keep TEXT_SEARCH_MASK Pro-tier and keep FREE_MONTHLY_CAPS["text_search"]
+# / ["nearby_search"] at 5,000 in the same commit: the two must always agree.
 TEXT_SEARCH_MASK = (
-    "places.id,places.displayName,places.formattedAddress,places.rating,"
-    "places.userRatingCount,places.googleMapsUri,places.nationalPhoneNumber,"
-    "places.websiteUri,places.regularOpeningHours,places.types,places.location"
+    "places.id,places.displayName,places.formattedAddress,"
+    "places.types,places.location"
 )
 DETAILS_MASK = (
     "id,displayName,formattedAddress,rating,userRatingCount,regularOpeningHours,"

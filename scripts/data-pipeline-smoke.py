@@ -51,7 +51,7 @@ def main() -> int:
     # ── free-tier guard ───────────────────────────────────────────────────
     print("\nbudget guard")
     check("free caps are the published per-SKU allowances",
-          FREE_MONTHLY_CAPS == {"text_search": 1000, "nearby_search": 1000,
+          FREE_MONTHLY_CAPS == {"text_search": 5000, "nearby_search": 5000,
                                 "details": 1000, "photo": 1000},
           str(FREE_MONTHLY_CAPS))
 

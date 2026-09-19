@@ -23,14 +23,14 @@ where it stopped.
 
 | Phase | Work | Google SKU | Free each month | Stops at |
 | --- | --- | --- | --- | --- |
-| `discover` | 313 Text Searches (49 barrios × 2 categories × 3 keyword variants + 19 city-wide variants) + 286 Nearby Searches (13 × 11 grid cells × 2 categories) | Text Search (Enterprise), Nearby Search (Enterprise) | 1,000 + 1,000 | the free cap, then resumes next month |
+| `discover` | 313 Text Searches (49 barrios × 2 categories × 3 keyword variants + 19 city-wide variants) + 286 Nearby Searches (13 × 11 grid cells × 2 categories) | Text Search (Pro), Nearby Search (Pro) | 5,000 + 5,000 | the free cap, then resumes next month |
 | `enrich` | one Place Details call per candidate, then the keep/reject filter, then the content page | Place Details (Enterprise) | 1,000 | idem |
 | `photos` | up to 5 photo downloads per **kept** business | Place Details Photos | 1,000, then $7/1,000 | idem |
 
-All three sit in the Enterprise tier because of our field masks (see
-`places-api-free-tier-guardrails.md`), so every allowance is 1,000/month — which makes
-`enrich` the binding constraint on the whole pipeline: at most 1,000 candidates a month,
-and the discovery pass above (599 calls) already needs two days at the 33/day quota.
+Discovery sits in the Pro tier because `TEXT_SEARCH_MASK` asks only for identity, name,
+address, type and location; details is Enterprise because a listing needs rating, hours,
+phone and website. `enrich` is therefore the binding constraint on the whole pipeline: at
+most 1,000 candidates a month, no matter how much search headroom there is.
 
 **Order matters for cost.** Photos are the only SKU that gets expensive, and about 60 % of
 discovered candidates are false positives (a hairdresser's "uñas" mention, a hotel with a
@@ -97,8 +97,8 @@ counts calls:
 * `--caps` can only *lower* a cap, never raise it above Google's free allowance.
 
 `Text Search` and `Nearby Search` share nothing with `Place Details` or photos: each SKU has
-its own allowance, so burning 1,000 Text Searches does not reduce the details or photo
-budget. A full discovery pass (599 calls) fits inside its two allowances, but a details
+its own allowance, so burning 5,000 Text Searches does not reduce the details or photo
+budget. A full discovery pass (599 calls) sits well inside its two allowances, but a details
 pass for ~875 candidates does **not** fit inside the 1,000 Place Details allowance — so
 filter candidates down before enriching, or accept that the pass spreads over two months.
 
