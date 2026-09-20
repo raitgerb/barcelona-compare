@@ -108,9 +108,11 @@
     '$current_url', '$pathname', '$host', '$referrer', '$referring_domain',
     '$browser', '$browser_version', '$os', '$os_version', '$device_type', '$device',
     '$screen_height', '$screen_width', '$viewport_height', '$viewport_width',
-    '$process_person_profile', '$is_identified',
-    '$session_entry_url', '$session_entry_pathname', '$session_entry_host',
-    '$session_entry_referrer'
+    '$process_person_profile', '$is_identified'
+    // NOTE: the $session_entry_* fields are deliberately NOT allowlisted. Nothing in this
+    // instrumentation reads them (no insight, dashboard or schema entry references them), and
+    // $session_entry_pathname could carry an identifier-shaped path segment that before_send
+    // does not rewrite. Not permitting what nothing needs is the smaller surface.
   ];
   var SDK_PROP_SET = {};
   for (var _spi = 0; _spi < SDK_PROPS.length; _spi++) SDK_PROP_SET[SDK_PROPS[_spi]] = true;
@@ -387,6 +389,18 @@
         if (props.$pathname) props.$pathname = sp;
         if (props.path) props.path = sp;
         if (props.$referrer) props.$referrer = referrerHost() ? ('https://' + referrerHost() + '/') : null;
+        // Structural guard for this whole class: a property whose NAME names a path must not
+        // leave the boundary unsanitised. $pathname/path are rewritten above; any other
+        // *pathname field is DROPPED rather than rewritten, because substituting the current
+        // path would misrepresent the session's entry point.
+        for (var pk in props) {
+          if (!Object.prototype.hasOwnProperty.call(props, pk)) continue;
+          if (pk === '$pathname' || pk === 'path') continue;
+          if (/pathname$/i.test(pk)) {
+            warn('before_send dropped an unsanitised path property:', pk);
+            delete props[pk];
+          }
+        }
         scrubUrls(props);
         payload.properties = props;
         return payload;
