@@ -249,6 +249,11 @@ const tagline: Record<Locale, string> = {
         a.setConsent(state);
         hide(banner);
         show(withdraw, 'inline-block');
+        // Reflect the choice IMMEDIATELY, synchronously: decide() writes this label too, but only
+        // after the SDK finishes loading, so without this line the control keeps saying "Change
+        // analytics choice" while already holding a grant - and one click would withdraw instead
+        // of reopening the choice. The label must never depend on a third-party response.
+        withdraw.textContent = state === 'granted' ? 'Turn analytics off' : 'Change analytics choice';
       }
 
       banner.addEventListener('click', function (e) {
@@ -263,6 +268,8 @@ const tagline: Record<Locale, string> = {
         if (a.getConsent() === 'granted') {
           // Withdrawal is immediate and one-click: opt out, reset identity, clear storage.
           a.setConsent('denied');
+          // Truthful at once, for the same reason as apply(): do not wait for the SDK's event.
+          withdraw.textContent = 'Change analytics choice';
         } else {
           // NEVER grant from here. A visitor who declined and then asks to change their
           // choice must be shown the choice again: only the explicitly labelled
