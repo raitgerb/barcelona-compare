@@ -342,13 +342,19 @@
   }
 
   function sdkInitConfig() {
-    var granted = consentState === 'granted';
+    // Derived from the PERSISTED decision, NEVER from this tab's in-memory consentState. Another
+    // tab may have withdrawn while this tab's SDK request was outstanding, and initialisation must
+    // not be the step that enables persistence or opts the SDK in for a grant that no longer
+    // exists. Reading the persisted value here is what makes "reconciled before init" true rather
+    // than aspirational: a stale in-memory grant can no longer configure persistence.
+    //
+    // Persistence stays localStorage for a genuine grant, deliberately: the loader uses the SDK's
+    // session id as the session boundary, so memory persistence would make every reload look like a
+    // new session (the suite's J2 covers exactly that).
+    var granted = lsGet(CFG.consentKey) === 'granted';
     return {
       api_host: CFG.apiHost,
       ui_host: CFG.uiHost,
-      // The SDK is only ever requested once consent exists, so it starts opted in
-      // in that case. The opt-out default remains as belt-and-braces for any path
-      // that reaches init without consent.
       opt_out_capturing_by_default: !granted,
       opt_out_capturing_persistence_type: 'local_storage',
       persistence: granted ? 'localStorage' : 'memory',
@@ -638,6 +644,18 @@
   // after the real init.
   function startSdk(then) {
     loadSdk(function () {
+      // ONE authoritative consent gate BEFORE INITIALISATION. Another tab on this origin may have
+      // persisted a denial while this tab's SDK request was outstanding and this tab has not yet
+      // processed its storage event. This must run before posthog.init() is constructed, because
+      // init's own configuration is consent-dependent: settling it afterwards would enable
+      // persistence first and reconcile second. The config is also fail-closed now, so this gate
+      // and the configuration agree instead of relying on their order.
+      if (consentState === 'granted' && lsGet(CFG.consentKey) === 'denied') {
+        consentState = 'denied';
+        pending = [];
+        stopEngagement();
+        log('persisted consent was revoked elsewhere; stale grant revoked before initialisation');
+      }
       try {
         if (!window.posthog || window.posthog.__loaded !== true) {
           window.posthog.init(CFG.projectToken, sdkInitConfig());
@@ -645,18 +663,6 @@
       } catch (e) { warn('init failed', e); }
       initApplied = true;
       booted = true;
-      // ONE authoritative consent gate BEFORE activation. Another tab on this origin may have
-      // persisted a denial while this tab's SDK request was outstanding and this tab has not yet
-      // processed its storage event, so reconcile against the PERSISTED decision HERE - before
-      // persistence is activated or buffered events are released. Checking only afterwards (as
-      // finish() does) is too late: flushPending() would already have handed events to capture(),
-      // and before_send() sees only in-memory consent.
-      if (consentState === 'granted' && lsGet(CFG.consentKey) === 'denied') {
-        consentState = 'denied';
-        pending = [];
-        stopEngagement();
-        log('persisted consent was revoked elsewhere; stale grant revoked before activation');
-      }
       if (consentState === 'granted') {
         applyConsentGranted();
         flushPending();
