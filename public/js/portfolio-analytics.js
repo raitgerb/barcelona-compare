@@ -645,9 +645,26 @@
       } catch (e) { warn('init failed', e); }
       initApplied = true;
       booted = true;
-      if (consentState === 'granted') applyConsentGranted();
-      sdkReady = true;
-      flushPending();
+      // ONE authoritative consent gate BEFORE activation. Another tab on this origin may have
+      // persisted a denial while this tab's SDK request was outstanding and this tab has not yet
+      // processed its storage event, so reconcile against the PERSISTED decision HERE - before
+      // persistence is activated or buffered events are released. Checking only afterwards (as
+      // finish() does) is too late: flushPending() would already have handed events to capture(),
+      // and before_send() sees only in-memory consent.
+      if (consentState === 'granted' && lsGet(CFG.consentKey) === 'denied') {
+        consentState = 'denied';
+        pending = [];
+        stopEngagement();
+        log('persisted consent was revoked elsewhere; stale grant revoked before activation');
+      }
+      if (consentState === 'granted') {
+        applyConsentGranted();
+        sdkReady = true;
+        flushPending();
+      } else if (window.posthog) {
+        // Consent does not hold: ensure the SDK cannot collect anything, whatever its defaults.
+        applyConsentDenied();
+      }
       if (then) then();
     });
   }
