@@ -98,6 +98,41 @@
     claim_submitted: ['category'],
   };
 
+  // Properties the SDK itself may attach for a request to remain routable and attributable.
+  // Enumerated explicitly: this is a FINAL-BOUNDARY allowlist, so nothing is permitted merely
+  // because its name starts with '$'. Identity / session / device / routing fields only -
+  // never content, input, element text, or search terms.
+  var SDK_PROPS = [
+    'token', 'distinct_id', '$session_id', '$window_id', '$device_id', '$pageview_id',
+    '$lib', '$lib_version', '$insert_id', '$time', '$sent_at', '$geoip_disable',
+    '$current_url', '$pathname', '$host', '$referrer', '$referring_domain',
+    '$browser', '$browser_version', '$os', '$os_version', '$device_type', '$device',
+    '$screen_height', '$screen_width', '$viewport_height', '$viewport_width',
+    '$process_person_profile', '$is_identified',
+    '$session_entry_url', '$session_entry_pathname', '$session_entry_host',
+    '$session_entry_referrer'
+  ];
+  var SDK_PROP_SET = {};
+  for (var _spi = 0; _spi < SDK_PROPS.length; _spi++) SDK_PROP_SET[SDK_PROPS[_spi]] = true;
+
+  // Fields the loader attaches to EVERY event (baseProps()): the site key/label and the schema
+  // version. They are mandatory, not optional, so the final-boundary allowlist must permit them.
+  var COMMON_PROPS = ['site', 'site_label', 'schema_version'];
+
+  // The properties this event may carry: SDK routing/identity fields, the loader's mandatory
+  // fields, and the event's own schema entries.
+  function allowedPropSetFor(name) {
+    var set = {};
+    var k;
+    for (k in SDK_PROP_SET) {
+      if (Object.prototype.hasOwnProperty.call(SDK_PROP_SET, k)) set[k] = true;
+    }
+    for (var c = 0; c < COMMON_PROPS.length; c++) set[COMMON_PROPS[c]] = true;
+    var schema = EVENT_SCHEMA[name] || [];
+    for (var i = 0; i < schema.length; i++) set[schema[i]] = true;
+    return set;
+  }
+
   var CFG = null;
   var consentState = null;
   var pageviewSent = false;
@@ -322,12 +357,21 @@
         var sp = safePath();
         if (sp === null) { warn('before_send dropped a private-route event:', name); return null; }
         var props = payload.properties || {};
+        // Final-boundary allowlist: anything not permitted for THIS event is removed here, so a
+        // property injected after cleanProps() - or by a direct SDK capture() - cannot reach the
+        // wire. This is what makes the banner's "never sees search terms / input" claim true of
+        // the transmitted payload and not merely of our own wrapper.
+        var allowed = allowedPropSetFor(name);
         for (var k in props) {
           if (!Object.prototype.hasOwnProperty.call(props, k)) continue;
-          // A reserved routing field must survive verbatim: the exact configured
-          // PUBLIC ingestion token is not an application secret, and deleting it
-          // is what makes an otherwise valid request unstorable.
-          if (k === 'token' && props[k] === CFG.projectToken) continue;
+          // A reserved routing field: the exact configured PUBLIC ingestion token survives
+          // verbatim (not an application secret; deleting it makes the request unstorable).
+          // Any other value is dropped. There is no blanket exemption for "$" keys.
+          if (k === 'token') {
+            if (props[k] !== CFG.projectToken) { warn('before_send dropped a non-matching routing token'); delete props[k]; }
+            continue;
+          }
+          if (!allowed[k]) { warn('before_send dropped non-allowlisted property:', k); delete props[k]; continue; }
           if (isForbiddenKey(k)) { delete props[k]; continue; }
           var cv = cleanValue(props[k]);
           if (cv === null && props[k] !== null) delete props[k];
