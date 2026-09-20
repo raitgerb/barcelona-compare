@@ -140,6 +140,10 @@
   var pageviewSent = false;
   var sdkRequested = false;
   var sdkLoaded = false;
+  var sdkLoading = false;    // a fetch of the SDK asset is in flight
+  var sdkFailed = false;     // the LAST fetch failed; readiness is not claimed
+  var sdkAttempts = 0;       // bounded retries (review finding: failure was reported as success)
+  var sdkMaxAttempts = 3;
   var initApplied = false;   // SDK initialised
   var booted = false;        // loader finished its boot sequence
   var sdkReady = false;      // real init has run; capture is safe
@@ -172,7 +176,25 @@
   // on a withdrawal clear the queue, stop engagement and opt the SDK out (without writing back,
   // since the value already came from storage - writing would risk a loop).
   window.addEventListener('storage', function (e) {
-    if (!e || e.key !== CFG.consentKey) return;
+    if (!e) return;
+    // Only THIS origin's localStorage drives the consent lifecycle: this handler must never act on
+    // a sessionStorage notification (or any other storage area), which is not the decision store.
+    if (e.storageArea && e.storageArea !== window.localStorage) return;
+    // localStorage.clear() reports key === null, so a clear used to be ignored entirely. The
+    // decision is GONE afterwards and absence is not permission, so a clear IS revocation: discard
+    // the queue, stop engagement and tear the SDK down. Without this branch, a tab that buffered an
+    // event before another tab cleared storage would flush it after a later regrant, because the
+    // final-boundary guard cannot tell which consent period the buffered event came from.
+    if (e.key === null) {
+      consentState = currentPersistedState();
+      pending = [];
+      stopEngagement();
+      if (window.posthog) applyConsentDenied();
+      announce('consent', { consent: consentState, was: 'granted', source: 'other-tab-clear' });
+      log('consent decision cleared in another tab ->', consentState);
+      return;
+    }
+    if (e.key !== CFG.consentKey) return;
     if (e.newValue === 'denied' || e.newValue === null) {
       consentState = e.newValue === null ? null : 'denied';
       pending = [];
@@ -351,16 +373,32 @@
   // are buffered by `pending` and flushed by flushPending().
 
   function loadSdk(cb) {
-    if (sdkLoaded) return cb();
-    if (sdkRequested) return;              // never request the SDK twice
+    // cb(true) = the asset is loaded and the SDK is usable; cb(false) = it could not be fetched
+    // (bounded retries exhausted). The distinction matters: the previous version called the SAME
+    // callback on error, so startSdk() went on to claim readiness and a later acceptance took the
+    // "already initialised" path instead of retrying - analytics stayed broken for that document
+    // while every lifecycle flag said it was fine (independent review, round 13).
+    if (sdkLoaded) return cb(true);
+    if (sdkLoading) return;                     // a fetch is already in flight
+    if (sdkFailed && sdkAttempts >= sdkMaxAttempts) return cb(false);
+    sdkLoading = true;
     sdkRequested = true;
+    sdkAttempts += 1;
     var s = document.createElement('script');
     s.type = 'text/javascript';
     s.async = true;
     s.crossOrigin = 'anonymous';
     s.src = CFG.assetsUrl;
-    s.onload = function () { sdkLoaded = true; cb(); };
-    s.onerror = function () { warn('PostHog SDK failed to load from', CFG.assetsUrl); cb(); };
+    s.onload = function () { sdkLoading = false; sdkLoaded = true; sdkFailed = false; cb(true); };
+    s.onerror = function () {
+      sdkLoading = false;
+      sdkFailed = true;
+      warn('PostHog SDK failed to load from ' + CFG.assetsUrl +
+           ' (attempt ' + sdkAttempts + ' of ' + sdkMaxAttempts + ')');
+      // Never the success callback: the caller must not claim readiness. A later explicit
+      // acceptance retries, until the attempt bound is reached.
+      cb(false);
+    };
     var first = document.getElementsByTagName('script')[0];
     if (first && first.parentNode) first.parentNode.insertBefore(s, first);
     else document.head.appendChild(s);
@@ -589,6 +627,12 @@
       return false;
     }
     if (!window.posthog || !window.posthog.set_config) { log('SDK not ready for grant'); return false; }
+    // A fresh consent period may report engagement again. stopEngagement() latches engagementSent
+    // so the withdrawn period can never report more, and nothing ever cleared it - so acceptance
+    // after a withdrawal (or after reset()) left engagement measurement permanently suppressed.
+    // Only cleared when there is NO accumulator, so an already-running period keeps its
+    // one-event-per-period property and no previously accumulated time is ever revived.
+    if (!engaged) engagementSent = false;
     try { window.posthog.set_config({ persistence: 'localStorage', persistence_name: storageName() }); }
     catch (e) { warn('set_config failed', e); }
     try { window.posthog.opt_in_capturing(); } catch (e) { warn('opt_in failed', e); }
@@ -644,7 +688,15 @@
   }
 
   function pageview() {
-    if (pageviewSent) { log('duplicate pageview suppressed'); return false; }
+    if (pageviewSent) {
+      log('duplicate pageview suppressed');
+      // The PAGEVIEW is once per page load, but ENGAGEMENT must still (re)start: after a withdrawal
+      // and a fresh acceptance in the same load the pageview is legitimately already sent, yet
+      // engagement measurement has to resume (round-13 finding 4). startEngagement() is a no-op
+      // while an accumulator exists, so this cannot create a second timer.
+      if (consentState === 'granted') startEngagement();
+      return false;
+    }
     if (consentState !== 'granted') return false;
     var sp = safePath();
     if (sp === null) { warn('private route: no pageview reported'); return false; }
@@ -689,7 +741,21 @@
   // autocapture on). Events captured in the gap are buffered by us and flushed
   // after the real init.
   function startSdk(then) {
-    loadSdk(function () {
+    loadSdk(function (loaded) {
+      if (loaded === false) {
+        // The asset could not be fetched (or the bounded retries are exhausted). Claim NOTHING:
+        // initApplied/sdkReady stay false so no caller can conclude the SDK is usable, buffered
+        // events stay buffered, and a later explicit acceptance retries the fetch. Reporting
+        // failure as readiness is exactly what the round-13 review found (findings 3).
+        sdkReady = false;
+        initApplied = false;
+        booted = true;
+        announce('sdk', { state: 'failed', attempts: sdkAttempts, max: sdkMaxAttempts });
+        log('SDK unavailable; capture stays disabled until a retry succeeds');
+        if (then) then(false);
+        return;
+      }
+      sdkFailed = false;
       // ONE authoritative consent gate BEFORE INITIALISATION. Another tab on this origin may have
       // persisted a denial while this tab's SDK request was outstanding and this tab has not yet
       // processed its storage event. This must run before posthog.init() is constructed, because
@@ -722,7 +788,8 @@
       // granted branch left a denied page with sdkReady false forever, so events emitted after a
       // LATER grant buffered and were never flushed. The positive controls caught exactly that.
       sdkReady = true;
-      if (then) then();
+      announce('sdk', { state: 'initialized', attempts: sdkAttempts });
+      if (then) then(true);
     });
   }
 
@@ -749,10 +816,15 @@
         pageview();
         announce('consent', { consent: value });
       };
-      if (sdkLoaded || initApplied) finish();
+      if (sdkLoaded && initApplied) finish();
       else if (CFG.loadSdkOnlyOnConsent) {
-        // First request to a third party happens HERE, after the click, never before.
-        startSdk(finish);
+        // First request to a third party happens HERE, after the click, never before. If the fetch
+        // fails, the decision is still announced - it IS stored - but the analytics path is NOT
+        // applied and no readiness is claimed; a later acceptance retries the fetch (bounded).
+        startSdk(function (ok) {
+          if (ok) finish();
+          else announce('consent', { consent: value, sdk: 'failed' });
+        });
       } else finish();
       return true;
     }
@@ -805,6 +877,16 @@
     reset: reset,
     schemaVersion: DEFAULTS.schemaVersion,
     events: EVENT_SCHEMA,
+    // Introspection for the regression suite and for on-page debugging: readiness is a claim, so it
+    // must be observable. `ready` true always implies `loaded` and `initApplied` true - that
+    // implication is what the SDK-failure regression asserts.
+    sdkState: function () {
+      return {
+        requested: sdkRequested, loading: sdkLoading, loaded: sdkLoaded, failed: sdkFailed,
+        attempts: sdkAttempts, maxAttempts: sdkMaxAttempts,
+        initApplied: initApplied, ready: sdkReady,
+      };
+    },
     // Catch-up for code that attaches after boot: see announce().
     announcements: ANNOUNCE_LOG,
   };
@@ -850,7 +932,12 @@
     // 3) A visitor who has not accepted causes no third-party request: the SDK
     //    script is not inserted until consent exists.
     if (consentState === 'granted') {
-      startSdk(function () { pageview(); announce('ready', { site: CFG.site.key, consent: consentState }); });
+      startSdk(function (ok) {
+        // Only report the pageview when the SDK is actually usable; 'ready' is still announced, with
+        // an honest sdk state, so a page whose SDK failed is not told the loader is collecting.
+        if (ok) pageview();
+        announce('ready', { site: CFG.site.key, consent: consentState, sdk: ok ? 'initialized' : 'failed' });
+      });
       return;
     }
     if (consentState === 'denied') { booted = true; announce('ready', { site: CFG.site.key, consent: consentState }); return; }
