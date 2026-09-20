@@ -564,6 +564,13 @@
     if (value === 'granted') {
       lsSet(CFG.consentKey, 'granted');
       var finish = function () {
+        if (consentState !== 'granted') {
+          // Consent was WITHDRAWN while the SDK was still loading. Applying the stale grant
+          // here would opt the SDK back in and enable persistence after a refusal, so opt it
+          // OUT instead, and announce nothing about a grant that no longer holds.
+          if (window.posthog) applyConsentDenied();
+          return;
+        }
         applyConsentGranted();
         pageview();
         announce('consent', { consent: value });
