@@ -175,7 +175,14 @@
     var p = String(path || '/');
     for (var i = 0; i < CFG.privatePathPrefixes.length; i++) {
       var pre = CFG.privatePathPrefixes[i];
-      if (pre && p.indexOf(pre) === 0) return true;
+      if (!pre) continue;
+      // Match the route ROOT exactly, or a slash-delimited DESCENDANT of it. The configured
+      // trailing slash names descendants; the bare root is private too, because routes are
+      // canonicalised without a trailing slash (e.g. '/library' serves the library root).
+      // A different route sharing leading characters ('/library-news') must NOT match, so this
+      // is a boundary test, never a bare prefix test.
+      var root = pre.charAt(pre.length - 1) === '/' ? pre.slice(0, -1) : pre;
+      if (p === root || p.indexOf(root + '/') === 0) return true;
     }
     return false;
   }
