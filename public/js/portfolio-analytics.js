@@ -166,6 +166,31 @@
   function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { window.localStorage.setItem(k, v); return true; } catch (e) { return false; } }
   function lsDel(k) { try { window.localStorage.removeItem(k); return true; } catch (e) { return false; } }
+
+  // Consent governs EVERY open tab, not only the one where the click happened. Another tab on this
+  // origin writes the decision to localStorage, which fires a 'storage' event here, so adopt it:
+  // on a withdrawal clear the queue, stop engagement and opt the SDK out (without writing back,
+  // since the value already came from storage - writing would risk a loop).
+  window.addEventListener('storage', function (e) {
+    if (!e || e.key !== CFG.consentKey) return;
+    if (e.newValue === 'denied' || e.newValue === null) {
+      consentState = e.newValue === null ? null : 'denied';
+      pending = [];
+      stopEngagement();
+      if (window.posthog) applyConsentDenied();
+      announce('consent', { consent: consentState, was: 'granted', source: 'other-tab' });
+      log('consent changed in another tab ->', consentState);
+      return;
+    }
+    if (e.newValue === 'granted') {
+      consentState = 'granted';
+      // Respect a grant made elsewhere if the SDK is already here. This tab does not initiate an
+      // SDK request on someone else's click; a later navigation handles that.
+      if (window.posthog) applyConsentGranted();
+      announce('consent', { consent: 'granted', source: 'other-tab' });
+      log('consent granted in another tab');
+    }
+  });
   function storageName() { return CFG.storagePrefix + CFG.site.key; }
 
   // Identifier-shaped segments (a uuid, a long hex digest, a long number) are
@@ -634,10 +659,16 @@
     if (value === 'granted') {
       lsSet(CFG.consentKey, 'granted');
       var finish = function () {
-        if (consentState !== 'granted') {
-          // Consent was WITHDRAWN while the SDK was still loading. Applying the stale grant
-          // here would opt the SDK back in and enable persistence after a refusal, so opt it
-          // OUT instead, and announce nothing about a grant that no longer holds.
+        // The PERSISTED decision is authoritative, because another tab on this origin may have
+        // withdrawn while this tab's SDK request was outstanding. Re-read it here rather than
+        // trusting this tab's in-memory state, and fail closed if it no longer grants.
+        var persisted = lsGet(CFG.consentKey);
+        if (consentState !== 'granted' || persisted === 'denied') {
+          // Consent was withdrawn - here or in another tab. Applying the stale grant would opt the
+          // SDK back in and enable persistence after a refusal, so opt it OUT instead, discard
+          // anything buffered, and announce nothing about a grant that no longer holds.
+          consentState = 'denied';
+          pending = [];
           if (window.posthog) applyConsentDenied();
           return;
         }
