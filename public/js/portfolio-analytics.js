@@ -530,6 +530,11 @@
   }
 
   function applyConsentDenied() {
+    // Discard anything buffered while the SDK was loading. Consent governs each event's lifetime,
+    // not merely the browser's consent state at send time: without this, withdrawing and then
+    // accepting again before the SDK has loaded would flush activity captured during the revoked
+    // period (see the held-SDK lifecycle regression, E21/E22).
+    pending = [];
     if (!window.posthog) return;
     try { window.posthog.opt_out_capturing(); } catch (e) {}
     try { window.posthog.reset(); } catch (e) {}
@@ -650,6 +655,11 @@
     lsSet(CFG.consentKey, 'denied');
     // Withdrawal stops collection immediately: no final engagement event is sent.
     stopEngagement();
+    // Discard buffered events UNCONDITIONALLY. This must not depend on whether the SDK has loaded:
+    // the denied branch below only opts the SDK out `if (window.posthog)`, so clearing the queue
+    // inside that helper left it intact whenever the SDK was still loading, and a later re-grant
+    // flushed activity captured during the revoked period. Consent governs each event's lifetime.
+    pending = [];
     if (window.posthog) applyConsentDenied();
     announce('consent', { consent: value, was: was });
     return true;
@@ -657,6 +667,9 @@
   function getConsent() { return consentState; }
 
   function reset() {
+    // Same reason as applyConsentDenied(): a reset must not leave the previous grant's buffered
+    // activity available to a later grant.
+    pending = [];
     consentState = null;
     lsDel(CFG.consentKey);
     lsDel(storageName());
