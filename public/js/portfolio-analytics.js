@@ -191,6 +191,19 @@
       log('consent granted in another tab');
     }
   });
+
+  // ONE consent-validity rule shared by initialisation, activation and sending: collection is
+  // permitted only while an AFFIRMATIVE persisted grant exists. 'denied' and a REMOVED key are both
+  // revocation (reset() deletes the key), and an absent decision is not permission.
+  function persistedGrantIsValid() {
+    return lsGet(CFG.consentKey) === 'granted';
+  }
+
+  // Fail closed to the decision storage actually holds, rather than trusting a stale in-memory one.
+  function currentPersistedState() {
+    var v = lsGet(CFG.consentKey);
+    return v === 'granted' ? 'granted' : (v === 'denied' ? 'denied' : null);
+  }
   function storageName() { return CFG.storagePrefix + CFG.site.key; }
 
   // Identifier-shaped segments (a uuid, a long hex digest, a long number) are
@@ -391,7 +404,12 @@
       },
       before_send: function (payload) {
         if (!payload || !payload.event) return payload;
-        if (consentState !== 'granted') { log('before_send blocked (no consent)'); return null; }
+        // Sending is governed by the same rule: an affirmative PERSISTED grant must exist, so a
+        // stale in-memory grant (or a decision removed in another tab) cannot transmit.
+        if (consentState !== 'granted' || !persistedGrantIsValid()) {
+          log('before_send blocked (no persisted consent)');
+          return null;
+        }
         var name = payload.event;
         if (!EVENT_SCHEMA[name]) { warn('before_send dropped non-allowlisted event:', name); return null; }
         var sp = safePath();
@@ -650,11 +668,12 @@
       // init's own configuration is consent-dependent: settling it afterwards would enable
       // persistence first and reconcile second. The config is also fail-closed now, so this gate
       // and the configuration agree instead of relying on their order.
-      if (consentState === 'granted' && lsGet(CFG.consentKey) === 'denied') {
-        consentState = 'denied';
+      if (consentState === 'granted' && !persistedGrantIsValid()) {
+        // 'denied' OR a removed key (reset() elsewhere): both revoke. Absence is not permission.
+        consentState = currentPersistedState();
         pending = [];
         stopEngagement();
-        log('persisted consent was revoked elsewhere; stale grant revoked before initialisation');
+        log('no persisted grant; any in-memory grant revoked before initialisation');
       }
       try {
         if (!window.posthog || window.posthog.__loaded !== true) {
@@ -663,7 +682,7 @@
       } catch (e) { warn('init failed', e); }
       initApplied = true;
       booted = true;
-      if (consentState === 'granted') {
+      if (consentState === 'granted' && persistedGrantIsValid()) {
         applyConsentGranted();
         flushPending();
       } else if (window.posthog) {
@@ -689,12 +708,11 @@
         // The PERSISTED decision is authoritative, because another tab on this origin may have
         // withdrawn while this tab's SDK request was outstanding. Re-read it here rather than
         // trusting this tab's in-memory state, and fail closed if it no longer grants.
-        var persisted = lsGet(CFG.consentKey);
-        if (consentState !== 'granted' || persisted === 'denied') {
+        if (consentState !== 'granted' || !persistedGrantIsValid()) {
           // Consent was withdrawn - here or in another tab. Applying the stale grant would opt the
           // SDK back in and enable persistence after a refusal, so opt it OUT instead, discard
           // anything buffered, and announce nothing about a grant that no longer holds.
-          consentState = 'denied';
+          consentState = currentPersistedState();
           pending = [];
           if (window.posthog) applyConsentDenied();
           return;
