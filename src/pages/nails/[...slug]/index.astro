@@ -9,7 +9,7 @@ import VerifiedBadge from '../../../components/VerifiedBadge.astro';
 import ClaimCta from '../../../components/ClaimCta.astro';
 import WhatsappCta from '../../../components/WhatsappCta.astro';
 import { getCollection } from 'astro:content';
-import { imagePath, photoOrder } from '../../../lib/images';
+import { imagePath, photoOrder, hasPhoto } from '../../../lib/images';
 import { verifiedBusinessFor } from '../../../lib/registry';
 
 export async function getStaticPaths() {
@@ -85,7 +85,7 @@ const schemaOrg = {
       <!-- Photo Gallery -->
       {[0, 1, 2, 3, 4].some(i => true) && (
         <!--owner:gallery-->
-        <div class="photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin">
+        <div class={`photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin${hasPhoto('nails', slug) ? '' : ' hidden'}`}>
           {[0, 1, 2, 3, 4].map(i => {
             const src = `${galleryPath}-${galleryOrder[i] ?? i}.jpg`;
             return (
@@ -248,5 +248,5 @@ const schemaOrg = {
     <DetailEnhancements category="nails" slug={slug} neighborhood={data.neighborhood} lang="es" />
     {data.googlePlaceId && <EventTracking placeId={data.googlePlaceId} />}
   </article>
-  <Lightbox imagePath={galleryPath} photoCount={5} altText={data.name} />
+  {hasPhoto('nails', slug) && <Lightbox imagePath={galleryPath} photoCount={5} altText={data.name} />}
 </BaseLayout>

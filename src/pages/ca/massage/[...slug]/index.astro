@@ -10,7 +10,7 @@ import VerifiedBadge from '../../../../components/VerifiedBadge.astro';
 import ClaimCta from '../../../../components/ClaimCta.astro';
 import WhatsappCta from '../../../../components/WhatsappCta.astro';
 import { getCollection } from 'astro:content';
-import { imagePath, photoOrder } from '../../../../lib/images';
+import { imagePath, photoOrder, hasPhoto } from '../../../../lib/images';
 import { verifiedBusinessFor } from '../../../../lib/registry';
 
 export async function getStaticPaths() {
@@ -80,7 +80,7 @@ const schemaOrg = {
     <div class="bg-white rounded-xl border border-stone-200 p-6 md:p-8">
       <!-- Photo Gallery -->
       <!--owner:gallery-->
-        <div class="photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory">
+        <div class={`photo-gallery flex gap-3 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory${hasPhoto('massage', slug) ? '' : ' hidden'}`}>
         {[0, 1, 2, 3, 4].map(i => (
           <img src={`${galleryPath}-${galleryOrder[i] ?? i}.jpg`} alt={`${data.name} - foto ${i + 1}`}
             class="snap-start min-w-[280px] h-48 object-cover rounded-xl border border-stone-100 bg-stone-100" width="280" height="192" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'" />
@@ -167,5 +167,5 @@ const schemaOrg = {
     <DetailEnhancements category="massage" slug={slug} neighborhood={data.neighborhood} lang="ca" />
     {data.googlePlaceId && <EventTracking placeId={data.googlePlaceId} />}
   </article>
-  <Lightbox imagePath={galleryPath} photoCount={5} altText={data.name} />
+  {hasPhoto('massage', slug) && <Lightbox imagePath={galleryPath} photoCount={5} altText={data.name} />}
 </BaseLayout>
