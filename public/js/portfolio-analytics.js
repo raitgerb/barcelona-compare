@@ -659,12 +659,16 @@
       }
       if (consentState === 'granted') {
         applyConsentGranted();
-        sdkReady = true;
         flushPending();
       } else if (window.posthog) {
         // Consent does not hold: ensure the SDK cannot collect anything, whatever its defaults.
         applyConsentDenied();
       }
+      // sdkReady means "the SDK is initialised, so calling capture is safe" - it is NOT a statement
+      // about consent, which opt_in/opt_out and before_send() enforce. Setting it only in the
+      // granted branch left a denied page with sdkReady false forever, so events emitted after a
+      // LATER grant buffered and were never flushed. The positive controls caught exactly that.
+      sdkReady = true;
       if (then) then();
     });
   }
