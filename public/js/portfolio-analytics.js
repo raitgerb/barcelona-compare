@@ -183,6 +183,18 @@
       return;
     }
     if (e.newValue === 'granted') {
+      // Reconcile against the CURRENT persisted decision: a storage event describes a change that
+      // happened, and a withdrawal may already be stored by the time this notification runs. Trust
+      // the stored value, not the notification's payload.
+      if (!persistedGrantIsValid()) {
+        consentState = currentPersistedState();
+        pending = [];
+        stopEngagement();
+        if (window.posthog) applyConsentDenied();
+        announce('consent', { consent: consentState, was: 'granted', source: 'other-tab-stale' });
+        log('stale grant notification ignored; storage no longer grants');
+        return;
+      }
       consentState = 'granted';
       // Respect a grant made elsewhere if the SDK is already here. This tab does not initiate an
       // SDK request on someone else's click; a later navigation handles that.
@@ -561,10 +573,26 @@
   // ------------------------------------------------------------------ behaviour
 
   function applyConsentGranted() {
-    if (!window.posthog || !window.posthog.set_config) { log('SDK not ready for grant'); return; }
+    // THE guarded activation boundary: every caller (explicit consent, SDK completion, storage
+    // notification, boot) funnels through here, so activation never depends on each caller
+    // remembering to check the persisted decision. A storage event reports a CHANGE, not the
+    // current value - so by the time a queued "granted" notification is processed, storage may
+    // already say otherwise. Refuse, and fail closed.
+    if (!persistedGrantIsValid()) {
+      consentState = currentPersistedState();
+      pending = [];
+      stopEngagement();
+      if (window.posthog && window.posthog.opt_out_capturing) {
+        try { window.posthog.opt_out_capturing(); } catch (e) {}
+      }
+      log('applyConsentGranted refused: no affirmative persisted grant');
+      return false;
+    }
+    if (!window.posthog || !window.posthog.set_config) { log('SDK not ready for grant'); return false; }
     try { window.posthog.set_config({ persistence: 'localStorage', persistence_name: storageName() }); }
     catch (e) { warn('set_config failed', e); }
     try { window.posthog.opt_in_capturing(); } catch (e) { warn('opt_in failed', e); }
+    return true;
   }
 
   function clearIdentityStorage() {
