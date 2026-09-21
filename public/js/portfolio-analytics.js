@@ -23,6 +23,17 @@
  *   - Events and properties are an explicit allowlist; before_send re-checks.
  *   - One browser identity per SITE, not per portfolio.
  *   - Consent is withdrawable and honoured immediately.
+ *   - INTEGRATION PRECONDITION: this loader governs ONLY the analytics SDK instance IT creates
+ *     itself. What it DETECTS is exactly one thing: a `window.posthog` that already exists (already
+ *     loaded) when this script boots. Such an instance cannot have its earlier requests prevented
+ *     retroactively, so it is reported (announcement 'portfolioanalytics:conflict', kind
+ *     'foreign-sdk-at-boot', and sdkState().foreignAtBoot) and is then left COMPLETELY UNTOUCHED:
+ *     never adopted, initialised, configured, opted in, captured through, read from or torn down -
+ *     including on denial, reset() and every cross-tab revocation path.
+ *     That detection covers a pre-existing `window.posthog` and NOTHING ELSE. Any other analytics
+ *     SDK on the page is not detected here and cannot be: it is an explicit page-level audit
+ *     condition on the release checklist (audit the host page for other analytics SDKs before every
+ *     deployment), never a property this loader can establish or claim.
  *
  * Usage (per site, before this script):
  *   <script>
@@ -144,9 +155,18 @@
   var sdkFailed = false;     // the LAST fetch failed; readiness is not claimed
   var sdkAttempts = 0;       // bounded retries (review finding: failure was reported as success)
   var sdkMaxAttempts = 3;
-  var initApplied = false;   // SDK initialised
+  var initApplied = false;   // SDK initialised (never inferred from a caught exception)
   var booted = false;        // loader finished its boot sequence
-  var sdkReady = false;      // real init has run; capture is safe
+  var sdkReady = false;      // an instance THIS loader initialised is usable; capture is safe
+  var sdkOwned = false;      // this loader performed the successful init() itself
+  var sdkRefused = false;    // a pre-existing, already-loaded instance was refused, never adopted
+  var sdkOwnedInstance = null; // the exact instance object THIS loader initialised. Every SDK method
+                             // this loader calls goes through it, never through whatever
+                             // window.posthog happens to hold at call time.
+  var foreignAtBoot = false; // a pre-existing window.posthog (already loaded) was on the page when
+                             // this loader booted: an INTEGRATION CONFLICT (see the header
+                             // precondition). Detection covers that one condition and nothing else.
+  var initFailed = false;    // the last init attempt failed (the asset arrived, the SDK was unusable)
   var pending = [];          // events captured between consent and init
   var noopMode = false;
   var engaged = null;        // active-engagement accumulator (null until consented)
@@ -189,7 +209,7 @@
       consentState = currentPersistedState();
       pending = [];
       stopEngagement();
-      if (window.posthog) applyConsentDenied();
+      applyConsentDenied();
       announce('consent', { consent: consentState, was: 'granted', source: 'other-tab-clear' });
       log('consent decision cleared in another tab ->', consentState);
       return;
@@ -199,7 +219,7 @@
       consentState = e.newValue === null ? null : 'denied';
       pending = [];
       stopEngagement();
-      if (window.posthog) applyConsentDenied();
+      applyConsentDenied();
       announce('consent', { consent: consentState, was: 'granted', source: 'other-tab' });
       log('consent changed in another tab ->', consentState);
       return;
@@ -212,15 +232,24 @@
         consentState = currentPersistedState();
         pending = [];
         stopEngagement();
-        if (window.posthog) applyConsentDenied();
+        applyConsentDenied();
         announce('consent', { consent: consentState, was: 'granted', source: 'other-tab-stale' });
         log('stale grant notification ignored; storage no longer grants');
         return;
       }
       consentState = 'granted';
-      // Respect a grant made elsewhere if the SDK is already here. This tab does not initiate an
-      // SDK request on someone else's click; a later navigation handles that.
-      if (window.posthog) applyConsentGranted();
+      // Respect a grant made elsewhere if the SDK is already here. This tab does not initiate an SDK
+      // request on someone else's click; a later navigation handles that. But a tab that DOES hold a
+      // usable instance must resume through the same consented activation path as a local acceptance:
+      // applyConsentGranted() cleared the engagement latch without ever restarting the accumulator, so
+      // the tab resumed event capture while engagement stayed stopped (round-14 finding 3). pageview()
+      // deduplicates the pageview this load already sent and refuses private routes, so this cannot
+      // add a second pageview or collect anything from a private route.
+      if (sdkOwned && sdkReady && sdkInstanceUsable()) {
+        activateConsented();
+      } else {
+        log('grant notification seen; this tab holds no usable SDK instance, nothing activated');
+      }
       announce('consent', { consent: 'granted', source: 'other-tab' });
       log('consent granted in another tab');
     }
@@ -373,11 +402,14 @@
   // are buffered by `pending` and flushed by flushPending().
 
   function loadSdk(cb) {
-    // cb(true) = the asset is loaded and the SDK is usable; cb(false) = it could not be fetched
-    // (bounded retries exhausted). The distinction matters: the previous version called the SAME
-    // callback on error, so startSdk() went on to claim readiness and a later acceptance took the
-    // "already initialised" path instead of retrying - analytics stayed broken for that document
-    // while every lifecycle flag said it was fine (independent review, round 13).
+    // cb(true) = the SDK ASSET arrived; cb(false) = it could not be fetched (bounded retries
+    // exhausted). "Asset arrived" is deliberately weaker than "SDK is usable": startSdk() establishes
+    // the latter by initialising and then re-reading the instance. The distinction matters: the
+    // previous version called the SAME callback on error, so startSdk() went on to claim readiness
+    // and a later acceptance took the "already initialised" path instead of retrying - analytics
+    // stayed broken for that document while every lifecycle flag said it was fine (independent
+    // review, round 13). Round 14 closed the same gap one layer down: a fetched asset that exposes
+    // no SDK, or an init() that throws, must be just as honest a failure as a failed fetch.
     if (sdkLoaded) return cb(true);
     if (sdkLoading) return;                     // a fetch is already in flight
     if (sdkFailed && sdkAttempts >= sdkMaxAttempts) return cb(false);
@@ -402,6 +434,36 @@
     var first = document.getElementsByTagName('script')[0];
     if (first && first.parentNode) first.parentNode.insertBefore(s, first);
     else document.head.appendChild(s);
+  }
+
+  // Read the INSTANCE, never the loader's intentions. A fetched asset proves only that bytes
+  // arrived: the bundle may never expose window.posthog, or may expose one whose init() throws.
+  // Both must read as "no SDK", so every readiness claim, activation, flush and success
+  // announcement asks these first (round-14 finding 1).
+  function sdkInstance() {
+    try { return (window.posthog && typeof window.posthog === 'object') ? window.posthog : null; }
+    catch (e) { return null; }
+  }
+  function sdkInstanceUsable(inst) {
+    var p = inst || sdkInstance();
+    if (!p || p.__loaded !== true) return false;
+    return typeof p.init === 'function' &&
+           typeof p.capture === 'function' &&
+           typeof p.set_config === 'function' &&
+           typeof p.opt_in_capturing === 'function';
+  }
+
+  // THE SDK-operations gate. EVERY SDK method this loader calls - opt_out_capturing(), reset(),
+  // set_config(), opt_in_capturing(), capture(), get_session_id() - goes through here, so the loader
+  // can never act on an instance it did not initialise. Two conditions, both required:
+  //   - sdkOwned: this loader performed the successful init() itself. A pre-existing instance is
+  //     refused at boot and a failed init clears it, so neither can ever reach this state.
+  //   - sdkOwnedInstance: the exact object that init() produced.
+  // window.posthog is deliberately NOT a fallback: a foreign script that replaces window.posthog
+  // after our init must not be touched, and a loader that never owned an instance must not touch a
+  // pre-existing one - not to opt it out, not to reset it, not to read its session id.
+  function ownedSdkInstance() {
+    return (sdkOwned && sdkOwnedInstance) ? sdkOwnedInstance : null;
   }
 
   function sdkInitConfig() {
@@ -522,14 +584,42 @@
     try { return document.hasFocus(); } catch (e) { return true; }
   }
 
-  function startEngagement() {
-    if (engaged) return;
-    engaged = { engagedMs: 0, visibleMs: 0, lastInteraction: Date.now(), lastTick: Date.now() };
+  // The handlers that observe engagement are created ONCE for the lifetime of the page and are
+  // attached while an accumulator exists, detached again in stopEngagement(). Round-15 finding 2:
+  // the previous shape created a fresh closure per startEngagement() and never removed anything, so
+  // every withdraw/regrant cycle permanently accumulated five document listeners plus
+  // visibilitychange and pagehide handlers - an unbounded lifecycle leak in a long-lived,
+  // privacy-sensitive page. Identity is what makes removal possible: the same function object and
+  // the same capture flag are used by add and remove.
+  function onEngagementInteraction() { if (engaged) engaged.lastInteraction = Date.now(); }
+  function onEngagementVisibility() { if (document.hidden) flushEngagement('hidden'); }
+  function onEngagementPagehide() { flushEngagement('unload'); }
+  var engagementListenersAttached = false;
 
-    function markInteraction() { if (engaged) engaged.lastInteraction = Date.now(); }
+  function attachEngagementListeners() {
+    if (engagementListenersAttached) return;
     for (var i = 0; i < ENGAGEMENT_INTERACTION.length; i++) {
-      document.addEventListener(ENGAGEMENT_INTERACTION[i], markInteraction, { passive: true, capture: true });
+      document.addEventListener(ENGAGEMENT_INTERACTION[i], onEngagementInteraction, { passive: true, capture: true });
     }
+    document.addEventListener('visibilitychange', onEngagementVisibility);
+    window.addEventListener('pagehide', onEngagementPagehide);
+    engagementListenersAttached = true;
+  }
+
+  function detachEngagementListeners() {
+    if (!engagementListenersAttached) return;
+    for (var i = 0; i < ENGAGEMENT_INTERACTION.length; i++) {
+      document.removeEventListener(ENGAGEMENT_INTERACTION[i], onEngagementInteraction, { capture: true });
+    }
+    document.removeEventListener('visibilitychange', onEngagementVisibility);
+    window.removeEventListener('pagehide', onEngagementPagehide);
+    engagementListenersAttached = false;
+  }
+
+  function startEngagement() {
+    if (engaged) { attachEngagementListeners(); return; }
+    engaged = { engagedMs: 0, visibleMs: 0, lastInteraction: Date.now(), lastTick: Date.now() };
+    attachEngagementListeners();
 
     engaged.timer = window.setInterval(function () {
       if (!engaged) return;
@@ -545,15 +635,20 @@
       }
     }, CFG.engagementTickMs);
 
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) flushEngagement('hidden');
-    });
-    window.addEventListener('pagehide', function () { flushEngagement('unload'); });
+    // Round-15 finding 2 residual: the two anonymous addEventListener calls that used to sit here were
+    // leftovers of the pre-fix shape. They added a NEW function identity per startEngagement() that
+    // detachEngagementListeners() could never remove - an unbounded per-cycle listener leak in a
+    // long-lived, privacy-sensitive page - while doing exactly what onEngagementVisibility /
+    // onEngagementPagehide already do via attachEngagementListeners(). Removed; the module-level
+    // handler set above is the single source of the lifecycle listeners.
   }
 
   function stopEngagement() {
-    if (!engaged) return;
-    if (engaged.timer) window.clearInterval(engaged.timer);
+    // Detach first and unconditionally: the listeners belong to the lifecycle, not to the
+    // accumulator, so a stop with no accumulator running must still not leave a previous period's
+    // handlers behind. Removal is idempotent (the attach flag is the guard).
+    detachEngagementListeners();
+    if (engaged && engaged.timer) window.clearInterval(engaged.timer);
     engaged = null;
     engagementSent = true;   // withdrawal: nothing further is reported
   }
@@ -595,7 +690,8 @@
     var idxKey = storageName() + '_sessions';
     var curKey = storageName() + '_session_cur';
     var sid = null;
-    try { sid = window.posthog.get_session_id(); } catch (e) {}
+    var sessInst = ownedSdkInstance();
+    try { if (sessInst) sid = sessInst.get_session_id(); } catch (e) {}
     if (!sid) return { index: 1, returning: false };
     var count = parseInt(lsGet(idxKey) || '0', 10);
     if (!isFinite(count) || count < 0) count = 0;
@@ -620,22 +716,56 @@
       consentState = currentPersistedState();
       pending = [];
       stopEngagement();
-      if (window.posthog && window.posthog.opt_out_capturing) {
-        try { window.posthog.opt_out_capturing(); } catch (e) {}
+      var staleInst = ownedSdkInstance();
+      if (staleInst && typeof staleInst.opt_out_capturing === 'function') {
+        try { staleInst.opt_out_capturing(); } catch (e) {}
       }
       log('applyConsentGranted refused: no affirmative persisted grant');
       return false;
     }
-    if (!window.posthog || !window.posthog.set_config) { log('SDK not ready for grant'); return false; }
+    // Activation requires an instance THIS loader initialised under its own configuration (its own
+    // token, consent config and before_send guarantee). Without this check a foreign or
+    // half-initialised instance could be opted in, so consent would be the step that switches on
+    // someone else's SDK (round-14 finding 2).
+    if (!sdkOwned || !sdkReady || !sdkInstanceUsable()) {
+      log('grant not applied: no usable, loader-initialised SDK instance');
+      return false;
+    }
+    // Readiness is not ownership. After our init, a foreign script may have replaced
+    // window.posthog; sdkInstanceUsable() above would then be describing SOMEONE ELSE'S instance and
+    // the calls below would configure and opt in an SDK this loader does not own. Every SDK call
+    // here goes through the tracked owned instance, or nothing happens at all.
+    var inst = ownedSdkInstance();
+    if (!inst) {
+      log('grant not applied: the usable instance is not the one this loader initialised');
+      return false;
+    }
     // A fresh consent period may report engagement again. stopEngagement() latches engagementSent
     // so the withdrawn period can never report more, and nothing ever cleared it - so acceptance
     // after a withdrawal (or after reset()) left engagement measurement permanently suppressed.
     // Only cleared when there is NO accumulator, so an already-running period keeps its
     // one-event-per-period property and no previously accumulated time is ever revived.
     if (!engaged) engagementSent = false;
-    try { window.posthog.set_config({ persistence: 'localStorage', persistence_name: storageName() }); }
+    try { inst.set_config({ persistence: 'localStorage', persistence_name: storageName() }); }
     catch (e) { warn('set_config failed', e); }
-    try { window.posthog.opt_in_capturing(); } catch (e) { warn('opt_in failed', e); }
+    try { inst.opt_in_capturing(); } catch (e) { warn('opt_in failed', e); }
+    return true;
+  }
+
+  // THE one consented activation path. Every grant that must start collection - an explicit
+  // acceptance, a completed SDK initialisation, a valid grant notification from another tab -
+  // funnels through here, so "which caller remembered to start engagement?" stops being a
+  // per-caller question (round-14 finding 3). pageview() is the only thing that starts a fresh
+  // accumulator, and it deduplicates the pageview this load already sent and refuses private
+  // routes, so activating through here cannot add a second pageview or collect on a private route.
+  function activateConsented() {
+    if (!sdkOwned || !sdkReady || !sdkInstanceUsable()) {
+      log('consented activation refused: no usable, loader-initialised SDK instance');
+      return false;
+    }
+    if (!applyConsentGranted()) return false;
+    flushPending();
+    pageview();
     return true;
   }
 
@@ -651,24 +781,58 @@
   }
 
   function applyConsentDenied() {
+    // OWN CLEANUP IS UNCONDITIONAL. It does not depend on an SDK existing, on window.posthog being
+    // ours, or on consent ever having been granted: the queue this loader buffered, the listeners
+    // this loader attached and the storage this loader namespaced are ALWAYS cleared here. (The
+    // previous version returned early when no window.posthog existed, while a FOREIGN window.posthog
+    // made this same path tear down someone else's SDK - the finding this repair closes.)
+    //
     // Discard anything buffered while the SDK was loading. Consent governs each event's lifetime,
     // not merely the browser's consent state at send time: without this, withdrawing and then
     // accepting again before the SDK has loaded would flush activity captured during the revoked
     // period (see the held-SDK lifecycle regression, E21/E22).
     pending = [];
-    if (!window.posthog) return;
-    try { window.posthog.opt_out_capturing(); } catch (e) {}
-    try { window.posthog.reset(); } catch (e) {}
+    // The engagement listeners belong to the withdrawn consent period, not to a live accumulator, so
+    // they are detached here (idempotently) rather than left to each caller. This is what makes "our
+    // cleanup happened" true even when there is no SDK at all.
+    stopEngagement();
+    // SDK operations ONLY on the instance this loader initialised. sdkOwned is false for a
+    // pre-existing instance and for a refused or failed init, and ownedSdkInstance() is null then,
+    // so a foreign window.posthog is never opted out, reset, configured or captured through - on
+    // denial, on reset(), on a cross-tab withdrawal, on a storage clear, or on a stale-grant refusal.
+    // If window.posthog has been REPLACED by a foreign instance after our init, the tracked owned
+    // instance is still the one acted on (and the replacement is never touched).
+    var inst = ownedSdkInstance();
+    if (inst) {
+      try { inst.opt_out_capturing(); } catch (e) {}
+      try { inst.reset(); } catch (e) {}
+    }
+    // Namespaced to THIS loader and this site only: never another integration's storage.
     clearIdentityStorage();
-    log('consent denied/withdrawn; identity cleared');
+    log('consent denied/withdrawn; own queue/listeners/identity cleaned' +
+        (inst ? ' and the loader-owned SDK opted out' : ' (no loader-owned SDK to opt out)'));
   }
 
+  // Bounded release of the buffer. Two rules, both from round-14 finding 1:
+  //   - it is a NO-OP unless a usable, loader-owned instance exists, so the queue survives a failed
+  //     fetch or a failed init instead of being emptied into nothing;
+  //   - an item whose capture throws STAYS queued, because "we attempted a capture" is not
+  //     "the event was delivered".
   function flushPending() {
+    var inst = ownedSdkInstance();
+    if (!inst || !sdkReady || !sdkInstanceUsable()) {
+      log('flushPending skipped: no usable SDK instance owned by this loader; ' + pending.length + ' event(s) retained');
+      return false;
+    }
     var q = pending;
     pending = [];
+    var kept = [];
     for (var i = 0; i < q.length; i++) {
-      try { window.posthog.capture(q[i][0], q[i][1]); } catch (e) { warn('flush failed', e); }
+      try { inst.capture(q[i][0], q[i][1]); }
+      catch (e) { warn('flush failed; event retained for the next attempt', e); kept.push(q[i]); }
     }
+    pending = kept;
+    return kept.length === 0;
   }
 
   function emit(name, props) {
@@ -679,27 +843,33 @@
     log('capture', name, clean);
     // Consent is granted but the bundle may still be in flight; buffering keeps
     // the event instead of dropping it or throwing on a bare stub.
-    if (!sdkReady) {
+    var inst = ownedSdkInstance();
+    if (!sdkReady || !inst) {
+      // No usable instance, or the usable instance is not this loader's (a refused pre-existing
+      // instance, a failed init, or a foreign replacement of window.posthog): buffer instead of
+      // calling capture on an SDK this loader does not own.
       if (pending.length < 50) pending.push([name, clean]);
       return true;
     }
-    try { window.posthog.capture(name, clean); } catch (e) { warn('capture failed', e); return false; }
+    try { inst.capture(name, clean); } catch (e) { warn('capture failed', e); return false; }
     return true;
   }
 
   function pageview() {
+    // Private-route suppression and consent are checked FIRST, so neither a duplicate pageview nor a
+    // cross-tab regrant can start collection on a route that is never reported.
+    var sp = safePath();
+    if (sp === null) { warn('private route: no pageview reported'); return false; }
+    if (consentState !== 'granted') return false;
     if (pageviewSent) {
       log('duplicate pageview suppressed');
       // The PAGEVIEW is once per page load, but ENGAGEMENT must still (re)start: after a withdrawal
       // and a fresh acceptance in the same load the pageview is legitimately already sent, yet
       // engagement measurement has to resume (round-13 finding 4). startEngagement() is a no-op
       // while an accumulator exists, so this cannot create a second timer.
-      if (consentState === 'granted') startEngagement();
+      startEngagement();
       return false;
     }
-    if (consentState !== 'granted') return false;
-    var sp = safePath();
-    if (sp === null) { warn('private route: no pageview reported'); return false; }
     var props = campaignProps();
     props.path = sp;
     props.$pathname = sp;
@@ -741,6 +911,19 @@
   // autocapture on). Events captured in the gap are buffered by us and flushed
   // after the real init.
   function startSdk(then) {
+    // REFUSE BEFORE THE FETCH. A pre-existing, already-loaded instance is not this loader's, and
+    // fetching our own bundle would REPLACE it - the conflict would vanish and the page would look
+    // like ours. So no asset request, no init, no activation: refuse here, not in the callback.
+    if (!sdkOwned && sdkInstance() && sdkInstance().__loaded === true) {
+      sdkRefused = true;
+      sdkReady = false;
+      initApplied = false;
+      booted = true;
+      warn('refusing a pre-existing window.posthog instance; capture stays disabled');
+      announce('sdk', { state: 'refused', reason: 'pre-existing SDK instance is not this loader\'s', attempts: sdkAttempts });
+      if (then) then(false);
+      return;
+    }
     loadSdk(function (loaded) {
       if (loaded === false) {
         // The asset could not be fetched (or the bounded retries are exhausted). Claim NOTHING:
@@ -769,25 +952,74 @@
         stopEngagement();
         log('no persisted grant; any in-memory grant revoked before initialisation');
       }
+      // A PRE-EXISTING, already-loaded instance belongs to someone else: another project's token,
+      // another consent configuration and none of this loader's before_send() guarantee. Adopting it
+      // and then calling opt_in_capturing() (round-14 finding 2) would transmit under a configuration
+      // this loader never verified, so it is REFUSED: nothing is initialised on it, activated,
+      // flushed or opted in, and readiness is never claimed.
+      if (!sdkOwned && sdkInstance() && sdkInstance().__loaded === true) {
+        sdkRefused = true;
+        sdkReady = false;
+        initApplied = false;
+        booted = true;
+        warn('refusing a pre-existing window.posthog instance; capture stays disabled');
+        announce('sdk', { state: 'refused', reason: 'pre-existing SDK instance is not this loader\'s', attempts: sdkAttempts });
+        if (then) then(false);
+        return;
+      }
+      // INITIALISATION SUCCESS is the prerequisite for everything downstream. A fetched asset proves
+      // only that bytes arrived, so a bundle that never exposes window.posthog, an init() that
+      // throws, and an init() that returns without a usable instance are all failures here - never a
+      // reason to continue into activation, queue release and an "initialized" announcement
+      // (round-14 finding 1).
+      var initOk = false;
+      // What window.posthog was BEFORE this init() call: null means the instance below came from OUR
+      // asset fetch, anything else means a pre-existing instance (another integration's stub) that
+      // must not be initialised or torn down by this loader.
+      var preInitInstance = sdkInstance();
       try {
-        if (!window.posthog || window.posthog.__loaded !== true) {
-          window.posthog.init(CFG.projectToken, sdkInitConfig());
-        }
-      } catch (e) { warn('init failed', e); }
+        var fresh = sdkInstance();
+        if (!fresh || typeof fresh.init !== 'function') throw new Error('asset loaded but exposed no usable SDK');
+        fresh.init(CFG.projectToken, sdkInitConfig());
+        initOk = sdkInstanceUsable(fresh);
+        if (!initOk) throw new Error('init() returned without a usable SDK instance');
+      } catch (e) { warn('init failed', e); initOk = false; }
+      if (!initOk) {
+        sdkOwned = false;
+        initApplied = false;
+        initFailed = true;
+        sdkReady = false;
+        booted = true;
+        // Force the ASSET to be fetched again on the next attempt: re-running init() against the same
+        // husk would fail identically, because the bundle never produced a usable instance. Bounded by
+        // sdkMaxAttempts in loadSdk(), so recovery cannot become an unbounded retry loop.
+        sdkLoaded = false;
+        sdkFailed = true;
+        // Cleanup target is the CAPTURED bundle object (the one we tried to init), never a re-read of
+        // the mutable global: a failed init can hand window.posthog to someone else's instance, and
+        // that instance must not be touched. Claims no ownership (sdkOwned/sdkOwnedInstance stay off).
+        try { if (fresh && typeof fresh.opt_out_capturing === 'function') fresh.opt_out_capturing(); } catch (e3) {}
+        announce('sdk', { state: 'failed', stage: 'init', attempts: sdkAttempts, max: sdkMaxAttempts });
+        log('SDK init failed; capture stays disabled and the buffer is retained');
+        if (then) then(false);
+        return;
+      }
+      sdkOwned = true;
+      sdkOwnedInstance = fresh;   // every later SDK call goes through this exact object
       initApplied = true;
+      initFailed = false;
       booted = true;
+      // sdkReady means "an instance THIS loader initialised is usable, so calling capture is safe". It
+      // is NOT a statement about consent, which opt_in/opt_out and before_send() enforce - so it is
+      // set on the denied path too, and events emitted after a LATER grant are buffered rather than
+      // thrown at a bare stub. It is only ever set after a verified successful initialisation.
+      sdkReady = true;
       if (consentState === 'granted' && persistedGrantIsValid()) {
-        applyConsentGranted();
-        flushPending();
-      } else if (window.posthog) {
+        activateConsented();
+      } else {
         // Consent does not hold: ensure the SDK cannot collect anything, whatever its defaults.
         applyConsentDenied();
       }
-      // sdkReady means "the SDK is initialised, so calling capture is safe" - it is NOT a statement
-      // about consent, which opt_in/opt_out and before_send() enforce. Setting it only in the
-      // granted branch left a denied page with sdkReady false forever, so events emitted after a
-      // LATER grant buffered and were never flushed. The positive controls caught exactly that.
-      sdkReady = true;
       announce('sdk', { state: 'initialized', attempts: sdkAttempts });
       if (then) then(true);
     });
@@ -809,11 +1041,10 @@
           // anything buffered, and announce nothing about a grant that no longer holds.
           consentState = currentPersistedState();
           pending = [];
-          if (window.posthog) applyConsentDenied();
+          applyConsentDenied();
           return;
         }
-        applyConsentGranted();
-        pageview();
+        activateConsented();
         announce('consent', { consent: value });
       };
       if (sdkLoaded && initApplied) finish();
@@ -836,7 +1067,7 @@
     // inside that helper left it intact whenever the SDK was still loading, and a later re-grant
     // flushed activity captured during the revoked period. Consent governs each event's lifetime.
     pending = [];
-    if (window.posthog) applyConsentDenied();
+    applyConsentDenied();
     announce('consent', { consent: value, was: was });
     return true;
   }
@@ -848,15 +1079,18 @@
     pending = [];
     consentState = null;
     lsDel(CFG.consentKey);
-    lsDel(storageName());
-    lsDel(storageName() + '_id');
-    lsDel(storageName() + '_sessions');
-    lsDel(storageName() + '_session_cur');
+    // ONE definition of "this loader's identity storage" (it also deletes the SDK's own
+    // ph_<storageName> persistence key). Listing keys by hand here missed that key.
+    clearIdentityStorage();
     pageviewSent = false;
     stopEngagement();
-    if (window.posthog) {
-      try { window.posthog.opt_out_capturing(); } catch (e) {}
-      try { window.posthog.reset(); } catch (e) {}
+    // The identity deletes above are this loader's own and stay unconditional. The SDK calls are
+    // gated: only the instance this loader initialised is ever opted out or reset, so a foreign or
+    // pre-existing window.posthog is left completely untouched by reset().
+    var inst = ownedSdkInstance();
+    if (inst) {
+      try { inst.opt_out_capturing(); } catch (e) {}
+      try { inst.reset(); } catch (e) {}
     }
     announce('reset', {});
     return true;
@@ -878,13 +1112,16 @@
     schemaVersion: DEFAULTS.schemaVersion,
     events: EVENT_SCHEMA,
     // Introspection for the regression suite and for on-page debugging: readiness is a claim, so it
-    // must be observable. `ready` true always implies `loaded` and `initApplied` true - that
-    // implication is what the SDK-failure regression asserts.
+    // must be observable. `ready` true always implies `loaded`, `initApplied`, `owned` and `usable` -
+    // that implication is what the SDK-failure and initialisation-failure regressions assert.
     sdkState: function () {
       return {
         requested: sdkRequested, loading: sdkLoading, loaded: sdkLoaded, failed: sdkFailed,
         attempts: sdkAttempts, maxAttempts: sdkMaxAttempts,
         initApplied: initApplied, ready: sdkReady,
+        owned: sdkOwned, refused: sdkRefused, initFailed: initFailed,
+        foreignAtBoot: foreignAtBoot,
+        usable: sdkInstanceUsable(),
       };
     },
     // Catch-up for code that attaches after boot: see announce().
@@ -917,6 +1154,28 @@
       return;
     }
     API.enabled = true;
+
+    // 1b) INTEGRATION PRECONDITION (round-15 finding 1). "No analytics before consent" is a claim
+    //     this loader can make only about the SDK instance IT creates: a `window.posthog` that another
+    //     integration put on the page BEFORE this loader booted may already have requested assets,
+    //     created identity or transmitted data, and nothing done here can prevent that retroactively.
+    //     So the presence of one is a CONFLICT to surface, not a condition to paper over: report it at
+    //     boot and never adopt, init, configure, opt in, capture through, read from or tear it down -
+    //     including on denial, reset() and every cross-tab revocation path.
+    //     WHAT IS DETECTED: a pre-existing `window.posthog` (already loaded), and nothing else. Other
+    //     analytics SDKs are not detected by this check and cannot be; they are a page-level audit
+    //     condition on the release checklist, not a property this loader can establish. This
+    //     announcement (and sdkState().foreignAtBoot) is how a page detects that the precondition was
+    //     broken by a second posthog instance.
+    if (window.posthog && window.posthog.__loaded === true) {
+      foreignAtBoot = true;
+      warn('CONFLICT: a pre-existing window.posthog instance was present before this loader booted; its earlier requests cannot be prevented by this loader, and it is never touched by it');
+      announce('conflict', {
+        kind: 'foreign-sdk-at-boot',
+        site: CFG.site.key,
+        reason: 'a pre-existing window.posthog instance existed before this loader booted; prior requests cannot be retroactively prevented',
+      });
+    }
 
     // 2) Existing decision, or a privacy signal, decides before anything loads.
     var stored = lsGet(CFG.consentKey);
