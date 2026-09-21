@@ -138,11 +138,14 @@ listing base-content assertions.
 
 ## 5. Release-scoped declaration / exemption record (PREPARED text, not yet applied)
 
-`docs/project-standard.json` does **not exist on origin/main**, so this slice asserts
-no declaration state at all: nothing is marked VERIFIED and nothing is marked EXEMPT
-in a declaration file. The record below is the text to fold into the declaration when
-the declaration itself is created/updated in the ownership release slice. It records
-the owner's scoped deferral honestly.
+`docs/project-standard.json` does **not exist on origin/main** (and therefore not in
+this workspace), so this slice asserts no declaration state at all: nothing is marked
+VERIFIED and nothing is marked EXEMPT. Note for the reviewer: an untracked
+`docs/project-standard.json` does exist in the canonical checkout's dirty ownership
+work (`/Users/agrippa/Projects/barcelona-compare`, branch `analytics-fix16`); it was
+not read for authority, not modified and not copied here. The record below is the text
+to fold into the declaration when the declaration itself is created/updated in the
+ownership release slice. It records the owner's scoped deferral honestly.
 
 - Owner decision (Rutger, 2026-09-21, clarify): unrelated pre-existing baseline gaps
   are deferred for the ownership/UI release; the deferral does not extend to
