@@ -15,13 +15,28 @@
 
 import { getPublishedOverrideBySlug } from './_lib/profile';
 import { galleryBaseFor, hasOwnerMarkers, injectOwnerContent, matchDetailPath } from './_lib/owner-content';
+import { MAINTENANCE_GUARD_ACTIVE, isGuardedRequest, maintenanceGuardResponse } from './_lib/maintenance-guard';
 
 export const onRequest: PagesFunction = async (context) => {
   const { request, env, next } = context;
 
+  const url = new URL(request.url);
+
+  // FIRST-STAGE MAINTENANCE GUARD — executes before any route handler.
+  // Ownership/claim/publication endpoints are refused outright (no handler code,
+  // no D1 write, no session minted). See docs/ownership-guard-preparation.md.
+  if (isGuardedRequest(url.pathname, request.method)) {
+    return maintenanceGuardResponse();
+  }
+
+  // While the guard is active the edge must not inject owner-published content:
+  // pre-migration overrides are exactly the state the guard exists to stop
+  // serving. Listing detail pages keep their build-time base content.
+  if (MAINTENANCE_GUARD_ACTIVE) return next();
+
   if (request.method !== 'GET') return next();
 
-  const pathname = new URL(request.url).pathname;
+  const pathname = url.pathname;
   const detail = matchDetailPath(pathname);
   if (!detail) return next();
 
