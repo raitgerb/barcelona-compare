@@ -3,8 +3,12 @@
 # End-to-end smoke test for the business registry (B2B Phase 0).
 #
 # Proves the full read/write path through the real Pages Functions runtime:
-# migrations -> HTTP PUT (claim / conflict / verify / setTier / revoke) -> HTTP GET,
-# then checks the audit trail that landed in registry_events.
+# migrations -> HTTP PUT (claim / conflict / ownership-provenance verify / setTier /
+# revoke) -> HTTP GET, then checks the audit trail that landed in registry_events.
+#
+# `verify` is the ownership approval (migration 0006) and requires `approvedBy` +
+# `evidence`; the bare form is asserted to fail so a mailbox can never be mistaken
+# for ownership again.
 #
 # Usage:
 #   bash scripts/registry-smoke.sh                       # local: migrate, serve, test, clean up
@@ -30,6 +34,13 @@ MODE="local"
 BASE_URL=""
 ADMIN_TOKEN="${ADMIN_TOKEN:-local-dev-token}"
 LOG_FILE="$(mktemp -t registry-smoke-log)"
+
+# Isolated local D1 — see the same block in scripts/claim-smoke.sh: set
+# SMOKE_PERSIST_DIR to keep the whole run inside a throwaway directory instead of
+# the shared .wrangler/state database. Unset = the historical default.
+PERSIST_DIR="${SMOKE_PERSIST_DIR:-}"
+PERSIST_FLAG=""
+if [ -n "$PERSIST_DIR" ]; then PERSIST_FLAG="--persist-to $PERSIST_DIR"; fi
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -68,11 +79,12 @@ if [ "$MODE" = local ]; then
   cd "$(git rev-parse --show-toplevel)"
   [ -d dist ] || npm run build
 
-  echo "== migrations (local D1: $DB_NAME)"
-  npx --yes wrangler d1 migrations apply "$DB_NAME" --local 2>&1 | tail -3
+  echo "== migrations (local D1: $DB_NAME${PERSIST_DIR:+ at $PERSIST_DIR})"
+  npx --yes wrangler d1 migrations apply "$DB_NAME" --local $PERSIST_FLAG 2>&1 | tail -3
 
   echo "== starting wrangler pages dev on :$PORT"
   npx --yes wrangler pages dev dist \
+    $PERSIST_FLAG \
     --port "$PORT" \
     --binding "REGISTRY_ADMIN_TOKEN=$ADMIN_TOKEN" \
     --show-interactive-dev-session=false \
@@ -151,15 +163,56 @@ req PUT "/api/registry/$PLACE_ID" '{"op":"claim","ownerEmail":"not-an-email"}' "
 check "invalid owner email -> 400" "400" "$STATUS"
 check "invalid owner email -> invalid_email" "invalid_email" "$(q .error)"
 
+# Ownership approval (migrations 0006 + 0007). Mailbox possession is not ownership, so
+# `verify` only happens with provenance (who approved it, on what evidence) AND with the
+# claimant + claim generation the operator reviewed. A decision that does not name the
+# exact claim it approves is refused, so a stale approval cannot verify a replacement.
 req PUT "/api/registry/$PLACE_ID" '{"op":"verify"}' "$ADMIN_TOKEN"
-check "verify -> 200" "200" "$STATUS"
+check "verify without evidence -> 400" "400" "$STATUS"
+check "verify without evidence -> approval_provenance_missing" "approval_provenance_missing" "$(q .error)"
+# The 400 body carries no `business`, so the state has to be read back: a refused
+# approval must leave the row exactly as the claim left it. Read it as the operator —
+# the public projection deliberately hides the approval generation.
+req GET "/api/registry/$PLACE_ID" "" "$ADMIN_TOKEN"
+check "verify without evidence leaves verified=false" "false" "$(q .business.verified)"
+check "verify without evidence leaves verifiedAt=null" "null" "$(q .business.verifiedAt)"
+check "a fresh claim starts at approval_generation 0" "0" "$(q .business.approvalGeneration)"
+
+req PUT "/api/registry/$PLACE_ID" '{"op":"verify","approvedBy":"smoke-operator","evidence":"smoke: independent ownership source stub"}' "$ADMIN_TOKEN"
+check "verify without the expected claimant -> 400" "400" "$STATUS"
+check "verify without the expected claimant -> approval_provenance_missing" "approval_provenance_missing" "$(q .error)"
+
+req PUT "/api/registry/$PLACE_ID" "{\"op\":\"verify\",\"approvedBy\":\"smoke-operator\",\"evidence\":\"smoke: independent ownership source stub\",\"expectedOwnerEmail\":\"$OWNER_EMAIL\"}" "$ADMIN_TOKEN"
+check "verify without the expected generation -> 400" "400" "$STATUS"
+
+req PUT "/api/registry/$PLACE_ID" "{\"op\":\"verify\",\"approvedBy\":\"smoke-operator\",\"evidence\":\"smoke: independent ownership source stub\",\"expectedOwnerEmail\":\"$OTHER_EMAIL\",\"expectedClaimGeneration\":0}" "$ADMIN_TOKEN"
+check "verify for a claimant that is not the claimed one -> 409" "409" "$STATUS"
+check "verify for the wrong claimant -> approval_conflict" "approval_conflict" "$(q .error)"
+
+APPROVAL_BODY="{\"op\":\"verify\",\"approvedBy\":\"smoke-operator\",\"evidence\":\"smoke: independent ownership source stub\",\"expectedOwnerEmail\":\"$OWNER_EMAIL\",\"expectedClaimGeneration\":0}"
+req PUT "/api/registry/$PLACE_ID" "$APPROVAL_BODY" "$ADMIN_TOKEN"
+check "verify with provenance and a bound claimant -> 200" "200" "$STATUS"
 check "verify sets verified=true" "true" "$(q .business.verified)"
+check "verify records who approved ownership" "smoke-operator" "$(q .business.ownershipApprovedBy)"
+check "verify records the evidence" "smoke: independent ownership source stub" "$(q .business.ownershipEvidence)"
+check "verify advances approval_generation to 1" "1" "$(q .business.approvalGeneration)"
 VERIFIED_AT="$(q .business.verifiedAt)"
 if [ -n "$VERIFIED_AT" ] && [ "$VERIFIED_AT" != "null" ]; then pass "verify sets verifiedAt"; else fail "verify sets verifiedAt (got [$VERIFIED_AT])"; fi
 
-req PUT "/api/registry/$PLACE_ID" '{"op":"verify"}' "$ADMIN_TOKEN"
-check "verify twice -> 200 (idempotent)" "200" "$STATUS"
-check "verify twice keeps verifiedAt" "$VERIFIED_AT" "$(q .business.verifiedAt)"
+# The same decision replayed after the approval is stale: the generation it names has
+# moved on, so it must not silently re-approve whoever holds the claim now.
+req PUT "/api/registry/$PLACE_ID" "$APPROVAL_BODY" "$ADMIN_TOKEN"
+check "replaying a stale approval -> 409" "409" "$STATUS"
+check "replaying a stale approval -> approval_conflict" "approval_conflict" "$(q .error)"
+req GET "/api/registry/$PLACE_ID" "" "$ADMIN_TOKEN"
+check "the stale replay left verified=true" "true" "$(q .business.verified)"
+check "the stale replay left verifiedAt alone" "$VERIFIED_AT" "$(q .business.verifiedAt)"
+check "the stale replay left the approver alone" "smoke-operator" "$(q .business.ownershipApprovedBy)"
+
+req PUT "/api/registry/$PLACE_ID" "{\"op\":\"verify\",\"approvedBy\":\"smoke-operator-2\",\"evidence\":\"smoke: re-review of the same claimant\",\"expectedOwnerEmail\":\"$OWNER_EMAIL\",\"expectedClaimGeneration\":1}" "$ADMIN_TOKEN"
+check "re-approving the same claimant with the current generation -> 200" "200" "$STATUS"
+check "re-approval advances the generation to 2" "2" "$(q .business.approvalGeneration)"
+check "re-approval records the second approver" "smoke-operator-2" "$(q .business.ownershipApprovedBy)"
 
 req PUT "/api/registry/$PLACE_ID" '{"op":"setTier","tier":"bogus"}' "$ADMIN_TOKEN"
 check "unknown tier -> 400" "400" "$STATUS"
@@ -175,6 +228,8 @@ check "public GET hides ownerEmail (PII)" "false" "$(q '.business | has("ownerEm
 check "public GET hides notes (PII)" "false" "$(q '.business | has("notes")')"
 check "public GET exposes verified" "true" "$(q .business.verified)"
 check "public GET exposes tier" "pro" "$(q .business.tier)"
+check "public GET hides approvalGeneration (internal lifecycle state)" "false" "$(q '.business | has("approvalGeneration")')"
+check "public GET hides ownershipEvidence" "false" "$(q '.business | has("ownershipEvidence")')"
 
 req GET "/api/registry/$PLACE_ID?events=1" "" "$ADMIN_TOKEN"
 check "admin GET exposes ownerEmail" "$OWNER_EMAIL" "$(q .business.ownerEmail)"
@@ -193,20 +248,20 @@ check "revoke clears verified" "false" "$(q .business.verified)"
 check "revoke clears ownerEmail" "null" "$(q .business.ownerEmail)"
 check "revoke resets tier" "free" "$(q .business.tier)"
 
-req PUT "/api/registry/$PLACE_ID" '{"op":"verify"}' "$ADMIN_TOKEN"
+req PUT "/api/registry/$PLACE_ID" "{\"op\":\"verify\",\"approvedBy\":\"smoke-operator\",\"evidence\":\"smoke: after revoke\",\"expectedOwnerEmail\":\"$OWNER_EMAIL\",\"expectedClaimGeneration\":3}" "$ADMIN_TOKEN"
 check "verify after revoke -> 409" "409" "$STATUS"
 check "verify after revoke -> not_claimed" "not_claimed" "$(q .error)"
 
 # ------------------------------------------------------------------ audit trail
 echo "== audit trail (registry_events)"
-EVENTS="$(npx --yes wrangler d1 execute "$DB_NAME" "$D1_TARGET" --json \
+EVENTS="$(npx --yes wrangler d1 execute "$DB_NAME" "$D1_TARGET" $PERSIST_FLAG --json \
   --command "SELECT event, actor FROM registry_events WHERE place_id = '$PLACE_ID' ORDER BY id" 2>/dev/null \
   | jq -r '.[0].results | map(.event) | join(",")')"
-check "events recorded in order" "claim,verify,tier_change,revoke" "$EVENTS"
+check "events recorded in order" "claim,ownership_approved,ownership_approved,tier_change,revoke" "$EVENTS"
 
 # ---------------------------------------------------------------------- cleanup
 if [ "$KEEP" != 1 ]; then
-  npx --yes wrangler d1 execute "$DB_NAME" "$D1_TARGET" --yes \
+  npx --yes wrangler d1 execute "$DB_NAME" "$D1_TARGET" $PERSIST_FLAG --yes \
     --command "DELETE FROM registry_events WHERE place_id = '$PLACE_ID'; DELETE FROM businesses WHERE place_id = '$PLACE_ID';" >/dev/null 2>&1 || \
     echo "  warn  could not delete the test rows from $DB_NAME"
   req GET "/api/registry/$PLACE_ID"

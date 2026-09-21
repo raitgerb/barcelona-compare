@@ -1,8 +1,11 @@
 # Claim flow with email verification (B2B Phase 0)
 
 The owner-facing half of the business registry: an owner finds their listing, asks
-for a code, gets it by email and types it in. Only then does the business get
-`claimed = 1` + `verified = 1` in D1.
+for a code, gets it by email and types it in. A correct code records
+`claimed = 1` in D1 and **nothing more** — it proves the requester can read that
+mailbox, which is not proof of ownership. `verified = 1`, the public badge and the
+owner editor come only from the manual ownership approval described in
+*Ownership approval* below (migration `0006_ownership_approval.sql`).
 
 - **Pages:** `/reclamar/` (ES) and `/en/claim-business/` (EN), both driven by
   `src/components/ClaimFlow.astro`
@@ -17,10 +20,17 @@ for a code, gets it by email and types it in. Only then does the business get
 
 **A code request never writes to `businesses`.** Pending codes live in
 `claim_requests` and go nowhere else. The registry row is only touched after a
-correct code, through `claimBusiness()` and `verifyBusiness()` from
-`functions/_lib/registry.ts` — so the hijack guard (`already_claimed`), the DB
-invariants and the audit trail stay in one place, and a stranger who asks for a
-code to somebody else's salon changes nothing at all.
+correct code, through `claimBusiness()` from `functions/_lib/registry.ts` — so the
+hijack guard (`already_claimed`), the DB invariants and the audit trail stay in one
+place, and a stranger who asks for a code to somebody else's salon changes nothing
+at all.
+
+**A correct code never grants ownership.** Anyone can select any listed business
+and type their own address into the form, so mailbox possession must not award the
+verified badge or edit/publish access. `POST /api/claim/verify` therefore no longer
+calls `verifyBusiness()`; it answers `state: "pending_approval"` and leaves
+`verified = 0`. The only transition to `verified` is `approveOwnership()` with a
+named approver and the independent evidence used — see *Ownership approval*.
 
 ## Flow
 
@@ -38,9 +48,18 @@ code to somebody else's salon changes nothing at all.
             v
   POST /api/claim/verify { placeId, email, code }
             |   HMAC compare, 5-attempt limit, 15-minute TTL
-            |   on success: claimBusiness() + verifyBusiness()  -> claimed + verified
+            |   on success: claimBusiness()  -> claimed, still verified = 0
             v
-  { ok: true, state: "verified", business: {...}, listingUrl }
+  { ok: true, state: "pending_approval", business: {...}, listingUrl,
+    ownership: { state: "pending_review", approved: false, nextStep } }
+            |
+            |  (off-line of this flow, by a human)
+            v
+  PUT /api/registry/:placeId { op: "verify", approvedBy, evidence,
+        expectedOwnerEmail, expectedClaimGeneration }                -> verified = 1
+            |   the operator path; the ONLY transition that awards the badge
+            v
+  badge rebuild queued (functions/_lib/rebuild.ts)
 ```
 
 ## Table `claim_requests`
@@ -64,8 +83,8 @@ One row per code request (migration `0004_claim_verification.sql`):
 
 | Method | Path | Auth | Purpose |
 | --- | --- | --- | --- |
-| POST | `/api/claim/start` | none (throttled) | `{placeId, email, locale?}` → `{state, business, email, delivery, expiresAt, resendInSeconds}` |
-| POST | `/api/claim/verify` | none (throttled) | `{placeId, email, code}` → `{state:"verified", business, listingUrl}` |
+| POST | `/api/claim/start` | none (throttled) | `{placeId, email, locale?}` → `{state, business, email, delivery, expiresAt, resendInSeconds}`; `state` is `code_sent`, `already_verified` or `already_pending` (mailbox already confirmed, still awaiting ownership review — no new code is issued) |
+| POST | `/api/claim/verify` | none (throttled) | `{placeId, email, code}` → `{state:"pending_approval", business, listingUrl, ownership}` |
 | GET | `/api/claim/outbox` | `x-registry-admin-token` | codes that were requested but not delivered |
 | POST | `/api/claim/outbox/:id` | `x-registry-admin-token` | record a hand-over (`{provider}`), drops the plain code |
 
@@ -83,9 +102,70 @@ Error codes (all with a stable `error` field, mapped from `RegistryError`):
 | `catalog_unavailable` | 503 | the build catalog could not be read |
 | `server_misconfigured` | 500 | `CLAIM_CODE_SECRET` missing or too short |
 
-`start` is idempotent for an owner who is already verified (`state:
-"already_verified"`, no new code). Requesting a second code deletes the previous
-pending one, so **only the newest code can ever be accepted**.
+`start` never issues a second code for a business whose owner email already holds
+an email-verified claim: an approved owner gets `state: "already_verified"` and a
+pending one gets `state: "already_pending"` (both without sending mail). Requesting
+a second code deletes the previous pending one, so **only the newest code can ever
+be accepted**.
+
+## Ownership approval
+
+`claimed` and `verified` mean two different things and are never set together:
+
+| flag | set by | evidence it rests on |
+| --- | --- | --- |
+| `claimed = 1` | `claimBusiness()` after a correct code | possession of the mailbox the claimant typed in |
+| `verified = 1` | `approveOwnership()` (operator only) | a person checked an **independent** source, recorded in `ownership_approved_by` + `ownership_evidence` |
+
+Because the mailbox is chosen by the claimant, a correct code alone must not open
+the owner surfaces. All three owner entry points refuse a claim that is not
+approved, with `403 ownership_pending`:
+
+- `POST /api/owner/session` — no login code is minted for a pending claim
+- `POST /api/owner/session/verify` — an old/again-used code cannot be exchanged
+- `GET/PUT /api/owner/profile/:placeId` — a session token cannot read or write the profile
+
+Approving is a deliberate operator action:
+
+```
+curl -X PUT "$BASE/api/registry/$PLACE_ID" \
+  -H "x-registry-admin-token: $REGISTRY_ADMIN_TOKEN" \
+  -H 'content-type: application/json' \
+  -d '{"op":"verify","approvedBy":"<who checked>","evidence":"<which independent source>",
+       "expectedOwnerEmail":"<the claimant you reviewed>","expectedClaimGeneration":<n>}'
+```
+
+All four fields are mandatory, and none of them is inferred from the calling token:
+
+* `approvedBy` — the **human who performed the independent check**, supplied by the
+  operator. It is *not* defaulted from the token's `actor`: the token proves only that
+  someone holding the operator credential called the API, which is a different claim
+  from "this named person reviewed the evidence". Both are recorded separately (the
+  audit event carries `approvedBy` and `actor`), so the audit never invents an approver.
+* `evidence` — what independent source established ownership. No default, ever.
+* `expectedOwnerEmail` + `expectedClaimGeneration` — the exact claim the decision is
+  about. Read the current generation from `GET /api/registry/:placeId` with the admin
+  token before approving. The transition is a compare-and-set on that claimant and that
+  generation, committed in one transaction with its audit row, so a decision that
+  arrives after a revoke/reclaim is refused with `409 approval_conflict` instead of
+  approving whoever holds the claim by then, and a failed audit row cannot leave
+  `verified = 1` behind. Re-approving a row therefore needs a *fresh* decision against
+  the current generation (it is not silently idempotent, by design).
+
+Missing fields fail with `400 approval_provenance_missing` and `verified` stays `0`.
+Migration `0006` downgrades any legacy `verified = 1` row with no provenance to
+"email-verified, pending review" and writes an `ownership_review_required` audit event.
+Migration `0007` binds publications and credentials to the approval generation and
+makes provenance a schema invariant, so the pre-0006 code path now fails closed at the
+database.
+
+`revokeBusiness()` now deletes the owner's session rows as well, and the write path
+re-checks `verified` on every request: the two guards are independent, so a revoked
+or merely pending owner cannot edit anything even with a live token.
+
+The owner-facing consequence is stated in `src/components/ClaimFlow.astro`: the
+"claim recorded" panel says the claim is **pending review**, offers the listing link
+and deliberately offers no editor link.
 
 ## Delivering the code
 
@@ -141,7 +221,8 @@ bash scripts/claim-smoke.sh        # 40+ assertions, cleans up after itself
 catalog validation, the resend cooldown, the operator outbox (401 without the
 token, then hand-over), single-use codes, the attempt limit, that failed
 verifications leave no trace in `businesses`, and that a correct code writes
-`claimed`/`verified` plus the `claim,verify` audit trail. Remote mode
+`claimed` plus the `claim` audit trail (and *not* `verified`, migration 0006:
+ownership needs a human approval with recorded evidence). Remote mode
 (`--url https://barcelonacompare.com --token <token>`) runs the same suite against
 production and deletes its own rows. If an email transport is configured the test
 sends real mail — pass `SMOKE_EMAIL=you@example.com`.
