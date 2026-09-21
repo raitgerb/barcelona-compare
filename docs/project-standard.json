@@ -1,0 +1,247 @@
+{
+  "standard_version": "1.0.0",
+  "project": {
+    "name": "Barcelona Compare",
+    "purpose": "A trilingual (ES/EN/CA) directory comparing nail salons and massage businesses in Barcelona. Static Astro site on Cloudflare Pages, plus a small edge registry (Cloudflare Pages Functions + D1) so that the person who runs a listed business can claim the listing and manage the content that is published about it.",
+    "owner": "Rutger (raitgerb). Coordination: Agrippa. Bounded code implementation: Builder.",
+    "canonical_root": "/Users/agrippa/Projects/barcelona-compare",
+    "remote": "git@github.com:raitgerb/barcelona-compare.git",
+    "board": "barcelona-compare"
+  },
+  "maturity": "PUBLIC",
+  "modules": ["WEB", "DATA", "EXTERNAL", "ANALYTICS", "AUTOMATION"],
+  "module_exclusions": [
+    {
+      "module": "COMMERCE",
+      "rationale": "No payment or fulfilment path is active. The paid partner tier is deliberately on hold by owner decision until the ~20-claimed-partner gate is met, no Stripe integration exists, and the collection budget is a hard $0 ceiling."
+    }
+  ],
+  "instructions": {
+    "entrypoint": "AGENTS.md",
+    "standard_source": "Hermes/Standards/Project Standard v1"
+  },
+  "commands": {
+    "install": "npm install",
+    "build": "npm run build",
+    "test": "npm run data:smoke",
+    "test_claim": "bash scripts/claim-smoke.sh",
+    "test_owner": "bash scripts/owner-edit-smoke.sh",
+    "test_registry": "bash scripts/registry-smoke.sh",
+    "test_analytics": "bash scripts/analytics-smoke.sh",
+    "migrate_local": "npm run db:migrate:local",
+    "preview": "npx wrangler pages dev dist --port 8801"
+  },
+  "boundaries": {
+    "authority": "Owner: Rutger. Latest explicit implementation scope is the approved improvement plan at .hermes/plans/2026-09-20_205738-project-review-and-improvement-plan.md; the approval is quoted verbatim in docs/improvement-execution-handoff.md. Release authority is a reviewed pull request merged into protected main. The unconditional 'standing authorization to ship: pushing main is authorized without asking' sentence in AGENTS.md is stale (main now requires a PR and a passing check) and is NOT relied upon. Owner-approved bounded exception (Rutger, Discord 1551271418543734866, 2026-09-21, verbatim 'I approve that bounded exception.'): BarcelonaCompare only, ONE analytics repair release, for pre-existing foundation gaps unrelated to the loader; documented open, review due 2026-09-28. Analytics privacy/consent checks, independent review, the required CI check, rollback and live verification are NEVER exempt. No database, collector, credential or infrastructure change. Spending money, adding a paid service, re-enabling the paused weekly refresh cron, changing Cloudflare dashboard settings, rotating credentials and sending outreach all require explicit owner approval.",
+    "release": "Release from an identified committed source: fetch, rebase the topic branch onto origin/main, open a PR (required check: the Cloudflare Pages build), squash-merge it, then verify the deployed commit hash through the Cloudflare Pages API AND the changed bytes on the live host. A merge is not a deployment and HTTP 200 is not proof that a route exists: this site serves the homepage with 200 for unknown paths.",
+    "read": [
+      "The whole project working tree and git history",
+      "Local D1 state and the local wrangler dev server",
+      "The public read APIs (GET /api/registry, GET /api/claim/outbox with the operator token)",
+      "The live site over HTTPS for read-only verification"
+    ],
+    "write": [
+      "src/, functions/, scripts/, migrations/, tests/ and docs/ in this repository, on a topic branch",
+      "Local tool output under the project or /tmp (logs, evidence, fixture databases). Test runs use an isolated local D1 via SMOKE_PERSIST_DIR (--persist-to); the shared .wrangler/state database and the production D1 are never opened by a test.",
+      "The central registry entry for this project, after reading it"
+    ]
+  },
+  "public": {
+    "repository": true,
+    "origin_remote": "git@github.com:raitgerb/barcelona-compare.git",
+    "production_branch": "main"
+  },
+  "release": {
+    "authority": "Owner Rutger grants release authority per change through the coordination handoff; the standing grant is 'ship a reviewed PR', not 'deploy anything'. Security, auth, payment, migration and credential changes additionally require independent review before release (Project Standard v1.0.0, SENSITIVE change-risk gate). The bounded exception of 2026-09-21 (Discord 1551271418543734866) authorizes exactly one analytics repair release with the pre-existing unrelated gaps marked EXEMPT below; it authorizes no other release and expires at review 2026-09-28.",
+    "procedure": "Rebase onto origin/main, run the declared test commands plus the build, open a PR that states the reviewed revision, obtain the required Cloudflare Pages check, squash-merge, then read back the deployment id, commit hash and live page bytes. Record the receipt in data/release-receipt.json (kept git-ignored: a receipt cannot name its own commit, see project-foundations docs/declaration-schema.md), with the human-readable evidence committed under docs/release-evidence/.",
+    "rollback": "Revert the offending commit on a new branch and merge the revert (main is protected, so no force-push and no history rewrite). Deployment rollback target captured by API readback on 2026-09-21: production deployment a4795c83-22a4-47bc-8f20-093d7505e827, commit ce34124209947caaaff9c9f667cb068de81d4c5b, aliases ['https://barcelonacompare.com'], latest_stage deploy/success - this is the pre-change production state and the exact target to roll back to. Database rollback needs its own plan: migrations are forward-only files applied in filename order and are never rewritten; a bad migration is corrected by a new migration. Re-run npm run db:migrate:local to rebuild the local schema.",
+    "verification": "Compare the deployed commit hash from the Pages API against the merged commit, then fetch the changed route from the live host and assert on its content (title/canonical/body marker) rather than its status code. The served analytics loader is verified by fetching /js/portfolio-analytics.js from the live host and matching sha256 7f231e76d757511d370f025f70683ed78888e39c865ef4dacd0c948eedd8dea9, then exercising the consent gate in a real browser and reading a consented, provider-tagged event back through the existing analytics verification tooling. analytics/registry read-back uses the operator token.",
+    "receipt_path": "data/release-receipt.json"
+  },
+  "requirements": [
+    {
+      "id": "B01",
+      "state": "VERIFIED",
+      "date": "2026-09-20",
+      "evidence": "Audience, problem, success criteria and non-goals are recorded in AGENTS.md ('What this project is', 'Standing constraints'), in the approved plan section 2-3, and restated in this declaration. The latest authorized scope is quoted verbatim, with its source and date, in docs/improvement-execution-handoff.md. The bounded exception and its exact scope are quoted verbatim in docs/release-evidence/analytics-loader-2026-09-21.md."
+    },
+    {
+      "id": "B02",
+      "state": "VERIFIED",
+      "date": "2026-09-20",
+      "evidence": "Identity read live this session: canonical root /Users/agrippa/Projects/barcelona-compare, branch main, HEAD 30cedecf071040e7eec549d2801cd84ee97756b5, remote git@github.com:raitgerb/barcelona-compare.git (git ls-remote). Board 'barcelona-compare' confirmed present by 'hermes kanban boards list'. Domain/zone/Pages project and the owner are recorded in AGENTS.md; the protected-branch readback is recorded in the central registry.",
+      "detail": "Which source governs what: the repository governs code and content; AGENTS.md governs local operating boundaries; the kanban board barcelona-compare governs execution state; D1 'barcelona-compare-registry' (id ca91d4f4-d44d-4163-9f5b-7db0464ef446) governs runtime claim/ownership state; R2 bucket 'barcelona-compare-images' governs photos. A board label and a git permission are explicitly not treated as production authority."
+    },
+    {
+      "id": "B03",
+      "state": "EXEMPT",
+      "reason": "EXEMPT (unrelated remainder ONLY): the non-Git platform assets - D1 'barcelona-compare-registry' and R2 bucket 'barcelona-compare-images' - have no documented export/recovery method and no restore has ever been exercised. This is a pre-existing gap in the claim/photo data plane. The analytics loader change touches no database, bucket, migration, account or configuration, so the change neither creates nor can repair this gap. NOT EXEMPT: the Git source contract for this change and its rollback target, which are both recorded (see release.rollback). GAP detail preserved verbatim below.",
+      "approved_by": "Rutger (owner). Discord 1551271418543734866, 2026-09-21, verbatim: 'I approve that bounded exception.'",
+      "approval_reference": "Discord 1551271418543734866, 2026-09-21: 'I approve that bounded exception.' - BarcelonaCompare only, one analytics repair release exception for pre-existing foundation gaps unrelated to the loader; remains documented/open, review due 2026-09-28.",
+      "safeguards": [
+        "This release changes one static asset plus the declaration and its evidence: no DB, collector, credential, DNS, billing or infrastructure change is part of it.",
+        "The change is bound to a single recorded sha256 (7f231e76d757511d370f025f70683ed78888e39c865ef4dacd0c948eedd8dea9) and a reviewed PR on protected main; no direct push.",
+        "Rollback target captured by API readback before the release: production deployment a4795c83-22a4-47bc-8f20-093d7505e827 @ ce34124209947caaaff9c9f667cb068de81d4c5b.",
+        "The gap stays documented open with a dated review (2026-09-28); it is not closed and not claimed as fixed."
+      ],
+      "review_date": "2026-09-28",
+      "detail": "The Git contract is explicit (remote, production branch main, .gitignore excluding node_modules/, dist/, .astro/, /data/, .env*), and authoritative inputs (src/, functions/, migrations/, scripts/, tests/) are separated from generated output (dist/, .astro/, data/usage-ledger.json). The gap is the non-Git platform assets: D1 'barcelona-compare-registry' and R2 bucket 'barcelona-compare-images' have no documented export/recovery method and no restore has ever been exercised. Plan F09 records the same gap."
+    },
+    {
+      "id": "B04",
+      "state": "EXEMPT",
+      "reason": "EXEMPT (unrelated remainder ONLY): the entrypoint's stale 'Current state (Sep 11 2026)' block and the stale 'Standing authorization to ship: pushing main is authorized without asking' sentence. Both are corrections to a PROTECTED instruction file, which this bounded release is not authorized to make, and neither is caused by nor blocks the loader change. NOT EXEMPT and not claimed: the '## Project Standard' block naming Project Standard v1.0.0 and its canonical path, which is CARRIED INTO this release exactly as approved on 2026-09-20 (+7 lines, diff inspected, no other AGENTS.md edit). GAP detail preserved verbatim below.",
+      "approved_by": "Rutger (owner). Discord 1551271418543734866, 2026-09-21, verbatim: 'I approve that bounded exception.'",
+      "approval_reference": "Discord 1551271418543734866, 2026-09-21: 'I approve that bounded exception.' - scope covers pre-existing foundation gaps unrelated to the loader; review due 2026-09-28.",
+      "safeguards": [
+        "AGENTS.md is committed with no change beyond the carried-over 7-line standard block; no other protected file is touched by this release.",
+        "Release authority for this change is the reviewed PR plus the protected-branch required check, never the stale push sentence.",
+        "The onboarding gate is satisfied by the adopted standard block, proved by an onboarding preflight PASS on this revision.",
+        "Review due 2026-09-28 to correct the stale blocks under an owner-approved protected-file edit."
+      ],
+      "review_date": "2026-09-28",
+      "detail": "AGENTS.md is the fresh-session entrypoint and carries setup/build/deploy commands, restrictions and gotchas. Partially fixed on 2026-09-20 by an approval-gated owner edit (Agrippa, protected-file tool): it now carries a '## Project Standard' block naming Project Standard v1.0.0 and its canonical path, which is what the onboarding gate reads (project_preflight --phase onboarding now passes, 13 GAP warnings, branch note only). Remaining gap: the 'Current state (Sep 11 2026)' block is still stale (page counts, the missing /en/compare page, superseded future work) and the 'Standing authorization to ship: pushing main is authorized without asking' sentence still contradicts the protected branch (plan F09). Both are corrections to a protected instruction file and need an explicit owner approval, so they are reported rather than applied."
+    },
+    {
+      "id": "B05",
+      "state": "EXEMPT",
+      "reason": "EXEMPT (unrelated remainder ONLY): the Python collectors' dependencies (requests, Pillow, numpy) remain unpinned, no committed CI workflow runs the D1/registry/owner suites, and the production migration for 0006 has not been applied or rehearsed. All three are pre-existing gaps in the ownership/D1 slice and the collector toolchain; this change adds no Python dependency, no migration and no CI workflow. NOT EXEMPT (mandatory for this release, evidenced in docs/release-evidence/analytics-loader-2026-09-21.md and the release receipt): the change's own tests and the required CI check. GAP detail preserved verbatim below.",
+      "approved_by": "Rutger (owner). Discord 1551271418543734866, 2026-09-21, verbatim: 'I approve that bounded exception.'",
+      "approval_reference": "Discord 1551271418543734866, 2026-09-21: 'I approve that bounded exception.' - test/CI gates for THIS release are explicitly NOT excluded by it; review due 2026-09-28.",
+      "safeguards": [
+        "Change-scoped tests are mandatory and were run: exact candidate 7f231e76... passed 168/168 clean assertions and 168/168 with the FCF banner fixture.",
+        "The suites are proven discriminating, not green-by-construction: three mutation controls bound to recorded mutant hashes failed exactly their expected assertions (M1 162/168 T1,T2,T4,T5,T7,T10; M2 162/168 U1-U6; M3 167/168 V3), per final-verification/parent-acceptance.json (all_expected true, source_sha256 = the candidate).",
+        "The real project build was executed in the isolated worktree: npm run build produced a complete dist/ (4,957 HTML files) serving dist/js/portfolio-analytics.js byte-identical to the candidate.",
+        "Merge requires the protected branch's required Cloudflare Pages check to pass; no admin bypass.",
+        "The untouched remainder stays documented open with a dated review (2026-09-28)."
+      ],
+      "review_date": "2026-09-28",
+      "detail": "Offline suites exist and were run against isolated throwaway local D1 databases on 2026-09-20 while implementing the ownership gate: npm run data:smoke -> '57 passed, 0 failed'; scripts/registry-smoke.sh -> '48 passed, 0 failed'; scripts/claim-smoke.sh -> '56 passed, 0 failed'; scripts/owner-edit-smoke.sh -> '85 passed, 0 failed'. Each smoke script accepts SMOKE_PERSIST_DIR and then runs every local wrangler call with --persist-to, so a run cannot read or delete rows in the shared .wrangler/state database (proved byte-identical before/after by sha256 of the shared D1 files). Gaps: no committed CI gate runs any of these, the Python collectors' dependencies (requests, Pillow, numpy) are unpinned, no full astro build was executed in this slice (the claim-flow copy change is compile-checked only: npx astro check reports 1 pre-existing error in src/pages/en/mejores/[category]/index.astro and none in the changed components), and the production database migration for 0006 has not been applied or rehearsed."
+    },
+    {
+      "id": "B06",
+      "state": "EXEMPT",
+      "reason": "EXEMPT (unrelated remainder ONLY): there is no in-repo CI workflow file, and no release receipt had ever been executed for this project before this release (so previous releases have no recorded rollback target). Those are pre-existing gaps in release tooling. NOT EXEMPT (mandatory for this release and demonstrated): reviewed artifact at an exact revision, protected production branch with an enforced required check, recorded authorization, executed release receipt, captured rollback deployment, and live verification of the deployed bytes. GAP detail preserved verbatim below.",
+      "approved_by": "Rutger (owner). Discord 1551271418543734866, 2026-09-21, verbatim: 'I approve that bounded exception.'",
+      "approval_reference": "Discord 1551271418543734866, 2026-09-21: 'I approve that bounded exception.' - the required CI check, review, rollback and live verification remain mandatory and are NOT exempt; review due 2026-09-28.",
+      "safeguards": [
+        "Release comes from an identified committed source on a topic branch; main is protected with the Cloudflare Pages check required and admin enforcement on.",
+        "A release receipt is executed for this change (data/release-receipt.json) binding the identical source/reviewed SHA to the resolved HEAD.",
+        "Rollback target captured by API readback before the release (a4795c83-22a4-47bc-8f20-093d7505e827 @ ce34124209947caaaff9c9f667cb068de81d4c5b).",
+        "Live verification is mandatory and asserts deployed bytes and a real consented interaction, not an HTTP status.",
+        "The untouched remainder stays documented open with a dated review (2026-09-28)."
+      ],
+      "review_date": "2026-09-28",
+      "detail": "main is protected: PR required, the Cloudflare Pages check must pass, the branch must be up to date, admin enforcement on, force-push and deletion blocked (API readback 2026-09-20, recorded in the central registry). Gaps: there is no in-repo CI workflow, no release receipt has been executed for this project, and the current rollback deployment is UNKNOWN."
+    },
+    {
+      "id": "B07",
+      "state": "EXEMPT",
+      "reason": "EXEMPT (unrelated remainder ONLY): the Google Places cost guard's bypass holes (a missing ledger resets to zero, reservations are not atomic, legacy collectors call the API unguarded, recommended daily caps exceed the monthly free tier) and the absence of a documented purpose/retention/erasure rule for owner emails and claim rows in D1. Neither is touched by a static browser loader and neither is repaired by it. NOT EXEMPT and explicitly NOT waived: ANALYTICS PRIVACY AND CONSENT for this change - allowlisted payloads, affirmative persisted grant before any send, withdrawal honoured immediately including cross-tab, no credentials in source or logs - which is independently reviewed at the exact candidate revision and exercised by the change's suites. This release creates no new data collection, no new credential and no billable scope. GAP detail preserved verbatim below.",
+      "approved_by": "Rutger (owner). Discord 1551271418543734866, 2026-09-21, verbatim: 'I approve that bounded exception.'",
+      "approval_reference": "Discord 1551271418543734866, 2026-09-21: 'I approve that bounded exception.' - no credential, collector or infrastructure change is authorized by it; analytics privacy/consent checks are mandatory; review due 2026-09-28.",
+      "safeguards": [
+        "Zero new paid services and zero provider spend in this change; no Google Places call is made by it.",
+        "No credential, secret, .env or dashboard setting is read, changed or committed by this release.",
+        "Analytics privacy/consent controls are NOT exempt: they are independently reviewed at the exact candidate revision (closure review log, 9/10) and exercised by the 168-assertion suite including rejection, withdrawal and cross-tab paths.",
+        "The untouched remainder stays documented open with a dated review (2026-09-28)."
+      ],
+      "review_date": "2026-09-28",
+      "detail": "Credentials stay out of source (.env* and .dev.vars gitignored; operator tokens live in ~/.hermes/profiles/builder/secrets/) and the collection cost ceiling is a hard $0 with per-SKU free caps written into AGENTS.md and docs/places-api-free-tier-guardrails.md, enforced pre-request by scripts/places_budget.py. Gaps: that guard is bypassable (a missing ledger resets to zero, reservations are not atomic, legacy collectors call the API unguarded, and the recommended daily caps exceed the monthly free tier in a 31-day month - plan F02/F03), and there is no documented purpose/retention/erasure rule for the owner emails and claim rows stored in D1."
+    },
+    {
+      "id": "B08",
+      "state": "EXEMPT",
+      "reason": "EXEMPT (unrelated remainder ONLY): D1 and R2 have no verified backup or restore, and not every unresolved item in the wider project carries a dated next action. Both are pre-existing continuity gaps in the data plane and the wider backlog; a static loader change neither worsens nor repairs them. NOT EXEMPT for this change: built/tested/reviewed/deployed/live are tracked as separate gates in the evidence file and the receipt, and this change's own rollback target is recorded. GAP detail preserved verbatim below.",
+      "approved_by": "Rutger (owner). Discord 1551271418543734866, 2026-09-21, verbatim: 'I approve that bounded exception.'",
+      "approval_reference": "Discord 1551271418543734866, 2026-09-21: 'I approve that bounded exception.' - rollback and live verification remain mandatory; review due 2026-09-28.",
+      "safeguards": [
+        "This release writes no database and no bucket: the originals it could endanger are untouched.",
+        "Built / tested / reviewed / merged / deployed / live are recorded as independent fields with evidence, not as one 'done' flag.",
+        "Rollback target for this change captured before release; rollback is a new commit on a protected branch (no history rewrite).",
+        "The untouched remainder stays documented open with a dated review (2026-09-28)."
+      ],
+      "review_date": "2026-09-28",
+      "detail": "One authoritative execution queue exists (kanban board barcelona-compare) and period state/handoff notes link to it rather than creating a second queue; built/tested/reviewed/deployed/accepted are tracked separately in docs/improvement-execution-handoff.md. Gaps: D1 and R2 have no verified backup or restore, and every unresolved item currently has an owner but not always a dated next action."
+    },
+    {
+      "id": "B09",
+      "state": "EXEMPT",
+      "reason": "EXEMPT (unrelated remainder ONLY): the project has no promoted regression checks for the other recorded defects (plan F01-F10) beyond the ones this repair carries. That backlog is wider than this change and pre-existing. NOT EXEMPT: this change's own regression and discrimination evidence, which exists and was run (168/168 clean, 168/168 with the FCF banner, and three mutation controls failing exactly their expected assertions). GAP detail preserved verbatim below.",
+      "approved_by": "Rutger (owner). Discord 1551271418543734866, 2026-09-21, verbatim: 'I approve that bounded exception.'",
+      "approval_reference": "Discord 1551271418543734866, 2026-09-21: 'I approve that bounded exception.' - review and live verification remain mandatory; review due 2026-09-28.",
+      "safeguards": [
+        "The suites are discriminating, not green-by-construction: removing the mechanism (mutants M1/M2/M3, each bound to a recorded sha256) fails exactly the expected assertions.",
+        "A papercut was recorded honestly: the first M1 control run timed out (suite-M1-init-success-not-verified.log contains a TimeoutError) and only the corrected M1 run is the accepted artifact - the accepted row names its own log so the substitution is visible.",
+        "Drift review of actual work vs latest owner intent is recorded in the worker result and the evidence file.",
+        "The untouched remainder stays documented open with a dated review (2026-09-28)."
+      ],
+      "review_date": "2026-09-28",
+      "detail": "Cross-project friction is recorded centrally in Hermes/Standards/Papercuts.md and this migration produced a drift review. Gaps: the project has no promoted regression checks for its own recorded defects (plan F01-F10), and the entrypoint still contains stale claims (see B04)."
+    },
+    {
+      "id": "WEB",
+      "state": "EXEMPT",
+      "reason": "EXEMPT (unrelated remainder ONLY): site-wide mobile, keyboard/focus and accessibility certification was never completed, and there is no in-repo application CI workflow. Both are pre-existing site-wide gaps; a change to one static JS asset cannot certify the whole site's accessibility and adds no workflow. NOT EXEMPT: the required release check (protected main + enforced Cloudflare Pages check) and the already-verified transport controls (HTTPS/Always-Use-HTTPS, TLS 1.3, sitemap, robots.txt, self-referencing canonicals, content-asserted 404 semantics). GAP detail preserved verbatim below.",
+      "approved_by": "Rutger (owner). Discord 1551271418543734866, 2026-09-21, verbatim: 'I approve that bounded exception.'",
+      "approval_reference": "Discord 1551271418543734866, 2026-09-21: 'I approve that bounded exception.' - the required CI check remains mandatory; review due 2026-09-28.",
+      "safeguards": [
+        "The loader is a single static asset: it changes no markup, layout, route or transport setting, so it cannot alter site-wide accessibility or TLS posture.",
+        "Live verification asserts served bytes and a real consented interaction, not a status code.",
+        "The untouched remainder stays documented open with a dated review (2026-09-28)."
+      ],
+      "review_date": "2026-09-28",
+      "detail": "Verified: HTTPS with Always-Use-HTTPS and TLS 1.3 on the zone, a served sitemap and robots.txt, canonical self-referencing URLs per locale, and real 404 semantics except that an unknown path returns the homepage with HTTP 200 (soft-404), which is why verification asserts on content, not status. Gap: mobile, keyboard/focus and accessibility were not certified (plan section 2 step 11 - browser QA failed during review), and there is no application CI gate."
+    },
+    {
+      "id": "DATA",
+      "state": "EXEMPT",
+      "reason": "EXEMPT (entirely unrelated): the D1 authorization-role coverage, the preview environment sharing the production database, the absence of a migration rollback plan and the unexercised restore of owner data are all pre-existing gaps in the registry/claim data plane. This release makes no database read, write, migration or configuration change of any kind, so none of these gaps is created, widened or blocked by it. GAP detail preserved verbatim below.",
+      "approved_by": "Rutger (owner). Discord 1551271418543734866, 2026-09-21, verbatim: 'I approve that bounded exception.'",
+      "approval_reference": "Discord 1551271418543734866, 2026-09-21: 'I approve that bounded exception.' - no DB or infrastructure change is authorized by it; review due 2026-09-28.",
+      "safeguards": [
+        "Explicitly no DB change: the release touches public/js/portfolio-analytics.js, the declaration and the evidence only.",
+        "No local test in this release opens the shared .wrangler/state database or production D1.",
+        "The gap stays documented open with a dated review (2026-09-28); no restore claim is made."
+      ],
+      "review_date": "2026-09-28",
+      "detail": "D1 access is centralised in functions/_lib/registry.ts and functions/_lib/profile.ts, owner emails are never exposed through the public projection (toPublic / public_business_registry view), and migrations are ordered files. Gaps: the preview environment shares the production database (plan F04), authorization has been tested for the owner role only, there is no migration rollback plan, and no restore of owner data has been exercised."
+    },
+    {
+      "id": "EXTERNAL",
+      "state": "EXEMPT",
+      "reason": "EXEMPT (entirely unrelated): the unresolved long-term right to store Google-derived reviews/photos, reviewCount-based candidate prioritisation, and the cost-guard bypass holes are pre-existing gaps in the Places collection pipeline. This release makes no external API call, collects nothing and changes no collection code, so it neither creates nor worsens any of them. GAP detail preserved verbatim below.",
+      "approved_by": "Rutger (owner). Discord 1551271418543734866, 2026-09-21, verbatim: 'I approve that bounded exception.'",
+      "approval_reference": "Discord 1551271418543734866, 2026-09-21: 'I approve that bounded exception.' - zero provider spend and no collector change; review due 2026-09-28.",
+      "safeguards": [
+        "Zero new paid services and zero API spend: no Places request is made by this release.",
+        "No collector, mask, cap or ledger file is modified.",
+        "The untouched remainder stays documented open with a dated review (2026-09-28)."
+      ],
+      "review_date": "2026-09-28",
+      "detail": "Provenance and cost controls that exist: the Google Places field masks and their per-SKU free caps are derived from the official data-fields page and recorded in docs/places-api-free-tier-guardrails.md, a pre-request budget guard rejects the call that would cross the ceiling, requests are cached locally, and Place IDs are the stable key. Gaps: the right to store Google-derived reviews/photos long-term and to re-host photos is unresolved (plan F05), candidate prioritisation still reads reviewCount, and the guard has the bypass holes listed in B07."
+    },
+    {
+      "id": "ANALYTICS",
+      "state": "VERIFIED",
+      "date": "2026-09-21",
+      "evidence": "Change-scoped verification of the exact candidate revision sha256 7f231e76d757511d370f025f70683ed78888e39c865ef4dacd0c948eedd8dea9, not of an earlier revision. (1) Independent closure review of that exact candidate: ~/.hermes/tasks/analytics-final-closure-review.log (Cato, session 20260921_000752_9280f4), verdict 9/10, with the reset-cleanup and failed-init ownership findings closed. (2) Consent model exercised: 168/168 assertions on the clean candidate and 168/168 with the FCF banner fixture (final-verification/suite-clean-final.log, suite-fcf-final.log, parent-acceptance.json source_sha256 = the candidate) - including an affirmative persisted grant required before activation or sending, rejection, immediate withdrawal, cross-tab grant/withdrawal, and nothing collected from a private route. (3) The suites are proven discriminating: mutants M1/M2/M3 each bound to a recorded sha256 fail exactly their expected assertions (162/168 T1,T2,T4,T5,T7,T10; 162/168 U1-U6; 167/168 V3; all_expected true). (4) Source/build comparison: the isolated integration build serves dist/js/portfolio-analytics.js byte-identical to the candidate (same sha256), and the pre-change live asset was e3325f6efdea855300cb2a41da609f63c3c40ba23876df255b4f85a918267685 - i.e. the repair is present in the build output and absent from production before this release. NOT YET CLAIMED HERE: the deployed-host served-loader hash and the consented provider-tagged event readback on the production build. That is this release's mandatory live-verification step and is recorded in data/release-receipt.json and the worker result once observed, not asserted in advance. This state is change-scoped: it is evidence for this repair, not a claim that the project's wider analytics/CI gaps are closed.",
+      "detail": "Intentional consent model: analytics activation requires an affirmative persisted grant, the initialisation is derived from the persisted decision, and the loader/sending boundary landed in commits 4885e66 and 30cedec. Per-business events go to D1 through POST /api/track with an allowlisted event dictionary (docs/business-analytics.md); Cloudflare Web Analytics is readable but sample-weighted and has no click dimension. Gap: a consented-event readback on the served production build has not been re-verified since those commits, which the central registry also records as an open gap."
+    },
+    {
+      "id": "AUTOMATION",
+      "state": "EXEMPT",
+      "reason": "EXEMPT (entirely unrelated): legacy unguarded Places entry points remain runnable, no bounded collection schedule with an owner/log path/alert exists, and no autonomous reader remediation path exists. All three are pre-existing gaps in the collection automation layer. This release schedules nothing, adds no job, no cron, no retry and no automatic deployer; the weekly refresh cron a0357cbcaf3b stays paused. GAP detail preserved verbatim below.",
+      "approved_by": "Rutger (owner). Discord 1551271418543734866, 2026-09-21, verbatim: 'I approve that bounded exception.'",
+      "approval_reference": "Discord 1551271418543734866, 2026-09-21: 'I approve that bounded exception.' - no new auto-deployer or scheduled job is authorized by it; review due 2026-09-28.",
+      "safeguards": [
+        "No cron, scheduler, workflow file or automatic deployer is created or enabled by this release; a human merges the reviewed PR.",
+        "The paused weekly refresh cron is not re-enabled or re-proposed.",
+        "Legacy unguarded collectors are not run.",
+        "The untouched remainder stays documented open with a dated review (2026-09-28)."
+      ],
+      "review_date": "2026-09-28",
+      "detail": "Boundaries that exist: the weekly refresh cron a0357cbcaf3b is intentionally paused and must not be re-enabled without an owner decision; collectors declare their own caps in code and the pipeline has an offline smoke suite; the badge rebuild is a recorded fire-and-forget request, never a throw. Gaps: legacy unguarded API entry points are still runnable (plan F02), no bounded schedule with an owner, log path and alerted failure exists for collection, and no reader/observer has an automatic remediation path."
+    }
+  ]
+}
