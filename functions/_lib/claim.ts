@@ -2,10 +2,19 @@
 // `POST /api/claim/start` and `POST /api/claim/verify`.
 //
 // The rule that shapes everything here: **a code request never touches
-// `businesses`**. Only a correct code does, and it does so through
-// `claimBusiness()` + `verifyBusiness()` from ./registry.ts, so the claim-hijack
-// guard and the audit trail stay in one place. A stranger who requests a code for
-// somebody else's salon therefore changes nothing.
+// `businesses`**, and **a correct code never grants ownership**.
+//
+// Only a correct code writes to `businesses`, and it writes exactly one thing:
+// the email-verified claim (`claimBusiness()` from ./registry.ts, i.e.
+// `claimed = 1`, `verified = 0`). Passing the email step proves the requester
+// controls that mailbox. It does NOT prove they own the business, so it must not
+// grant the verified badge or edit/publish access — a stranger can select any
+// listed business and type their own address into the form.
+//
+// Ownership is approved afterwards, by a human, off-line of this flow:
+// `approveOwnership()` in ./registry.ts records who approved it and on what
+// independent evidence. Until then the claim is "pending review" and the owner
+// surfaces stay closed (functions/api/owner/*). See docs/claim-flow.md.
 //
 // Security properties:
 //   * the 6-digit code is compared as HMAC-SHA256(secret, code:place:email), so the
@@ -24,7 +33,6 @@ import {
   getBusiness,
   normalizeEmail,
   toPublic,
-  verifyBusiness,
   type BusinessRecord,
   type PublicBusinessRecord,
 } from './registry';
@@ -53,7 +61,11 @@ export interface ClaimStartInput {
 }
 
 export interface ClaimStartResult {
-  state: 'code_sent' | 'already_verified';
+  /**
+   * `already_pending` = the same mailbox already holds an email-verified claim that
+   * is still waiting for manual ownership approval; no second code is needed.
+   */
+  state: 'code_sent' | 'already_verified' | 'already_pending';
   business: { placeId: string; slug: string; name: string };
   email: string;
   /** `resend` = mailed from the edge; `none` = no transport configured, operator handover. */
@@ -64,6 +76,8 @@ export interface ClaimStartResult {
 }
 
 export interface ClaimVerifyResult {
+  /** Never `verified`: proving a mailbox only opens the manual ownership review. */
+  state: 'pending_approval';
   business: PublicBusinessRecord;
   /** Site path of the claimed listing, for the "view your listing" link. */
   listingUrl: string;
@@ -204,6 +218,12 @@ export async function startClaim(
   if (existing?.verified && existing.ownerEmail === email) {
     return { state: 'already_verified', business: publicBusiness, email };
   }
+  if (existing?.claimed && !existing.verified && existing.ownerEmail === email) {
+    // The same mailbox already passed the email step and is queued for the manual
+    // ownership review. Issuing another code would prove nothing new, so answer
+    // honestly and send the owner to the review status instead.
+    return { state: 'already_pending', business: publicBusiness, email };
+  }
   if (!existing?.claimed && existing?.ownerEmail && existing.ownerEmail !== email) {
     // Defensive: the DB CHECK constraints make this unreachable.
     throw new RegistryError('already_claimed', `${placeId} is already claimed`, 409);
@@ -314,7 +334,13 @@ export async function startClaim(
 }
 
 /**
- * Check a code and, only on success, claim + verify the business.
+ * Check a code and, only on success, record the email-verified claim.
+ *
+ * The business is left **pending manual ownership approval**: this step proves the
+ * requester controls the mailbox, which is not the same thing as owning the
+ * business. `approveOwnership()` (./registry.ts) is the only transition to
+ * `verified`, and it requires a named approver plus the independent evidence used.
+ *
  * Throws `RegistryError` with `invalid_code` (400), `code_expired` (410),
  * `too_many_attempts` (429) or `already_claimed` (409).
  */
@@ -398,10 +424,13 @@ export async function verifyClaim(
     source: 'claim',
     actor: 'claim-flow',
   });
-  const verified = await verifyBusiness(db, placeId, 'claim-flow');
 
+  // Deliberately NOT verifyBusiness()/approveOwnership(): controlling the mailbox
+  // must not grant ownership, the badge, or edit/publish access. The claim waits
+  // for an operator to approve it with recorded evidence.
   return {
-    business: toPublic(verified ?? record),
+    state: 'pending_approval',
+    business: toPublic(record),
     listingUrl: listingPath(business),
   };
 }

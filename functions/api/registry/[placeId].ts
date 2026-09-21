@@ -2,10 +2,22 @@
 //
 // GET  public: claim state only, PII stripped. With the admin token: full record.
 // PUT  admin only: { op: "claim" | "verify" | "setTier" | "revoke", ... }
-//                  The claim flow (Phase 0 card t_9e30b622) and the Phase 1 owner
-//                  dashboard call claimBusiness()/verifyBusiness() from
-//                  functions/_lib/registry.ts directly — this endpoint is the
-//                  operator path (manual claims, tier upgrades, revocations).
+//                  `verify` is the ownership approval and REQUIRES `evidence`
+//                  (what independent source proved ownership) AND a named
+//                  `approvedBy`. `approvedBy` is NEVER defaulted from anything, and
+//                  both fields must be non-blank — an email-verified claim is not
+//                  ownership, so it cannot be approved without provenance.
+//                  A body `actor` is recorded only as operator-asserted provenance.
+//                  The audit `actor` column holds the server-controlled credential
+//                  class for the `verify`/ownership-approval event only (round 3, R3);
+//                  the other ops on this route (claim/revoke/setTier/publish) still
+//                  record the body-supplied actor, so that column is NOT a uniform
+//                  credential-class field across every event — read the event's
+//                  `actorAssertedSource` before treating `actor` as authenticated.
+//                  The claim flow (Phase 0) and the Phase 1 owner dashboard call
+//                  claimBusiness()/approveOwnership() from functions/_lib/registry.ts
+//                  directly — this endpoint is the operator path (manual claims,
+//                  ownership approval, tier upgrades, revocations).
 //
 // A write that actually changes verification state queues a production rebuild
 // (functions/_lib/rebuild.ts) so the static badge HTML refreshes; send
@@ -23,6 +35,7 @@ import {
 } from '../../_lib/http';
 import {
   RegistryError,
+  approveOwnership,
   claimBusiness,
   getBusiness,
   listEvents,
@@ -30,7 +43,6 @@ import {
   revokeBusiness,
   setTier,
   toPublic,
-  verifyBusiness,
   isTier,
 } from '../../_lib/registry';
 import { queueRebuild } from '../../_lib/rebuild';
@@ -102,7 +114,33 @@ export const onRequestPut: PagesFunction = async (context) => {
         return json({ ok: true, op, business: record });
       }
       case 'verify': {
-        const record = await verifyBusiness(env.DB, placeId, actor);
+        // Ownership approval. `approvedBy` + `evidence` are mandatory: a claim is
+        // only email-verified, and the registry must record who decided this
+        // business really belongs to that owner, and on what independent basis.
+        //
+        // `expectedOwnerEmail` + `expectedClaimGeneration` are mandatory too: the
+        // approval is bound to the exact claimant the operator reviewed. Read the
+        // current generation from `GET /api/registry/:placeId` (admin token) before
+        // submitting; a stale or conflicting decision is refused with 409 rather
+        // than approving whoever happens to be there now.
+        const record = await approveOwnership(env.DB, placeId, {
+          // Server-controlled: this call only reaches here because the request
+          // presented the registry admin token, so the credential class is known
+          // from the server side, not from the body.
+          credentialClass: 'registry-admin-token',
+          credentialIdentifier: 'X-Registry-Admin-Token',
+          approvedBy: typeof body.approvedBy === 'string' ? body.approvedBy : '',
+          evidence: typeof body.evidence === 'string' ? body.evidence : '',
+          expectedOwnerEmail:
+            typeof body.expectedOwnerEmail === 'string' ? body.expectedOwnerEmail : '',
+          expectedClaimGeneration:
+            body.expectedClaimGeneration === undefined || body.expectedClaimGeneration === null
+              ? Number.NaN
+              : Number(body.expectedClaimGeneration),
+          // Only a name the caller actually asserted; the route never substitutes an
+          // invented individual here. The credential class above is what authorizes.
+          actor: typeof body.actor === 'string' ? body.actor : '',
+        });
         if (rebuild && before && !before.verified) {
           queueRebuild(context, env, {
             reason: 'verify',

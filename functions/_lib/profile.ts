@@ -15,6 +15,7 @@
 // Docs: docs/owner-profile-edits.md
 
 import { normalizeWhatsapp } from './whatsapp';
+import { isNonBlankProvenance, sqlNonBlankProvenance } from './provenance';
 
 export type Category = 'nails' | 'massage';
 
@@ -37,6 +38,11 @@ export interface ProfileOverride {
   hiddenPhotos: number[];
   addedPhotos: string[];
   published: boolean;
+  /**
+   * Claim generation this content was written under (migration 0007). NULL means the
+   * content is not bound to any approved claim — it is never served publicly.
+   */
+  claimGeneration: number | null;
   updatedBy: string;
   createdAt: string;
   updatedAt: string;
@@ -67,6 +73,7 @@ export type ProfileErrorCode =
   | 'code_expired'
   | 'session_expired'
   | 'not_claimed'
+  | 'ownership_pending'
   | 'email_mismatch'
   | 'too_many_requests'
   | 'not_found'
@@ -354,6 +361,38 @@ interface OwnerSessionRow {
   expires_at: string;
   created_at: string;
   used_at: string | null;
+  approval_generation: number | null;
+}
+
+/**
+ * The approval generation of a business whose ownership is currently approved, or
+ * null when it is not approved (unclaimed, pending, or revoked). Codes and sessions
+ * are minted against this value and stop working the moment it changes.
+ */
+async function approvedClaimGeneration(db: D1Database, placeId: string): Promise<number | null> {
+  const row = await db
+    .prepare(
+      `SELECT claimed, verified, ownership_approved_by, ownership_evidence, approval_generation
+         FROM businesses WHERE place_id = ?1`,
+    )
+    .bind(placeId)
+    .first<{
+      claimed: number;
+      verified: number;
+      ownership_approved_by: string | null;
+      ownership_evidence: string | null;
+      approval_generation: number;
+    }>();
+  if (
+    !row ||
+    row.claimed !== 1 ||
+    row.verified !== 1 ||
+    !isNonBlankProvenance(row.ownership_approved_by) ||
+    !isNonBlankProvenance(row.ownership_evidence)
+  ) {
+    return null;
+  }
+  return Number(row.approval_generation ?? 0);
 }
 
 export interface IssuedCode {
@@ -363,13 +402,24 @@ export interface IssuedCode {
 
 /**
  * Issue a 6-digit login code for a claimed business. The caller has already
- * checked that `email` owns `placeId`; this only enforces the rate limit.
+ * checked that `email` owns `placeId`; this enforces the rate limit and binds the
+ * code to the *current* approval generation of the business (migration 0007), so a
+ * code minted under one ownership approval cannot be redeemed under another.
  */
 export async function issueLoginCode(
   db: D1Database,
   placeId: string,
   email: string,
 ): Promise<IssuedCode> {
+  const generation = await approvedClaimGeneration(db, placeId);
+  if (generation === null) {
+    throw new ProfileError(
+      'ownership_pending',
+      'ownership of this listing is not approved, so no login code is issued',
+      403,
+    );
+  }
+
   const since = hoursFromNow(-60);
   const recent = await db
     .prepare(
@@ -401,10 +451,10 @@ export async function issueLoginCode(
       .bind(placeId, createdAt),
     db
       .prepare(
-        `INSERT INTO owner_sessions (id, place_id, email, kind, expires_at, created_at)
-         VALUES (?1, ?2, ?3, 'code', ?4, ?5)`,
+        `INSERT INTO owner_sessions (id, place_id, email, kind, expires_at, created_at, approval_generation)
+         VALUES (?1, ?2, ?3, 'code', ?4, ?5, ?6)`,
       )
-      .bind(id, placeId, email, expiresAt, createdAt),
+      .bind(id, placeId, email, expiresAt, createdAt, generation),
   ]);
 
   return { code, expiresAt };
@@ -415,11 +465,18 @@ export interface OwnerSession {
   placeId: string;
   email: string;
   expiresAt: string;
+  /** Approval generation this session belongs to; writes must match it. */
+  approvalGeneration: number;
 }
 
 /**
  * Exchange a 6-digit code for a session token. Wrong codes burn an attempt; the
  * code dies after 5 misses, so a 6-digit space cannot be brute-forced.
+ *
+ * The business must still be ownership-approved AND the code must have been minted
+ * under the business's current approval generation. A code from before a revoke (or
+ * from the pre-approval era, marked generation -1 by migration 0007) is refused
+ * here even though the row still exists.
  */
 export async function verifyLoginCode(
   db: D1Database,
@@ -430,7 +487,7 @@ export async function verifyLoginCode(
 
   const row = await db
     .prepare(
-      `SELECT id, place_id, email, kind, attempts, expires_at, created_at, used_at
+      `SELECT id, place_id, email, kind, attempts, expires_at, created_at, used_at, approval_generation
        FROM owner_sessions
        WHERE place_id = ?1 AND kind = 'code' AND used_at IS NULL
        ORDER BY created_at DESC LIMIT 1`,
@@ -438,6 +495,22 @@ export async function verifyLoginCode(
     .bind(placeId)
     .first<OwnerSessionRow>();
   if (!row) throw new ProfileError('code_expired', 'no active code — request a new one', 401);
+
+  const generation = await approvedClaimGeneration(db, placeId);
+  if (generation === null) {
+    throw new ProfileError(
+      'ownership_pending',
+      'ownership of this listing is not approved, so this code cannot be exchanged',
+      403,
+    );
+  }
+  if (row.approval_generation === null || Number(row.approval_generation) !== generation) {
+    throw new ProfileError(
+      'ownership_pending',
+      'this code was issued under an earlier ownership approval — request a new one',
+      403,
+    );
+  }
 
   if (row.expires_at <= nowIso()) {
     await db.prepare(`UPDATE owner_sessions SET used_at = ?2 WHERE id = ?1`).bind(row.id, nowIso()).run();
@@ -464,33 +537,44 @@ export async function verifyLoginCode(
     db.prepare(`UPDATE owner_sessions SET used_at = ?2 WHERE id = ?1`).bind(row.id, verifiedAt),
     db
       .prepare(
-        `INSERT INTO owner_sessions (id, place_id, email, kind, expires_at, created_at)
-         VALUES (?1, ?2, ?3, 'session', ?4, ?5)`,
+        `INSERT INTO owner_sessions (id, place_id, email, kind, expires_at, created_at, approval_generation)
+         VALUES (?1, ?2, ?3, 'session', ?4, ?5, ?6)`,
       )
-      .bind(tokenId, placeId, row.email, expiresAt, verifiedAt),
+      .bind(tokenId, placeId, row.email, expiresAt, verifiedAt, generation),
   ]);
 
-  return { token, placeId, email: row.email, expiresAt };
+  return { token, placeId, email: row.email, expiresAt, approvalGeneration: generation };
 }
 
-/** Validate an `x-owner-session` token. Returns null when it is not usable. */
+/**
+ * Validate an `x-owner-session` token. Returns null when it is not usable.
+ * The approval generation is returned so callers can refuse a session that was
+ * minted under an ownership approval that has since changed.
+ */
 export async function getOwnerSession(
   db: D1Database,
   placeId: string,
   token: string,
-): Promise<{ email: string; expiresAt: string } | null> {
+): Promise<{ email: string; expiresAt: string; approvalGeneration: number | null } | null> {
   if (!token || !placeId) return null;
   const id = await digest(`${token}:${placeId}`);
   const row = await db
     .prepare(
-      `SELECT id, place_id, email, kind, attempts, expires_at, created_at, used_at
+      `SELECT id, place_id, email, kind, attempts, expires_at, created_at, used_at, approval_generation
        FROM owner_sessions WHERE id = ?1 AND kind = 'session'`,
     )
     .bind(id)
     .first<OwnerSessionRow>();
   if (!row || row.place_id !== placeId) return null;
   if (row.expires_at <= nowIso()) return null;
-  return { email: row.email, expiresAt: row.expires_at };
+  return {
+    email: row.email,
+    expiresAt: row.expires_at,
+    approvalGeneration:
+      row.approval_generation === null || row.approval_generation === undefined
+        ? null
+        : Number(row.approval_generation),
+  };
 }
 
 /** Drop a session (owner logs out). */
@@ -514,13 +598,72 @@ interface OverrideRow {
   hidden_photos: string;
   added_photos: string;
   published: number;
+  claim_generation: number | null;
   updated_by: string;
   created_at: string;
   updated_at: string;
 }
 
 const OVERRIDE_COLUMNS =
-  'place_id, slug, category, services, hours, price_note, whatsapp, hidden_photos, added_photos, published, updated_by, created_at, updated_at';
+  'place_id, slug, category, services, hours, price_note, whatsapp, hidden_photos, added_photos, published, claim_generation, updated_by, created_at, updated_at';
+
+/** The same column list, qualified for queries that join `profile_overrides` as `o`. */
+function overrideColumns(alias: string): string {
+  return OVERRIDE_COLUMNS.split(', ')
+    .map((column) => `${alias}.${column}`)
+    .join(', ');
+}
+
+/**
+ * The authority a mutation runs under. Owner writes are bound to the *live* session
+ * row and to the business's current approval generation, and the SQL below re-checks
+ * both at write time (not at authorize time), so a revoke that lands between
+ * authorization and the write cannot be published through.
+ */
+export type OverrideAuthority =
+  | { kind: 'owner'; sessionId: string }
+  | { kind: 'operator' };
+
+/** Owner sessions are keyed by sha256(token || ':' || place_id) — see issueLoginCode. */
+export async function ownerSessionId(placeId: string, token: string): Promise<string> {
+  return digest(`${token}:${placeId}`);
+}
+
+/**
+ * A live-session + approved-generation guard, as SQL, so it is evaluated when the
+ * statement executes rather than when the request was authorized. An in-flight owner
+ * write therefore cannot publish through a revoke that lands mid-request, and an
+ * expired session cannot be resurrected by clock skew inside one statement.
+ *
+ * `nowRef`/`sessionRef` are the statement's own placeholder numbers (each statement
+ * numbers its own parameters).
+ */
+function ownerWriteGuard(nowRef: string, sessionRef: string, alias = 'b'): string {
+  return `
+        ${alias}.claimed = 1
+    AND ${alias}.verified = 1
+    AND ${sqlNonBlankProvenance(`${alias}.ownership_approved_by`)}
+    AND ${sqlNonBlankProvenance(`${alias}.ownership_evidence`)}
+    AND EXISTS (
+          SELECT 1 FROM owner_sessions s
+           WHERE s.id = ${sessionRef}
+             AND s.place_id = ${alias}.place_id
+             AND s.kind = 'session'
+             AND s.used_at IS NULL
+             AND s.expires_at > ${nowRef}
+             AND s.approval_generation = ${alias}.approval_generation
+        )`;
+}
+
+/**
+ * The generation an operator write is bound to: the current one when ownership is
+ * approved, otherwise NULL — an operator edit for an unapproved listing is kept (it
+ * is support content) but is never publicly visible.
+ */
+const OPERATOR_BOUND_GENERATION = `CASE WHEN b.claimed = 1 AND b.verified = 1
+                 AND ${sqlNonBlankProvenance('b.ownership_approved_by')}
+                 AND ${sqlNonBlankProvenance('b.ownership_evidence')}
+                THEN b.approval_generation ELSE NULL END`;
 
 function parseJson<T>(value: string | null, fallback: T): T {
   if (!value) return fallback;
@@ -543,6 +686,10 @@ function toOverride(row: OverrideRow): ProfileOverride {
     hiddenPhotos: parseJson<number[]>(row.hidden_photos, []),
     addedPhotos: parseJson<string[]>(row.added_photos, []),
     published: row.published === 1,
+    claimGeneration:
+      row.claim_generation === null || row.claim_generation === undefined
+        ? null
+        : Number(row.claim_generation),
     updatedBy: row.updated_by,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -581,14 +728,44 @@ async function logEdit(
     .run();
 }
 
-/** The injector's hot path: one indexed lookup per detail-page view. */
+/**
+ * The injector's public read path: one ownership-checked lookup per detail-page view.
+ *
+ * Fail-closed by construction: the row is only public when the business it belongs to
+ * currently has an approved owner AND the content was written under that same
+ * approval generation. Content published before the approval gate (migration 0007
+ * sets `claim_generation = NULL`), content from a revoked claimant, and content left
+ * behind by an interrupted lifecycle therefore all resolve to `null`/no rows — the
+ * static page is served instead.
+ */
+const PUBLIC_OVERRIDE_FROM = `FROM profile_overrides o
+  JOIN businesses b ON b.place_id = o.place_id
+ WHERE o.published = 1
+   AND o.claim_generation IS NOT NULL
+   AND b.claimed = 1
+   AND b.verified = 1
+   AND ${sqlNonBlankProvenance('b.ownership_approved_by')}
+   AND ${sqlNonBlankProvenance('b.ownership_evidence')}
+   AND o.claim_generation = b.approval_generation`;
+
 export async function getPublishedOverrideBySlug(
   db: D1Database,
   slug: string,
 ): Promise<ProfileOverride | null> {
   const row = await db
-    .prepare(`SELECT ${OVERRIDE_COLUMNS} FROM profile_overrides WHERE slug = ?1 AND published = 1`)
+    .prepare(`SELECT ${overrideColumns('o')} ${PUBLIC_OVERRIDE_FROM} AND o.slug = ?1`)
     .bind(slug)
+    .first<OverrideRow>();
+  return row ? toOverride(row) : null;
+}
+
+export async function getPublishedOverrideByPlaceId(
+  db: D1Database,
+  placeId: string,
+): Promise<ProfileOverride | null> {
+  const row = await db
+    .prepare(`SELECT ${overrideColumns('o')} ${PUBLIC_OVERRIDE_FROM} AND o.place_id = ?1`)
+    .bind(placeId)
     .first<OverrideRow>();
   return row ? toOverride(row) : null;
 }
@@ -611,9 +788,14 @@ interface ClaimedRow {
   name: string | null;
   category: string | null;
   owner_email: string | null;
+  verified: number;
+  ownership_approved_by: string | null;
+  ownership_evidence: string | null;
+  approval_generation: number;
 }
 
-const CLAIMED_SELECT = 'place_id, slug, name, category, owner_email';
+const CLAIMED_SELECT =
+  'place_id, slug, name, category, owner_email, verified, ownership_approved_by, ownership_evidence, approval_generation';
 
 /** A claimed business by registry key. */
 async function claimedByPlaceId(db: D1Database, placeId: string): Promise<ClaimedRow | null> {
@@ -668,6 +850,15 @@ export async function resolveClaimedBusiness(
   name: string | null;
   category: string | null;
   ownerEmail: string;
+  /** Ownership approved by a human (migration 0006). `claimed` alone is not enough. */
+  verified: boolean;
+  /**
+   * The full predicate the authorization decisions use: claimed, verified, provenance
+   * recorded and a generation present (migration 0007). `verified` alone stays in the
+   * shape for callers that only need the raw flag.
+   */
+  ownershipApproved: boolean;
+  approvalGeneration: number;
 } | null> {
   const value = business.trim();
   if (!value) return null;
@@ -686,6 +877,12 @@ export async function resolveClaimedBusiness(
     name: row.name,
     category: row.category,
     ownerEmail: row.owner_email,
+    verified: row.verified === 1,
+    ownershipApproved:
+      row.verified === 1 &&
+      isNonBlankProvenance(row.ownership_approved_by) &&
+      isNonBlankProvenance(row.ownership_evidence),
+    approvalGeneration: Number(row.approval_generation ?? 0),
   };
 }
 
@@ -702,7 +899,67 @@ export interface ProfilePatch {
  * Create or replace the owner's profile content. Only keys present in `patch`
  * are touched, so the dashboard can save one section at a time; `services` /
  * `hours` sent as empty collections deliberately blank the section.
+ *
+ * The authority is enforced *at write time*, atomically, in the statement that
+ * writes: the row is upserted only while the caller's session row is live AND the
+ * business's approval generation still equals the session's. A revoke that lands
+ * between authorization and this write (including one that lands while an external
+ * photo HEAD request is in flight) leaves `changes = 0` and nothing is published.
  */
+/**
+ * Retention for a superseded (quarantined / different-generation) override row whose
+ * fields are NOT being inherited by the save that replaces it. The predecessor's
+ * content is preserved in `ownership_quarantine_log` and the edit trail, so the
+ * evidence survives without any of it being served: the saved row only ever contains
+ * what the current, approved owner actually submitted plus safe defaults.
+ *
+ * A deliberate adoption of predecessor content would be a separate, explicit operator
+ * workflow; nothing here republishes it.
+ */
+async function retainSupersededOverride(
+  db: D1Database,
+  before: ProfileOverride,
+  input: { placeId: string; slug: string; reason: string },
+): Promise<void> {
+  const hasContent =
+    before.services !== null ||
+    before.hours !== null ||
+    before.priceNote !== null ||
+    before.whatsapp !== null ||
+    before.hiddenPhotos.length > 0 ||
+    before.addedPhotos.length > 0;
+  if (!hasContent) return;
+
+  const detail = JSON.stringify({
+    slug: input.slug,
+    published: before.published,
+    claimGeneration: before.claimGeneration,
+    updatedBy: before.updatedBy,
+    services: before.services,
+    hours: before.hours,
+    priceNote: before.priceNote,
+    whatsapp: before.whatsapp,
+    hiddenPhotos: before.hiddenPhotos,
+    addedPhotos: before.addedPhotos,
+    reason: `not inherited on partial save (${input.reason}); retained as evidence only`,
+  });
+
+  await db.batch([
+    db
+      .prepare(
+        `INSERT INTO ownership_quarantine_log (place_id, kind, generation, owner_email, detail)
+         SELECT ?1, 'publication', ?2, b.owner_email, ?3 FROM businesses b WHERE b.place_id = ?1`,
+      )
+      .bind(input.placeId, before.claimGeneration, detail),
+    db
+      .prepare(
+        `INSERT INTO profile_edit_events (place_id, slug, actor, action, detail)
+         VALUES (?1, ?2, 'owner-save', 'ownership_predecessor_content_not_inherited', ?3)`,
+      )
+      .bind(input.placeId, input.slug, detail),
+  ]);
+}
+
 export async function saveOverride(
   db: D1Database,
   input: {
@@ -711,6 +968,7 @@ export async function saveOverride(
     category: Category;
     patch: ProfilePatch;
   },
+  authority: OverrideAuthority,
 ): Promise<ProfileOverride> {
   const { placeId, patch } = input;
   const slug = normalizeSlug(input.slug);
@@ -719,66 +977,117 @@ export async function saveOverride(
   }
 
   const before = await getOverrideByPlaceId(db, placeId);
+
+  // R1 (round 3). A partial save may only carry forward fields that were written
+  // under the CURRENT approval generation. Quarantined (pre-0007 migration),
+  // revoked-claimant or otherwise unbound predecessor content is NEVER inherited
+  // implicitly: omitted keys fall back to safe defaults instead, and the superseded
+  // content is retained as evidence (separate from what is served), so a replacement
+  // owner cannot silently republish a predecessor's prices, WhatsApp number or links
+  // under a fresh approval. Adopting predecessor content is a deliberate, auditable
+  // operator action, not a side effect of an unrelated partial save.
+  const approvedGeneration = await approvedClaimGeneration(db, placeId);
+  const inheritable =
+    before !== null &&
+    before.published &&
+    before.claimGeneration !== null &&
+    approvedGeneration !== null &&
+    before.claimGeneration === approvedGeneration;
+  if (before && !inheritable) {
+    await retainSupersededOverride(db, before, {
+      placeId,
+      slug,
+      reason: approvedGeneration === null ? 'no-current-approval' : 'different-generation',
+    });
+  }
+  const previous = inheritable ? before : null;
   const services =
     patch.services === undefined
-      ? before?.services ?? null
+      ? previous?.services ?? null
       : validateServices(patch.services);
   const hours =
-    patch.hours === undefined ? before?.hours ?? null : validateHours(patch.hours);
+    patch.hours === undefined ? previous?.hours ?? null : validateHours(patch.hours);
   const priceNote =
-    patch.priceNote === undefined ? before?.priceNote ?? null : validatePriceNote(patch.priceNote);
+    patch.priceNote === undefined ? previous?.priceNote ?? null : validatePriceNote(patch.priceNote);
   const whatsapp =
-    patch.whatsapp === undefined ? before?.whatsapp ?? null : validateWhatsapp(patch.whatsapp);
+    patch.whatsapp === undefined ? previous?.whatsapp ?? null : validateWhatsapp(patch.whatsapp);
   const hiddenPhotos =
     patch.hiddenPhotos === undefined
-      ? before?.hiddenPhotos ?? []
+      ? previous?.hiddenPhotos ?? []
       : validatePhotoIndexes(patch.hiddenPhotos);
   const addedPhotos =
     patch.addedPhotos === undefined
-      ? before?.addedPhotos ?? []
+      ? previous?.addedPhotos ?? []
       : validatePhotoUrls(patch.addedPhotos);
 
   for (const url of addedPhotos) {
-    if (before?.addedPhotos.includes(url)) continue; // already verified once
+    if (previous?.addedPhotos.includes(url)) continue; // already verified once
     await assertImageReachable(url);
   }
 
   const now = nowIso();
-  await db
-    .prepare(
-      `INSERT INTO profile_overrides
-         (place_id, slug, category, services, hours, price_note, whatsapp, hidden_photos,
-          added_photos, published, updated_by, created_at, updated_at)
-       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, 1, 'owner', ?10, ?10)
-       ON CONFLICT (place_id) DO UPDATE SET
-         slug          = excluded.slug,
-         category      = excluded.category,
-         services      = excluded.services,
-         hours         = excluded.hours,
-         price_note    = excluded.price_note,
-         whatsapp      = excluded.whatsapp,
-         hidden_photos = excluded.hidden_photos,
-         added_photos  = excluded.added_photos,
-         published     = 1,
-         updated_by    = 'owner',
-         updated_at    = excluded.updated_at`,
-    )
-    .bind(
-      placeId,
-      slug,
-      input.category,
-      services === null ? null : JSON.stringify(services),
-      hours === null ? null : JSON.stringify(hours),
-      priceNote,
-      whatsapp,
-      JSON.stringify(hiddenPhotos),
-      JSON.stringify(addedPhotos),
-      now,
-    )
-    .run();
+  const COLUMN_LIST = `(place_id, slug, category, services, hours, price_note, whatsapp, hidden_photos,
+          added_photos, published, claim_generation, updated_by, created_at, updated_at)`;
+  const boundGeneration =
+    authority.kind === 'owner' ? 'b.approval_generation' : OPERATOR_BOUND_GENERATION;
+  const writer = authority.kind === 'owner' ? 'owner' : 'operator';
+
+  // ONE statement, therefore ONE authorization evaluation point: nothing can slip
+  // between "the session and generation were checked" and "the row was written". The
+  // predicate appears twice because the upsert has two branches (insert, and DO UPDATE
+  // for an existing row), and both are evaluated against committed state when the
+  // statement runs.
+  const selectGuard =
+    authority.kind === 'owner' ? `AND ${ownerWriteGuard('?10', '?11', 'b')}` : '';
+  const conflictGuard =
+    authority.kind === 'owner'
+      ? `AND EXISTS (SELECT 1 FROM businesses b2 WHERE b2.place_id = ?1 AND ${ownerWriteGuard('?10', '?11', 'b2')})`
+      : `AND EXISTS (SELECT 1 FROM businesses b2 WHERE b2.place_id = ?1)`;
+
+  const select = `INSERT INTO profile_overrides ${COLUMN_LIST}
+               SELECT b.place_id, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, 1, ${boundGeneration}, '${writer}', ?10, ?10
+                 FROM businesses b
+                WHERE b.place_id = ?1
+                  ${selectGuard}
+               ON CONFLICT (place_id) DO UPDATE SET
+                 slug = excluded.slug, category = excluded.category, services = excluded.services,
+                 hours = excluded.hours, price_note = excluded.price_note, whatsapp = excluded.whatsapp,
+                 hidden_photos = excluded.hidden_photos, added_photos = excluded.added_photos,
+                 published = 1, claim_generation = excluded.claim_generation,
+                 updated_by = '${writer}', updated_at = excluded.updated_at
+                WHERE profile_overrides.place_id = ?1
+                  ${conflictGuard}`;
+
+  const statement = db.prepare(select).bind(
+    placeId,
+    slug,
+    input.category,
+    services === null ? null : JSON.stringify(services),
+    hours === null ? null : JSON.stringify(hours),
+    priceNote,
+    whatsapp,
+    JSON.stringify(hiddenPhotos),
+    JSON.stringify(addedPhotos),
+    now,
+    ...(authority.kind === 'owner' ? [authority.sessionId] : []),
+  );
+
+  const result = await statement.run();
+  const written = Number(result?.meta?.changes ?? 0);
+
+  if (written === 0) {
+    if (authority.kind === 'operator') {
+      throw new ProfileError('not_found', `no registry entry for ${placeId}`, 404);
+    }
+    throw new ProfileError(
+      'ownership_pending',
+      'this change was not saved: ownership of the listing is no longer approved for this session',
+      403,
+    );
+  }
 
   const record = (await getOverrideByPlaceId(db, placeId))!;
-  await logEdit(db, placeId, slug, 'owner', before ? 'owner_save' : 'owner_create', {
+  await logEdit(db, placeId, slug, writer, before ? 'owner_save' : 'owner_create', {
     services: services?.length ?? null,
     hours: hours ? Object.values(hours).filter(Boolean).length : null,
     priceNote: priceNote ? true : null,
@@ -790,12 +1099,44 @@ export async function saveOverride(
   return record;
 }
 
-/** Owner-triggered reset: drop back to the Google-derived defaults. */
-export async function resetOverride(db: D1Database, placeId: string): Promise<boolean> {
+/**
+ * Owner-triggered reset: drop back to the Google-derived defaults.
+ *
+ * Guarded like a save: an owner may only remove their published content while their
+ * session and the business's approval generation still agree, so a revoked owner
+ * cannot delete content after the revoke (which would otherwise be a way to keep
+ * mutating the live listing).
+ */
+export async function resetOverride(
+  db: D1Database,
+  placeId: string,
+  authority: OverrideAuthority,
+): Promise<boolean> {
   const before = await getOverrideByPlaceId(db, placeId);
   if (!before) return false;
-  await db.prepare(`DELETE FROM profile_overrides WHERE place_id = ?1`).bind(placeId).run();
-  await logEdit(db, placeId, before.slug, 'owner', 'owner_reset', { previous: toPublicOverride(before) });
+  const now = nowIso();
+  const result =
+    authority.kind === 'owner'
+      ? await db
+          .prepare(
+            `DELETE FROM profile_overrides
+              WHERE place_id = ?1
+                AND EXISTS (SELECT 1 FROM businesses b
+                             WHERE b.place_id = ?1 AND ${ownerWriteGuard('?2', '?3')})`,
+          )
+          .bind(placeId, now, authority.sessionId)
+          .run()
+      : await db.prepare('DELETE FROM profile_overrides WHERE place_id = ?1').bind(placeId).run();
+
+  if (Number(result.meta?.changes ?? 0) === 0) {
+    if (authority.kind === 'operator') return false;
+    throw new ProfileError(
+      'ownership_pending',
+      'the reset was refused: ownership of the listing is no longer approved for this session',
+      403,
+    );
+  }
+  await logEdit(db, placeId, before.slug, authority.kind === 'operator' ? 'operator' : 'owner', 'owner_reset', { previous: toPublicOverride(before) });
   return true;
 }
 
@@ -807,18 +1148,25 @@ export async function listPublishedOverrides(
   const offset = Math.max(options.offset ?? 0, 0);
   const rows = await db
     .prepare(
-      `SELECT ${OVERRIDE_COLUMNS} FROM profile_overrides WHERE published = 1
-       ORDER BY updated_at DESC, slug ASC LIMIT ?1 OFFSET ?2`,
+      `SELECT ${overrideColumns('o')} ${PUBLIC_OVERRIDE_FROM}
+       ORDER BY o.updated_at DESC, o.slug ASC LIMIT ?1 OFFSET ?2`,
     )
     .bind(limit, offset)
     .all<OverrideRow>();
   const count = await db
-    .prepare(`SELECT COUNT(*) AS n FROM profile_overrides WHERE published = 1`)
+    .prepare(`SELECT COUNT(*) AS n ${PUBLIC_OVERRIDE_FROM}`)
     .first<{ n: number }>();
   return { total: count?.n ?? 0, records: (rows.results ?? []).map(toOverride) };
 }
 
-/** Operator moderation: take an edit down or put it back up. */
+/**
+ * Operator moderation: take an edit down or put it back up.
+ *
+ * Taking content down always works. Putting it *up* only works while the listing has
+ * an approved owner, and the row is re-bound to that owner's current approval
+ * generation: moderation cannot be used to re-publish quarantined content for a
+ * listing nobody legitimately owns.
+ */
 export async function setOverridePublished(
   db: D1Database,
   key: string,
@@ -828,10 +1176,38 @@ export async function setOverridePublished(
   const record = (await getOverrideByPlaceId(db, key)) ?? (await findBySlug(db, key));
   if (!record) throw new ProfileError('not_found', `no profile edits for ${key}`, 404);
   const now = nowIso();
-  await db
-    .prepare(`UPDATE profile_overrides SET published = ?2, updated_by = ?3, updated_at = ?4 WHERE place_id = ?1`)
-    .bind(record.placeId, published ? 1 : 0, actor, now)
-    .run();
+
+  if (published) {
+    const result = await db
+      .prepare(
+        `UPDATE profile_overrides
+            SET published = 1,
+                claim_generation = (SELECT b.approval_generation FROM businesses b WHERE b.place_id = ?1),
+                updated_by = ?2, updated_at = ?3
+          WHERE place_id = ?1
+            AND EXISTS (SELECT 1 FROM businesses b
+                         WHERE b.place_id = ?1 AND b.claimed = 1 AND b.verified = 1
+                           AND ${sqlNonBlankProvenance('b.ownership_approved_by')}
+                           AND ${sqlNonBlankProvenance('b.ownership_evidence')})`,
+      )
+      .bind(record.placeId, actor, now)
+      .run();
+    if (Number(result.meta?.changes ?? 0) === 0) {
+      throw new ProfileError(
+        'ownership_pending',
+        'refusing to publish: the listing has no approved owner to attribute this content to',
+        409,
+      );
+    }
+  } else {
+    await db
+      .prepare(
+        `UPDATE profile_overrides SET published = 0, updated_by = ?2, updated_at = ?3 WHERE place_id = ?1`,
+      )
+      .bind(record.placeId, actor, now)
+      .run();
+  }
+
   await logEdit(db, record.placeId, record.slug, actor, published ? 'operator_publish' : 'operator_unpublish', null);
   return (await getOverrideByPlaceId(db, record.placeId))!;
 }

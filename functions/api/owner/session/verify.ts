@@ -30,6 +30,15 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     if (!record) {
       throw new ProfileError('not_claimed', 'we have no verified owner for that business yet', 404);
     }
+    // The code alone is not enough: the business must still be ownership-approved
+    // *with provenance*, not merely carry `verified = 1`.
+    if (!record.ownershipApproved) {
+      throw new ProfileError(
+        'ownership_pending',
+        'ownership of this listing has not been approved yet — the editor opens once we have reviewed it',
+        403,
+      );
+    }
 
     const session = await verifyLoginCode(env.DB, record.placeId, code);
     const slug = record.slug ?? (isPlaceId(business) ? record.placeId : business);
