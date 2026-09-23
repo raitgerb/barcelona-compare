@@ -1,0 +1,32 @@
+# Withdrawn listing — owner-requested takedown (2026-09-23).
+# Retired URL: /massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gràcia/
+# (placeId ChIJ-QmdGByjpBIRSL1I2YNxXjk; source markdown already deleted in 1d5baf2)
+#
+# Why this file exists: unknown paths on this site are served as the homepage with
+# HTTP 200, so a deleted listing would decay into a homepage soft-404 instead of a
+# real "gone" response. Cloudflare Pages _redirects supports only 301/302/303/307/308
+# and 200 (https://developers.cloudflare.com/pages/configuration/redirects/), so a 410
+# Gone is not expressible here; the retired listing is instead permanently redirected
+# to its own category index in the SAME locale (never the homepage).
+#
+# Both the literal and percent-encoded source forms are listed, and both the trailing
+# and non-trailing slash forms, because Pages' matching behaviour on encoded paths is
+# undocumented. Order is irrelevant here: every form of one URL has the same target.
+
+# ES (default locale, unprefixed)
+/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gràcia/ /massage/ 301
+/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gr%C3%A0cia/ /massage/ 301
+/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gràcia /massage/ 301
+/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gr%C3%A0cia /massage/ 301
+
+# EN
+/en/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gràcia/ /en/massage/ 301
+/en/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gr%C3%A0cia/ /en/massage/ 301
+/en/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gràcia /en/massage/ 301
+/en/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gr%C3%A0cia /en/massage/ 301
+
+# CA
+/ca/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gràcia/ /ca/massage/ 301
+/ca/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gr%C3%A0cia/ /ca/massage/ 301
+/ca/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gràcia /ca/massage/ 301
+/ca/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gr%C3%A0cia /ca/massage/ 301
