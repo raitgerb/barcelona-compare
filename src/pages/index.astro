@@ -5,8 +5,8 @@ import { getCollection } from 'astro:content';
 import { imageUrl } from '../lib/images';
 import { loadVerifiedRegistry } from '../lib/registry';
 
-const nails = await getCollection('nails');
-const massage = await getCollection('massage');
+const nails = await getCollection('nails', ({ data }) => !data.offline);
+const massage = await getCollection('massage', ({ data }) => !data.offline);
 const registry = await loadVerifiedRegistry();
 
 const featuredNails = nails.filter(b => b.data.googleRating && b.data.googleRating >= 4.6).sort((a, b) => (b.data.googleReviewCount || 0) - (a.data.googleReviewCount || 0)).slice(0, 4);

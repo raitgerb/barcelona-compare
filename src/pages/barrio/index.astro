@@ -3,8 +3,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { neighborhoodGuides } from '../../data/neighborhoods';
 
-const nails = await getCollection('nails');
-const massage = await getCollection('massage');
+const nails = await getCollection('nails', ({ data }) => !data.offline);
+const massage = await getCollection('massage', ({ data }) => !data.offline);
 const all = [...nails, ...massage];
 
 const entries = Object.entries(neighborhoodGuides)
