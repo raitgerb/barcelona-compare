@@ -43,4 +43,5 @@ googleReviews:
     relativeTime: "2 years ago"
     languageCode: "es"
     text: "Víctor tiene una sensibilidad especial para reconocer lo que tú cuerpo necesita que, junto con su experiencia y preparación, te ayudan a relajarte y salir como nuevo. El entorno es de total confort. Mi espalda y yo recomendamos a Víctor al 100%"
+offline: true
 ---
