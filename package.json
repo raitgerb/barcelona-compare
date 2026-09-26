@@ -19,7 +19,8 @@
     "owner:smoke": "bash scripts/owner-edit-smoke.sh",
     "registry:snapshot": "node scripts/registry-snapshot.mjs",
     "data:smoke": "python3 scripts/data-pipeline-smoke.py",
-    "data:status": "python3 scripts/broaden.py status"
+    "data:status": "python3 scripts/broaden.py status",
+    "listing:visibility": "python3 scripts/listing-visibility.py"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

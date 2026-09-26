@@ -13,17 +13,18 @@ import { imagePath, photoOrder, hasPhoto } from '../../../lib/images';
 import { verifiedBusinessFor } from '../../../lib/registry';
 
 export async function getStaticPaths() {
-  const businesses = await getCollection('massage');
+  const businesses = await getCollection('massage', ({ data }) => !data.offline);
   return businesses.map(b => ({ params: { slug: b.id } }));
 }
 
 const { slug } = Astro.params;
-const businesses = await getCollection('massage');
+const businesses = await getCollection('massage', ({ data }) => !data.offline);
 const business = businesses.find(b => b.id === slug);
 
 if (!business) {
   return Astro.redirect('/massage');
 }
+
 
 const { data } = business;
 const verified = await verifiedBusinessFor(data.googlePlaceId);

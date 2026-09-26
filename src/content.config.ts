@@ -20,6 +20,8 @@ const businessSchema = z.object({
   googlePlaceId: z.string().optional(),
   photos: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
+  // Kept in the source catalogue, but omitted from all public catalogue output.
+  offline: z.boolean().default(false),
   massageTypes: z.array(z.string()).optional(),
   primaryType: z.string().optional(),
   googleMapsUri: z.string().optional(),
