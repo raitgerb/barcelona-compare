@@ -67,7 +67,8 @@
   function imgPath(b) {
     var leads = window.BC_PHOTO_LEAD || {};
     var lead = leads[b.cat + '/' + b.slug];
-    return '/images/' + b.cat + '/' + b.slug + '-' + (lead != null ? lead : '0') + '.jpg';
+    var imageBase = window.BC_IMAGE_BASE || '';
+    return imageBase + '/images/' + b.cat + '/' + b.slug + '-' + (lead != null ? lead : '0') + '.jpg';
   }
 
   function starsHtml(rating) {
