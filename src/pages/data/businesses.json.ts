@@ -10,8 +10,8 @@ type Biz = CollectionEntry<'nails'> | CollectionEntry<'massage'>;
  * pre-fill the WhatsApp field with the number that is live right now).
  */
 export async function GET() {
-  const nails = await getCollection('nails');
-  const massage = await getCollection('massage');
+  const nails = await getCollection('nails', ({ data }) => !data.offline);
+  const massage = await getCollection('massage', ({ data }) => !data.offline);
 
   const pick = (entries: Biz[], category: string) =>
     entries.map(e => ({

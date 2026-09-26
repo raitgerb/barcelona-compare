@@ -16,7 +16,7 @@ type Biz = CollectionEntry<'nails'> | CollectionEntry<'massage'>;
  * key and there is nothing to claim without it.
  */
 export async function GET() {
-  const [nails, massage] = await Promise.all([getCollection('nails'), getCollection('massage')]);
+  const [nails, massage] = await Promise.all([getCollection('nails', ({ data }) => !data.offline), getCollection('massage', ({ data }) => !data.offline)]);
 
   const pick = (entries: Biz[], category: string) =>
     entries
