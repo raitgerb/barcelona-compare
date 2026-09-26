@@ -1,5 +1,6 @@
 ---
 // /ca/massage/{slug}/ — Catalan business detail (mirror of /massage and /en/massage).
+import OfflineListing from '../../../../components/OfflineListing.astro';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import Lightbox from '../../../../components/Lightbox.astro';
 import DetailEnhancements from '../../../../components/DetailEnhancements.astro';
@@ -14,14 +15,16 @@ import { imagePath, photoOrder, hasPhoto } from '../../../../lib/images';
 import { verifiedBusinessFor } from '../../../../lib/registry';
 
 export async function getStaticPaths() {
-  const businesses = await getCollection('massage', ({ data }) => !data.offline);
+  const businesses = await getCollection('massage');
   return businesses.map(b => ({ params: { slug: b.id } }));
 }
 
 const { slug } = Astro.params;
-const businesses = await getCollection('massage', ({ data }) => !data.offline);
+const businesses = await getCollection('massage');
 const business = businesses.find(b => b.id === slug);
 if (!business) return Astro.redirect('/ca/massage');
+
+const isOffline = Boolean(business.data.offline);
 
 
 const { data } = business;
@@ -69,6 +72,11 @@ const schemaOrg = {
 };
 ---
 
+{isOffline ? (
+  <BaseLayout title="Fitxa no disponible — Barcelona Compare" description="Aquesta fitxa ja no està publicada." lang="ca">
+    <OfflineListing lang="ca" />
+  </BaseLayout>
+) : (
 <BaseLayout
   title={`${data.name} — Massatge a ${data.neighborhood}`}
   description={`${data.name} a ${data.neighborhood}, Barcelona. ${data.googleRating ? `Valoració: ${data.googleRating}/5 (${data.googleReviewCount} ressenyes).` : ''}`}
@@ -170,3 +178,4 @@ const schemaOrg = {
   </article>
   {hasPhoto('massage', slug) && <Lightbox imagePath={galleryPath} photoCount={5} altText={data.name} />}
 </BaseLayout>
+)}
