@@ -16,6 +16,9 @@ def main():
     db.execute("insert into owner_users(user_id, created_at, updated_at) values ('u1', 'now', 'now')")
     db.execute("insert into owner_contact_snapshots(snapshot_id, place_id, user_id, phone_digest, source, eligibility_version, eligibility_disposition, captured_at) values ('s1','ChIJone','u1','digest','google_places','phone-self-service-eligibility-v1','eligible_unique_canonical','now')")
     db.execute("insert into owner_memberships(membership_id,user_id,place_id,state,source,created_at) values ('m1','u1','ChIJone','legacy_unverified','legacy_email','now')")
+    # Ensure the mismatched-user case reaches the composite membership/user/place
+    # foreign key rather than failing on the ordinary user foreign key first.
+    db.execute("insert into owner_users(user_id, created_at, updated_at) values ('u2', 'now', 'now')")
     db.execute("insert into owner_verification_events(event_id,membership_id,user_id,place_id,event_type,channel,occurred_at) values ('e1','m1','u1','ChIJone','legacy_imported','legacy_email','now')")
     db.execute("insert into owner_verification_events(event_id,membership_id,user_id,place_id,event_type,channel,eligibility_version,occurred_at) values ('e2','m1','u1','ChIJone','admitted','phone','phone-self-service-eligibility-v1','now')")
     # A verification event must identify the same user and Place ID as its membership.
@@ -39,7 +42,6 @@ def main():
         ("different user", 'm2', 'u2', 'ChIJone', False),
         ("different place", 'm3', 'u1', 'ChIJtwo', False),
     )
-    db.execute("insert into owner_users(user_id, created_at, updated_at) values ('u2', 'now', 'now')")
     for label, membership_id, user_id, place_id, should_reject in duplicate_cases:
         try:
             db.execute("insert into owner_memberships(membership_id,user_id,place_id,state,source,created_at) values (?,?,?,?,?,?)", (membership_id, user_id, place_id, 'verified', 'phone_manifest', 'now'))
