@@ -76,6 +76,20 @@ def plausible_shared_contact(group: list[dict[str, str | None]]) -> bool:
     return any(len(token_sets[0] & tokens) >= 2 for tokens in token_sets[1:])
 
 
+def collision_groups(rows: list[dict[str, str | None]]) -> dict[str, list[dict[str, str | None]]]:
+    groups = defaultdict(list)
+    for row in rows:
+        if row['canonical']:
+            groups[row['canonical']].append(row)
+    return {number: group for number, group in groups.items() if len(group) > 1}
+
+
+def collision_disposition(group: list[dict[str, str | None]]) -> str:
+    if plausible_shared_contact(group):
+        return 'plausible shared/chain/contact'
+    return 'data-quality conflict: manual review'
+
+
 def count(category: str) -> tuple[int, int]:
     paths = sorted((Path('src/content') / category).glob('*.md'))
     present = 0
@@ -102,18 +116,14 @@ def quality_report(rows: list[dict[str, str | None]]) -> None:
         missing = len(selected) - non_empty
         print(f'{category}: total={len(selected)} non_empty={non_empty} canonicalizable={canonical} invalid_or_ambiguous={invalid} missing={missing}')
 
-    groups = defaultdict(list)
-    for row in rows:
-        if row['canonical']:
-            groups[row['canonical']].append(row)
-    collisions = {number: group for number, group in groups.items() if len(group) > 1}
+    collisions = collision_groups(rows)
     print(f'collisions: groups={len(collisions)} listings={sum(len(group) for group in collisions.values())}')
     for number, group in sorted(collisions.items()):
         del number  # Never print raw phone values in command output.
         places = ', '.join(str(row['place_id'] or 'missing-place-id') for row in group)
         slugs = ', '.join(str(row['slug']) for row in group)
         categories = ', '.join(str(row['category']) for row in group)
-        disposition = 'plausible shared/chain/contact' if plausible_shared_contact(group) else 'data-quality conflict: manual review'
+        disposition = collision_disposition(group)
         print(f'collision: place_ids=[{places}] slugs=[{slugs}] categories=[{categories}] disposition={disposition}')
 
 

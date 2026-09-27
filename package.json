@@ -18,7 +18,7 @@
     "analytics:smoke": "bash scripts/analytics-smoke.sh",
     "owner:smoke": "bash scripts/owner-edit-smoke.sh",
     "owner:phone-coverage": "python3 scripts/phone-coverage.py",
-    "test:phone": "node --experimental-strip-types --test scripts/phone-canonicalization.test.ts",
+    "test:phone": "node --experimental-strip-types --test scripts/phone-canonicalization.test.ts && python3 scripts/phone-coverage.test.py",
     "registry:snapshot": "node scripts/registry-snapshot.mjs",
     "data:smoke": "python3 scripts/data-pipeline-smoke.py",
     "data:status": "python3 scripts/broaden.py status"
