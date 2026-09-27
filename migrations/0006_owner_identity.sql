@@ -53,6 +53,10 @@ CREATE TABLE IF NOT EXISTS owner_verification_events (
   eligibility_version TEXT,
   occurred_at TEXT NOT NULL,
   details_json TEXT NOT NULL DEFAULT '{}',
+  CONSTRAINT owner_verification_event_version CHECK (
+    (channel = 'legacy_email' AND eligibility_version IS NULL)
+    OR (channel = 'phone' AND eligibility_version = 'phone-self-service-eligibility-v1')
+  ),
   FOREIGN KEY (membership_id) REFERENCES owner_memberships(membership_id),
   FOREIGN KEY (user_id) REFERENCES owner_users(user_id)
 );
