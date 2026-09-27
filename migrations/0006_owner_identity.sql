@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS owner_contact_snapshots (
   user_id TEXT,
   phone_digest TEXT NOT NULL,
   source TEXT NOT NULL CHECK (source IN ('google_places')),
-  eligibility_version TEXT NOT NULL,
+  eligibility_version TEXT NOT NULL CHECK (eligibility_version = 'phone-self-service-eligibility-v1'),
   eligibility_disposition TEXT NOT NULL CHECK (eligibility_disposition = 'eligible_unique_canonical'),
   captured_at TEXT NOT NULL,
   revoked_at TEXT,
