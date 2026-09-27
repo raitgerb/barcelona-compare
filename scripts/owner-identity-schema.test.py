@@ -17,6 +17,7 @@ def main():
     db.execute("insert into owner_contact_snapshots(snapshot_id, place_id, user_id, phone_digest, source, eligibility_version, eligibility_disposition, captured_at) values ('s1','ChIJone','u1','digest','google_places','phone-self-service-eligibility-v1','eligible_unique_canonical','now')")
     db.execute("insert into owner_memberships(membership_id,user_id,place_id,state,source,created_at) values ('m1','u1','ChIJone','legacy_unverified','legacy_email','now')")
     db.execute("insert into owner_verification_events(event_id,membership_id,user_id,place_id,event_type,channel,occurred_at) values ('e1','m1','u1','ChIJone','legacy_imported','legacy_email','now')")
+    db.execute("insert into owner_verification_events(event_id,membership_id,user_id,place_id,event_type,channel,eligibility_version,occurred_at) values ('e2','m1','u1','ChIJone','admitted','phone','phone-self-service-eligibility-v1','now')")
     db.execute("insert into owner_identity_sessions(session_id,token_digest,user_id,place_id,scope,issued_at,expires_at) values ('x1','td1','u1','ChIJone','owner_edit','now','2999-01-01')")
     assert db.execute("select state from owner_memberships where membership_id='m1'").fetchone()[0] == 'legacy_unverified'
     # The idempotency key is the user/place/role tuple: duplicates reject deterministically,
@@ -63,6 +64,23 @@ def main():
         pass
     else:
         raise AssertionError('arbitrary eligibility version was accepted')
+    # Every verification event has an explicit channel/version contract: legacy
+    # imports carry no manifest version; phone events carry the exact manifest.
+    event_version_cases = (
+        ('legacy NULL', 'e3', 'legacy_imported', 'legacy_email', None, False),
+        ('phone exact', 'e4', 'verified', 'phone', 'phone-self-service-eligibility-v1', False),
+        ('phone arbitrary', 'e5', 'verified', 'phone', 'arbitrary-version', True),
+        ('legacy arbitrary', 'e6', 'legacy_imported', 'legacy_email', 'arbitrary-version', True),
+    )
+    for label, event_id, event_type, channel, version, should_reject in event_version_cases:
+        try:
+            db.execute("insert into owner_verification_events(event_id,membership_id,user_id,place_id,event_type,channel,eligibility_version,occurred_at) values (?,?,?,?,?,?,?,?)", (event_id, 'm1', 'u1', 'ChIJone', event_type, channel, version, 'now'))
+        except sqlite3.IntegrityError:
+            if not should_reject:
+                raise AssertionError(f'{label} event was rejected')
+        else:
+            if should_reject:
+                raise AssertionError(f'{label} event was accepted')
     db.execute("update owner_identity_sessions set revoked_at='now' where session_id='x1'")
     assert db.execute("select revoked_at from owner_identity_sessions where session_id='x1'").fetchone()[0] == 'now'
     # Rollback rehearsal: reverse dependency order, matching the migration comments.
