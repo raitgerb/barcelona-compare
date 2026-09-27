@@ -17,7 +17,7 @@ languages:
   - "Español"
   - "Inglés"
 googleRating: 4.9
-googleReviewCount: 204
+googleReviewCount: 244
 googlePlaceId: "ChIJI2l2yHSjpBIRYsAesITxamo"
 googleReviews:
   - author: "Vadim Reutskiy"
