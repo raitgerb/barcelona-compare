@@ -14,8 +14,15 @@ export type Locale = (typeof LOCALES)[number];
 
 export const DEFAULT_LOCALE: Locale = 'es';
 
-/** Short label for the language switcher. */
+/** Short label for compact language controls. */
 export const LOCALE_LABELS: Record<Locale, string> = { es: 'ES', en: 'EN', ca: 'CA' };
+
+/** Native language names keep the selector understandable without translation. */
+export const LOCALE_NAMES: Record<Locale, string> = {
+  es: 'Español',
+  en: 'English',
+  ca: 'Català',
+};
 
 export function isLocale(value: string | undefined): value is Locale {
   return !!value && (LOCALES as readonly string[]).includes(value);

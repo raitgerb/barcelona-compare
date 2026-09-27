@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { ui } from '../i18n/ui';
-import { DEFAULT_LOCALE, LOCALES, LOCALE_LABELS, localeHref, localePath, stripLocale, type Locale } from '../i18n/locales';
+import { DEFAULT_LOCALE, LOCALES, LOCALE_LABELS, LOCALE_NAMES, localeHref, localePath, stripLocale, type Locale } from '../i18n/locales';
 
 interface Props {
   title: string;
@@ -107,26 +107,37 @@ const tagline: Record<Locale, string> = {
               {t[item.key]}
             </a>
           ))}
-          <span class="flex items-center gap-1" aria-label="Language">
-            {langs.map(l => (
-              l === lang ? (
-                <span
-                  class="text-xs px-3 py-1 rounded-full border border-stone-400 bg-stone-100 text-stone-700 font-semibold"
-                  aria-current="true"
-                >
-                  {LOCALE_LABELS[l]}
-                </span>
-              ) : (
-                <a
-                  href={langs.length === 2 && altPath ? altPath : localePath(l, bare)}
-                  hreflang={l}
-                  class="text-xs px-3 py-1 rounded-full border border-stone-300 text-stone-500 hover:border-stone-400 hover:text-stone-700 transition-colors font-medium"
-                >
-                  {LOCALE_LABELS[l]}
-                </a>
-              )
-            ))}
-          </span>
+          <details class="relative group">
+            <summary
+              class="list-none cursor-pointer text-xs px-3 py-1.5 rounded-full border border-stone-300 bg-white text-stone-700 hover:border-stone-400 transition-colors font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+              aria-label={`Language: ${LOCALE_NAMES[lang]}`}
+            >
+              {LOCALE_LABELS[lang]} <span aria-hidden="true" class="ml-1">▾</span>
+            </summary>
+            <nav
+              aria-label="Choose language"
+              class="absolute right-0 mt-2 min-w-36 rounded-lg border border-stone-200 bg-white p-1 shadow-lg"
+            >
+              {langs.map(l => (
+                l === lang ? (
+                  <span
+                    class="block rounded-md px-3 py-2 text-xs text-stone-700 bg-stone-100 font-semibold"
+                    aria-current="page"
+                  >
+                    {LOCALE_NAMES[l]}
+                  </span>
+                ) : (
+                  <a
+                    href={langs.length === 2 && altPath ? altPath : localePath(l, bare)}
+                    hreflang={l}
+                    class="block rounded-md px-3 py-2 text-xs text-stone-600 hover:bg-stone-100 hover:text-stone-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-brand-500"
+                  >
+                    {LOCALE_NAMES[l]}
+                  </a>
+                )
+              ))}
+            </nav>
+          </details>
         </div>
       </nav>
     </header>

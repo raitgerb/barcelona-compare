@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "check:language-selector": "node scripts/language-selector-check.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "db:migrate:local": "npx --yes wrangler d1 migrations apply barcelona-compare-registry --local",
