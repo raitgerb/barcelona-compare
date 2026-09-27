@@ -5,9 +5,9 @@ Evidence date: 2026-09-27
 
 ## Executive recommendation
 
-Keep the existing passwordless email-code UX, but replace its trust decision. A claim or owner login must first resolve the selected listing to its immutable Google Place ID and compare the claimant's contact value with a current, versioned Google contact snapshot for that Place ID. A successful challenge creates a user identity and an owner membership for that exact Place ID; it must never grant access based on a slug, business name, or possession of an arbitrary email address.
+Keep the existing passwordless code UX where a contact transport is actually available, but replace its trust decision. A claim or owner login must first resolve the selected listing to its immutable Google Place ID and compare the claimant's contact value with a current, versioned Google contact snapshot for that Place ID. A successful challenge creates a user identity and an owner membership for that exact Place ID; it must never grant access based on a slug, business name, or possession of an arbitrary email address.
 
-Use email when Google supplies an email and phone when Google supplies a phone. If both are present, offer either matching contact as a challenge (with an explicit choice). If neither is present, do not self-serve: route to manual review. Existing email-only claims must be migrated as unverified legacy memberships and must pass the new Google-contact check before they receive a new session or edit access.
+The executable recommendation is phone-only for a Google-supplied phone, because the permitted Google Places source currently supplies phone but not email. Email must not be assumed, derived from `websiteUri`, or collected from an unspecified second provider. If an owner-approved authoritative email source is added later, the same exact-match email challenge may be enabled; until then, a listing with only an email alleged by an operator or claimant is manual-review-only. If both an authoritative phone and an approved authoritative email are present, offer either matching contact as a challenge (with an explicit choice). If neither has an approved contact transport, do not self-serve: route to manual review. Existing email-only claims must be migrated as unverified legacy memberships and must pass the new Google-contact check before they receive a new session or edit access.
 
 This is a recommendation, not an implementation approval.
 
@@ -55,7 +55,7 @@ The live registry probe `GET /api/registry/ChIJdummy` returned 404 `not_found`, 
 | Option | Security / recognition | UX and recovery | Cost | Effort | Decision |
 | --- | --- | --- | --- | --- | --- |
 | A. Improve current email OTP only | Better throttling and audit, but still cannot establish that email is the contact Google lists. It remains a painted door. | Familiar and low friction; recovery is email-only. | $0 incremental if existing mail transport remains. | Low | Reject: fails the mandatory Google-contact rule. |
-| B. Google-contact challenge + first-party business membership (recommended) | Challenge is scoped to Place ID and a normalized contact snapshot. Separate user identity, membership, contact verification, and sessions support revocation and multiple owners. Strongest recognition without trusting an external login. | Email code or phone code; one explicit listing selection. Manual path for no/stale contacts. Recovery can use a second matching contact or reviewed evidence. | $0 incremental using existing D1, Pages Functions, and mail. SMS is not assumed; phone can initially be operator-mediated or a free-to-receive call/WhatsApp code only if policy and transport are approved. | Medium | Recommend. Meets the requirement and preserves current UX. |
+| B. Google-contact challenge + first-party business membership (recommended) | Challenge is scoped to Place ID and a normalized contact snapshot. Separate user identity, membership, contact verification, and sessions support revocation and multiple owners. Strongest recognition without trusting an external login. | Phone code only where Google supplies the phone and an approved transport exists; email remains disabled until an authoritative source is approved. One explicit listing selection. Manual path for no/stale contacts. Recovery can use a second matching contact or reviewed evidence. | $0 incremental using existing D1, Pages Functions, and mail if a phone transport is approved without paid SMS. No provider, scraping, or second data source is assumed. | Medium | Recommend. Meets the requirement with the currently feasible Google source. |
 | C. External identity provider (Google/Microsoft/Auth0/Clerk/etc.) plus matching | Provider proves control of a human account, not that it matches the listing's Google contact. It still needs the same contact challenge, so the provider adds little recognition. Provider account takeover/dependency and data-sharing risks remain. | Polished sign-in and recovery, but confusing two identities and third-party consent. | Usually $0 at small scale on a free tier, but vendor limits and future cost/lock-in; paid services are not acceptable without approval. | Medium-high | Reject as primary; optional later for convenience after contact verification. |
 | D. Operator-only verification | Strong review against public evidence and direct contact; can handle no/stale Google data. | Slow, inconsistent, and does not scale; owner waits for staff. | $0 service cost, but recurring human cost. | Low code, high operations | Retain only as fallback and dispute/recovery lane. |
 
@@ -71,16 +71,26 @@ The live registry probe `GET /api/registry/ChIJdummy` returned 404 `not_found`, 
 - A `contact_verification` records which snapshot and challenge proved control, method, timestamps, attempt count, and result. It is append-only/auditable; raw OTPs are never persisted after delivery.
 - Sessions are opaque, random, short-lived tokens stored only as hashes and bound to `user_id` plus the selected Place ID (or a narrowly scoped membership). Logout/revoke invalidates them.
 
-### Google contact ingestion
+### Google contact source-of-truth and ingestion
 
-Do not add a paid fetch or alter Places masks in this discovery task. Before implementation, decide which currently available Google field(s) are authoritative and confirm their SKU/cap implications against the Google data-fields documentation. Store a source version/hash when a listing is enriched. A refresh that has no contact is not permission to fall back to an arbitrary claimant email.
+The central feasibility constraint is explicit: Google Places API (New)'s permitted fields expose phone, but no email field. `websiteUri` is a website URL, not an email address and must never be scraped or transformed into one for self-service authorization. Therefore the first implementation can be executable without an email feed only by offering a phone challenge where a Google phone exists and an approved transport exists; email remains disabled for recognition until the owner approves an authoritative source and its acquisition path.
+
+| Contact / evidence | Current field or source | Authoritative for mandatory self-service? | Acquisition, freshness, and version semantics | $0 / quota gate |
+| --- | --- | --- | --- | --- |
+| Phone | Google Places API (New) `nationalPhoneNumber`, requested by the existing `scripts/broaden.py` `DETAILS_MASK` and stored in the enrichment output | Yes, after canonicalization to E.164; only for the exact Place ID returned by Google | Obtain only through the existing budget-guarded enrichment path; snapshot the retrieval timestamp, source revision/hash, canonicalization version, and expiry policy. A later refresh that changes/removes it marks the prior snapshot stale and requires re-verification | One Place Details Enterprise call; current published cap is 1,000/month and 33/day. Do not widen the mask or bypass `scripts/places_budget.py`; verify the field/cap against the linked Google data-fields documentation before implementation |
+| Email | No email field in the permitted Google Places API (New) fields; not present in the current enrichment path | No; unavailable from the permitted Google source | Do not infer from `websiteUri`, public web pages, social profiles, or claimant input. Enable only after a separately named, owner-approved authoritative source, with documented legal basis, retrieval method, freshness/version, and $0 gate | No Google Places call can supply it. No second provider, scraping, paid API, or quota change is authorized by this discovery |
+| Website | Google Places API (New) `websiteUri` | No; website ownership is not an email/contact match | Existing field is retained as listing data only. It may be supporting evidence for manual review, never converted into an email challenge | Included in the existing Details Enterprise call; it does not create email coverage |
+| Operator/manual evidence | Staff-provided documents, direct conversation, or a contact discovered outside the authorized Google snapshot | No; never satisfies the mandatory exact-match self-service path | Store only a restricted review record: evidence type, reviewer, reason, decision, grant expiry, and source timestamp. It may produce a time-limited manual membership after human review | No API call required, but it is not Google-supplied evidence and must not be presented as equivalent |
+
+For each Place ID, a contact snapshot is immutable evidence of one retrieval: source name, retrieval time, source version/hash, canonicalization version, contact-kind, and keyed canonical digest. A refresh creates a new version rather than overwriting history. “Current” means the newest successful authorized snapshot inside the configured freshness window; stale, missing, changed, or removed contacts cannot authorize a new self-service challenge. The implementation must not start until the owner has approved the freshness window and confirmed the source/capacity check above.
 
 The challenge service selects only contacts present in the current snapshot for that Place ID:
 
-- Email present: show a masked email and offer email challenge. Only the matching canonical email may continue.
-- Phone present: show a masked phone and offer phone challenge. Only the matching canonical phone may continue.
-- Both present: either matching method may continue; record which one was used. A policy decision is still needed on whether one method may add a second owner without staff review.
+- Approved email present (only after the separate source gate is accepted): show a masked email and offer email challenge. Only the matching canonical email may continue.
+- Google phone present: show a masked phone and offer phone challenge only if an approved, operational transport exists. Only the matching canonical phone may continue.
+- Both approved contacts present: either matching method may continue; record which one was used. A policy decision is still needed on whether one method may add a second owner without staff review.
 - Neither present: no self-service claim/login. Offer manual review without revealing which contact fields are missing to an unauthenticated caller.
+- A phone or email that exists only in manual/operator evidence: no self-service challenge; route to manual review. Manual review may never be silently upgraded to a Google-contact verification.
 
 ### Exact-match and normalization rules
 
@@ -136,8 +146,8 @@ Recovery paths:
 
 ### Phase 0 — decision and measurement (no production writes)
 
-- Owner decides: acceptable Google contact fields and freshness window; whether either contact is sufficient when both exist; whether phone challenge may use an existing free/manual operator path; session storage policy; manual-review SLA and evidence standard.
-- Confirm current Google data coverage without changing masks or spending budget. Produce counts of listings with email, phone, both, neither, and stale contacts from an existing authorized dataset.
+- Owner confirms the source matrix: `nationalPhoneNumber` is the only currently feasible Google self-service contact; Google Places supplies no email field. Decide the freshness window, whether either approved contact is sufficient when both exist, whether phone challenge may use an existing free/manual operator path, session storage policy, and manual-review SLA/evidence standard. An email source is a separate future approval, not an open Phase 0 task.
+- Measure phone coverage and freshness from an existing authorized dataset without changing masks or spending budget. Report email coverage as “not available from the permitted Google source,” rather than implying an email count. Do not scrape, fetch, or enrich contacts in this phase.
 - Gate: written owner acceptance of the exact-match and stale/no-contact policy; Cato review of this design.
 
 ### Phase 1 — schema and pure data layer (test/local only)
@@ -149,7 +159,7 @@ Recovery paths:
 
 ### Phase 2 — challenge API and UI behind a disabled flag
 
-- Build Place-ID-only start/verify endpoints, generic anti-enumeration errors, throttles, audit events, and existing mail transport integration. Add phone/manual adapter only after owner decision.
+- Build Place-ID-only start/verify endpoints, generic anti-enumeration errors, throttles, audit events, and a phone transport adapter only after owner decision. Keep email challenge code disabled until its source gate is approved; if phone transport is unavailable, return the same generic manual-review path as no-contact cases.
 - Update ES and EN claim/manage journeys. Keep CA links explicitly routed to ES until a CA UI is approved; do not create a false CA login.
 - Gate: adversarial tests for wrong Place ID, wrong contact, replay, concurrency, code brute force, stale snapshot, no contact, revoke, and duplicate owners.
 
@@ -167,12 +177,13 @@ Recovery paths:
 
 ## 6. Explicit owner decisions required before implementation
 
-1. When both Google email and phone exist, is either matching contact sufficient, or must a claimant prove both?
+1. When both approved authoritative contacts exist, is either matching contact sufficient, or must a claimant prove both? (Today only Google phone is approved; Google Places email is unavailable.)
 2. What is the contact freshness window, and should a changed/removed Google contact immediately revoke sessions or only require re-verification at next login?
-3. Is operator-mediated phone/WhatsApp code delivery acceptable as a temporary no-cost phone challenge, or should phone-only listings be manual-review-only until an approved transport exists?
+3. Is operator-mediated phone/WhatsApp code delivery acceptable as a temporary no-cost phone challenge, or should phone-only listings be manual-review-only until an approved transport exists? A transport failure must never fall back to claimant-selected email or manual evidence as self-service proof.
 4. Should legacy email-verified owners become read-only pending matching re-verification, or retain editing until the announced deadline?
 5. What independent evidence and reviewer authority are acceptable for stale/no-contact recovery, and how long should a manual grant last?
 6. Approve the first pilot population and whether a CA claim/manage UI is in scope; until then CA must continue to link to the ES journey.
+7. If email recognition is desired, name and approve the authoritative email source, acquisition path, legal basis, freshness/version semantics, and $0 gate; until that decision, email is not a supported self-service method.
 
 ## Evidence and scope boundary
 
