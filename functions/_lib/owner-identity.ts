@@ -19,6 +19,8 @@ export class IdentityAdmissionError extends Error {
   constructor(code: AdmissionRejection) { super(`owner identity admission rejected: ${code}`); this.name = 'IdentityAdmissionError'; this.code = code; }
 }
 
+const acceptedAdmissions = new WeakSet<object>();
+
 export function admitPlace(manifest: EligibilityManifest, input: AdmissionInput): Admission {
   if (!/^ChIJ[A-Za-z0-9_-]+$/.test(input.placeId)) throw new IdentityAdmissionError('invalid_place_id');
   if (manifest.version !== ELIGIBILITY_VERSION) throw new IdentityAdmissionError('manifest_version_mismatch');
@@ -26,7 +28,9 @@ export function admitPlace(manifest: EligibilityManifest, input: AdmissionInput)
   const entry = manifest.entries.find(candidate => candidate.place_id === input.placeId);
   if (!entry) throw new IdentityAdmissionError('not_found');
   if (entry.disposition !== ELIGIBLE_DISPOSITION) throw new IdentityAdmissionError('ineligible');
-  return { placeId: input.placeId, eligibilityVersion: ELIGIBILITY_VERSION, disposition: ELIGIBLE_DISPOSITION, source: 'google_places' };
+  const admission = { placeId: input.placeId, eligibilityVersion: ELIGIBILITY_VERSION, disposition: ELIGIBLE_DISPOSITION, source: 'google_places' as const };
+  acceptedAdmissions.add(admission);
+  return admission;
 }
 
 function required(value: string, field: string): void { if (typeof value !== 'string' || value.length === 0) throw new Error(`owner identity invalid ${field}`); }
@@ -38,8 +42,9 @@ export function createContactSnapshot(input: { snapshotId: string; placeId: stri
   return { snapshotId: input.snapshotId, placeId: input.placeId, phoneDigest: input.phoneDigest, source: 'google_places', eligibilityVersion: ELIGIBILITY_VERSION, eligibilityDisposition: ELIGIBLE_DISPOSITION, capturedAt: input.capturedAt, revokedAt: null };
 }
 
-export function createMembership(memberships: readonly OwnerMembership[], input: { membershipId: string; userId: string; placeId: string; now: string }): { memberships: OwnerMembership[]; membership: OwnerMembership; created: boolean } {
+export function createMembership(memberships: readonly OwnerMembership[], input: { membershipId: string; userId: string; placeId: string; now: string; admission: Admission }): { memberships: OwnerMembership[]; membership: OwnerMembership; created: boolean } {
   required(input.membershipId, 'membershipId'); required(input.userId, 'userId'); required(input.placeId, 'placeId'); required(input.now, 'now');
+  if (!acceptedAdmissions.has(input.admission) || input.admission.source !== 'google_places' || input.admission.placeId !== input.placeId || input.admission.eligibilityVersion !== ELIGIBILITY_VERSION || input.admission.disposition !== ELIGIBLE_DISPOSITION) throw new Error('owner identity membership admission mismatch');
   const existing = memberships.find(m => m.userId === input.userId && m.placeId === input.placeId && m.role === 'owner');
   if (existing) return { memberships: [...memberships], membership: existing, created: false };
   const membership: OwnerMembership = { membershipId: input.membershipId, userId: input.userId, placeId: input.placeId, role: 'owner', state: 'verified', source: 'phone_manifest', createdAt: input.now, verifiedAt: input.now, revokedAt: null };

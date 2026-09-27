@@ -16,12 +16,14 @@ import {
 } from '../functions/_lib/owner-identity.ts';
 
 const eligiblePlace = 'ChIJeligible1';
+const otherEligiblePlace = 'ChIJeligible2';
 const otherPlace = 'ChIJother1';
 const manifest = {
   version: ELIGIBILITY_VERSION,
   policy: { eligible_only: ELIGIBLE_DISPOSITION, no_raw_phone_values: true },
   entries: [
     { category: 'nails', slug: 'eligible', place_id: eligiblePlace, disposition: ELIGIBLE_DISPOSITION },
+    { category: 'nails', slug: 'eligible-two', place_id: otherEligiblePlace, disposition: ELIGIBLE_DISPOSITION },
     { category: 'nails', slug: 'missing', place_id: 'ChIJmissing1', disposition: 'ineligible_missing' as const },
     { category: 'nails', slug: 'invalid', place_id: 'ChIJinvalid1', disposition: 'ineligible_invalid' as const },
     { category: 'nails', slug: 'shared', place_id: 'ChIJshared1', disposition: 'ineligible_shared_or_collision' as const },
@@ -33,6 +35,8 @@ function rejects(code: string, fn: () => unknown) {
   assert.throws(fn, (error) => error instanceof IdentityAdmissionError && error.code === code);
 }
 
+const eligibleAdmission = admitPlace(manifest, { placeId: eligiblePlace });
+
 test('admission accepts only an eligible canonical Place ID', () => {
   assert.deepEqual(admitPlace(manifest, {
     placeId: eligiblePlace, slug: 'not-the-manifest-slug', name: 'not the manifest name',
@@ -43,12 +47,29 @@ test('admission accepts only an eligible canonical Place ID', () => {
 });
 
 test('admission rejects every non-eligible disposition and malformed or absent IDs', () => {
-  for (const entry of manifest.entries.slice(1)) {
+  for (const entry of manifest.entries.slice(2)) {
     rejects('ineligible', () => admitPlace(manifest, { placeId: entry.place_id! }));
   }
   rejects('not_found', () => admitPlace(manifest, { placeId: 'ChIJnotlisted1' }));
   rejects('invalid_place_id', () => admitPlace(manifest, { placeId: 'slug-is-not-a-place-id' }));
   rejects('not_found', () => admitPlace(manifest, { placeId: 'ChIJnotlisted1', slug: 'eligible', name: 'eligible' }));
+});
+
+test('membership creation requires a successful eligible admission', () => {
+  assert.throws(() => createMembership([], {
+    membershipId: 'unlisted', userId: 'u1', placeId: 'ChIJnotlisted1', now: 'now',
+    admission: { ...eligibleAdmission, placeId: 'ChIJnotlisted1' },
+  }), /admission mismatch/);
+  assert.throws(() => createMembership([], {
+    membershipId: 'ineligible', userId: 'u1', placeId: 'ChIJmissing1', now: 'now',
+    admission: { ...eligibleAdmission, placeId: 'ChIJmissing1' },
+  }), /admission mismatch/);
+  const admitted = createMembership([], {
+    membershipId: 'admitted', userId: 'u1', placeId: eligiblePlace, now: 'now',
+    admission: eligibleAdmission,
+  });
+  assert.equal(admitted.created, true);
+  assert.equal(admitted.membership.placeId, eligiblePlace);
 });
 
 test('manifest contract is version and policy gated without changing entries', () => {
@@ -77,20 +98,21 @@ test('contact snapshots are Place-ID scoped and expose only a digest', () => {
 });
 
 test('membership creation is idempotent per user and Place ID, not globally', () => {
-  const first = createMembership([], { membershipId: 'm1', userId: 'u1', placeId: eligiblePlace, now: '2026-09-27T00:00:00Z' });
-  const duplicate = createMembership(first.memberships, { membershipId: 'different', userId: 'u1', placeId: eligiblePlace, now: '2026-09-28T00:00:00Z' });
+  const first = createMembership([], { membershipId: 'm1', userId: 'u1', placeId: eligiblePlace, now: '2026-09-27T00:00:00Z', admission: eligibleAdmission });
+  const duplicate = createMembership(first.memberships, { membershipId: 'different', userId: 'u1', placeId: eligiblePlace, now: '2026-09-28T00:00:00Z', admission: eligibleAdmission });
   assert.equal(first.created, true);
   assert.equal(duplicate.created, false);
   assert.deepEqual(duplicate.memberships, first.memberships);
-  const other = createMembership(duplicate.memberships, { membershipId: 'm2', userId: 'u1', placeId: otherPlace, now: '2026-09-28T00:00:00Z' });
-  const otherUser = createMembership(other.memberships, { membershipId: 'm3', userId: 'u2', placeId: eligiblePlace, now: '2026-09-28T00:00:00Z' });
+  const otherAdmission = admitPlace(manifest, { placeId: otherEligiblePlace });
+  const other = createMembership(duplicate.memberships, { membershipId: 'm2', userId: 'u1', placeId: otherEligiblePlace, now: '2026-09-28T00:00:00Z', admission: otherAdmission });
+  const otherUser = createMembership(other.memberships, { membershipId: 'm3', userId: 'u2', placeId: eligiblePlace, now: '2026-09-28T00:00:00Z', admission: eligibleAdmission });
   assert.equal(other.created, true);
   assert.equal(otherUser.created, true);
   assert.equal(JSON.stringify(otherUser).includes('"phone"'), false);
 });
 
 test('verification events retain membership identity and enforce channel/version semantics', () => {
-  const membership = createMembership([], { membershipId: 'm1', userId: 'u1', placeId: eligiblePlace, now: '2026-09-27T00:00:00Z' }).membership;
+  const membership = createMembership([], { membershipId: 'm1', userId: 'u1', placeId: eligiblePlace, now: '2026-09-27T00:00:00Z', admission: eligibleAdmission }).membership;
   const recorded = recordVerificationEvent([], { eventId: 'e1', membership, eventType: 'verified', channel: 'phone', occurredAt: '2026-09-27T01:00:00Z' });
   assert.deepEqual(recorded.event, {
     eventId: 'e1', membershipId: 'm1', userId: 'u1', placeId: eligiblePlace,
@@ -103,7 +125,7 @@ test('verification events retain membership identity and enforce channel/version
 });
 
 test('revocation invalidates sessions and membership edit authorization', () => {
-  const membership = createMembership([], { membershipId: 'm1', userId: 'u1', placeId: eligiblePlace, now: '2026-09-27T00:00:00Z' }).membership;
+  const membership = createMembership([], { membershipId: 'm1', userId: 'u1', placeId: eligiblePlace, now: '2026-09-27T00:00:00Z', admission: eligibleAdmission }).membership;
   const sessionResult = createScopedSession([], { sessionId: 's1', tokenDigest: 'sha256:token', membership, issuedAt: '2026-09-27T00:00:00Z', expiresAt: '2026-09-28T00:00:00Z' });
   assert.equal(canEdit(membership, { state: 'active' }, sessionResult.session, eligiblePlace, new Date('2026-09-27T12:00:00Z')), true);
   const revokedSession = revokeSession(sessionResult.sessions, 's1', '2026-09-27T13:00:00Z')[0];
@@ -133,7 +155,7 @@ test('identity rules do not invoke network providers or remote D1', () => {
   globalThis.fetch = (() => { throw new Error('network call'); }) as typeof fetch;
   try {
     assert.equal(admitPlace(manifest, { placeId: eligiblePlace }).placeId, eligiblePlace);
-    assert.equal(createMembership([], { membershipId: 'm1', userId: 'u1', placeId: eligiblePlace, now: 'now' }).created, true);
+    assert.equal(createMembership([], { membershipId: 'm1', userId: 'u1', placeId: eligiblePlace, now: 'now', admission: eligibleAdmission }).created, true);
   } finally {
     globalThis.fetch = originalFetch;
   }
