@@ -38,7 +38,8 @@ CREATE TABLE IF NOT EXISTS owner_memberships (
   verified_at TEXT,
   revoked_at TEXT,
   FOREIGN KEY (user_id) REFERENCES owner_users(user_id),
-  UNIQUE (user_id, place_id, role)
+  UNIQUE (user_id, place_id, role),
+  UNIQUE (membership_id, user_id, place_id)
 );
 CREATE INDEX IF NOT EXISTS idx_owner_membership_place
   ON owner_memberships(place_id, state);
@@ -57,7 +58,8 @@ CREATE TABLE IF NOT EXISTS owner_verification_events (
     (channel = 'legacy_email' AND eligibility_version IS NULL)
     OR (channel = 'phone' AND eligibility_version = 'phone-self-service-eligibility-v1')
   ),
-  FOREIGN KEY (membership_id) REFERENCES owner_memberships(membership_id),
+  FOREIGN KEY (membership_id, user_id, place_id)
+    REFERENCES owner_memberships(membership_id, user_id, place_id),
   FOREIGN KEY (user_id) REFERENCES owner_users(user_id)
 );
 CREATE INDEX IF NOT EXISTS idx_owner_verification_membership
