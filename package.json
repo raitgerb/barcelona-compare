@@ -17,6 +17,9 @@
     "badge:e2e": "node scripts/badge-freshness-e2e.mjs",
     "analytics:smoke": "bash scripts/analytics-smoke.sh",
     "owner:smoke": "bash scripts/owner-edit-smoke.sh",
+    "phone:eligibility": "python3 scripts/phone-eligibility.py",
+    "test:phone": "node --experimental-strip-types --test scripts/phone-canonicalization.test.ts && python3 scripts/phone-eligibility.test.py",
+    "test:owner-identity": "node --experimental-strip-types --test scripts/owner-identity.test.ts && python3 scripts/owner-identity-schema.test.py",
     "registry:snapshot": "node scripts/registry-snapshot.mjs",
     "data:smoke": "python3 scripts/data-pipeline-smoke.py",
     "data:status": "python3 scripts/broaden.py status"
