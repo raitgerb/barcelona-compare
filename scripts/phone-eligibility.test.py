@@ -30,7 +30,12 @@ class EligibilityTests(unittest.TestCase):
         self.assertEqual(manifest['total_listings'], 1500)
         self.assertEqual(sum(manifest['counts'].values()), 1500)
         rendered = json.dumps(manifest, ensure_ascii=False)
-        self.assertNotRegex(rendered, r'\\+34\\s*\\d')
+        raw_phone = '+34 (612) 345 678'
+        raw_phone_pattern = r'(?:\(\s*)?\+34\s*\)?\s*[\s(]*\d'
+        self.assertRegex(raw_phone, raw_phone_pattern)
+        fixture_manifest = mod.build_manifest([row('nails', 'fixture', raw_phone, 'fixture')])
+        self.assertNotRegex(json.dumps(fixture_manifest, ensure_ascii=False), raw_phone_pattern)
+        self.assertNotRegex(rendered, raw_phone_pattern)
         self.assertTrue(all(set(e) <= {'category','slug','place_id','disposition','collision_group'} for e in manifest['entries']))
 
     def test_generated_artifact_is_byte_stable(self):
