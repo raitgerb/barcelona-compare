@@ -7,6 +7,8 @@ const businessSchema = z.object({
   address: z.string(),
   phone: z.string().optional(),
   website: z.string().url().optional(),
+  description: z.string().optional(),
+  descriptionEn: z.string().optional(),
   whatsapp: z.string().optional(),
   priceIndicator: z.enum(['€', '€€', '€€€']).optional(),
   services: z.array(z.object({
@@ -14,6 +16,8 @@ const businessSchema = z.object({
     price: z.string().optional(),
   })).default([]),
   hours: z.record(z.string(), z.string()).optional(),
+  hoursNote: z.string().optional(),
+  hoursNoteEn: z.string().optional(),
   languages: z.array(z.string()).default(['Español']),
   googleRating: z.number().min(0).max(5).optional(),
   googleReviewCount: z.number().int().min(0).optional(),

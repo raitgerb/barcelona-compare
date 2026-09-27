@@ -50,7 +50,7 @@ const schemaOrg = {
   },
   "telephone": data.phone || undefined,
   "priceRange": data.priceIndicator || undefined,
-  ...(data.googleRating && {
+  ...(data.googleRating && data.googleReviewCount && {
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": data.googleRating,
@@ -143,7 +143,7 @@ const schemaOrg = {
               ))}
             </div>
             <span class="text-lg font-bold text-stone-900">{data.googleRating}</span>
-            <span class="text-sm text-stone-500">· {data.googleReviewCount} reseñas en Google</span>
+            {data.googleReviewCount && <span class="text-sm text-stone-500">· {data.googleReviewCount} reseñas en Google</span>}
           </div>
           <ReviewInsights lang="es" reviews={data.googleReviews || []} reviewCount={data.googleReviewCount} />
           <p class="text-xs text-stone-400 mt-2 flex items-center gap-1">
@@ -152,6 +152,8 @@ const schemaOrg = {
           </p>
         </div>
       )}
+
+      {data.description && <p class="mb-8 text-stone-700 leading-relaxed">{data.description}</p>}
 
       {data.massageTypes && data.massageTypes.length > 0 && (
         <section class="mb-8">
@@ -197,6 +199,7 @@ const schemaOrg = {
               );
             })}
           </div>
+          {data.hoursNote && <p class="mt-2 text-sm text-stone-500">{data.hoursNote}</p>}
         </section>
       )}
 
