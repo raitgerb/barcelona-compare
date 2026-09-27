@@ -49,52 +49,7 @@ const valuePoints = [
   },
 ];
 
-const tiers = [
-  {
-    key: 'free',
-    name: 'Ficha gratuita',
-    price: '0 €',
-    status: 'Activa ahora',
-    tone: 'live',
-    blurb: 'La ficha que ya tienes, construida con datos públicos de Google Maps y con tus enlaces de contacto directos.',
-  },
-  {
-    key: 'claimed',
-    name: 'Reclamada',
-    price: '0 €',
-    status: 'Activa ahora',
-    tone: 'live',
-    blurb: 'Verificas por email que eres el titular y tu ficha queda marcada como reclamada y verificada. El control para editar servicios, precios y fotos llega a continuación.',
-  },
-  {
-    key: 'pro',
-    name: 'Pro',
-    price: 'Precio por confirmar',
-    status: 'En preparación',
-    tone: 'later',
-    blurb: 'Visibilidad extra para competir en las búsquedas más disputadas. Aún no está a la venta: los negocios reclamados tendrán acceso primero.',
-  },
-];
-
-// y = incluido, n = no incluido
-const features: Array<{ label: string; v: Array<'y' | 'n'> }> = [
-  { label: 'Aparece en las listas de uñas y masajes, en las guías de distrito y en las páginas de “los mejores”', v: ['y', 'y', 'y'] },
-  { label: 'Horario, dirección, teléfono, web y fotos', v: ['y', 'y', 'y'] },
-  { label: 'Valoración y reseñas de Google agregadas', v: ['y', 'y', 'y'] },
-  { label: 'Contacto directo (teléfono, web) sin comisión por cliente', v: ['y', 'y', 'y'] },
-  { label: 'Insignia de negocio verificado', v: ['n', 'y', 'y'] },
-  { label: 'Editas tú mismo servicios, precios, fotos y horario', v: ['n', 'y', 'y'] },
-  { label: 'Botón de WhatsApp para que te escriban directamente', v: ['n', 'y', 'y'] },
-  { label: 'Galería de fotos ampliada', v: ['n', 'n', 'y'] },
-  { label: 'Posición destacada en los rankings, siempre marcada como patrocinada', v: ['n', 'n', 'y'] },
-  { label: 'Estadísticas mensuales por email (visitas y clics)', v: ['n', 'n', 'y'] },
-];
-
 const faqs = [
-  {
-    q: '¿Cuánto cuesta aparecer en Barcelona Compare?',
-    a: 'Nada. La ficha básica es gratuita y lo seguirá siendo: no cobramos por aparecer ni por recibir contactos. El plan Pro está en preparación y todavía no se puede contratar.',
-  },
   {
     q: '¿Cómo reclamo mi negocio?',
     a: `Busca tu negocio en el directorio, pulsa «Reclama este negocio» y verifica tu email con un código de 6 dígitos: la ficha queda marcada como reclamada y verificada al momento. Si lo prefieres, escríbenos a ${CLAIM_EMAIL} y lo hacemos nosotros.`,
@@ -119,10 +74,7 @@ const faqs = [
     q: '¿De dónde salen las valoraciones y las reseñas?',
     a: 'De Google Maps, y siempre aparecen atribuidas a Google. No publicamos reseñas propias ni podemos modificar o eliminar las que ya tienes en Google.',
   },
-  {
-    q: '¿Se puede pagar para aparecer más arriba?',
-    a: 'Hoy no se vende ninguna posición. Cuando lancemos el plan Pro, los espacios destacados irán siempre marcados como patrocinados y nunca cambiarán la valoración real de los clientes, que seguirá siendo la que decide el orden.',
-  },
+
   {
     q: 'La información de mi ficha es incorrecta.',
     a: 'La construimos con datos públicos de Google Maps. Si ves un error, dínoslo y lo corregimos; si el perfil está reclamado, podrás editarlo tú mismo.',
@@ -139,7 +91,7 @@ const faqSchema = {
   })),
 };
 
-const mark = (v: 'y' | 'n') => (v === 'y' ? '✓' : '—');
+
 ---
 
 <BaseLayout
@@ -243,62 +195,14 @@ const mark = (v: 'y' | 'n') => (v === 'y' ? '✓' : '—');
     </section>
 
     <section class="mt-14">
-      <h2 class="text-2xl font-bold text-stone-900">Compara los planes</h2>
-      <p class="mt-2 text-stone-600">
-        La ficha es y será gratuita. El plan Pro está en preparación y aún no se puede contratar.
-      </p>
-
-      <div class="hidden md:block mt-6 overflow-hidden rounded-xl border border-stone-200 bg-white">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="bg-stone-50 border-b border-stone-200">
-              <th class="text-left font-semibold text-stone-700 p-4 w-1/2">Qué incluye</th>
-              {tiers.map(t => (
-                <th class="text-center p-4 align-top">
-                  <span class="block font-bold text-stone-900">{t.name}</span>
-                  <span class="block mt-1 text-xs font-normal text-stone-500">{t.price}</span>
-                  <span class={`inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full ${t.tone === 'live' ? 'bg-green-50 text-green-700 border border-green-200' : t.tone === 'soon' ? 'bg-brand-50 text-brand-700 border border-brand-200' : 'bg-stone-100 text-stone-500 border border-stone-200'}`}>
-                    {t.status}
-                  </span>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {features.map(f => (
-              <tr class="border-b border-stone-100 last:border-0">
-                <td class="p-4 text-stone-600">{f.label}</td>
-                {f.v.map(m => (
-                  <td class={`p-4 text-center font-bold ${m === 'y' ? 'text-brand-600' : 'text-stone-300'}`}>{mark(m)}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div class="md:hidden mt-6 space-y-4">
-        {tiers.map((t, i) => (
-          <div class="p-5 rounded-xl bg-white border border-stone-200">
-            <div class="flex items-baseline justify-between gap-3">
-              <h3 class="font-bold text-stone-900">{t.name}</h3>
-              <span class="text-sm text-stone-500">{t.price}</span>
-            </div>
-            <span class={`inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full ${t.tone === 'live' ? 'bg-green-50 text-green-700 border border-green-200' : t.tone === 'soon' ? 'bg-brand-50 text-brand-700 border border-brand-200' : 'bg-stone-100 text-stone-500 border border-stone-200'}`}>
-              {t.status}
-            </span>
-            <p class="mt-3 text-sm text-stone-600">{t.blurb}</p>
-            <ul class="mt-3 space-y-1.5 text-sm">
-              {features.map(f => (
-                <li class={`flex gap-2 ${f.v[i] === 'y' ? 'text-stone-700' : 'text-stone-400'}`}>
-                  <span class={`shrink-0 font-bold ${f.v[i] === 'y' ? 'text-brand-600' : 'text-stone-300'}`}>{mark(f.v[i])}</span>
-                  <span>{f.label}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+      <h2 class="text-2xl font-bold text-stone-900">Qué incluye tu ficha</h2>
+      <p class="mt-2 text-stone-600">Tu presencia en Barcelona Compare es gratuita. Al reclamarla, verificamos que gestionas el negocio y te damos control sobre la información que ven tus clientes.</p>
+      <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Ficha pública</strong><p class="mt-2 text-sm text-stone-600">Nombre, dirección, horario, teléfono, web, fotos, valoración y reseñas de Google.</p></li>
+        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Verificación del negocio</strong><p class="mt-2 text-sm text-stone-600">Después de confirmar tu email, tu ficha muestra la insignia de negocio verificado.</p></li>
+        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Edición directa</strong><p class="mt-2 text-sm text-stone-600">Desde tu panel puedes actualizar servicios, precios, horario, fotos y WhatsApp. Los cambios se publican al instante.</p></li>
+        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Contacto sin intermediarios</strong><p class="mt-2 text-sm text-stone-600">Las personas que te encuentran pueden llamarte, visitar tu web o escribirte por WhatsApp directamente.</p></li>
+      </ul>
     </section>
 
     <section class="mt-14">
