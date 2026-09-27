@@ -18,6 +18,18 @@ def main():
     db.execute("insert into owner_memberships(membership_id,user_id,place_id,state,source,created_at) values ('m1','u1','ChIJone','legacy_unverified','legacy_email','now')")
     db.execute("insert into owner_verification_events(event_id,membership_id,user_id,place_id,event_type,channel,occurred_at) values ('e1','m1','u1','ChIJone','legacy_imported','legacy_email','now')")
     db.execute("insert into owner_verification_events(event_id,membership_id,user_id,place_id,event_type,channel,eligibility_version,occurred_at) values ('e2','m1','u1','ChIJone','admitted','phone','phone-self-service-eligibility-v1','now')")
+    # A verification event must identify the same user and Place ID as its membership.
+    mismatch_cases = (
+        ("mismatched user", 'e-mismatch-user', 'u2', 'ChIJone'),
+        ("mismatched place", 'e-mismatch-place', 'u1', 'ChIJtwo'),
+    )
+    for label, event_id, user_id, place_id in mismatch_cases:
+        try:
+            db.execute("insert into owner_verification_events(event_id,membership_id,user_id,place_id,event_type,channel,eligibility_version,occurred_at) values (?,?,?,?,?,?,?,?)", (event_id, 'm1', user_id, place_id, 'verified', 'phone', 'phone-self-service-eligibility-v1', 'now'))
+        except sqlite3.IntegrityError:
+            pass
+        else:
+            raise AssertionError(f'{label} event was accepted')
     db.execute("insert into owner_identity_sessions(session_id,token_digest,user_id,place_id,scope,issued_at,expires_at) values ('x1','td1','u1','ChIJone','owner_edit','now','2999-01-01')")
     assert db.execute("select state from owner_memberships where membership_id='m1'").fetchone()[0] == 'legacy_unverified'
     # The idempotency key is the user/place/role tuple: duplicates reject deterministically,
