@@ -92,16 +92,29 @@ Sender and deliverability constraints for Spain (same vendor, guidelines page):
 - International and domestic long codes are supported; short codes take **12–14 weeks**.
 - Sending to a landline fails with error 21614 and is not charged.
 
-Free trial vs free tier:
+Free trial vs free tier — all of the following is stated on
+https://www.twilio.com/docs/usage/trials (accessed 2026-09-27):
 
-- Trial: **30 days**, and while on it *"You can send messages and make calls only to
-  verified phone numbers"* (**up to 5 recipients**); *"SMS messages and voice calls are
-  restricted to your sign-up country"*; account expires 30 days after sign-up.
-  **A trial therefore cannot be used to message real Barcelona owners**: it can only text
-  up to five numbers the operator has personally verified.
-- Sustainable free tier: **none** (Twilio's own pricing page is "Start for free. Then pay
-  as you go."). A third party (Sinch's comparison article) puts the trial credit at $15 —
-  secondary source, not quoted as fact.
+- **Trial free units are product-specific, not a dollar balance**: *"Instead of a
+  dollar-based balance, your trial includes transparent, product-specific free units —
+  such as 100 SMS messages, 3,000 emails, and 75 voice minutes"*. The page's own table row
+  is `Messaging | SMS messages | 100`, and the Console surface it names is **Free units
+  tracker**. Upgrading grants a **fresh** set — `Messaging | Messages | 100` — regardless of
+  what the trial consumed, so at most **200 SMS** are free in total.
+- The trial is **30 days**, expires automatically, and **needs no credit card**.
+- While on trial: *"You can send messages and make calls only to verified phone numbers"*
+  (**up to 5 recipients** per account, shared across Messaging/WhatsApp/Voice), and
+  *"SMS messages and voice calls are restricted to your sign-up country"*. Spain appears on
+  the supported-countries list, so a Spanish sign-up could text Spanish numbers — but only
+  the ≤5 numbers the operator has personally verified.
+- **Pre-defined content only**: *"You must use Twilio-provided templates or message
+  examples. Custom message bodies … aren't available during the trial."* An arbitrary OTP
+  body *is* a custom message body, so the trial cannot send this product's own code text
+  either — and it would go out from a Twilio trial number, not the business's sender ID.
+- **A trial therefore cannot be used to message real Barcelona owners.**
+- Sustainable free tier: **none.** Post-upgrade units are consumed *"before any usage is
+  charged"*, i.e. a one-off grant on a pay-as-you-go account ("Start for free. Then pay as
+  you go.") — not a recurring monthly allowance.
 
 Sources: https://www.twilio.com/en-us/sms/pricing/es · https://www.twilio.com/en-us/guidelines/es/sms ·
 https://www.twilio.com/docs/usage/trials · https://www.twilio.com/en-us/pricing (all accessed 2026-09-27).
@@ -174,26 +187,21 @@ Source: https://developers.facebook.com/documentation/business-messaging/whatsap
 
 ## 3. Hobby-scale cost scenarios (step 3)
 
-Reproducible arithmetic — the script below is the exact program that produced the tables
-(it was run in this worktree, output pasted verbatim; nothing is hand-computed):
+Reproducible arithmetic. The tables in §3.2 are the **verbatim stdout** of
+`docs/sms-otp-cost-scenarios.py`, committed in this repository alongside this document.
+Every cell is printed by that program — including the failed-message sensitivity and the
+IVA-inclusive and prepaid-pack columns, which are computed from the same constants, not
+hand-derived. Reproduce in one command:
 
-```python
-VERIFICATIONS = (10, 25, 50, 100)
-RETRY_FACTOR = 1.3
-TWILIO_ES_USD_PER_SEGMENT = 0.0875
-TWILIO_FAILED_FEE_USD = 0.001
-OVH_PACK_EUR, OVH_PACK_SMS, OVH_IVA = 6.00, 118, 0.21
-OVH_EUR_PER_SMS = OVH_PACK_EUR / OVH_PACK_SMS     # 0.0508 EUR
-
-for v in VERIFICATIONS:
-    print(v, v, v * RETRY_FACTOR)                                  # messages
-    print(v * TWILIO_ES_USD_PER_SEGMENT, v * RETRY_FACTOR * TWILIO_ES_USD_PER_SEGMENT)
-    print(v * OVH_EUR_PER_SMS,          v * RETRY_FACTOR * OVH_EUR_PER_SMS)
-    print(v * 12 * TWILIO_ES_USD_PER_SEGMENT, v * 12 * OVH_EUR_PER_SMS,
-          OVH_PACK_SMS / v)                                        # first year + pack lifetime
+```bash
+/usr/bin/python3 docs/sms-otp-cost-scenarios.py
 ```
 
-### Labelled assumptions
+Rates inside the script are the official figures cited in §2 (Twilio Spain
+`USD 0.0875`/segment, failed-message fee `USD 0.001`; OVHcloud pack `EUR 6.00` + IVA for
+118 SMS, IVA 21 %). The script has no network call, no account and no credential.
+
+### 3.1 Labelled assumptions
 
 - **A1** 1 verification = 1 delivered SMS, 1 segment (a code message fits inside 160 GSM-7 chars).
 - **A2** *Base* scenario: every verification succeeds first try → messages = verifications.
@@ -203,8 +211,20 @@ for v in VERIFICATIONS:
 - **A5** Tax-exclusive: Twilio publishes USD ex-tax; OVHcloud shows **+ IVA (21 % in Spain)**.
   **No FX conversion is applied** — compare USD with USD, EUR with EUR.
 - **A6** Twilio's $0.001 failed-message fee is shown as a sensitivity, not folded into totals.
+  It is computed on the *realistic* message count at a 2 % failure share.
 - **A7** AWS SNS, Telnyx, Brevo, Sinch, ClickSend, GatewayAPI and the Spanish prepaid
   providers are absent from the money tables because no official Spain rate was retrievable.
+- **A8** OVHcloud SMS is sold as **prepaid packs that are consumed as messages are sent**,
+  not as a monthly allowance. The first-year cash out is therefore a whole number of packs
+  (`OVH cash out yr-1`), which can exceed the pro-rata credit cost. **The smallest possible
+  cash out is one pack, €7.26 IVA incl.** — that is the entire hard spend cap.
+
+### 3.2 Program output (verbatim stdout of `docs/sms-otp-cost-scenarios.py`)
+
+```
+SMS OTP cost scenarios, hobby scale -- generated by docs/sms-otp-cost-scenarios.py
+As of the official rates cited in docs/sms-otp-provider-cost-spike.md (accessed 2026-09-27).
+Constants: Twilio USD 0.0875/segment to Spain, failed-message fee USD 0.001, OVHcloud pack EUR 6.00 + IVA (0.21) for 118 SMS = EUR 0.0508/SMS ex-IVA, pack price IVA incl. EUR 7.26. Retry factor 1.3, failed share 0.02.
 
 ### Monthly messages
 
@@ -217,30 +237,42 @@ for v in VERIFICATIONS:
 
 ### Twilio (USD, ex-tax)
 
-| verifications/month | base msgs | base USD | realistic msgs | realistic USD | +$0.001 failed @2 % |
+| verifications/month | base msgs | base USD | realistic msgs | realistic USD | +USD 0.001 failed @2 % |
 | --- | --- | --- | --- | --- | --- |
 | 10 | 10 | 0.8750 | 13.0 | 1.1375 | 0.00026 |
 | 25 | 25 | 2.1875 | 32.5 | 2.8438 | 0.00065 |
 | 50 | 50 | 4.3750 | 65.0 | 5.6875 | 0.00130 |
 | 100 | 100 | 8.7500 | 130.0 | 11.3750 | 0.00260 |
 
-### OVHcloud SMS (EUR, + IVA)
+### OVHcloud SMS (EUR, ex-IVA message cost)
 
-| verifications/month | base msgs | base EUR | realistic msgs | realistic EUR | months a 118-SMS pack lasts |
+| verifications/month | base msgs | base EUR | realistic msgs | realistic EUR | months a 118-SMS pack lasts (base) |
 | --- | --- | --- | --- | --- | --- |
 | 10 | 10 | 0.5085 | 13.0 | 0.6610 | 11.8 |
 | 25 | 25 | 1.2712 | 32.5 | 1.6525 | 4.7 |
 | 50 | 50 | 2.5424 | 65.0 | 3.3051 | 2.4 |
 | 100 | 100 | 5.0847 | 130.0 | 6.6102 | 1.2 |
 
-### First year, base scenario (messages + the one-off pack, no number rental)
+### First year, base scenario (12 months of messages, no number rental)
 
-| verifications/month | Twilio USD/yr | OVH EUR/yr | OVH EUR/yr + one-off 118-SMS pack (IVA incl., €7.26) |
-| --- | --- | --- | --- |
-| 10 | 10.50 | 6.10 | 13.36 |
-| 25 | 26.25 | 15.25 | 22.51 |
-| 50 | 52.50 | 30.51 | 37.77 |
-| 100 | 105.00 | 61.02 | 68.28 |
+| verifications/month | msgs/year | Twilio USD/yr (ex-tax) | OVH EUR/yr (pro-rata credit cost, ex-IVA) | OVH EUR/yr incl. IVA | OVH cash out yr-1 (118-SMS packs, IVA incl.) |
+| --- | --- | --- | --- | --- | --- |
+| 10 | 120 | 10.50 | 6.10 | 7.38 | 2 x 7.26 = 14.52 |
+| 25 | 300 | 26.25 | 15.25 | 18.46 | 3 x 7.26 = 21.78 |
+| 50 | 600 | 52.50 | 30.51 | 36.92 | 6 x 7.26 = 43.56 |
+| 100 | 1200 | 105.00 | 61.02 | 73.83 | 11 x 7.26 = 79.86 |
+
+OVHcloud packs are prepaid lumps: the pack is consumed as messages are
+sent, so the smallest cash out is one pack (EUR 7.26, IVA incl.) regardless of monthly volume.
+```
+
+**Reading the tables.** At hobby volume the money is small in every scenario: even at 100
+verifications/month the pro-rata message cost is **$8.75/month (Twilio)** or **€6.61/month
+(OVHcloud, realistic 1.3× retries)**. The difference that matters for a €0-ceiling hobby
+project is not the monthly figure but **when money leaves the account**: Twilio bills
+post-paid against a card on file (unbounded), while OVHcloud cannot charge more than the
+packs the owner has already bought — the first year's whole exposure is the pack count in
+the last column (one pack = €7.26 at 10 verifications/month, ~11.8 months of headroom).
 
 **One-time / setup costs, separated from message fees**
 
@@ -260,7 +292,7 @@ for v in VERIFICATIONS:
 
 | Provider | Free **trial** | Sustainable **free tier** |
 | --- | --- | --- |
-| Twilio | 30-day trial, ≤5 verified recipient numbers, SMS restricted to sign-up country, credit expires | **No** — pay-as-you-go only |
+| Twilio | 30-day trial with **100 SMS free units** (product-specific, no dollar balance; a further 100 post-upgrade), ≤5 verified recipient numbers, SMS restricted to sign-up country, **pre-defined message templates only** | **No** — the post-upgrade units are a one-off grant; after that it is pay-as-you-go |
 | OVHcloud | None found | **No** — prepaid packs from €6 |
 | AWS SNS | Free tier covers push + 1,000 e-mails; SMS **excluded** | **No** |
 | Sinch | 14-day trial with credits (Sinch's own article) | **No** |
@@ -270,9 +302,12 @@ for v in VERIFICATIONS:
 | WhatsApp thread (user-initiated) | — | **Effectively yes** for the reply inside the 24-h service window; authentication templates are charged |
 
 **Zero-cost *starting* path answer: yes, but only the one already built.** There is no
-provider whose free tier can carry a live OTP feature; every offer is a trial. The only
-€0 sustainable paths are the shipped operator outbox and (if the owner later approves a
-non-SMS channel) a user-initiated WhatsApp thread.
+provider whose free tier can carry a live OTP feature; every offer is a trial. Twilio's
+trial is the largest free grant found (**100 SMS units**, 200 across the life of the
+account) and it is still unusable here rather than merely small: ≤5 verified recipients,
+custom message bodies refused, and messages sent from a Twilio trial number rather than the
+business's sender ID. The only €0 sustainable paths are the shipped operator outbox and (if
+the owner later approves a non-SMS channel) a user-initiated WhatsApp thread.
 
 ---
 
@@ -280,7 +315,7 @@ non-SMS channel) a user-initiated WhatsApp thread.
 
 | Criterion | Twilio | OVHcloud SMS | AWS SNS | Operator outbox (shipped) |
 | --- | --- | --- | --- | --- |
-| Cost at 10–100 verifications/month | $0.88–$8.75 | €0.51–€5.08 (+€7.26 one-off) | `DATA GAP` | **€0** |
+| Cost at 10–100 verifications/month | $0.88–$8.75/month, post-paid | €0.51–€5.08/month pro-rata, but cash out is **whole packs**: €7.26 each, 2–11 packs in year one (see §3.2) | `DATA GAP` | **€0** |
 | Number of moving parts | Trial restrictions, sender pre-registration (≤4 weeks), per-segment billing, geo permissions, optional anti-pumping add-on | Prepaid credits, custom sender, REST API | AWS account + origination identity + registration | None |
 | Delivery reliability to Spanish mobiles | Sender ID preserved, two-way, mature deliverability tooling; landline numbers fail visibly (21614) | EU network, sending inside Europe "guaranteed by default"; OTP named as a use case | Unknown for Spain | n/a (human-confirmed) |
 | Lock-in | Proprietary REST API (well-supported by libraries) | REST **and** **SMPP** (portable, standard) | AWS-specific | None |
@@ -292,9 +327,11 @@ non-SMS channel) a user-initiated WhatsApp thread.
 ### Recommendation
 
 1. **Do not add paid SMS now, and do not open any account.** At hobby volume the money is
-   trivial (€5–7/month at the top of the range) but the *process* is not: Twilio's Spain
+   small (under €7/month of prepaid credit for OVHcloud at the top of the range, 100/month)
+   but the *process* is not: Twilio's Spain
    alphanumeric sender needs up to 4 weeks of pre-registration and its trial cannot message
-   real owners at all; AWS has no free SMS tier and no retrievable Spain rate. This spike
+   real owners at all (≤5 verified recipients, and custom message bodies are refused);
+   AWS has no free SMS tier and no retrievable Spain rate. This spike
    found **no provider with a sustainable free tier**.
 2. **Run the pilot on the path that already exists:** the operator-mediated hand-over
    (`GET /api/claim/outbox` → phone/WhatsApp → `POST /api/claim/outbox/:id`). Cost €0,
@@ -334,7 +371,7 @@ schema and its own review) — SMS delivery of the existing e-mail code would no
 | AWS SNS per-message rate to Spain | Worldwide table is rendered client-side; `grep -i spain` on the served HTML = 0 hits | AWS Pricing Calculator or the SNS FAQ |
 | Telnyx, Sinch, Brevo, ClickSend, GatewayAPI, Altiria Spain rates | Country tables/dropdowns are client-side; ClickSend's pricing API answered `404 Country not found` for `country=ES` | Ask each provider for a rate card, or read the page in a real browser |
 | OVHcloud: sender-registration requirement/lead time for Spain, credit expiry | Not stated on the pages retrieved | OVHcloud public documentation or support (free) |
-| Twilio trial credit amount | Twilio's own pages state the 30-day/5-recipient/sign-up-country limits but not a credit figure; the $15 figure comes from a competitor's article | Twilio console on sign-up (would require creating an account — not done) |
+| Twilio trial free units and post-upgrade units | Verified from Twilio's own trials page (100 SMS units each) — **this gap is closed** | n/a |
 | Data-residency guarantees (Twilio, AWS) | Not verified in this spike | Provider DPA / trust-centre pages |
 | WhatsApp authentication-template rate for Spain | Meta distributes per-country rate cards as CSV/PDF links, not inline text | Download Meta's USD rate card CSV |
 
@@ -342,7 +379,8 @@ schema and its own review) — SMS delivery of the existing e-mail code would no
 
 - Twilio Spain SMS pricing — https://www.twilio.com/en-us/sms/pricing/es
 - Twilio Spain SMS guidelines (alphanumeric sender pre-registration, ≤4 weeks) — https://www.twilio.com/en-us/guidelines/es/sms
-- Twilio trial limits (30 days, ≤5 verified recipients, sign-up country) — https://www.twilio.com/docs/usage/trials
+- Twilio trial account — free units (100 SMS messages; 100 more post-upgrade), 30-day expiry,
+  ≤5 verified recipients, sign-up-country restriction, pre-defined content only — https://www.twilio.com/docs/usage/trials
 - Twilio all-products pricing (Verify $0.05/verification) — https://www.twilio.com/en-us/pricing
 - OVHcloud SMS (Spain) — https://www.ovhcloud.com/es-es/sms/ · per-country grid — https://www.ovhcloud.com/es-es/sms/prices/
 - AWS SNS SMS pricing (free tier excludes SMS; short-code and 10DLC fees) — https://aws.amazon.com/sns/sms-pricing/
@@ -354,7 +392,7 @@ schema and its own review) — SMS delivery of the existing e-mail code would no
 - ClickSend SMS pricing — https://www.clicksend.com/pricing/sms/
 - GatewayAPI pricing (free account, no subscription, GDPR/ISAE) — https://gatewayapi.com/pricing/
 - Altiria tariffs (Spanish prepaid, credits do not expire, free trial account) — https://www.altiria.com/tarifas-sms/
-- Sinch comparison article (secondary source for trial credits) — https://sinch.com/es/blog/la-mejor-api-de-sms
+- Sinch comparison article (secondary source, and the only source, for Sinch's own 14-day trial claim) — https://sinch.com/es/blog/la-mejor-api-de-sms
 
 ## 8. Reproduction
 
@@ -369,6 +407,7 @@ grep -rIn -h -E 'api\.(resend)' functions
 # 3. reachable-by-SMS population
 for d in nails massage; do t=$(ls src/content/$d/*.md | wc -l); p=$(grep -l '^phone:' src/content/$d/*.md | wc -l); echo "$d: $p of $t"; done
 
-# 4. cost scenarios (script in the workspace, output pasted in §3)
-/usr/bin/python3 /tmp/sms_otp_scenarios.py
+# 4. the exact script behind the section 3 tables (committed in this repo);
+#    its stdout is pasted verbatim in section 3.2
+/usr/bin/python3 docs/sms-otp-cost-scenarios.py
 ```
