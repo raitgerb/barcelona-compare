@@ -21,6 +21,7 @@ languages:
   - "Español"
   - "Inglés"
 googleRating: 4.9
+googleReviewCount: 244
 googlePlaceId: "ChIJI2l2yHSjpBIRYsAesITxamo"
 services:
   - name: "Masaje de 55 minutos"
