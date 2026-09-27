@@ -52,7 +52,7 @@ const valuePoints = [
 const faqs = [
   {
     q: 'How do I claim my business?',
-    a: `Find your business in the directory, hit “Claim this business” and verify your email with a 6-digit code: the listing is marked as claimed and verified straight away. If you prefer, email us at ${CLAIM_EMAIL} and we will do it for you.`,
+    a: `Find your business in the directory, hit “Claim this business” and verify your email with a 6-digit code: the listing is marked as claimed and verified when you accept the code. If you prefer, email us at ${CLAIM_EMAIL} and we will do it for you.`,
   },
   {
     q: 'Can I change my prices, services or opening hours?',
@@ -68,7 +68,7 @@ const faqs = [
   },
   {
     q: 'Can I ask you to remove my business?',
-    a: 'Yes. Email us and we take it out of the directory within 2-3 business days. You do not have to give a reason.',
+    a: 'Yes. Email us and we remove it from the directory after reviewing the request. You do not have to give a reason.',
   },
   {
     q: 'Where do the ratings and reviews come from?',
@@ -132,7 +132,7 @@ const faqSchema = {
         </a>
       </div>
       <p class="mt-3 text-sm text-stone-500">
-        Or email us directly at <strong class="text-stone-700">{CLAIM_EMAIL}</strong> · reply within 2-3 business days
+        Or email us directly at <strong class="text-stone-700">{CLAIM_EMAIL}</strong> · email requests are reviewed manually
       </p>
 
       <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 p-5 rounded-xl bg-white border border-stone-200">
@@ -188,7 +188,7 @@ const faqSchema = {
           <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">3</span>
           <div>
             <h3 class="font-semibold text-stone-900">Your listing is marked as verified</h3>
-            <p class="mt-1 text-sm text-stone-600">It shows the verified business badge and we publish any detail changes you send us within 2-3 business days. No fees, no contracts and no exclusivity: every business keeps being compared on the same terms.</p>
+            <p class="mt-1 text-sm text-stone-600">It shows the verified business badge. Detail changes you send us by email are reviewed and published after we check them. No fees, no contracts and no exclusivity: every business keeps being compared on the same terms.</p>
           </div>
         </li>
       </ol>
@@ -200,7 +200,7 @@ const faqSchema = {
       <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Public listing</strong><p class="mt-2 text-sm text-stone-600">Name, address, opening hours, phone, website, photos, Google rating and reviews.</p></li>
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Business verification</strong><p class="mt-2 text-sm text-stone-600">After you confirm your email, your listing shows the verified business badge.</p></li>
-        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Direct editing</strong><p class="mt-2 text-sm text-stone-600">Your dashboard lets you update services, prices, opening hours, photos and WhatsApp. Changes go live immediately.</p></li>
+        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Direct editing</strong><p class="mt-2 text-sm text-stone-600">Your dashboard lets you update services, prices, opening hours, photos and WhatsApp. Changes appear on your public listing within about a minute.</p></li>
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Direct contact</strong><p class="mt-2 text-sm text-stone-600">People who find you can call, visit your website or message you on WhatsApp directly.</p></li>
       </ul>
     </section>
@@ -223,7 +223,7 @@ const faqSchema = {
     <section class="mt-14 p-8 rounded-2xl bg-brand-50 border border-brand-100 text-center">
       <h2 class="text-2xl font-bold text-stone-900">Claim your listing for free</h2>
       <p class="mt-2 text-stone-600 max-w-xl mx-auto">
-        Find your business, verify your email with a 6-digit code and the listing is claimed and verified straight away.
+        Find your business, verify your email with a 6-digit code and the listing is claimed and verified when you accept the code.
       </p>
       <a
         href={CLAIM_HREF}

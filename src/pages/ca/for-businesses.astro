@@ -50,7 +50,7 @@ const valuePoints = [
 const faqs = [
   {
     q: 'Com reclamo el meu negoci?',
-    a: `Troba el teu negoci al directori, clica «Reclama aquest negoci» i verifica el correu amb un codi de 6 xifres: la fitxa queda marcada com a reclamada i verificada a l'instant. Si ho prefereixes, escriu-nos a ${CLAIM_EMAIL} i ho fem nosaltres.`,
+    a: `Troba el teu negoci al directori, clica «Reclama aquest negoci» i verifica el correu amb un codi de 6 xifres: la fitxa queda marcada com a reclamada i verificada quan acceptes el codi. Si ho prefereixes, escriu-nos a ${CLAIM_EMAIL} i ho fem nosaltres.`,
   },
   {
     q: 'Puc canviar els meus preus, serveis o horari?',
@@ -66,7 +66,7 @@ const faqs = [
   },
   {
     q: 'Puc demanar que retireu el meu negoci?',
-    a: "Sí. Escriu-nos i el traiem del directori en 2-3 dies laborables. No cal que ens diguis el motiu.",
+    a: "Sí. Escriu-nos i el traiem del directori després de revisar la sol·licitud. No cal que ens diguis el motiu.",
   },
   {
     q: 'D\'on surten les valoracions i les ressenyes?',
@@ -130,7 +130,7 @@ const faqSchema = {
         </a>
       </div>
       <p class="mt-3 text-sm text-stone-500">
-        O escriu-nos directament a <strong class="text-stone-700">{CLAIM_EMAIL}</strong> · responem en 2-3 dies laborables
+        O escriu-nos directament a <strong class="text-stone-700">{CLAIM_EMAIL}</strong> · revisem les sol·licituds per correu
       </p>
       <p class="mt-1 text-xs text-stone-400">
         El formulari de reclamació amb codi de verificació està disponible en castellà i anglès.
@@ -189,7 +189,7 @@ const faqSchema = {
           <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">3</span>
           <div>
             <h3 class="font-semibold text-stone-900">La teva fitxa queda marcada com a verificada</h3>
-            <p class="mt-1 text-sm text-stone-600">Mostra la insígnia de negoci verificat i publiquem els canvis de dades que ens enviïs en 2-3 dies laborables. Sense quotes, sense contractes i sense exclusivitat: tots els negocis es continuen comparant amb les mateixes regles.</p>
+            <p class="mt-1 text-sm text-stone-600">Mostra la insígnia de negoci verificat. Els canvis de dades que ens enviïs per correu es revisen i es publiquen després de comprovar-los. Sense quotes, sense contractes i sense exclusivitat: tots els negocis es continuen comparant amb les mateixes regles.</p>
           </div>
         </li>
       </ol>
@@ -201,7 +201,7 @@ const faqSchema = {
       <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Fitxa pública</strong><p class="mt-2 text-sm text-stone-600">Nom, adreça, horari, telèfon, web, fotos, valoració i ressenyes de Google.</p></li>
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Verificació del negoci</strong><p class="mt-2 text-sm text-stone-600">Després de confirmar el teu correu, la fitxa mostra la insígnia de negoci verificat.</p></li>
-        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Edició directa</strong><p class="mt-2 text-sm text-stone-600">Des del teu panell pots actualitzar serveis, preus, horari, fotos i WhatsApp. Els canvis es publiquen a l'instant.</p></li>
+        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Edició directa</strong><p class="mt-2 text-sm text-stone-600">Des del teu panell pots actualitzar serveis, preus, horari, fotos i WhatsApp. Els canvis apareixen a la teva fitxa pública en aproximadament un minut.</p></li>
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Contacte directe</strong><p class="mt-2 text-sm text-stone-600">Les persones que et troben poden trucar-te, visitar la teva web o escriure't per WhatsApp directament.</p></li>
       </ul>
     </section>
@@ -224,7 +224,7 @@ const faqSchema = {
     <section class="mt-14 p-8 rounded-2xl bg-brand-50 border border-brand-100 text-center">
       <h2 class="text-2xl font-bold text-stone-900">Reclama la teva fitxa gratis</h2>
       <p class="mt-2 text-stone-600 max-w-xl mx-auto">
-        Troba el teu negoci, verifica el correu amb un codi de 6 xifres i la fitxa queda reclamada i verificada a l'instant.
+        Troba el teu negoci, verifica el correu amb un codi de 6 xifres i la fitxa queda reclamada i verificada quan acceptes el codi.
       </p>
       <a
         href={CLAIM_HREF}
