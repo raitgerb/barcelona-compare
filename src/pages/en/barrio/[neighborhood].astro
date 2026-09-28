@@ -19,10 +19,10 @@ const guide = Object.entries(neighborhoodGuides).find(([nb]) =>
 if (!guide) return Astro.redirect('/en/barrio/');
 const [nbName, meta] = guide;
 
-const nails = (await getCollection('nails'))
+const nails = (await getCollection('nails', ({ data }) => !data.offline))
   .filter(b => b.data.neighborhood === nbName)
   .sort((a, b) => ((b.data.googleRating || 0) - (a.data.googleRating || 0)) || ((b.data.googleReviewCount || 0) - (a.data.googleReviewCount || 0)));
-const massage = (await getCollection('massage'))
+const massage = (await getCollection('massage', ({ data }) => !data.offline))
   .filter(b => b.data.neighborhood === nbName)
   .sort((a, b) => ((b.data.googleRating || 0) - (a.data.googleRating || 0)) || ((b.data.googleReviewCount || 0) - (a.data.googleReviewCount || 0)));
 
@@ -51,7 +51,7 @@ const nbSlug = neighborhood;
 // Money-page cross-links: district (≥MIN_CITY) + combo (≥MIN_COMBO), EN side.
 const moneyLinks: Array<{ href: string; label: string }> = [];
 {
-  const allBiz = [...(await getCollection('nails')), ...(await getCollection('massage'))]
+  const allBiz = [...(await getCollection('nails', ({ data }) => !data.offline)), ...(await getCollection('massage', ({ data }) => !data.offline))]
     .filter(b => b.data.neighborhood === nbName);
   for (const cat of ['nails', 'massage'] as const) {
     const catN = allBiz.filter(b => b.collection === cat).length;

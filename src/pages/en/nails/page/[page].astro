@@ -5,7 +5,7 @@ import PaginatedListing from '../../../../components/PaginatedListing.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
-  const businesses = await getCollection('nails');
+  const businesses = await getCollection('nails', ({ data }) => !data.offline);
   businesses.sort((a, b) => (b.data.googleRating || 0) - (a.data.googleRating || 0));
   const PAGE_SIZE = 30;
   const totalPages = Math.ceil(businesses.length / PAGE_SIZE);

@@ -46,4 +46,5 @@ googleReviews:
     text: "An outstanding erotic massage experience in Barcelona. The setting felt calm and inviting, the team was highly skilled and professional, and the session itself was both deeply soothing and intensely sensual. Without a doubt, one of the finest sensual massage experiences I’ve enjoyed in the city."
 serviceTags:
   - spa-bienestar
+offline: true
 ---

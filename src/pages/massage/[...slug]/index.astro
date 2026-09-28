@@ -24,6 +24,10 @@ const business = businesses.find(b => b.id === slug);
 if (!business) {
   return Astro.redirect('/massage');
 }
+if (business.data.offline) {
+  return Astro.rewrite('/404');
+}
+
 
 const { data } = business;
 const verified = await verifiedBusinessFor(data.googlePlaceId);
