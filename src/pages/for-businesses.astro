@@ -52,7 +52,7 @@ const valuePoints = [
 const faqs = [
   {
     q: '¿Cómo reclamo mi negocio?',
-    a: `Busca tu negocio en el directorio, pulsa «Reclama este negocio» y verifica tu email con un código de 6 dígitos: la ficha queda marcada como reclamada y verificada cuando aceptas el código. Si lo prefieres, escríbenos a ${CLAIM_EMAIL} y lo hacemos nosotros.`,
+    a: `Busca tu negocio en el directorio, pulsa «Reclama este negocio» y confirma con un código de 6 dígitos que controlas el buzón de email indicado. La titularidad se revisa por separado: la insignia de negocio verificado y el editor para propietarios no están disponibles hasta que aprobemos la titularidad. Si lo prefieres, escríbenos a ${CLAIM_EMAIL} y lo hacemos nosotros.`,
   },
   {
     q: '¿Puedo cambiar los precios, los servicios o el horario?',
@@ -181,14 +181,14 @@ const faqSchema = {
           <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">2</span>
           <div>
             <h3 class="font-semibold text-stone-900">Verifica tu email</h3>
-            <p class="mt-1 text-sm text-stone-600">Pulsa «Reclama este negocio» en tu ficha y te enviamos un código de 6 dígitos. Confirmamos así que eres el titular o su responsable antes de tocar nada.</p>
+            <p class="mt-1 text-sm text-stone-600">Pulsa «Reclama este negocio» en tu ficha y te enviamos un código de 6 dígitos. El código confirma que controlas el buzón de email indicado; la titularidad se revisa por separado.</p>
           </div>
         </li>
         <li class="flex gap-4 p-5 rounded-xl bg-white border border-stone-200">
           <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">3</span>
           <div>
-            <h3 class="font-semibold text-stone-900">Tu ficha queda verificada</h3>
-            <p class="mt-1 text-sm text-stone-600">Pasa a estar marcada como negocio verificado. Los cambios que nos pidas por email se revisan y publican después de comprobarlos. Sin cuotas, sin contratos y sin exclusividad: seguimos comparando todos los negocios por igual.</p>
+            <h3 class="font-semibold text-stone-900">Revisamos la titularidad</h3>
+            <p class="mt-1 text-sm text-stone-600">La insignia de negocio verificado y el editor para propietarios no están disponibles hasta que aprobemos la titularidad. Sin cuotas, sin contratos y sin exclusividad: seguimos comparando todos los negocios por igual.</p>
           </div>
         </li>
       </ol>
@@ -196,10 +196,10 @@ const faqSchema = {
 
     <section class="mt-14">
       <h2 class="text-2xl font-bold text-stone-900">Qué incluye tu ficha</h2>
-      <p class="mt-2 text-stone-600">Tu presencia en Barcelona Compare es gratuita. Al reclamarla, verificamos que gestionas el negocio y te damos control sobre la información que ven tus clientes.</p>
+      <p class="mt-2 text-stone-600">Tu presencia en Barcelona Compare es gratuita. Al reclamarla, confirmamos que controlas el buzón de email indicado y revisamos la titularidad por separado. La insignia de negocio verificado y el editor para propietarios no están disponibles hasta que aprobemos la titularidad.</p>
       <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Ficha pública</strong><p class="mt-2 text-sm text-stone-600">Nombre, dirección, horario, teléfono, web, fotos, valoración y reseñas de Google.</p></li>
-        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Verificación del negocio</strong><p class="mt-2 text-sm text-stone-600">Después de confirmar tu email, tu ficha muestra la insignia de negocio verificado.</p></li>
+        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Revisión de titularidad</strong><p class="mt-2 text-sm text-stone-600">El código confirma el control del buzón de email indicado. La insignia de negocio verificado y el editor para propietarios quedan disponibles solo después de aprobar la titularidad.</p></li>
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Edición directa</strong><p class="mt-2 text-sm text-stone-600">Desde tu panel puedes actualizar servicios, precios, horario, fotos y WhatsApp. Los cambios aparecen en tu ficha pública en aproximadamente un minuto.</p></li>
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Contacto sin intermediarios</strong><p class="mt-2 text-sm text-stone-600">Las personas que te encuentran pueden llamarte, visitar tu web o escribirte por WhatsApp directamente.</p></li>
       </ul>
@@ -223,7 +223,7 @@ const faqSchema = {
     <section class="mt-14 p-8 rounded-2xl bg-brand-50 border border-brand-100 text-center">
       <h2 class="text-2xl font-bold text-stone-900">Reclama tu ficha gratis</h2>
       <p class="mt-2 text-stone-600 max-w-xl mx-auto">
-        Busca tu negocio, verifica tu email con un código de 6 dígitos y la ficha queda reclamada y verificada cuando aceptas el código.
+        Busca tu negocio y confirma con un código de 6 dígitos que controlas el buzón de email indicado. Después revisamos la titularidad; la insignia y el editor para propietarios quedan disponibles solo tras su aprobación.
       </p>
       <a
         href={CLAIM_HREF}
