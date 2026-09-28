@@ -7,6 +7,8 @@ const businessSchema = z.object({
   address: z.string(),
   phone: z.string().optional(),
   website: z.string().url().optional(),
+  websiteEn: z.string().url().optional(),
+  websiteCa: z.string().url().optional(),
   description: z.string().optional(),
   descriptionEn: z.string().optional(),
   whatsapp: z.string().optional(),
@@ -22,6 +24,7 @@ const businessSchema = z.object({
   googleRating: z.number().min(0).max(5).optional(),
   googleReviewCount: z.number().int().min(0).optional(),
   googlePlaceId: z.string().optional(),
+  mapPlaceId: z.string().optional(),
   photos: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
   // Kept in the source catalogue, but omitted from all public catalogue output.

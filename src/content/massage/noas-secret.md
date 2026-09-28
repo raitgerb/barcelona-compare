@@ -1,9 +1,12 @@
 ---
 name: "Noa's Secret"
 neighborhood: "Eixample"
-address: "Pl. de Catalunya, 1, Eixample, 08002 Barcelona, Spain"
-phone: "654 98 98 78"
-website: "https://www.noassecret.com/centro-masajes-eroticos-barcelona-centro/?utm_source=gmb"
+address: "Noa's Secret, Ronda de la Universitat 7, mezzanine 1, 08007 Barcelona, Spain"
+phone: "+34 654 98 98 78"
+whatsapp: "+34 641 86 25 37"
+website: "https://www.noassecret.com/centro-masajes-eroticos-barcelona-ronda-universitat/"
+websiteEn: "https://www.noassecret.com/en/erotic-massage-center-in-the-center-of-barcelona-ronda-universitat-7/"
+websiteCa: "https://www.noassecret.com/centro-masajes-eroticos-barcelona-ronda-universitat/"
 priceIndicator: "€€€"
 hours:
   monday: "10:00-05:00"
@@ -18,6 +21,7 @@ languages:
 googleRating: 4.9
 googleReviewCount: 144
 googlePlaceId: "ChIJx31des2_umIRdin5o4CT8ew"
+mapPlaceId: "ChIJzUvpB4GjpBIR_kzJyl8E9Eg"
 googleReviews:
   - author: "Motonkey Youtube"
     rating: 5
