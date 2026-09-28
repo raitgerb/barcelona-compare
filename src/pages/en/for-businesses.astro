@@ -52,7 +52,7 @@ const valuePoints = [
 const faqs = [
   {
     q: 'How do I claim my business?',
-    a: `Find your business in the directory, hit “Claim this business” and verify your email with a 6-digit code: the listing is marked as claimed and verified when you accept the code. If you prefer, email us at ${CLAIM_EMAIL} and we will do it for you.`,
+    a: `Find your business in the directory, hit “Claim this business” and use a 6-digit code to confirm control of the submitted email mailbox. Ownership is reviewed separately: the verified badge and owner editor are unavailable until ownership is approved. If you prefer, email us at ${CLAIM_EMAIL} and we will do it for you.`,
   },
   {
     q: 'Can I change my prices, services or opening hours?',
@@ -181,14 +181,14 @@ const faqSchema = {
           <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">2</span>
           <div>
             <h3 class="font-semibold text-stone-900">Verify your email</h3>
-            <p class="mt-1 text-sm text-stone-600">Hit “Claim this business” on your listing and we email you a 6-digit code. That is how we confirm you are the owner or the person responsible before we touch anything.</p>
+            <p class="mt-1 text-sm text-stone-600">Hit “Claim this business” on your listing and we email you a 6-digit code. The code confirms control of the submitted email mailbox; ownership is reviewed separately.</p>
           </div>
         </li>
         <li class="flex gap-4 p-5 rounded-xl bg-white border border-stone-200">
           <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">3</span>
           <div>
-            <h3 class="font-semibold text-stone-900">Your listing is marked as verified</h3>
-            <p class="mt-1 text-sm text-stone-600">It shows the verified business badge. Detail changes you send us by email are reviewed and published after we check them. No fees, no contracts and no exclusivity: every business keeps being compared on the same terms.</p>
+            <h3 class="font-semibold text-stone-900">We review ownership</h3>
+            <p class="mt-1 text-sm text-stone-600">The verified badge and owner editor are unavailable until ownership is approved. No fees, no contracts and no exclusivity: every business keeps being compared on the same terms.</p>
           </div>
         </li>
       </ol>
@@ -196,10 +196,10 @@ const faqSchema = {
 
     <section class="mt-14">
       <h2 class="text-2xl font-bold text-stone-900">What your listing includes</h2>
-      <p class="mt-2 text-stone-600">Your presence on Barcelona Compare is free. When you claim it, we verify that you run the business and give you control over the information customers see.</p>
+      <p class="mt-2 text-stone-600">Your presence on Barcelona Compare is free. When you claim it, we confirm control of the submitted email mailbox and review ownership separately. The verified badge and owner editor are unavailable until ownership is approved.</p>
       <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Public listing</strong><p class="mt-2 text-sm text-stone-600">Name, address, opening hours, phone, website, photos, Google rating and reviews.</p></li>
-        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Business verification</strong><p class="mt-2 text-sm text-stone-600">After you confirm your email, your listing shows the verified business badge.</p></li>
+        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Ownership review</strong><p class="mt-2 text-sm text-stone-600">The code confirms control of the submitted email mailbox. The verified badge and owner editor become available only after ownership is approved.</p></li>
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Direct editing</strong><p class="mt-2 text-sm text-stone-600">Your dashboard lets you update services, prices, opening hours, photos and WhatsApp. Changes appear on your public listing within about a minute.</p></li>
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Direct contact</strong><p class="mt-2 text-sm text-stone-600">People who find you can call, visit your website or message you on WhatsApp directly.</p></li>
       </ul>
@@ -223,7 +223,7 @@ const faqSchema = {
     <section class="mt-14 p-8 rounded-2xl bg-brand-50 border border-brand-100 text-center">
       <h2 class="text-2xl font-bold text-stone-900">Claim your listing for free</h2>
       <p class="mt-2 text-stone-600 max-w-xl mx-auto">
-        Find your business, verify your email with a 6-digit code and the listing is claimed and verified when you accept the code.
+        Find your business and use a 6-digit code to confirm control of the submitted email mailbox. We then review ownership; the badge and owner editor become available only after approval.
       </p>
       <a
         href={CLAIM_HREF}

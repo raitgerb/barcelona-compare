@@ -50,7 +50,7 @@ const valuePoints = [
 const faqs = [
   {
     q: 'Com reclamo el meu negoci?',
-    a: `Troba el teu negoci al directori, clica «Reclama aquest negoci» i verifica el correu amb un codi de 6 xifres: la fitxa queda marcada com a reclamada i verificada quan acceptes el codi. Si ho prefereixes, escriu-nos a ${CLAIM_EMAIL} i ho fem nosaltres.`,
+    a: `Troba el teu negoci al directori, clica «Reclama aquest negoci» i confirma amb un codi de 6 xifres que controles la bústia de correu indicada. La titularitat es revisa per separat: la insígnia de negoci verificat i l'editor per a propietaris no estan disponibles fins que aprovem la titularitat. Si ho prefereixes, escriu-nos a ${CLAIM_EMAIL} i ho fem nosaltres.`,
   },
   {
     q: 'Puc canviar els meus preus, serveis o horari?',
@@ -182,14 +182,14 @@ const faqSchema = {
           <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">2</span>
           <div>
             <h3 class="font-semibold text-stone-900">Verifica el teu correu electrònic</h3>
-            <p class="mt-1 text-sm text-stone-600">Clica «Reclama aquest negoci» a la teva fitxa i t'enviem un codi de 6 xifres per correu. Així confirmem que ets el propietari o la persona responsable abans de tocar res.</p>
+            <p class="mt-1 text-sm text-stone-600">Clica «Reclama aquest negoci» a la teva fitxa i t'enviem un codi de 6 xifres per correu. El codi confirma que controles la bústia de correu indicada; la titularitat es revisa per separat.</p>
           </div>
         </li>
         <li class="flex gap-4 p-5 rounded-xl bg-white border border-stone-200">
           <span class="shrink-0 w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-bold text-sm flex items-center justify-center">3</span>
           <div>
-            <h3 class="font-semibold text-stone-900">La teva fitxa queda marcada com a verificada</h3>
-            <p class="mt-1 text-sm text-stone-600">Mostra la insígnia de negoci verificat. Els canvis de dades que ens enviïs per correu es revisen i es publiquen després de comprovar-los. Sense quotes, sense contractes i sense exclusivitat: tots els negocis es continuen comparant amb les mateixes regles.</p>
+            <h3 class="font-semibold text-stone-900">Revisem la titularitat</h3>
+            <p class="mt-1 text-sm text-stone-600">La insígnia de negoci verificat i l'editor per a propietaris no estan disponibles fins que aprovem la titularitat. Sense quotes, sense contractes i sense exclusivitat: tots els negocis es continuen comparant amb les mateixes regles.</p>
           </div>
         </li>
       </ol>
@@ -197,10 +197,10 @@ const faqSchema = {
 
     <section class="mt-14">
       <h2 class="text-2xl font-bold text-stone-900">Què inclou la teva fitxa</h2>
-      <p class="mt-2 text-stone-600">La teva presència a Barcelona Compare és gratuïta. Quan la reclames, verifiquem que gestiones el negoci i et donem control sobre la informació que veuen els clients.</p>
+      <p class="mt-2 text-stone-600">La teva presència a Barcelona Compare és gratuïta. Quan la reclames, confirmem que controles la bústia de correu indicada i revisem la titularitat per separat. La insígnia de negoci verificat i l'editor per a propietaris no estan disponibles fins que aprovem la titularitat.</p>
       <ul class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Fitxa pública</strong><p class="mt-2 text-sm text-stone-600">Nom, adreça, horari, telèfon, web, fotos, valoració i ressenyes de Google.</p></li>
-        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Verificació del negoci</strong><p class="mt-2 text-sm text-stone-600">Després de confirmar el teu correu, la fitxa mostra la insígnia de negoci verificat.</p></li>
+        <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Revisió de titularitat</strong><p class="mt-2 text-sm text-stone-600">El codi confirma el control de la bústia de correu indicada. La insígnia de negoci verificat i l'editor per a propietaris només estan disponibles després d'aprovar la titularitat.</p></li>
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Edició directa</strong><p class="mt-2 text-sm text-stone-600">Des del teu panell pots actualitzar serveis, preus, horari, fotos i WhatsApp. Els canvis apareixen a la teva fitxa pública en aproximadament un minut.</p></li>
         <li class="p-5 rounded-xl bg-white border border-stone-200"><strong class="text-stone-900">Contacte directe</strong><p class="mt-2 text-sm text-stone-600">Les persones que et troben poden trucar-te, visitar la teva web o escriure't per WhatsApp directament.</p></li>
       </ul>
@@ -224,7 +224,7 @@ const faqSchema = {
     <section class="mt-14 p-8 rounded-2xl bg-brand-50 border border-brand-100 text-center">
       <h2 class="text-2xl font-bold text-stone-900">Reclama la teva fitxa gratis</h2>
       <p class="mt-2 text-stone-600 max-w-xl mx-auto">
-        Troba el teu negoci, verifica el correu amb un codi de 6 xifres i la fitxa queda reclamada i verificada quan acceptes el codi.
+        Troba el teu negoci i confirma amb un codi de 6 xifres que controles la bústia de correu indicada. Després revisem la titularitat; la insígnia i l'editor per a propietaris només estan disponibles després d'aprovar-la.
       </p>
       <a
         href={CLAIM_HREF}
