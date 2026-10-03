@@ -17,10 +17,25 @@ import { getPublishedOverrideBySlug } from './_lib/profile';
 import { galleryBaseFor, hasOwnerMarkers, injectOwnerContent, matchDetailPath } from './_lib/owner-content';
 import { MAINTENANCE_GUARD_ACTIVE, isGuardedRequest, maintenanceGuardResponse } from './_lib/maintenance-guard';
 
+// Owner-requested takedown. Keep these paths as true 404s rather than allowing
+// the site's unknown-route soft-404 or a category redirect to answer.
+const WITHDRAWN_DETAIL_PATHS = new Set([
+  '/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gràcia',
+  '/en/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gràcia',
+  '/ca/massage/javi-san---masaje-deportivo-en-barcelona-passeig-de-gràcia',
+]);
+
 export const onRequest: PagesFunction = async (context) => {
   const { request, env, next } = context;
 
   const url = new URL(request.url);
+
+  if (request.method === 'GET' && isWithdrawnDetailPath(url.pathname)) {
+    return new Response('Not Found\n', {
+      status: 404,
+      headers: { 'content-type': 'text/plain; charset=utf-8' },
+    });
+  }
 
   // FIRST-STAGE MAINTENANCE GUARD — executes before any route handler.
   // Ownership/claim/publication endpoints are refused outright (no handler code,
@@ -77,6 +92,16 @@ export const onRequest: PagesFunction = async (context) => {
     return next();
   }
 };
+
+function isWithdrawnDetailPath(pathname: string): boolean {
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(pathname);
+  } catch {
+    return false;
+  }
+  return WITHDRAWN_DETAIL_PATHS.has(decoded.replace(/\/+$/, ''));
+}
 
 /** Re-wrap an already-read body, dropping the headers that no longer apply. */
 function rebuild(response: Response, html: string): Response {
