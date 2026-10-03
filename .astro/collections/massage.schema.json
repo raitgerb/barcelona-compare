@@ -18,6 +18,20 @@
       "type": "string",
       "format": "uri"
     },
+    "websiteEn": {
+      "type": "string",
+      "format": "uri"
+    },
+    "websiteCa": {
+      "type": "string",
+      "format": "uri"
+    },
+    "description": {
+      "type": "string"
+    },
+    "descriptionEn": {
+      "type": "string"
+    },
     "whatsapp": {
       "type": "string"
     },
@@ -56,6 +70,12 @@
         "type": "string"
       }
     },
+    "hoursNote": {
+      "type": "string"
+    },
+    "hoursNoteEn": {
+      "type": "string"
+    },
     "languages": {
       "default": [
         "Español"
@@ -76,6 +96,9 @@
       "maximum": 9007199254740991
     },
     "googlePlaceId": {
+      "type": "string"
+    },
+    "mapPlaceId": {
       "type": "string"
     },
     "photos": {
