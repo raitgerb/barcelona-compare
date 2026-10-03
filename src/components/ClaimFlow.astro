@@ -44,11 +44,10 @@ const copy = isEs
       resendIn: (s: number) => `Puedes pedir otro código en ${s} s`,
       resend: 'Enviar otro código',
       otherEmail: 'Usar otro email',
-      successTitle: '¡Ficha reclamada y verificada!',
+      successTitle: 'Ficha reclamada — pendiente de revisión',
       successBody:
-        'Ya constas como propietario verificado. Puedes editar tus servicios, precios, horarios y fotos cuando quieras, y los cambios se ven en tu ficha al momento.',
-      successLink: 'Editar mi ficha',
-      successSecondary: 'Ver mi ficha',
+        'Hemos confirmado que controlas ese email. Eso todavía no acredita que el negocio sea tuyo: antes de marcarla como verificada, una persona comprueba con una fuente independiente que lo gestionas y te escribimos a ese correo con el resultado. Hasta entonces la ficha no muestra la insignia de verificada y el editor sigue cerrado.',
+      successLink: 'Ver mi ficha',
       alreadyTitle: 'Esta ficha ya está reclamada',
       alreadyBody:
         'Si crees que es un error, o si necesitas cambiar el email de contacto, escríbenos y lo revisamos.',
@@ -83,11 +82,10 @@ const copy = isEs
       resendIn: (s: number) => `You can ask for another code in ${s}s`,
       resend: 'Send another code',
       otherEmail: 'Use another email',
-      successTitle: 'Listing claimed and verified',
+      successTitle: 'Claim recorded — pending review',
       successBody:
-        'You are now recorded as the verified owner. You can edit your services, prices, opening hours and photos whenever you like — the changes show on your listing immediately.',
-      successLink: 'Edit my listing',
-      successSecondary: 'View my listing',
+        'We confirmed you can read that mailbox. That is not yet proof that the business is yours: before the listing is marked verified, a person checks with an independent source that you run it and emails you the outcome. Until then the listing shows no verified badge and the editor stays closed.',
+      successLink: 'View my listing',
       alreadyTitle: 'This listing has already been claimed',
       alreadyBody:
         'If you think that is a mistake, or you need to change the contact email, write to us and we will look into it.',
@@ -179,7 +177,7 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
           class="mt-1.5 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:border-brand-400 focus:ring-2 focus:ring-brand-100 outline-none"
         />
         <ul id="claim-results" class="mt-3 divide-y divide-stone-100 rounded-lg border border-stone-200 bg-white hidden"></ul>
-        <p id="claim-no-results" class="hidden mt-3 text-sm text-stone-500">{copy.noResults}</p>
+        <p id="claim-no-results" role="status" aria-live="polite" aria-atomic="true" class="hidden mt-3 text-sm text-stone-500">{copy.noResults}</p>
       </div>
     </div>
   </section>
@@ -248,28 +246,26 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
     </form>
   </section>
 
-  <!-- Done ------------------------------------------------------------------>
+  <!-- Pending review --------------------------------------------------------->
+  <!-- Reached in two cases: the code was just confirmed (the claim is recorded, but
+       ownership is not approved yet), or the listing already holds an email-verified
+       claim. Both are "waiting for a human", so they share this panel — and it
+       deliberately offers no editor link, because the owner surfaces stay closed
+       until approveOwnership() (docs/claim-flow.md). -->
   <section id="claim-step-done" class="hidden mt-6">
-    <div class="p-6 rounded-xl border border-emerald-200 bg-emerald-50">
-      <h2 class="text-lg font-bold text-emerald-900">{copy.successTitle}</h2>
-      <p class="mt-2 text-sm text-emerald-900/90">
+    <div class="p-6 rounded-xl border border-amber-200 bg-amber-50">
+      <h2 class="text-lg font-bold text-amber-900">{copy.successTitle}</h2>
+      <p class="mt-2 text-sm text-amber-900/90">
         <strong id="claim-done-name" class="font-semibold"></strong>
         <span class="block mt-2">{copy.successBody}</span>
       </p>
       <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
         <a
           id="claim-done-link"
-          href={isEs ? '/gestion/' : '/en/manage/'}
+          href="/"
           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors"
         >
           {copy.successLink}
-        </a>
-        <a
-          id="claim-done-listing"
-          href="/"
-          class="text-sm font-semibold text-emerald-900 underline hover:no-underline"
-        >
-          {copy.successSecondary}
         </a>
       </div>
     </div>
@@ -320,6 +316,9 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
       already_claimed: isEs
         ? 'Esa ficha ya está reclamada por otra persona. Si crees que es un error, escríbenos.'
         : 'That listing has already been claimed by somebody else. If you think it is a mistake, write to us.',
+      ownership_pending: isEs
+        ? 'Tu email está confirmado, pero la propiedad de esta ficha todavía no está aprobada. Te escribimos en cuanto la revisemos.'
+        : 'Your email is confirmed, but ownership of this listing has not been approved yet. We will email you once we have reviewed it.',
       not_found: isEs
         ? 'No encontramos ese negocio en el directorio.'
         : 'We could not find that business in the directory.',
@@ -383,7 +382,6 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
     const errorDetail = el('claim-error-detail');
     const doneName = el('claim-done-name');
     const doneLink = el<HTMLAnchorElement>('claim-done-link');
-    const doneListing = el<HTMLAnchorElement>('claim-done-listing');
     const alreadyManage = el<HTMLAnchorElement>('claim-already-manage');
 
     // The owner dashboard (B2B Phase 1): the slug in ?b= pre-fills the login form so
@@ -590,6 +588,15 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
           showStep('already');
           return;
         }
+        if (state === 'already_pending') {
+          // Same mailbox, already email-verified and queued for the manual ownership
+          // review. No code was sent (it would prove nothing new), so do not pretend
+          // one was: show the review status instead.
+          doneName.textContent = business.name;
+          doneLink.href = `/${business.category}/${business.slug}/`;
+          showStep('done');
+          return;
+        }
         codeSentTo.textContent = isEs ? `Hemos enviado el código a ${email}.` : `We sent the code to ${email}.`;
         codeInput.value = '';
         showStep('code');
@@ -641,8 +648,9 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
         }
         const record = (payload.business ?? {}) as { name?: string; slug?: string };
         doneName.textContent = record.name ?? business.name;
-        doneLink.href = manageHref(record.slug ?? business.slug);
-        doneListing.href = String(payload.listingUrl ?? `/${business.category}/${business.slug}/`);
+        // The listing link, not the editor: the editor only opens after a human
+        // approves ownership (functions/api/owner/* require `verified`).
+        doneLink.href = String(payload.listingUrl ?? `/${business.category}/${business.slug}/`);
         showStep('done');
       } catch {
         showError('network');
@@ -694,11 +702,21 @@ const CONTACT_EMAIL = 'hola@barcelonacompare.com';
           try {
             const response = await fetch(`${root!.dataset.registry}${encodeURIComponent(entry.placeId)}`);
             if (response.ok) {
-              const payload = (await response.json()) as { business?: { verified?: boolean } };
+              const payload = (await response.json()) as {
+                business?: { verified?: boolean; claimed?: boolean };
+              };
               if (payload?.business?.verified) {
                 doneName.textContent = entry.name;
                 alreadyManage.href = manageHref(entry.slug);
                 showStep('already');
+                return;
+              }
+              if (payload?.business?.claimed) {
+                // Email-verified, ownership not yet approved. Explain the review instead
+                // of walking this person through a code step that proves nothing new.
+                doneName.textContent = entry.name;
+                doneLink.href = `/${entry.category}/${entry.slug}/`;
+                showStep('done');
                 return;
               }
             }

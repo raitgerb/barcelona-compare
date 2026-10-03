@@ -7,8 +7,9 @@
 #     (the build catalog is what validates `placeId`)
 #   * the code is single-use, HMAC-checked, throttled and attempt-limited
 #   * NO registry state is written until the code is correct
-#   * a correct code writes claimed + verified through claimBusiness()/verifyBusiness()
-#     and lands both events in the audit trail
+#   * a correct code records only the email-verified claim (claimed = 1) and stops
+#     there: it does NOT verify ownership, so the audit trail holds `claim` alone
+#     (migration 0006 — ownership needs a human approval with recorded evidence)
 #
 # Usage:
 #   bash scripts/claim-smoke.sh                                  # local: migrate, serve, test, clean up
@@ -34,6 +35,14 @@ ADMIN_TOKEN="${ADMIN_TOKEN:-local-dev-token}"
 CLAIM_SECRET="${CLAIM_CODE_SECRET:-local-dev-claim-code-secret-not-for-production}"
 SMOKE_EMAIL="${SMOKE_EMAIL:-}"
 LOG_FILE="$(mktemp -t claim-smoke-log)"
+
+# Isolated local D1. Set SMOKE_PERSIST_DIR=/tmp/<something> to point every local
+# wrangler call at a throwaway directory, so a run never touches the shared dev
+# database in .wrangler/state (which several agents on this machine share) and can
+# never see or delete another run's rows. Unset = the historical default.
+PERSIST_DIR="${SMOKE_PERSIST_DIR:-}"
+PERSIST_FLAG=""
+if [ -n "$PERSIST_DIR" ]; then PERSIST_FLAG="--persist-to $PERSIST_DIR"; fi
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -69,11 +78,12 @@ if [ "$MODE" = local ]; then
   [ -d dist ] || npm run build
   [ -f dist/data/claim-index.json ] || { echo "dist/data/claim-index.json missing — run npm run build" >&2; exit 2; }
 
-  echo "== migrations (local D1: $DB_NAME)"
-  npx --yes wrangler d1 migrations apply "$DB_NAME" --local 2>&1 | tail -3
+  echo "== migrations (local D1: $DB_NAME${PERSIST_DIR:+ at $PERSIST_DIR})"
+  npx --yes wrangler d1 migrations apply "$DB_NAME" --local $PERSIST_FLAG 2>&1 | tail -3
 
   echo "== starting wrangler pages dev on :$PORT"
   npx --yes wrangler pages dev dist \
+    $PERSIST_FLAG \
     --port "$PORT" \
     --binding "REGISTRY_ADMIN_TOKEN=$ADMIN_TOKEN" \
     --binding "CLAIM_CODE_SECRET=$CLAIM_SECRET" \
@@ -211,14 +221,18 @@ check "code for another business -> invalid_code" "invalid_code" "$(q .error)"
 
 req POST "/api/claim/verify" "{\"placeId\":\"$PLACE_A\",\"email\":\"$EMAIL_A\",\"code\":\"$CODE\"}"
 check "correct code -> 200" "200" "$STATUS"
-check "correct code -> state=verified" "verified" "$(q .state)"
+# REGRESSION (migration 0006): a correct code proves the mailbox, not ownership.
+# It must record the claim and stop there — no badge, no edit/publish authority.
+check "correct code -> state=pending_approval" "pending_approval" "$(q .state)"
 check "correct code -> claimed" "true" "$(q .business.claimed)"
-check "correct code -> verified" "true" "$(q .business.verified)"
+check "correct code -> NOT verified" "false" "$(q .business.verified)"
 check "correct code -> tier free" "free" "$(q .business.tier)"
 check "correct code -> PII stripped from the response" "false" "$(q '.business | has("ownerEmail")')"
+check "correct code -> ownership reported pending review" "pending_review" "$(q .ownership.state)"
+check "correct code -> ownership not approved" "false" "$(q .ownership.approved)"
 if [ -n "$(q .listingUrl)" ] && [ "$(q .listingUrl)" != "null" ]; then pass "listing url is present"; else fail "listing url is present"; fi
 if [ -n "$(q .business.claimedAt)" ] && [ "$(q .business.claimedAt)" != "null" ]; then pass "claimedAt is set"; else fail "claimedAt is set"; fi
-if [ -n "$(q .business.verifiedAt)" ] && [ "$(q .business.verifiedAt)" != "null" ]; then pass "verifiedAt is set"; else fail "verifiedAt is set"; fi
+if [ "$(q .business.verifiedAt)" = "null" ]; then pass "verifiedAt is left null until a human approves"; else fail "verifiedAt is left null until a human approves (got [$(q .business.verifiedAt)])"; fi
 
 req POST "/api/claim/verify" "{\"placeId\":\"$PLACE_A\",\"email\":\"$EMAIL_A\",\"code\":\"$CODE\"}"
 check "replaying a used code -> 400" "400" "$STATUS"
@@ -226,18 +240,18 @@ check "replaying a used code -> invalid_code" "invalid_code" "$(q .error)"
 
 req GET "/api/registry/$PLACE_A"
 check "registry GET shows claimed" "true" "$(q .business.claimed)"
-check "registry GET shows verified" "true" "$(q .business.verified)"
+check "registry GET shows NOT verified (no badge from a mailbox)" "false" "$(q .business.verified)"
 check "registry GET still hides ownerEmail" "false" "$(q '.business | has("ownerEmail")')"
 
 req POST "/api/claim/start" "{\"placeId\":\"$PLACE_A\",\"email\":\"$EMAIL_A\"}"
-check "re-claim by the verified owner -> already_verified" "already_verified" "$(q .state)"
+check "re-claim by the pending owner -> already_pending" "already_pending" "$(q .state)"
 
 req POST "/api/claim/start" "{\"placeId\":\"$PLACE_A\",\"email\":\"$OTHER_EMAIL\"}"
 check "claim by a different email -> 409" "409" "$STATUS"
 check "claim by a different email -> already_claimed" "already_claimed" "$(q .error)"
 
 req GET "/api/registry/$PLACE_A?events=1" "" "$ADMIN_TOKEN"
-check "audit trail records claim then verify" "claim,verify" "$(q '[.events[].event] | join(",")')"
+check "audit trail records the claim and nothing more" "claim" "$(q '[.events[].event] | join(",")')"
 check "audit trail actor is the claim flow" "claim-flow" "$(q '[.events[].actor] | unique | join(",")')"
 
 # ------------------------------------------------------- attempt limits (business B)
@@ -271,7 +285,7 @@ if [ "$KEEP" != 1 ]; then
   echo "== cleanup"
   req PUT "/api/registry/$PLACE_A" '{"op":"revoke","reason":"claim smoke test"}' "$ADMIN_TOKEN"
   check "cleanup revokes the test claim" "false" "$(q .business.claimed)"
-  npx --yes wrangler d1 execute "$DB_NAME" "$D1_TARGET" --yes \
+  npx --yes wrangler d1 execute "$DB_NAME" "$D1_TARGET" $PERSIST_FLAG --yes \
     --command "DELETE FROM registry_events WHERE place_id IN ('$PLACE_A','$PLACE_B'); DELETE FROM businesses WHERE place_id IN ('$PLACE_A','$PLACE_B'); DELETE FROM claim_requests WHERE place_id IN ('$PLACE_A','$PLACE_B');" >/dev/null 2>&1 || \
     echo "  warn  could not delete the test rows from $DB_NAME"
   req GET "/api/registry/$PLACE_A"

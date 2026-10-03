@@ -38,6 +38,7 @@ const galleryPath = imagePath('massage', slug);
 // display order of the files (best photo first) — see scripts/score-photos.py
 const galleryOrder = photoOrder('massage', slug);
 const googleMapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY;
+const mapPlaceId = data.mapPlaceId || data.googlePlaceId;
 const schemaOrg = {
   "@context": "https://schema.org",
   "@type": "BeautySalon",
@@ -219,10 +220,10 @@ const schemaOrg = {
           <div class="rounded-lg overflow-hidden border border-stone-200">
             <iframe width="100%" height="300" style="border:0" loading="lazy" allowfullscreen
               referrerpolicy="no-referrer-when-downgrade"
-              src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsKey}&q=place_id:${data.googlePlaceId}`}>
+              src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsKey}&q=place_id:${mapPlaceId}`}>
             </iframe>
           </div>
-          <a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(data.address)}&destination_place_id=${data.googlePlaceId}`} target="_blank" rel="noopener" data-track-event="click_directions" class="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-stone-300 text-stone-700 text-sm font-medium hover:bg-stone-50 transition-colors">
+          <a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(data.address)}&destination_place_id=${mapPlaceId}`} target="_blank" rel="noopener" data-track-event="click_directions" class="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-stone-300 text-stone-700 text-sm font-medium hover:bg-stone-50 transition-colors">
             Cómo llegar
           </a>
         </section>

@@ -94,15 +94,15 @@ const tagline: Record<Locale, string> = {
   </head>
   <body class="min-h-screen flex flex-col">
     <header class="border-b border-stone-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-      <nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <a href={localePath(lang, '/')} class="text-xl font-bold text-stone-900 tracking-tight">
+      <nav class="max-w-6xl mx-auto px-3 sm:px-4 min-h-16 py-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+        <a href={localePath(lang, '/')} class="text-lg sm:text-xl font-bold text-stone-900 tracking-tight whitespace-nowrap">
           Barcelona <span class="text-brand-500">Compare</span>
         </a>
-        <div class="flex items-center gap-6 text-sm font-medium">
+        <div class="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-1 text-sm font-medium">
           {navItems.map(item => (
             <a
               href={item.href}
-              class="text-stone-600 hover:text-stone-900 transition-colors"
+              class="whitespace-nowrap text-stone-600 hover:text-stone-900 transition-colors"
             >
               {t[item.key]}
             </a>

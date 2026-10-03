@@ -2,12 +2,14 @@
 //
 // Body: { "placeId": "ChIJ...", "email": "owner@example.com", "locale": "es" | "en" }
 // Success (200):
-//   { ok: true, state: "code_sent" | "already_verified", business: {...}, email,
-//     delivery: "resend" | "none", expiresAt, resendInSeconds }
+//   { ok: true, state: "code_sent" | "already_verified" | "already_pending",
+//     business: {...}, email, delivery: "resend" | "none", expiresAt, resendInSeconds }
 //
 // The business is resolved from the build catalog, so only listed businesses can be
 // claimed. Errors: invalid_email 400, not_found 404, already_claimed 409,
 // rate_limited 429, catalog_unavailable 503.
+//
+// A code never grants ownership: see docs/claim-flow.md for the review that does.
 //
 // Docs: docs/claim-flow.md
 

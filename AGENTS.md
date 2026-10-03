@@ -1,5 +1,12 @@
 # Barcelona Compare — Agent Instructions
 
+## Project Standard
+- Adopted baseline: **Project Standard v1.0.0**, canonical source `/Users/agrippa/Documents/Obsidian Vault/Hermes/Standards/Project Standard v1.md`.
+- Modules: WEB, DATA, EXTERNAL, ANALYTICS, AUTOMATION. Maturity: PUBLIC; authentication/ownership changes require SENSITIVE change controls and independent review.
+- Declaration and honest migration gaps: `docs/project-standard.json`.
+- Latest authorized improvement scope and boundaries: `docs/improvement-execution-handoff.md`; approved plan under `.hermes/plans/2026-09-20_205738-project-review-and-improvement-plan.md`.
+- Standard adoption is not certification or production permission. Preserve all stronger restrictions below. No Google collection until cost and content-rights gates are satisfied; the calendar reset alone does not authorize resumption.
+
 ## What this project is
 barcelonacompare.com — a directory site comparing nail salons and massage businesses in Barcelona. Built as an Astro 6.x static site, deployed on Cloudflare Pages. Content-driven: one markdown file per business.
 

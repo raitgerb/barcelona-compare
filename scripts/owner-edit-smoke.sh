@@ -3,9 +3,12 @@
 # End-to-end smoke test for B2B Phase 1 self-service profile edits.
 #
 # Proves the whole owner path through the real Pages Functions runtime:
-#   claim (registry) -> request login code -> 6-digit verify -> session token ->
-#   PUT services/prices/hours/photos -> public override API -> the LISTING PAGE
-#   served with the owner content injected -> operator takedown -> owner reset.
+#   claim (registry) -> ownership approval -> request login code -> 6-digit verify ->
+#   session token -> PUT services/prices/hours/photos -> public override API -> the
+#   LISTING PAGE served with the owner content injected -> operator takedown -> owner reset.
+#
+# Step 2b is the migration-0006 regression: an email-verified claim that has not been
+# ownership-approved gets 403 ownership_pending and no login code.
 #
 # The injection assertions read the real listing HTML, so this is the test that
 # says "an owner edit is live on a profile", not just "a row changed".
@@ -36,6 +39,13 @@ SLUG="${SLUG:-acuarela-nails}"
 CATEGORY="${CATEGORY:-nails}"
 LOG_FILE="$(mktemp -t owner-edit-smoke-log)"
 BODY_FILE="$(mktemp -t owner-edit-smoke-body)"
+
+# Isolated local D1 — see the same block in scripts/claim-smoke.sh: set
+# SMOKE_PERSIST_DIR to keep the whole run inside a throwaway directory instead of
+# the shared .wrangler/state database. Unset = the historical default.
+PERSIST_DIR="${SMOKE_PERSIST_DIR:-}"
+PERSIST_FLAG=""
+if [ -n "$PERSIST_DIR" ]; then PERSIST_FLAG="--persist-to $PERSIST_DIR"; fi
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -108,7 +118,7 @@ remote_d1() { # remote_d1 <sql>
   npx --yes wrangler d1 execute "$DB_NAME" --remote --yes --command "$1" >>"$LOG_FILE" 2>&1
 }
 local_d1() { # local_d1 <sql>
-  npx --yes wrangler d1 execute "$DB_NAME" --local --yes --command "$1" >>"$LOG_FILE" 2>&1
+  npx --yes wrangler d1 execute "$DB_NAME" --local $PERSIST_FLAG --yes --command "$1" >>"$LOG_FILE" 2>&1
 }
 
 cleanup() {
@@ -138,10 +148,10 @@ if [ "$MODE" = "local" ]; then
     echo "Re-run with PORT=<free port> (this machine runs several agents at once)." >&2
     exit 2
   fi
-  echo "applying migrations to the local D1"
-  npm run --silent db:migrate:local >>"$LOG_FILE" 2>&1
+  echo "applying migrations to the local D1${PERSIST_DIR:+ at $PERSIST_DIR}"
+  npx --yes wrangler d1 migrations apply "$DB_NAME" --local $PERSIST_FLAG >>"$LOG_FILE" 2>&1
   echo "starting wrangler pages dev on port $PORT"
-  npx --yes wrangler pages dev dist --port "$PORT" --ip 127.0.0.1 >>"$LOG_FILE" 2>&1 &
+  npx --yes wrangler pages dev dist $PERSIST_FLAG --port "$PORT" --ip 127.0.0.1 >>"$LOG_FILE" 2>&1 &
   SERVER_PID=$!
   trap 'kill "$SERVER_PID" 2>/dev/null || true; cleanup' EXIT
   ready=0
@@ -169,6 +179,33 @@ call PUT "/api/registry/$PLACE_ID" "{\"op\":\"claim\",\"ownerEmail\":\"$EMAIL\",
 check "claim accepted" "200" "$STATUS"
 check "registry says claimed" "true" "$(jqr '.business.claimed')"
 check "registry says not verified" "false" "$(jqr '.business.verified')"
+
+echo
+echo "2b. REGRESSION (migration 0006): an email-verified claim alone grants no owner access"
+call POST "/api/owner/session" "{\"business\":\"$SLUG\",\"email\":\"$EMAIL\"}"
+check "mailbox-verified claim cannot get a login code (anonymous)" "403" "$STATUS"
+check "refused with ownership_pending" "ownership_pending" "$(jqr '.error')"
+
+call POST "/api/owner/session" "{\"business\":\"$SLUG\",\"email\":\"$EMAIL\"}" "" "$ADMIN_TOKEN"
+check "mailbox-verified claim cannot get a login code (operator)" "403" "$STATUS"
+check "no code is minted for a pending claim" "ownership_pending" "$(jqr '.error')"
+
+# Ownership approval is the only transition that opens the owner path, and it
+# needs provenance AND the claimant + claim generation the operator reviewed
+# (migration 0007). rebuild:false keeps the smoke run off the deploy hook.
+call PUT "/api/registry/$PLACE_ID" "{\"op\":\"verify\",\"rebuild\":false}" "" "$ADMIN_TOKEN"
+check "ownership approval without evidence -> 400" "400" "$STATUS"
+check "ownership approval without evidence -> approval_provenance_missing" "approval_provenance_missing" "$(jqr '.error')"
+
+call PUT "/api/registry/$PLACE_ID" "{\"op\":\"verify\",\"approvedBy\":\"smoke-operator\",\"evidence\":\"smoke: independent ownership source stub\",\"rebuild\":false}" "" "$ADMIN_TOKEN"
+check "ownership approval without the expected claimant -> 400" "400" "$STATUS"
+
+call PUT "/api/registry/$PLACE_ID" "{\"op\":\"verify\",\"approvedBy\":\"smoke-operator\",\"evidence\":\"smoke: independent ownership source stub\",\"expectedOwnerEmail\":\"$EMAIL\",\"expectedClaimGeneration\":0,\"rebuild\":false}" "" "$ADMIN_TOKEN"
+check "operator approves ownership with recorded provenance" "200" "$STATUS"
+check "registry says verified after approval" "true" "$(jqr '.business.verified')"
+check "approval records who decided" "smoke-operator" "$(jqr '.business.ownershipApprovedBy')"
+check "approval records the evidence" "smoke: independent ownership source stub" "$(jqr '.business.ownershipEvidence')"
+check "approval records the claim generation it reviewed" "1" "$(jqr '.business.approvalGeneration')"
 
 echo
 echo "3. login code: never returned anonymously, always returned to the operator"

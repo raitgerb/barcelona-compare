@@ -12,6 +12,8 @@ import {
   deleteOverride,
   getOverrideByPlaceId,
   getOverrideBySlug,
+  getPublishedOverrideByPlaceId,
+  getPublishedOverrideBySlug,
   ProfileError,
   setOverridePublished,
   toPublicOverride,
@@ -40,8 +42,15 @@ async function lookup(db: D1Database, key: string): Promise<ProfileOverride | nu
 export const onRequestGet: PagesFunction = async ({ params, request, env }) => {
   try {
     const key = keyFrom(params);
-    const record = await lookup(env.DB, key);
     const admin = await isAdminRequest(request, env.REGISTRY_ADMIN_TOKEN);
+    // Public reads are ownership-checked: the row is served only while the listing
+    // still has an approved owner and the content was written under that same
+    // approval generation (migration 0007). Operator reads keep full visibility so
+    // quarantined content can be inspected.
+    const record = admin
+      ? await lookup(env.DB, key)
+      : ((await getPublishedOverrideBySlug(env.DB, key)) ??
+        (await getPublishedOverrideByPlaceId(env.DB, key)));
     if (!record || (!record.published && !admin)) {
       return errorJson('not_found', `no published owner content for ${key}`, 404);
     }

@@ -86,19 +86,32 @@ fetch it at build time (or from a cron) and match on `placeId`.
 ## Using the data layer
 
 `functions/_lib/registry.ts` is the only place that touches these tables. The
-claim flow should import `claimBusiness()` / `verifyBusiness()` instead of
+claim flow should import `claimBusiness()` / `approveOwnership()` instead of
 writing SQL, so the invariants and audit trail stay in one place:
 
 ```ts
-import { claimBusiness, verifyBusiness } from '../../_lib/registry';
+import { claimBusiness, approveOwnership } from '../../_lib/registry';
 
+// Mailbox possession only: records `claimed`, never `verified`.
 const record = await claimBusiness(env.DB, { placeId, ownerEmail: email, source: 'claim' });
-await verifyBusiness(env.DB, placeId);
+
+// The only transition to `verified`. Requires a named approver, the independent
+// evidence used, AND the exact claimant + claim generation the operator reviewed
+// (read `approvalGeneration` from the admin GET first), because an email-verified
+// claim is not proof of ownership and a stale decision must not approve a
+// replacement claimant.
+await approveOwnership(env.DB, placeId, {
+  approvedBy: 'operator@example.com',
+  evidence: 'called the business on its published number and confirmed the owner',
+  expectedOwnerEmail: email,
+  expectedClaimGeneration: record.approvalGeneration,
+});
 ```
 
 Thrown `RegistryError`s carry a stable `code` (`not_found`, `already_claimed`,
-`not_claimed`, `invalid_email`, `invalid_tier`, `invalid_body`) and an HTTP
-`status`, so handlers can map them straight onto responses.
+`not_claimed`, `invalid_email`, `invalid_tier`, `invalid_body`,
+`approval_provenance_missing`, `approval_conflict`) and an HTTP `status`, so handlers
+can map them straight onto responses.
 
 ## Migrations
 

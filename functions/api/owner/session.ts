@@ -48,6 +48,18 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
         403,
       );
     }
+    // Email-verified is not the same as owner-verified: until a human has approved
+    // ownership (approveOwnership) *with recorded provenance*, the editor stays closed
+    // for this business. The broader predicate is deliberate: a row that carries
+    // `verified = 1` without provenance (mixed-version rollout, or a legacy writer)
+    // must not open the editor.
+    if (!record.ownershipApproved) {
+      throw new ProfileError(
+        'ownership_pending',
+        'your email is verified, but ownership of this listing has not been approved yet — we will contact you at this address once the review is done, and the editor opens then',
+        403,
+      );
+    }
 
     const { code, expiresAt } = await issueLoginCode(env.DB, record.placeId, email);
 

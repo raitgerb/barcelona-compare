@@ -7,6 +7,13 @@ const businessSchema = z.object({
   address: z.string(),
   phone: z.string().optional(),
   website: z.string().url().optional(),
+<<<<<<< HEAD
+=======
+  websiteEn: z.string().url().optional(),
+  websiteCa: z.string().url().optional(),
+  description: z.string().optional(),
+  descriptionEn: z.string().optional(),
+>>>>>>> 1060f87 (fix: correct Noa's Secret listing details)
   whatsapp: z.string().optional(),
   priceIndicator: z.enum(['€', '€€', '€€€']).optional(),
   services: z.array(z.object({
@@ -18,6 +25,7 @@ const businessSchema = z.object({
   googleRating: z.number().min(0).max(5).optional(),
   googleReviewCount: z.number().int().min(0).optional(),
   googlePlaceId: z.string().optional(),
+  mapPlaceId: z.string().optional(),
   photos: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
   massageTypes: z.array(z.string()).optional(),

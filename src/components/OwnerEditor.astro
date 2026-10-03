@@ -61,7 +61,10 @@ const copy = {
     codeSent: 'Si ese email es el propietario, te hemos enviado un código de 6 dígitos.',
     needBusiness: 'Escribe el nombre de tu negocio tal como aparece en la URL de tu ficha.',
     needEmail: 'Escribe el email con el que reclamaste la ficha.',
+    needEmailMalformed: 'Ese email no parece válido. Revisa que no falte la arroba ni el dominio.',
     needCode: 'Escribe el código de 6 dígitos.',
+    ownershipPending:
+      'Tu email está confirmado, pero la propiedad de esta ficha todavía no está aprobada. Te escribimos en cuanto la revisemos; hasta entonces el editor sigue cerrado.',
     working: 'Un momento…',
     storageKey: 'bc_owner_session_v1',
     days: {
@@ -119,7 +122,10 @@ const copy = {
     codeSent: 'If that email owns the listing, we have sent a 6-digit code.',
     needBusiness: 'Enter your business as it appears in your listing URL.',
     needEmail: 'Enter the email you claimed the listing with.',
+    needEmailMalformed: 'That email does not look valid. Check that it has an @ sign and a domain.',
     needCode: 'Enter the 6-digit code.',
+    ownershipPending:
+      'Your email is confirmed, but ownership of this listing has not been approved yet. We will email you once we have reviewed it; until then the editor stays closed.',
     working: 'One moment…',
     storageKey: 'bc_owner_session_v1',
     days: {
@@ -155,7 +161,7 @@ const card = 'rounded-xl border border-stone-200 bg-white p-6';
   <h1 class="text-3xl font-bold text-stone-900 tracking-tight">{t.title}</h1>
   <p class="mt-3 text-stone-600">{t.intro}</p>
 
-  <p id="owner-status" role="status" aria-live="polite" class="hidden mt-6 p-4 rounded-lg text-sm"></p>
+  <p id="owner-status" role="status" aria-live="polite" aria-atomic="true" class="hidden mt-6 p-4 rounded-lg text-sm"></p>
 
   <!-- Step 1: identify the business -->
   <section id="owner-step-login" class={`mt-8 ${card}`}>
@@ -291,6 +297,15 @@ const card = 'rounded-xl border border-stone-200 bg-white p-6';
     node.className = message
       ? `mt-6 p-4 rounded-lg text-sm ${kind === 'error' ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'}`
       : 'hidden mt-6 p-4 rounded-lg text-sm';
+  }
+
+  /**
+   * Server errors arrive as English strings. The ownership states carry a product
+   * meaning the owner needs in their own language, so they get replaced here.
+   */
+  function errorText(error) {
+    if (error && error.code === 'ownership_pending') return APP.copy.ownershipPending;
+    return (error && error.message) || '';
   }
 
   async function api(path, options = {}) {
@@ -439,15 +454,31 @@ const card = 'rounded-xl border border-stone-200 bg-white p-6';
       return true;
     } catch (error) {
       if (error.status === 401) forget();
+      // 403 ownership_pending = the claim was revoked or is still under review: say so
+      // instead of silently dropping the owner back on the login form.
+      if (error.code === 'ownership_pending') status(APP.copy.ownershipPending, 'error');
       return false;
     }
   }
 
+  // Same shape the claim flow uses. The email input is type=email, but the send
+  // button is not a form submit, so the browser never runs its own validation:
+  // without this guard a malformed address reached POST /api/owner/session.
+  const EMAIL_SHAPE = /^[^@\s]+@[^@\s.]+\.[^@\s.]+$/;
+
   async function sendCode() {
     const business = el('owner-business').value.trim();
-    const email = el('owner-email').value.trim();
+    const emailField = el('owner-email');
+    const email = emailField.value.trim();
     if (!business) return status(APP.copy.needBusiness, 'error');
     if (!email) return status(APP.copy.needEmail, 'error');
+    if (!EMAIL_SHAPE.test(email)) {
+      emailField.setAttribute('aria-invalid', 'true');
+      status(APP.copy.needEmailMalformed, 'error');
+      emailField.focus();
+      return;
+    }
+    emailField.removeAttribute('aria-invalid');
     status(APP.copy.working);
     try {
       const payload = await api('/api/owner/session', { method: 'POST', body: { business, email, lang: APP.lang } });
@@ -466,7 +497,7 @@ const card = 'rounded-xl border border-stone-200 bg-white p-6';
       );
       el('owner-code')?.focus();
     } catch (error) {
-      status(error.message, 'error');
+      status(errorText(error), 'error');
     }
   }
 
@@ -491,7 +522,7 @@ const card = 'rounded-xl border border-stone-200 bg-white p-6';
       openEditor(profile);
       status(APP.copy.loginSaved, 'ok');
     } catch (error) {
-      status(error.message, 'error');
+      status(errorText(error), 'error');
     }
   }
 
@@ -516,7 +547,7 @@ const card = 'rounded-xl border border-stone-200 bg-white p-6';
       fillForm(state.override, state.defaults);
       status(APP.copy.saved, 'ok');
     } catch (error) {
-      status(error.message, 'error');
+      status(errorText(error), 'error');
     }
   }
 
@@ -530,7 +561,7 @@ const card = 'rounded-xl border border-stone-200 bg-white p-6';
       fillForm(null, state.defaults);
       status(APP.copy.resetDone, 'ok');
     } catch (error) {
-      status(error.message, 'error');
+      status(errorText(error), 'error');
     }
   }
 
