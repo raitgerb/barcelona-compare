@@ -49,51 +49,17 @@ const valuePoints = [
   },
 ];
 
-const tiers = [
-  {
-    key: 'free',
-    name: 'Ficha gratuita',
-    price: '0 €',
-    status: 'Activa ahora',
-    tone: 'live',
-    blurb: 'La ficha que ya tienes, construida con datos públicos de Google Maps y con tus enlaces de contacto directos.',
-  },
-  {
-    key: 'claimed',
-    name: 'Reclamada',
-    price: '0 €',
-    status: 'Activa ahora',
-    tone: 'live',
-    blurb: 'Verificas por email que eres el titular y tu ficha queda marcada como reclamada y verificada. El control para editar servicios, precios y fotos llega a continuación.',
-  },
-  {
-    key: 'pro',
-    name: 'Pro',
-    price: 'Precio por confirmar',
-    status: 'En preparación',
-    tone: 'later',
-    blurb: 'Visibilidad extra para competir en las búsquedas más disputadas. Aún no está a la venta: los negocios reclamados tendrán acceso primero.',
-  },
-];
-
-// y = incluido, n = no incluido
-const features: Array<{ label: string; v: Array<'y' | 'n'> }> = [
-  { label: 'Aparece en las listas de uñas y masajes, en las guías de distrito y en las páginas de “los mejores”', v: ['y', 'y', 'y'] },
-  { label: 'Horario, dirección, teléfono, web y fotos', v: ['y', 'y', 'y'] },
-  { label: 'Valoración y reseñas de Google agregadas', v: ['y', 'y', 'y'] },
-  { label: 'Contacto directo (teléfono, web) sin comisión por cliente', v: ['y', 'y', 'y'] },
-  { label: 'Insignia de negocio verificado', v: ['n', 'y', 'y'] },
-  { label: 'Editas tú mismo servicios, precios, fotos y horario', v: ['n', 'y', 'y'] },
-  { label: 'Botón de WhatsApp para que te escriban directamente', v: ['n', 'y', 'y'] },
-  { label: 'Galería de fotos ampliada', v: ['n', 'n', 'y'] },
-  { label: 'Posición destacada en los rankings, siempre marcada como patrocinada', v: ['n', 'n', 'y'] },
-  { label: 'Estadísticas mensuales por email (visitas y clics)', v: ['n', 'n', 'y'] },
+const ownerInfo = [
+  { title: 'Reclama y verifica tu ficha', body: 'Selecciona tu negocio y confirma un código de 6 dígitos enviado a tu email. La ficha queda marcada como reclamada y verificada.' },
+  { title: 'Mantén los datos al día', body: 'Después de verificarte puedes editar servicios, precios, horario, WhatsApp y la visibilidad de las fotos desde la gestión de tu ficha.' },
+  { title: 'Contacto directo', body: 'Tu ficha puede mostrar teléfono, web, indicaciones y WhatsApp cuando están disponibles. Barcelona Compare no gestiona citas ni pagos.' },
+  { title: 'Qué no incluye', body: 'No hay posiciones patrocinadas, compra de visibilidad ni panel de estadísticas para propietarios. El orden sigue las reglas públicas del directorio.' },
 ];
 
 const faqs = [
   {
-    q: '¿Cuánto cuesta aparecer en Barcelona Compare?',
-    a: 'Nada. La ficha básica es gratuita y lo seguirá siendo: no cobramos por aparecer ni por recibir contactos. El plan Pro está en preparación y todavía no se puede contratar.',
+    q: '¿Qué obtengo al reclamar mi negocio?',
+    a: 'Puedes verificar que gestionas el negocio, mantener sus datos al día desde la gestión de la ficha y mostrar enlaces de contacto disponibles. La reclamación es un programa gratuito para propietarios.',
   },
   {
     q: '¿Cómo reclamo mi negocio?',
@@ -120,8 +86,8 @@ const faqs = [
     a: 'De Google Maps, y siempre aparecen atribuidas a Google. No publicamos reseñas propias ni podemos modificar o eliminar las que ya tienes en Google.',
   },
   {
-    q: '¿Se puede pagar para aparecer más arriba?',
-    a: 'Hoy no se vende ninguna posición. Cuando lancemos el plan Pro, los espacios destacados irán siempre marcados como patrocinados y nunca cambiarán la valoración real de los clientes, que seguirá siendo la que decide el orden.',
+    q: '¿Tenéis un panel de estadísticas para propietarios?',
+    a: 'Todavía no. El sistema registra algunas visitas y clics para uso interno, pero no ofrece actualmente un panel ni informes de estadísticas para propietarios.',
   },
   {
     q: 'La información de mi ficha es incorrecta.',
@@ -139,7 +105,6 @@ const faqSchema = {
   })),
 };
 
-const mark = (v: 'y' | 'n') => (v === 'y' ? '✓' : '—');
 ---
 
 <BaseLayout
@@ -243,59 +208,13 @@ const mark = (v: 'y' | 'n') => (v === 'y' ? '✓' : '—');
     </section>
 
     <section class="mt-14">
-      <h2 class="text-2xl font-bold text-stone-900">Compara los planes</h2>
-      <p class="mt-2 text-stone-600">
-        La ficha es y será gratuita. El plan Pro está en preparación y aún no se puede contratar.
-      </p>
-
-      <div class="hidden md:block mt-6 overflow-hidden rounded-xl border border-stone-200 bg-white">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="bg-stone-50 border-b border-stone-200">
-              <th class="text-left font-semibold text-stone-700 p-4 w-1/2">Qué incluye</th>
-              {tiers.map(t => (
-                <th class="text-center p-4 align-top">
-                  <span class="block font-bold text-stone-900">{t.name}</span>
-                  <span class="block mt-1 text-xs font-normal text-stone-500">{t.price}</span>
-                  <span class={`inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full ${t.tone === 'live' ? 'bg-green-50 text-green-700 border border-green-200' : t.tone === 'soon' ? 'bg-brand-50 text-brand-700 border border-brand-200' : 'bg-stone-100 text-stone-500 border border-stone-200'}`}>
-                    {t.status}
-                  </span>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {features.map(f => (
-              <tr class="border-b border-stone-100 last:border-0">
-                <td class="p-4 text-stone-600">{f.label}</td>
-                {f.v.map(m => (
-                  <td class={`p-4 text-center font-bold ${m === 'y' ? 'text-brand-600' : 'text-stone-300'}`}>{mark(m)}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div class="md:hidden mt-6 space-y-4">
-        {tiers.map((t, i) => (
+      <h2 class="text-2xl font-bold text-stone-900">Tu colaboración con Barcelona Compare</h2>
+      <p class="mt-2 text-stone-600">La colaboración para propietarios es gratuita. Estas son las funciones disponibles hoy y sus límites actuales.</p>
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {ownerInfo.map(info => (
           <div class="p-5 rounded-xl bg-white border border-stone-200">
-            <div class="flex items-baseline justify-between gap-3">
-              <h3 class="font-bold text-stone-900">{t.name}</h3>
-              <span class="text-sm text-stone-500">{t.price}</span>
-            </div>
-            <span class={`inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full ${t.tone === 'live' ? 'bg-green-50 text-green-700 border border-green-200' : t.tone === 'soon' ? 'bg-brand-50 text-brand-700 border border-brand-200' : 'bg-stone-100 text-stone-500 border border-stone-200'}`}>
-              {t.status}
-            </span>
-            <p class="mt-3 text-sm text-stone-600">{t.blurb}</p>
-            <ul class="mt-3 space-y-1.5 text-sm">
-              {features.map(f => (
-                <li class={`flex gap-2 ${f.v[i] === 'y' ? 'text-stone-700' : 'text-stone-400'}`}>
-                  <span class={`shrink-0 font-bold ${f.v[i] === 'y' ? 'text-brand-600' : 'text-stone-300'}`}>{mark(f.v[i])}</span>
-                  <span>{f.label}</span>
-                </li>
-              ))}
-            </ul>
+            <h3 class="font-semibold text-stone-900">{info.title}</h3>
+            <p class="mt-2 text-sm text-stone-600 leading-relaxed">{info.body}</p>
           </div>
         ))}
       </div>
