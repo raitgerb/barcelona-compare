@@ -18,11 +18,8 @@ python3 scripts/listing-visibility.py massage <slug> online
 
 The `offline: true` frontmatter flag is excluded from every public catalogue query,
 including category pages, neighbourhood pages, recommendations, search JSON,
-claim-index JSON and the sitemap. The former detail path is built as a generic
-unavailable page with no listing content. It is kept as
-an explicit replacement asset because Cloudflare Pages can retain a removed
-static path in edge cache for up to seven days; deleting the route alone does not
-overwrite that cached asset.
+claim-index JSON, detail routes and the sitemap. The former detail path is not
+generated, so it returns a real 404 instead of a soft 404 page.
 
 This is a source-controlled operation: after changing the flag, build and deploy
 the site through the normal pull-request path. Do not delete the markdown file or
