@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "check:retired-routes": "node scripts/retired-route-check.mjs",
     "check:language-selector": "node scripts/language-selector-check.mjs",
     "preview": "astro preview",
     "astro": "astro",
