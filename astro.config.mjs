@@ -2,11 +2,12 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import { isPrivateDashboardRoute } from './scripts/sitemap-routes.mjs';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://barcelonacompare.com',
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !isPrivateDashboardRoute(page) })],
   vite: {
     plugins: [tailwindcss()],
   },
