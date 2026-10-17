@@ -1,6 +1,13 @@
 ---
 // /ca/compare/ — Catalan side-by-side comparison.
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import manifest from '../../data/photo-manifest.json';
+
+const leads: Record<string, string> = {};
+for (const [key, files] of Object.entries(manifest as Record<string, string[]>)) {
+  if (Array.isArray(files) && files.length) leads[key] = String(files[0]);
+}
+const imageBase = import.meta.env.R2_IMAGE_BASE_URL || '';
 ---
 <BaseLayout
   title="Compara negocis costat a costat"
@@ -14,5 +21,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     <!-- populated by /js/compare.js -->
     <div id="compare-root" class="mt-8"></div>
   </main>
+  <script is:inline set:html={`window.BC_PHOTO_LEAD=${JSON.stringify(leads)};window.BC_IMAGE_BASE=${JSON.stringify(imageBase)};`}></script>
   <script src="/js/compare.js" defer></script>
 </BaseLayout>
